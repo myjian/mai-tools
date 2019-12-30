@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import ScoreCalc from '../views/ScoreCalc.vue';
+import NotFound from '../views/NotFound.vue';
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,10 @@ const routes = [
     path: '/score-calc',
     name: 'score-calc',
     component: ScoreCalc,
+  },
+  {
+    path: '*',
+    component: NotFound,
   },
 ];
 
