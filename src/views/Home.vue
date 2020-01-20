@@ -20,7 +20,8 @@
       </span>
     </main>
     <footer>
-      <b>mai-tools</b> is created and maintained by <a href="https://github.com/zetaraku">Raku Zeta</a>.
+      <b>mai-tools</b> is created and maintained by
+      <a href="https://github.com/zetaraku" target="_blank" rel="noopener">Raku Zeta</a>.
     </footer>
   </div>
 </template>
