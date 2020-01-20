@@ -5,6 +5,11 @@
   </header>
   <main>
     <p>
+      <button @click="resetForm">Reset Form</button>
+      &nbsp;
+      <button @click="applyTestcase">Apply Test Data</button>
+    </p>
+    <p>
       <table>
         <thead>
           <tr>
@@ -441,7 +446,41 @@ export default {
     playerDeluxeScoreSubtotalPercentages(noteType) {
       return 100.0 * this.playerDeluxeScoreSubtotals[noteType] / this.noteDeluxeScoreSubtotals[noteType];
     },
-    playerScoringDX() {
+
+    /* Actions */
+
+    applyTestcase() {
+      this.noteCounts = {
+        tap: 432,
+        hold: 32,
+        slide: 166,
+        touch: 0,
+        break: 4,
+      };
+      this.playerPerformance = {
+        tap: { critical: 183, better_perfect: 0, perfect: 219, great: 29, good: 1, miss: 0 },
+        hold: { critical: 16, better_perfect: 0, perfect: 16, great: 0, good: 0, miss: 0 },
+        slide: { critical: 158, better_perfect: 0, perfect: 0, great: 6, good: 2, miss: 0 },
+        touch: { critical: 0, better_perfect: 0, perfect: 0, great: 0, good: 0, miss: 0 },
+        break: { critical: 2, better_perfect: 2, perfect: 0, great: 0, good: 0, miss: 0 },
+      };
+    },
+    resetForm() {
+      this.noteCounts = {
+        tap: 0,
+        hold: 0,
+        slide: 0,
+        touch: 0,
+        break: 0,
+      };
+      this.playerPerformance = {
+        tap: { critical: 0, better_perfect: 0, perfect: 0, great: 0, good: 0, miss: 0 },
+        hold: { critical: 0, better_perfect: 0, perfect: 0, great: 0, good: 0, miss: 0 },
+        slide: { critical: 0, better_perfect: 0, perfect: 0, great: 0, good: 0, miss: 0 },
+        touch: { critical: 0, better_perfect: 0, perfect: 0, great: 0, good: 0, miss: 0 },
+        break: { critical: 0, better_perfect: 0, perfect: 0, great: 0, good: 0, miss: 0 },
+      };
+    },
 
     /* Helper functions */
 
