@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
 		<title>Convert maimai DX score to FiNALE score</title>
 		<link rel="stylesheet" href="./styles.css">
 	</head>
@@ -15,8 +16,8 @@
 			<h3 class="songTitleHeading">
 				<a id="songTitle" target="_blank" href="https://maimai.fandom.com/zh/wiki/"></a>
 			</h3>
-			<div class="dxScoreWrapper">maimai DX Achievement: <span id="dxScore"></span>%</div>
-			<div class="finaleScoreWrapper">maimai Achievement: <span id="finaleScore"></span>%</div>
+			maimai DX Achievement: <div class="scoreWrapper"><span id="dxScore"></span>%</div>
+			maimai Achievement: <div class="scoreWrapper"><span id="finaleScore"></span>%</div>
 			<table class="resultTable">
 				<thead>
 					<tr>
@@ -110,6 +111,15 @@
 				</tbody>
 			</table>
 		</div>
+    <br>
+    <a href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>
+      從 maimai DX NET 的分數頁面直連此頁 (右鍵或長按加入書籤)
+    </a>
+    <div class="bookmarkLinkBreak"></div>
+    <a href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>
+      Open this page from maimai DX NET score page (right click to add to bookmarks)
+    </a>
+    <div class="footer"></div>
 		<script src="./main.js"></script>
 	</body>
 </html>

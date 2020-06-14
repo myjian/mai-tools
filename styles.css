@@ -3,6 +3,12 @@ body {
   font-family: sans-serif;
 }
 
+.input {
+  min-width: 95%;
+  max-width: 500px;
+  height: 10rem;
+}
+
 .convert {
 	padding: 6px 14px;
 	font-size: 20px;
@@ -15,6 +21,10 @@ body {
 
 .songTitleHeading {
   margin-bottom: 6px;
+}
+
+.scoreWrapper {
+  font-weight: bold;
 }
 
 table.resultTable, table.infoTable {
@@ -32,9 +42,10 @@ th, td {
 
 th {
   font-family: sans-serif;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: navy;
+  font-size: 0.9em;
 }
 
 tr {
@@ -45,15 +56,19 @@ tr.tap, tr.slide, tr.break {
   background-color: #e1f1f9;
 }
 
-td {
+table.resultTable td {
   width: 75px;
+}
+
+table.infoTable td {
+  width: 60px;
 }
 
 tr.break td.break span {
   display: block;
 }
 
-tbody th, tbody td {
+table.resultTable th, table.resultTable td {
   padding-right: 4px;
 }
 
@@ -89,8 +104,10 @@ table.infoTable tbody tr td, table.infoTable tbody tr th {
   color: #8c8c8c;
 }
 
-.input {
-  min-width: 500px;
-  max-width: 80%;
-  height: 10rem;
+.bookmarkLinkBreak {
+  height: 1rem;
+}
+
+.footer {
+  height: 3rem;
 }
