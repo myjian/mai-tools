@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Convert maimai DX score to FiNALE score</title>
+		<link rel="stylesheet" href="./styles.css">
+	</head>
+	<body>
+		<div>
+			<textarea class="input"></textarea>
+			<br>
+			<button class="convert">Convert</button>
+		</div>
+		<div class="output">
+			<h3 class="songTitleHeading">
+				<a id="songTitle" target="_blank" href="https://maimai.fandom.com/zh/wiki/"></a>
+			</h3>
+			<div class="dxScoreWrapper">maimai DX Achievement: <span id="dxScore"></span>%</div>
+			<div class="finaleScoreWrapper">maimai Achievement: <span id="finaleScore"></span>%</div>
+			<table class="resultTable">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th class="criticalPerfect">Critical<br>Perfect</th>
+						<th class="perfect">Perfect</th>
+						<th class="great">Great</th>
+						<th class="good">Good</th>
+						<th class="miss">Miss</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="tap">
+						<th>Tap</th>
+						<td class="tap criticalPerfect"></td>
+						<td class="tap perfect"></td>
+						<td class="tap great"></td>
+						<td class="tap good"></td>
+						<td class="tap miss"></td>
+					</tr>
+					<tr class="hold">
+						<th>Hold</th>
+						<td class="hold criticalPerfect"></td>
+						<td class="hold perfect"></td>
+						<td class="hold great"></td>
+						<td class="hold good"></td>
+						<td class="hold miss"></td>
+					</tr>
+					<tr class="slide">
+						<th>Slide</th>
+						<td class="slide criticalPerfect"></td>
+						<td class="slide perfect"></td>
+						<td class="slide great"></td>
+						<td class="slide good"></td>
+						<td class="slide miss"></td>
+					</tr>
+					<tr class="touch">
+						<th>Touch</th>
+						<td class="touch criticalPerfect"></td>
+						<td class="touch perfect"></td>
+						<td class="touch great"></td>
+						<td class="touch good"></td>
+						<td class="touch miss"></td>
+					</tr>
+					<tr class="break">
+						<th>Break</th>
+						<td class="break criticalPerfect">
+							<span class="break2600" title="2600"></span>
+						</td>
+						<td class="break perfect">
+							<span class="break2550" title="2550"></span>
+							<span class="break2500" title="2500"></span>
+						</td>
+						<td class="break great">
+							<span class="break2000" title="2000"></span>
+							<span class="break1500" title="1500"></span>
+							<span class="break1250" title="1250"></span>
+						</td>
+						<td class="break good">
+							<span class="break1000" title="1000"></span>
+						</td>
+						<td class="break miss">
+							<span class="break0" title="0"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3>Chart info</h3>
+			<table class="infoTable">
+				<thead>
+					<tr>
+						<th class="fullCombo">COMBO</th>
+						<th class="tap">TAP</th>
+						<th class="hold">HOLD</th>
+						<th class="slide">SLIDE</th>
+						<th class="touch">TOUCH</th>
+						<th class="break">BREAK</th>
+						<th class="maxFinaleScore">理論值</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="tap">
+						<td class="fullCombo"></th>
+						<td class="tapCount"></td>
+						<td class="holdCount"></td>
+						<td class="slideCount"></td>
+						<td class="touchCount"></td>
+						<td class="breakCount"></td>
+						<td><span class="maxFinaleScore"></span>%</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<script src="./main.js"></script>
+	</body>
+</html>

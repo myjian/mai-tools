@@ -1,0 +1,96 @@
+body {
+  background-color: #51bcf3;
+  font-family: sans-serif;
+}
+
+.convert {
+	padding: 6px 14px;
+	font-size: 20px;
+	margin-top: 6px;
+}
+
+.output {
+  margin-top: 20px;
+}
+
+.songTitleHeading {
+  margin-bottom: 6px;
+}
+
+table.resultTable, table.infoTable {
+  border: 2px solid #3e9cf5;
+  border-radius: 4px;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #c0e5f7;
+}
+
+th {
+  font-family: sans-serif;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: navy;
+}
+
+tr {
+  background-color: white;
+}
+
+tr.tap, tr.slide, tr.break {
+  background-color: #e1f1f9;
+}
+
+td {
+  width: 75px;
+}
+
+tr.break td.break span {
+  display: block;
+}
+
+tbody th, tbody td {
+  padding-right: 4px;
+}
+
+tbody td {
+  font-weight: bold;
+}
+
+table.resultTable tbody tr td, table.resultTable tbody tr th {
+  text-align: right;
+}
+
+table.infoTable tbody tr td, table.infoTable tbody tr th {
+  text-align: center;
+}
+
+.criticalPerfect {
+  color: #ffbc09;
+}
+
+.perfect {
+  color: #ff9d00;
+}
+
+.great {
+  color: #f75ea3;
+}
+
+.good {
+  color: #2fca4c;
+}
+
+.miss {
+  color: #8c8c8c;
+}
+
+.input {
+  min-width: 500px;
+  max-width: 80%;
+  height: 10rem;
+}
