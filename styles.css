@@ -4,6 +4,7 @@ body {
 }
 
 hr {
+  margin-top: 20px;
   border-top-style: none;
   border-bottom: solid 2px #d8d8d8;
 }
@@ -120,4 +121,19 @@ table.infoTable tbody tr td, table.infoTable tbody tr th {
 
 .footer {
   height: 3rem;
+  padding-top: 20px;
+}
+
+.credit {
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.credit a {
+  color: rgb(0, 56, 216);
+  text-decoration: none;
+}
+
+.credit a:visited {
+  color: rgb(0, 56, 216);
 }
