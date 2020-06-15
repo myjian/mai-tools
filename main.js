@@ -13,6 +13,7 @@ const JUDGEMENT_RESULTS = [
   "good",
   "miss"
 ];
+const ZERO_JUDGEMENT = [0, 0, 0, 0, 0];
 
 const BASE_SCORE_PER_TYPE = {
   tap: 500,
@@ -249,6 +250,11 @@ function calculateFinaleScore(
   ];
 }
 
+function parseNumArrayFromText(line, fallback) {
+  const textArr = line.match(/\d+/g);
+  return textArr ? textArr.map((num) => parseInt(num, 10)) : fallback;
+}
+
 function performConversion(inputText) {
   const lines = inputText.split("\n");
   if (lines < 6) {
@@ -256,7 +262,7 @@ function performConversion(inputText) {
   }
   let songTitle;
   let achievement;
-  const judgements = [];
+  let judgements = [];
   // Parse from the last line
   for (
     let currentLine = lines.pop();
@@ -270,7 +276,18 @@ function performConversion(inputText) {
       judgementsOfLine.length >= 4 &&
       judgementsOfLine.length <= 5
     ) {
-      judgements.unshift(judgementsOfLine.map((num) => parseInt(num, 10)));
+      const breakJ = parseNumArrayFromText(currentLine, undefined);
+      // zeroJ is a placeholder for non-existent note types
+      const zeroJ = ZERO_JUDGEMENT.slice(0, breakJ.length);
+
+      const touchJ = parseNumArrayFromText(lines.pop(), undefined);
+      const slideJ = parseNumArrayFromText(lines.pop(), zeroJ);
+      const holdJ = parseNumArrayFromText(lines.pop(), zeroJ);
+      const tapJ = parseNumArrayFromText(lines.pop(), zeroJ);
+      judgements = [tapJ, holdJ, slideJ, breakJ];
+      if (touchJ) {
+        judgements.splice(3, 0, touchJ);
+      }
     }
     const achievementText = currentLine.match(/(\d+\.\d+)%/);
     if (achievementText) {
@@ -279,7 +296,7 @@ function performConversion(inputText) {
       break;
     }
   }
-  
+
   if (!isNaN(achievement) && judgements.length >= 4) {
     const songTitleElem = document.getElementById("songTitle");
     songTitleElem.innerText = songTitle || "";
@@ -289,7 +306,7 @@ function performConversion(inputText) {
     judgements.forEach((j, idx) => {
       judgementsPerType.set(noteTypes[idx], j);
     });
-    
+
     // update UI (part 1)
     document.getElementById("dxScore").innerText = achievement.toFixed(4);
     const fullCombo = DX_NOTE_TYPES.reduce((combo, noteType) => {
@@ -303,7 +320,7 @@ function performConversion(inputText) {
       return combo + noteCount;
     }, 0);
     document.querySelector(`td.fullCombo`).innerText = fullCombo;
-    
+
     // do some math
     const [finaleAchievement, maxFinaleScore, breakDistribution] = calculateFinaleScore(
       judgementsPerType,
