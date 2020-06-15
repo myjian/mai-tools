@@ -3,13 +3,18 @@ body {
   font-family: sans-serif;
 }
 
+hr {
+  border-top-style: none;
+  border-bottom: solid 2px #d8d8d8;
+}
+
 .input {
   min-width: 95%;
   max-width: 500px;
   height: 10rem;
 }
 
-.convert {
+#convert {
 	padding: 6px 14px;
 	font-size: 20px;
 	margin-top: 6px;
@@ -17,6 +22,7 @@ body {
 
 .output {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .songTitleHeading {
@@ -104,8 +110,12 @@ table.infoTable tbody tr td, table.infoTable tbody tr th {
   color: #8c8c8c;
 }
 
-.bookmarkLinkBreak {
-  height: 1rem;
+#howtoHeading {
+  margin-bottom: 0;
+}
+
+#description {
+  margin-bottom: 20px;
 }
 
 .footer {

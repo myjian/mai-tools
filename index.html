@@ -10,7 +10,7 @@
 		<div>
 			<textarea class="input"></textarea>
 			<br>
-			<button class="convert">Convert</button>
+			<button id="convert">Convert</button>
 		</div>
 		<div class="output">
 			<h3 class="songTitleHeading">
@@ -85,7 +85,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<h3>Chart info</h3>
+			<h3 id="chartInfoHeading">Chart info</h3>
 			<table class="infoTable">
 				<thead>
 					<tr>
@@ -99,7 +99,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="tap">
+					<tr>
 						<td class="fullCombo"></th>
 						<td class="tapCount"></td>
 						<td class="holdCount"></td>
@@ -111,10 +111,12 @@
 				</tbody>
 			</table>
 		</div>
-    <br>
-    <a href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>從 maimai DX NET 的分數頁面直連此頁 (右鍵或長按加入書籤)</a>
-    <div class="bookmarkLinkBreak"></div>
-    <a href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>Open this page from maimai DX NET score page (right click to add to bookmarks)</a>
+    <hr>
+    <div class="howto">
+      <h3 id="howtoHeading">How to use</h3>
+      <div id="description"></div>
+      <a id="bookmarklet" href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>Convert maimai DX score to FiNALE score</a>
+    </div>
     <div class="footer"></div>
 		<script src="./main.js"></script>
 	</body>
