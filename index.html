@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <div>
+    <div id="inputContainer">
       <textarea class="input"></textarea>
       <br>
       <button id="convert">Convert</button>
@@ -16,8 +16,16 @@
       <h3 class="songTitleHeading">
         <a id="songTitle" title="開啟中文維基" target="_blank" href="https://maimai.fandom.com/zh/wiki/"></a>
       </h3>
-      maimai DX Achievement: <div class="scoreWrapper"><span id="dxScore"></span>%</div>
-      maimai Achievement: <div class="scoreWrapper"><span id="finaleScore"></span>%</div>
+        maimai DX <span class="achievement">Achievement</span>:
+        <div class="scoreWrapper">
+          <span class="playerScore"><span id="dxScore"></span>%</span>
+          / 101.0000%
+        </div>
+        maimai <span class="achievement">Achievement</span>:
+        <div class="scoreWrapper">
+          <span class="playerScore"><span id="finaleScore"></span>%</span>
+          / <span class="maxFinaleScore"></span>%
+        </div>
       <table class="resultTable">
         <thead>
           <tr>
@@ -89,18 +97,18 @@
       <table class="infoTable">
         <thead>
           <tr>
-            <th class="fullCombo">COMBO</th>
+            <th class="totalNoteCount">TOTAL</th>
             <th class="tap">TAP</th>
             <th class="hold">HOLD</th>
             <th class="slide">SLIDE</th>
             <th class="touch">TOUCH</th>
             <th class="break">BREAK</th>
-            <th class="maxFinaleScore">理論值</th>
+            <th class="maxFinaleScoreLabel">Max Achievement</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="fullCombo"></th>
+            <td id="totalNoteCount"></th>
             <td class="tapCount"></td>
             <td class="holdCount"></td>
             <td class="slideCount"></td>
@@ -121,6 +129,7 @@
     <div class="footer credit">
       Made by <a href="https://github.com/myjian" target="_blank">myjian</a>.
     </div>
+    <script src="./i18n.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>

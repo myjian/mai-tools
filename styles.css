@@ -4,7 +4,7 @@ body {
 }
 
 hr {
-  margin-top: 20px;
+  margin-top: 30px;
   border-top-style: none;
   border-bottom: solid 2px #d8d8d8;
 }
@@ -30,8 +30,8 @@ hr {
   margin-bottom: 6px;
 }
 
-.scoreWrapper {
-  font-weight: bold;
+table.resultTable {
+  margin-top: 20px;
 }
 
 table.resultTable, table.infoTable {
@@ -40,6 +40,9 @@ table.resultTable, table.infoTable {
   border-collapse: separate;
   border-spacing: 0;
   box-sizing: border-box;
+}
+
+table.infoTable {
   margin-top: 10px;
 }
 
@@ -83,12 +86,26 @@ tbody td {
   font-weight: bold;
 }
 
+.scoreWrapper {
+  margin-bottom: 8px;
+}
+
+.playerScore {
+  display: inline-block;
+  width: 80px;
+  font-weight: bold;
+}
+
 table.resultTable tbody tr td, table.resultTable tbody tr th {
   text-align: right;
 }
 
 table.infoTable tbody tr td, table.infoTable tbody tr th {
   text-align: center;
+}
+
+table.infoTable th.maxFinaleScoreLabel {
+  width: 80px;
 }
 
 .criticalPerfect {
@@ -109,6 +126,11 @@ table.infoTable tbody tr td, table.infoTable tbody tr th {
 
 .miss {
   color: #8c8c8c;
+}
+
+#chartInfoHeading {
+  margin-top: 30px;
+  margin-bottom: 14px;
 }
 
 #howtoHeading {
