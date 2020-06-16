@@ -34,7 +34,7 @@ table.resultTable {
   margin-top: 20px;
 }
 
-table.resultTable, table.infoTable {
+table.resultTable, table.infoTable, #borderTable {
   border: 2px solid #3e9cf5;
   border-radius: 4px;
   border-collapse: separate;
@@ -92,7 +92,7 @@ tbody td {
 
 .playerScore {
   display: inline-block;
-  width: 80px;
+  width: 94px;
   font-weight: bold;
 }
 
@@ -106,6 +106,16 @@ table.infoTable tbody tr td, table.infoTable tbody tr th {
 
 table.infoTable th.maxFinaleScoreLabel {
   width: 80px;
+}
+
+#borderTable th {
+  width: 80px;
+}
+
+#borderTable td {
+  width: 140px;
+  text-align: right;
+  padding-right: 4px;
 }
 
 .criticalPerfect {
@@ -158,4 +168,12 @@ table.infoTable th.maxFinaleScoreLabel {
 
 .credit a:visited {
   color: rgb(0, 56, 216);
+}
+
+.hidden {
+  display: none;
+}
+
+#finaleBorder {
+  margin-bottom: 6px;
 }

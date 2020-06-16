@@ -5,16 +5,16 @@
   const howtoHeading = document.getElementById("howtoHeading");
   const descriptionArea = document.getElementById("description");
   const bookmarklet = document.getElementById("bookmarklet");
+  const finaleBorder = document.getElementById("finaleBorder");
   const totalNoteCount = document.getElementsByClassName("totalNoteCount")[0];
-  const maxFinaleScore = document.getElementsByClassName("maxFinaleScoreLabel")[0];
 
   if (navigator.language.startsWith("zh")) {
     howtoHeading.innerText = "使用方式";
     chartInfoHeading.innerText = "譜面資訊";
     bookmarklet.innerText = document.title = "換算 maimai DX 成績為 maimai 舊筐成績";
     convertBtn.innerText = "分析";
-    totalNoteCount.innerText = "總數";
-    maxFinaleScore.innerText = "舊版理論值";
+    totalNoteCount.innerText = "總計";
+    finaleBorder.innerText = "舊版 Border";
     achievementSpans.forEach((span) => {
       span.innerText = "達成率";
     });

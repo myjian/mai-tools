@@ -160,6 +160,17 @@
     }
   }
 
+  function calculateBorder(totalBaseScore, breakCount, achievement, playerNoteScore) {
+    if (achievement === "AP+") {
+      return totalBaseScore + breakCount * 100 - playerNoteScore;
+    }
+    const rawBorder = totalBaseScore * achievement - playerNoteScore;
+    if (rawBorder < 0) {
+      return -1;
+    }
+    return Math.ceil(rawBorder / 50) * 50;
+  }
+  
   /**
    * Given judgements per note type and player achievement (percentage from DX),
    * figure out its maimai FiNALE score and break distribution.
@@ -240,14 +251,25 @@
       totalBreakCount += count;
       playerBreakNoteScore += count * judgement;
     });
-    const finaleAchievement =
-      (100.0 * (playerBreakNoteScore + playerRegularNoteScore)) / totalBaseScore;
-    const finaleMaxAchievement =
-      (100.0 * (totalBaseScore + 100 * totalBreakCount)) / totalBaseScore;
+    const playerNoteScore = playerBreakNoteScore + playerRegularNoteScore;
+    const maxNoteScore = totalBaseScore + 100 * totalBreakCount;
+    const finaleAchievement = (100.0 * playerNoteScore) / totalBaseScore;
+    const finaleMaxAchievement = (100.0 * maxNoteScore) / totalBaseScore;
+    console.log(`totalBaseScore ${totalBaseScore}`);
+    console.log(`totalBreakCount ${totalBreakCount}`);
+    const border = new Map([
+      ["S", calculateBorder(totalBaseScore, totalBreakCount, 0.97, playerNoteScore)],
+      ["S+", calculateBorder(totalBaseScore, totalBreakCount, 0.98, playerNoteScore)],
+      ["SS", calculateBorder(totalBaseScore, totalBreakCount, 0.99, playerNoteScore)],
+      ["SS+", calculateBorder(totalBaseScore, totalBreakCount, 0.995, playerNoteScore)],
+      ["SSS", calculateBorder(totalBaseScore, totalBreakCount, 1, playerNoteScore)],
+      ["AP+", calculateBorder(totalBaseScore, totalBreakCount, "AP+", playerNoteScore)],
+    ]);
     return [
       Math.floor(finaleAchievement * 100) / 100,
       Math.floor(finaleMaxAchievement * 100) / 100,
       breakDistribution,
+      border,
     ];
   }
 
@@ -308,7 +330,7 @@
         judgementsPerType.set(noteTypes[idx], j);
       });
 
-      // update UI (part 1)
+      // update UI (1) - chart info
       document.getElementById("dxScore").innerText = achievement.toFixed(4);
       const totalNoteCount = DX_NOTE_TYPES.reduce((combo, noteType) => {
         const playerJ = judgementsPerType.get(noteType) || [];
@@ -323,12 +345,12 @@
       document.getElementById("totalNoteCount").innerText = totalNoteCount;
 
       // do some math
-      const [finaleAchievement, maxFinaleScore, breakDistribution] = calculateFinaleScore(
+      const [finaleAchievement, maxFinaleScore, breakDistribution, border] = calculateFinaleScore(
         judgementsPerType,
         achievement
       );
 
-      // update UI (part 2)
+      // update UI (2) - player score table
       document.getElementById("finaleScore").innerText = finaleAchievement.toFixed(2);
       document.querySelectorAll(".maxFinaleScore").forEach((elem) => {
         elem.innerText = maxFinaleScore.toFixed(2);
@@ -351,6 +373,26 @@
         const tableCell = document.querySelector(`span.break${score}`);
         tableCell.innerText = count;
       });
+      // update UI (3) - border info
+      const borderInfo = document.getElementById("borderInfo");
+      const borderTable = document.querySelector("#borderTable tbody");
+      borderTable.innerHTML = "";
+      border.forEach((score, rank) => {
+        if (score > 0) {
+          const tr = document.createElement("tr");
+          const th = document.createElement("th");
+          const td = document.createElement("td");
+          th.innerText = rank;
+          td.innerText = score;
+          tr.append(th, td);
+          borderTable.append(tr);
+        }
+      });
+      if (borderTable.innerHTML.length) {
+        borderInfo.classList.remove("hidden");
+      } else {
+        borderInfo.classList.add("hidden");
+      }
     }
   }
 
@@ -366,9 +408,10 @@
     const noteDetail = searchParams.get("nd");
     if (songTitle && achievement && noteDetail) {
       document.getElementById("inputContainer").style.display = "none";
+      document.title = `${songTitle} - ${document.title}`;
+      const inputText = `${songTitle}\n${achievement}\n${noteDetail}\n`;
+      performConversion(inputText);
+      inputElem.value = inputText;
     }
-    const inputText = `${songTitle}\n${achievement}\n${noteDetail}\n`;
-    performConversion(inputText);
-    inputElem.value = inputText;
   }
 })();
