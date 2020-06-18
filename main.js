@@ -23,10 +23,12 @@
     slide: 1500,
     break: 2500
   };
+  const BREAK_BONUS_POINTS = 100;
+  const MAX_BREAK_POINTS = BASE_SCORE_PER_TYPE.break + BREAK_BONUS_POINTS;
   const REGULAR_BASE_SCORE_MULTIPLIER = [1, 1, 0.8, 0.5, 0];
 
   const BREAK_BASE_SCORE_MULTIPLIER = new Map([
-    [2600, 1],
+    [MAX_BREAK_POINTS, 1],
     [2550, 1],
     [2500, 1],
     [2000, 0.8],
@@ -36,7 +38,7 @@
     [0, 0]
   ]);
   const BREAK_BONUS_MULTIPLIER = new Map([
-    [2600, 1],
+    [MAX_BREAK_POINTS, 1],
     [2550, 0.75],
     [2500, 0.5],
     [2000, 0.4],
@@ -45,6 +47,8 @@
     [1000, 0.3],
     [0, 0]
   ]);
+  
+  const EPSILON = 0.00011;
 
   /*
    * @param breakDistribution Map<number, number>
@@ -62,7 +66,7 @@
     let bestAchievement = 0;
     switch (breakJudgements.length) {
       case 5: // Critical Perfect
-        breakDistribution.set(2600, noteCount);
+        breakDistribution.set(MAX_BREAK_POINTS, noteCount);
         return walkBreakDistributions(
           validBreakDistributions,
           breakDistribution,
@@ -71,11 +75,11 @@
           basePercentagePerBreak
         );
       case 4: // Perfect
-        const c2600lowerBound = breakDistribution.get(2600) || 0;
+        const c2600lowerBound = breakDistribution.get(MAX_BREAK_POINTS) || 0;
         noteCount += c2600lowerBound;
-        const c2600upperBound = breakDistribution.get(2600) || noteCount;
+        const c2600upperBound = breakDistribution.get(MAX_BREAK_POINTS) || noteCount;
         for (let i = c2600upperBound; i >= c2600lowerBound; i--) {
-          breakDistribution.set(2600, i);
+          breakDistribution.set(MAX_BREAK_POINTS, i);
           for (let j = noteCount - i; j >= 0; j--) {
             breakDistribution.set(2550, j);
             breakDistribution.set(2500, noteCount - i - j);
@@ -159,16 +163,21 @@
         return playerAchievement;
     }
   }
+  
+  function roundFloat(num, method, unit) {
+    return Math[method](unit * num) / unit;
+  }
 
   function calculateBorder(totalBaseScore, breakCount, achievement, playerNoteScore) {
     if (achievement === "AP+") {
-      return totalBaseScore + breakCount * 100 - playerNoteScore;
+      return totalBaseScore + breakCount * BREAK_BONUS_POINTS - playerNoteScore;
     }
     const rawBorder = totalBaseScore * achievement - playerNoteScore;
     if (rawBorder < 0) {
       return -1;
     }
-    return Math.ceil(rawBorder / 50) * 50;
+    console.log(achievement, playerNoteScore, rawBorder);
+    return roundFloat(rawBorder, "ceil", 1/50);
   }
   
   /**
@@ -184,10 +193,12 @@
   ) {
     let totalBaseScore = 0;
     let playerRegularNoteScore = 0;
+    const lostScorePerType = {};
     judgementsPerType.forEach((judgements, noteType) => {
       const noteBaseScore = BASE_SCORE_PER_TYPE[noteType];
       const count = judgements.reduce((acc, n) => acc + n, 0);
-      totalBaseScore += count * noteBaseScore;
+      const totalNoteScore = count * noteBaseScore;
+      totalBaseScore += totalNoteScore;
       // We'll deal with breaks later.
       if (noteType !== "break") {
         const scoreMultiplier =
@@ -198,16 +209,15 @@
           (acc, j, idx) => acc + j * noteBaseScore * scoreMultiplier[idx],
           0
         );
+        lostScorePerType[noteType] = totalNoteScore - playerNoteScore;
         playerRegularNoteScore += playerNoteScore;
       }
     });
 
-    const playerRegularNotePercentage =
-      (100.0 * playerRegularNoteScore) / totalBaseScore;
+    // Figure out break distribution
+    const playerRegularNotePercentage = (100.0 * playerRegularNoteScore) / totalBaseScore;
     const remainingAchievement = playerAchievement - playerRegularNotePercentage;
-    const basePercentagePerBreak =
-      (100.0 * BASE_SCORE_PER_TYPE.break) / totalBaseScore;
-
+    const basePercentagePerBreak = (100.0 * BASE_SCORE_PER_TYPE.break) / totalBaseScore;
     const validBreakDistributions = [];
     const breakJudgements = judgementsPerType.get("break");
     walkBreakDistributions(
@@ -218,7 +228,6 @@
       basePercentagePerBreak
     );
     console.log(validBreakDistributions);
-
     let breakDistribution = validBreakDistributions[0];
     if (!breakDistribution) {
       console.log(
@@ -226,7 +235,7 @@
       );
       // Assume the worst case
       breakDistribution = new Map([
-        [2600, 0],
+        [MAX_BREAK_POINTS, 0],
         [2550, 0],
         [2500, 0],
         [2000, 0],
@@ -236,8 +245,8 @@
         [0, 0]
       ]);
       let offset = 0;
-      if (breakJudgements.length === 5) {
-        breakDistribution.set(2600, breakJudgements[0]);
+      if (breakJudgements.length === JUDGEMENT_RESULTS.length) {
+        breakDistribution.set(MAX_BREAK_POINTS, breakJudgements[0]);
         offset = 1;
       }
       breakDistribution.set(2500, breakJudgements[offset]);
@@ -245,6 +254,8 @@
       breakDistribution.set(1000, breakJudgements[offset + 2]);
       breakDistribution.set(0, breakJudgements[offset + 3]);
     }
+    
+    // Figure out FiNALE achievement
     let totalBreakCount = 0;
     let playerBreakNoteScore = 0;
     breakDistribution.forEach((count, judgement) => {
@@ -252,9 +263,43 @@
       playerBreakNoteScore += count * judgement;
     });
     const playerNoteScore = playerBreakNoteScore + playerRegularNoteScore;
-    const maxNoteScore = totalBaseScore + 100 * totalBreakCount;
-    const finaleAchievement = (100.0 * playerNoteScore) / totalBaseScore;
-    const finaleMaxAchievement = (100.0 * maxNoteScore) / totalBaseScore;
+    const maxNoteScore = totalBaseScore + BREAK_BONUS_POINTS * totalBreakCount;
+    const finaleAchievement = roundFloat((100.0 * playerNoteScore) / totalBaseScore, "floor", 100);
+    const finaleMaxAchievement = roundFloat((100.0 * maxNoteScore) / totalBaseScore, "floor", 100);
+    
+    // Figure out achievement loss per note type
+    let dxAchievementLoss = 101 - playerAchievement;
+    let finaleAchievementLoss = finaleMaxAchievement - finaleAchievement;
+    console.log(`achLoss ${dxAchievementLoss} ${finaleAchievementLoss}`);
+    const achievementLossPerType = {
+      dx: new Map([["total", dxAchievementLoss && dxAchievementLoss.toFixed(4)]]),
+      finale: new Map([
+        [
+          "total",
+          finaleAchievementLoss && finaleAchievementLoss.toFixed(2)
+        ]
+      ]),
+    };
+    DX_NOTE_TYPES.forEach((noteType) => {
+      if (noteType === "break") {
+        return;
+      }
+      const loss = 100.0 * (lostScorePerType[noteType] || 0) / totalBaseScore;
+      let dxLoss = dxAchievementLoss - loss <= EPSILON ? dxAchievementLoss : loss;
+      dxLoss = roundFloat(dxLoss, "round", 10000);
+      dxAchievementLoss -= dxLoss;
+      achievementLossPerType.dx.set(noteType, dxLoss && dxLoss.toFixed(4));
+      let finaleLoss = finaleAchievementLoss - loss <= EPSILON ? finaleAchievementLoss : loss;
+      finaleLoss = roundFloat(finaleLoss, "round", 100);
+      finaleAchievementLoss -= finaleLoss;
+      achievementLossPerType.finale.set(noteType, finaleLoss && finaleLoss.toFixed(2));
+      console.log(`${noteType} ${dxLoss} ${finaleLoss}`);
+    });
+    console.log(`break ${dxAchievementLoss} ${finaleAchievementLoss}`);
+    achievementLossPerType.dx.set("break", dxAchievementLoss && dxAchievementLoss.toFixed(4));
+    achievementLossPerType.finale.set("break", finaleAchievementLoss && finaleAchievementLoss.toFixed(2));
+
+    // Figure out score diff vs. higher ranks
     console.log(`totalBaseScore ${totalBaseScore}`);
     console.log(`totalBreakCount ${totalBreakCount}`);
     const border = new Map([
@@ -265,10 +310,12 @@
       ["SSS", calculateBorder(totalBaseScore, totalBreakCount, 1, playerNoteScore)],
       ["AP+", calculateBorder(totalBaseScore, totalBreakCount, "AP+", playerNoteScore)],
     ]);
+    
     return [
-      Math.floor(finaleAchievement * 100) / 100,
-      Math.floor(finaleMaxAchievement * 100) / 100,
+      finaleAchievement,
+      finaleMaxAchievement,
       breakDistribution,
+      achievementLossPerType,
       border,
     ];
   }
@@ -278,59 +325,20 @@
     return textArr ? textArr.map((num) => parseInt(num, 10)) : fallback;
   }
 
-  function performConversion(inputText) {
-    const lines = inputText.split("\n");
-    if (lines < 6) {
-      return;
-    }
-    let songTitle;
-    let achievement;
-    let judgements = [];
-    // Parse from the last line
-    for (
-      let currentLine = lines.pop();
-      currentLine != undefined;
-      currentLine = lines.pop()
-    ) {
-      const judgementsOfLine = currentLine.match(/\d+/g);
-      // 4 = Perfect, Great, Good, Miss; 5 = Critical Perfect, ...
-      if (
-        judgementsOfLine &&
-        judgementsOfLine.length >= 4 &&
-        judgementsOfLine.length <= 5
-      ) {
-        const breakJ = parseNumArrayFromText(currentLine, undefined);
-        // zeroJ is a placeholder for non-existent note types
-        const zeroJ = ZERO_JUDGEMENT.slice(0, breakJ.length);
-
-        const touchJ = parseNumArrayFromText(lines.pop(), undefined);
-        const slideJ = parseNumArrayFromText(lines.pop(), zeroJ);
-        const holdJ = parseNumArrayFromText(lines.pop(), zeroJ);
-        const tapJ = parseNumArrayFromText(lines.pop(), zeroJ);
-        judgements = [tapJ, holdJ, slideJ, breakJ];
-        if (touchJ) {
-          judgements.splice(3, 0, touchJ);
-        }
-      }
-      const achievementText = currentLine.match(/(\d+\.\d+)%/);
-      if (achievementText) {
-        achievement = parseFloat(achievementText[1]);
-        songTitle = lines.pop();
-        break;
-      }
-    }
-
+  function performConversion(songTitle, achievement, judgements) {
     if (!isNaN(achievement) && judgements.length >= 4) {
+      // update song title UI
       const songTitleElem = document.getElementById("songTitle");
       songTitleElem.innerText = songTitle || "";
       songTitleElem.href = WIKI_URL_PREFIX + encodeURIComponent(songTitle) + WIKI_URL_SUFFIX;
+      
       const noteTypes = judgements.length === 4 ? STD_NOTE_TYPES : DX_NOTE_TYPES;
       const judgementsPerType = new Map();
       judgements.forEach((j, idx) => {
         judgementsPerType.set(noteTypes[idx], j);
       });
 
-      // update UI (1) - chart info
+      // Update chart info UI
       document.getElementById("dxScore").innerText = achievement.toFixed(4);
       const totalNoteCount = DX_NOTE_TYPES.reduce((combo, noteType) => {
         const playerJ = judgementsPerType.get(noteType) || [];
@@ -344,13 +352,19 @@
       }, 0);
       document.getElementById("totalNoteCount").innerText = totalNoteCount;
 
-      // do some math
-      const [finaleAchievement, maxFinaleScore, breakDistribution, border] = calculateFinaleScore(
+      // Do some crazy math
+      const [
+        finaleAchievement,
+        maxFinaleScore,
+        breakDistribution,
+        achievementLossPerType,
+        border,
+      ] = calculateFinaleScore(
         judgementsPerType,
         achievement
       );
-
-      // update UI (2) - player score table
+      
+      // Update player score table UI
       document.getElementById("finaleScore").innerText = finaleAchievement.toFixed(2);
       document.querySelectorAll(".maxFinaleScore").forEach((elem) => {
         elem.innerText = maxFinaleScore.toFixed(2);
@@ -359,7 +373,7 @@
         if (noteType === "break") {
           return;
         }
-        const hasCP = playerJ.length === 5;
+        const hasCP = playerJ.length === JUDGEMENT_RESULTS.length;
         JUDGEMENT_RESULTS.forEach((judgement, index) => {
           const tableCell = document.querySelector(`td.${noteType}.${judgement}`);
           if (judgement === "criticalPerfect") {
@@ -373,10 +387,21 @@
         const tableCell = document.querySelector(`span.break${score}`);
         tableCell.innerText = count;
       });
-      // update UI (3) - border info
-      const borderInfo = document.getElementById("borderInfo");
-      const borderTable = document.querySelector("#borderTable tbody");
-      borderTable.innerHTML = "";
+      
+      // Update achievement loss UI
+      achievementLossPerType.dx.forEach((loss, noteType) => {
+        const lossElem = document.querySelector(`td.achievementLoss.dx .${noteType}`);
+        lossElem.innerText = loss;
+      })
+      achievementLossPerType.finale.forEach((loss, noteType) => {
+        const lossElem = document.querySelector(`td.achievementLoss.finale .${noteType}`);
+        lossElem.innerText = loss;
+      })
+
+      // Update border info UI
+      const scoreDiffContainer = document.querySelector(".scoreDiffContainer");
+      const scoreDiffTable = document.querySelector("#scoreDiffTable tbody");
+      scoreDiffTable.innerHTML = "";
       border.forEach((score, rank) => {
         if (score > 0) {
           const tr = document.createElement("tr");
@@ -385,33 +410,89 @@
           th.innerText = rank;
           td.innerText = score;
           tr.append(th, td);
-          borderTable.append(tr);
+          scoreDiffTable.append(tr);
         }
       });
-      if (borderTable.innerHTML.length) {
-        borderInfo.classList.remove("hidden");
+      if (scoreDiffTable.innerHTML.length) {
+        scoreDiffContainer.classList.remove("hidden");
       } else {
-        borderInfo.classList.add("hidden");
+        scoreDiffContainer.classList.add("hidden");
       }
     }
   }
+  
+  function parseJudgement(jTextLines) {
+    const breakJ = parseNumArrayFromText(jTextLines.pop(), undefined);
+    // zeroJ is a placeholder for non-existent note types
+    const zeroJ = ZERO_JUDGEMENT.slice(0, breakJ.length);
+
+    const touchJ = parseNumArrayFromText(jTextLines.pop(), undefined);
+    const slideJ = parseNumArrayFromText(jTextLines.pop(), zeroJ);
+    const holdJ = parseNumArrayFromText(jTextLines.pop(), zeroJ);
+    const tapJ = parseNumArrayFromText(jTextLines.pop(), zeroJ);
+    const judgements = [tapJ, holdJ, slideJ, breakJ];
+    if (touchJ) {
+      judgements.splice(3, 0, touchJ);
+    }
+    return judgements;
+  }
 
   convertBtn.addEventListener("click", (evt) => {
-    performConversion(inputElem.value);
+    const lines = inputElem.value.split("\n");
+    if (lines < 6) {
+      return;
+    }
+    let songTitle;
+    let achievementText;
+    let noteDetails = [];
+    // Parse from the last line
+    while (lines.length) {
+      currentLine = lines.pop();
+      const judgements = currentLine.match(/\d+/g);
+      if (
+        judgements &&
+        judgements.length >= JUDGEMENT_RESULTS.length - 1 &&
+        judgements.length <= JUDGEMENT_RESULTS.length
+      ) {
+        noteDetails.unshift(currentLine);
+        for (let i = 0; i < DX_NOTE_TYPES.length - 1; i++) {
+          noteDetails.unshift(lines.pop());
+        }
+      }
+      const achievementMatch = currentLine.match(/(\d+\.\d+)%/);
+      if (achievementMatch) {
+        achievementText = achievementMatch[1];
+        songTitle = lines.pop();
+        break;
+      }
+    }
+    if (songTitle && achievementText && noteDetails.length) {
+      const baseUrl = document.location.href.substring(
+        0,
+        document.location.href.indexOf(document.location.pathname) + document.location.pathname.length
+      );
+      const query = new URLSearchParams();
+      query.set("st", songTitle);
+      query.set("ac", achievementText);
+      query.set("nd", noteDetails.join("\n"));
+      const newUrl = baseUrl + "?" + query;
+      console.log(newUrl);
+      window.location.assign(newUrl);
+    }
   });
 
   // Handle parameters from URL
   const searchParams = new URLSearchParams(document.location.search);
   if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) {
     const songTitle = searchParams.get("st");
-    const achievement = searchParams.get("ac");
+    const achievementText = searchParams.get("ac");
     const noteDetail = searchParams.get("nd");
-    if (songTitle && achievement && noteDetail) {
+    if (songTitle && achievementText && noteDetail) {
       document.getElementById("inputContainer").style.display = "none";
       document.title = `${songTitle} - ${document.title}`;
-      const inputText = `${songTitle}\n${achievement}\n${noteDetail}\n`;
-      performConversion(inputText);
-      inputElem.value = inputText;
+      const achievement = parseFloat(achievementText);
+      const judgements = parseJudgement(noteDetail.split("\n"));
+      performConversion(songTitle, achievement, judgements);
     }
   }
 })();

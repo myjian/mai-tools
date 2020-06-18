@@ -30,11 +30,11 @@ hr {
   margin-bottom: 6px;
 }
 
-table.resultTable {
-  margin-top: 20px;
+.playerAchievement {
+  margin-bottom: 20px;
 }
 
-table.resultTable, table.infoTable, #borderTable {
+#resultTable, table.infoTable, #scoreDiffTable, #achievementLossTable {
   border: 2px solid #3e9cf5;
   border-radius: 4px;
   border-collapse: separate;
@@ -66,8 +66,18 @@ tr.tap, tr.slide, tr.break {
   background-color: #e1f1f9;
 }
 
-table.resultTable td {
-  width: 75px;
+th.achievementLoss {
+  width: 100px;
+}
+
+td.achievementLoss {
+  text-align: right;
+  padding-right: 4px;
+  color: rgb(153, 128, 255);
+}
+
+#resultTable td {
+  width: 70px;
 }
 
 table.infoTable td {
@@ -78,7 +88,7 @@ tr.break td.break span {
   display: block;
 }
 
-table.resultTable th, table.resultTable td {
+#resultTable th, #resultTable td {
   padding-right: 4px;
 }
 
@@ -96,25 +106,17 @@ tbody td {
   font-weight: bold;
 }
 
-table.resultTable tbody tr td, table.resultTable tbody tr th {
-  text-align: right;
-}
-
-table.infoTable tbody tr td, table.infoTable tbody tr th {
-  text-align: center;
-}
-
 table.infoTable th.maxFinaleScoreLabel {
   width: 80px;
 }
 
-#borderTable th {
-  width: 80px;
+#scoreDiffTable th {
+  width: 50px;
 }
 
-#borderTable td {
-  width: 140px;
+#scoreDiffTable td {
   text-align: right;
+  padding-left: 30px;
   padding-right: 4px;
 }
 
@@ -170,10 +172,98 @@ table.infoTable th.maxFinaleScoreLabel {
   color: rgb(0, 56, 216);
 }
 
-.hidden {
-  display: none;
+h4 {
+  margin-bottom: 6px;
 }
 
 #finaleBorder {
-  margin-bottom: 6px;
+  margin-top: 0;
 }
+
+.deepBlueTopBorder th, .deepBlueTopBorder td {
+  border-top-color: #4e7ae3;
+}
+.deepBlueBottomBorder th, .deepBlueBottomBorder td {
+  border-bottom-color: #4e7ae3;
+}
+
+.scoreGrid {
+   display: grid;
+   grid-template-rows: max-content max-content max-content;
+   grid-template-columns: max-content max-content;
+   row-gap: 20px;
+   column-gap: 20px;
+}
+
+#resultTableContainer {  
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+#achievementLossContainer {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+.scoreDiffContainer {
+  grid-row-start: 3;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+@media only screen and (min-width: 550px) {
+  #achievementLossContainer {
+    grid-column-end: 2;
+  }
+  .scoreDiffContainer {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 2;
+  }
+  #scoreDiffTable {
+    width: 100%;
+  }
+  #finaleBorder {
+    text-align: center;
+    max-width: 200px;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  #resultTableContainer {  
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  #achievementLossContainer {
+    grid-area: 1 / 2 / 3 / 3;
+  }
+  #achievementLossContainer tr.break {
+    height: 46px;
+  }
+  .scoreDiffContainer {
+    display: block;
+    grid-area: 2 / 1 / 4 / 2;
+  }
+  #scoreDiffTable {
+    width: unset;
+  }
+  #finaleBorder {
+    text-align: left;
+    max-width: unset;
+  }
+}
+
+.textAlignRight {
+  text-align: right;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+s

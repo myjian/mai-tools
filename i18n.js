@@ -7,17 +7,22 @@
   const bookmarklet = document.getElementById("bookmarklet");
   const finaleBorder = document.getElementById("finaleBorder");
   const totalNoteCount = document.getElementsByClassName("totalNoteCount")[0];
+  const achievementLossDX = document.querySelector("th.achievementLoss.dx");
+  const achievementLossFinale = document.querySelector("th.achievementLoss.finale");
+  const totalAchievementLoss = document.querySelector(".totalAchievementLossLabel");
 
   if (navigator.language.startsWith("zh")) {
     howtoHeading.innerText = "使用方式";
     chartInfoHeading.innerText = "譜面資訊";
     bookmarklet.innerText = document.title = "換算 maimai DX 成績為 maimai 舊筐成績";
     convertBtn.innerText = "分析";
-    totalNoteCount.innerText = "總計";
+    totalAchievementLoss.innerText = totalNoteCount.innerText = "總計";
     finaleBorder.innerText = "距離下個 Rank 的分數差 (舊版計分方式)";
     achievementSpans.forEach((span) => {
       span.innerText = "達成率";
     });
+    achievementLossDX.innerText = "達成率損失\n(DX)";
+    achievementLossFinale.innerText = "達成率損失\n(舊版)";
     descriptionArea.innerText = `
 使用方式一：自動代入成績
 1. 把網頁下方的連結加入書籤
