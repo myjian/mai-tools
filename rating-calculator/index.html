@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>maimai DX Rating Calculator</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/input-styles.css">
+    <link rel="stylesheet" href="./css/song-record-styles.css">
+    <link rel="stylesheet" href="./css/rank-distributon-styles.css">
+    <link rel="stylesheet" href="./css/footer-styles.css">
+  </head>
+  <body>
+    <div>
+      <h2>譜面定數輸入</h2>
+      <textarea id="innerLvInput"></textarea><br>
+    </div>
+    <div>
+      <h2 class="playerScoreInputHeading">玩家成績輸入</h2>
+      <div>
+        請用
+        <a href="https://gist.github.com/myjian/e161f14b5ab6319a006a221fbed87dd7" target="_blank">
+          此工具</a>
+        下載成績後貼到下方文字框。
+      </div>
+      <textarea id="playerScoreInput"></textarea><br>
+    </div>
+    <div class="actionArea">
+      <button id="calculateRatingBtn">計算 Rating 值</button>
+    </div>
+    <div class="outputArea hidden">
+      <h2>分析結果</h2>
+      <div class="totalRatingRow">Rating： <span id="totalRating"></span></div>
+      <div>DX 譜面 Rating： <span id="dxRating"></span></div>
+      <div>舊譜面 Rating： <span id="finaleRating"></span></div>
+      <div class="ratingObjectDistribution">
+        <h3>Rating 對象曲等級與成績分布</h3>
+        <div class="flexRow">
+          <!-- lrDist = level-rank distribution --> 
+          <table id="lrDistTable">
+            <thead id="lrDistThead"></thead>
+            <tbody id="lrDistTbody"></tbody>
+          </table>
+          <!-- drDist = difficulty-rank distribution --> 
+          <table id="drDistTable">
+            <thead id="drDistThead"></thead>
+            <tbody id="drDistTbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="dxTopSongsContainer">
+        <h3>DX 譜面 Rating 對象曲目 (取最佳 15 首)：</h3>
+        <table id="dxTopSongsTable">
+          <thead id="dxTopSongsThead"></thead>
+          <tbody id="dxTopSongsTbody"></tbody>
+        </table>
+      </div>
+      <div class="finaleTopSongsContainer">
+        <h3>舊譜面 Rating 對象曲目 (取最佳 25 首)：</h3>
+        <table id="finaleTopSongsTable">
+          <thead id="finaleTopSongsThead"></thead>
+          <tbody id="finaleTopSongsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <hr class="hrBeforeFooter">
+    <footer>
+      Made by <a class="authorLink" href="https://github.com/myjian/">myjian</a>.
+    </footer>
+    <script src="./js/shared-constants.js"></script>
+    <script src="./js/inner-lv-parser.js"></script>
+    <script src="./js/player-score-parser.js"></script>
+    <script src="./js/rating-analyzer.js"></script>
+    <script src="./js/score-record-visualizer.js"></script>
+    <script src="./js/rank-distribution-visualizer.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

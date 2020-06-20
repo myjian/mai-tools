@@ -1,0 +1,16 @@
+.hrBeforeFooter {
+  margin-top: 35px;
+}
+
+footer {
+  margin-bottom: 40px;
+}
+
+.authorLink {
+  color: inherit;
+}
+
+.authorLink:visited {
+  color: inherit;
+}
+

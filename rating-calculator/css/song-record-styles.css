@@ -1,0 +1,52 @@
+.dxTopSongsContainer, .finaleTopSongsContainer {
+    margin-top: 35px;
+}
+
+#dxTopSongsTable, #finaleTopSongsTable {
+  border-collapse: collapse;
+}
+
+.scoreRecordCell {
+  border: 1px dotted #111;
+  padding: 4px;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+
+.songTitleCell {
+  max-width: 300px;
+  overflow: hidden;
+  padding-right: 10px;
+}
+
+td.orderCell,
+td.innerLvCell,
+td.achievementCell,
+td.rankFactorCell,
+td.ratingCell {
+  text-align: right;
+}
+
+td.difficultyCell {
+  width: 110px;
+}
+
+td.achievementCell {
+  width: 112px;
+}
+
+td.innerLvCell,
+td.rankFactorCell,
+td.ratingCell {
+  width: 70px;
+}
+
+td.difficultyCell {
+  text-align: center;
+}
+
+td.innerLvCell,
+td.rankFactorCell,
+td.ratingCell {
+  padding-right: 8px;
+}

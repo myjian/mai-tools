@@ -1,0 +1,49 @@
+body {
+  font-family: sans-serif;
+  background-color: #eee;
+}
+
+@media only screen and (min-width: 550px) {
+  body {
+    margin: 20px;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+th {
+  background-color: #dddddd;
+}
+
+.totalRatingRow {
+  font-size: 20px;
+  background-color: #111;
+  display: inline-block;
+  color: #eee;
+  padding: 5px 20px;
+  margin-bottom: 6px;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.advanced {
+  color: #fb9c2d;
+}
+
+.expert {
+  color: #f64861;
+}
+
+.master {
+  color: #9e45e2;
+}
+
+.remaster {
+  color: white;
+  text-shadow: 0 0 5px #c34de5;
+}

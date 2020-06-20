@@ -1,0 +1,23 @@
+textarea {
+  width: 90%;
+  min-height: 200px;
+}
+
+textarea:focus {
+  outline-color: #c179ca;
+}
+
+.playerScoreInputHeading {
+  margin-bottom: 10px;
+}
+
+#calculateRatingBtn {
+  font-size: 28px;
+  padding: 8px 20px;
+  margin-top: 16px;
+  background-color: #ffc542;
+}
+
+#playerScoreInput {
+  margin-top: 20px;
+}

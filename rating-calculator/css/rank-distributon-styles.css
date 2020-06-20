@@ -1,0 +1,34 @@
+#lrDistTable, #drDistTable {
+  border-collapse: collapse;
+}
+
+#drDistTable {
+  margin-left: 70px;
+}
+
+.levelRankCell, .diffRankCell {
+  border: 1px dotted #111;
+  padding: 4px;
+  width: 60px;
+}
+
+td.levelRankCell, td.diffRankCell {
+  text-align: center;
+}
+
+
+.officialLevelCell {
+  width: 40px;
+  padding-right: 8px;
+  text-align: right;
+}
+
+.difficultyRankDistHead {
+  width: 110px;
+}
+
+td.totalCell {
+  color: rgba(0, 0, 0, 0.8);
+  text-shadow: none;
+  width: 80px;
+}
