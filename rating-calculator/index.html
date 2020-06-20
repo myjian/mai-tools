@@ -11,8 +11,11 @@
   </head>
   <body>
     <div>
-      <h2>譜面定數輸入</h2>
-      <textarea id="innerLvInput"></textarea><br>
+      <h2 class="innerLvInputHeading">譜面定數輸入</h2>
+      <div class="innerLvInputDescription">
+        沒有也沒關係。若歌曲找不到對應的譜面定數，會採取該等級最低的譜面定數。例如 Lv10 採用 10.0 計算 (實際範圍是 10.0 - 10.6)，Lv10+ 採用 10.7 (實際範圍是 10.7 - 10.9)，依此類推。
+      </div>
+      <textarea id="innerLvInput"></textarea>
     </div>
     <div>
       <h2 class="playerScoreInputHeading">玩家成績輸入</h2>
@@ -22,7 +25,7 @@
           此工具</a>
         下載成績後貼到下方文字框。
       </div>
-      <textarea id="playerScoreInput"></textarea><br>
+      <textarea id="playerScoreInput"></textarea>
     </div>
     <div class="actionArea">
       <button id="calculateRatingBtn">計算 Rating 值</button>

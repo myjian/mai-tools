@@ -17,6 +17,10 @@ th {
   background-color: #dddddd;
 }
 
+.outputArea {
+  padding-top: 12px;
+}
+
 .totalRatingRow {
   font-size: 20px;
   background-color: #111;

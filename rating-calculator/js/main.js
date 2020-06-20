@@ -93,6 +93,7 @@ document.getElementById("calculateRatingBtn").addEventListener("click", (evt) =>
     
     const outputArea = document.querySelector(".outputArea");
     outputArea.classList.remove("hidden");
+    outputArea.scrollIntoView({behavior: "smooth"});
   });
 });
 

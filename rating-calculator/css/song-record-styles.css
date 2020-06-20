@@ -1,9 +1,10 @@
 .dxTopSongsContainer, .finaleTopSongsContainer {
-    margin-top: 35px;
+  margin-top: 35px;
 }
 
 #dxTopSongsTable, #finaleTopSongsTable {
   border-collapse: collapse;
+  border: 2px solid #999;
 }
 
 .scoreRecordCell {
