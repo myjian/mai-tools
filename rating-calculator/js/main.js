@@ -10,6 +10,7 @@ import {analyzePlayerRating} from './rating-analyzer.js';
 import {renderSongScores} from './score-record-visualizer.js';
 import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from './shared-constants.js';
 import {calculateRankMultipliers} from './quick-lookup.js';
+import {iWantSomeMagic} from './magic.js';
 
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
@@ -38,9 +39,8 @@ function handleGameVersionChange() {
   );
 }
 
-async function readSongProperties() {
-  const processText = (text) => {
-    const lines = text.split("\n");
+function readSongProperties(isDxPlus) {
+  const processText = (lines) => {
     // songPropsByName: song name -> array of song properties
     // most arrays have only 1 entry, but some arrays have more than 1 entries
     // because song name duplicates or it has both DX and Standard charts.
@@ -56,12 +56,18 @@ async function readSongProperties() {
     }
     return songPropsByName;
   };
-  return Promise((resolve) => {
+  return new Promise((resolve) => {
     let linesFromInput = innerLvInput.value.split("\n");
     if (linesFromInput.length > 1) {
       resolve(processText(linesFromInput));
     } else {
-      fetch();
+      console.log("Magic happening...");
+      fetch(iWantSomeMagic(isDxPlus))
+        .then(response => response.text())
+        .then(responseText => {
+          innerLvInput.value = responseText;
+          resolve(processText(responseText.split("\n")));
+        });
     }
   });
 }
@@ -79,16 +85,16 @@ async function readPlayerScoreFromText(text, isDxPlus) {
 }
 
 async function calculateAndShowRating() {
-  const songPropsByName = await readSongProperties();
+  const isDxPlus = getIsDxPlus();
+  console.log(`isDxPlus ${isDxPlus}`);
+  const songPropsByName = await readSongProperties(isDxPlus);
   console.log("Inner Level:");
   console.log(songPropsByName);
   if (songPropsByName.size > 600) {
-    const cacheKey = getIsDxPlus() ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
+    const cacheKey = isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
     writeToCache(cacheKey, innerLvInput.value);
   }
 
-  const isDxPlus = getIsDxPlus();
-  console.log(`isDxPlus ${isDxPlus}`);
   const playerScores = await readPlayerScoreFromText(playerScoreInput.value, isDxPlus);
   console.log("Player Score:");
   console.log(playerScores);

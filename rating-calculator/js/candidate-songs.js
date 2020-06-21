@@ -29,6 +29,9 @@ function getNextRating(record, isDxPlus, ratingThreshold) {
 
 export function getCandidateSongs(songScores, startIndex, isDxPlus) {
   const candidates = [];
+  if (startIndex <= 0) {
+    return candidates;
+  }
   const minRating = songScores[startIndex-1].rating;
   for (let i = startIndex; i < songScores.length; i++) {
     const record = songScores[i]
