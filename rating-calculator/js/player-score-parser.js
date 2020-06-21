@@ -1,7 +1,3 @@
-function getRatingFactor(r, isDxPlus) {
-  return isDxPlus ? r.factorPlus : r.factor;
-}
-
 function getScoreMultiplier(achievement, isDxPlus) {
   // If larger than 100.50, use 100.50.
   achievement = Math.min(achievement, RANK_DEFINITIONS[0].th);

@@ -55,18 +55,17 @@ function _renderRankRatingRow(innerLv, isDxPlus) {
       return true;
     }
     const factor = getRatingFactor(r, isDxPlus);
-    let maxAc = idx > 0 ? arr[idx - 1].th : 101;
+    let maxAc = idx > 0 ? arr[idx - 1].th : 100.5;
     if (idx > 1 && factor === getRatingFactor(arr[idx-1], isDxPlus)) {
       // Deal with double entries of SS+
       // DX plus and DX compatibility is hard :-(
       values.pop();
       maxAc = arr[idx - 2].th;
     }
-    const minMultiplier = getScoreMultiplier(r.th, isDxPlus).multiplier;
-    const maxMultiplier = getScoreMultiplier(maxAc - 0.0001, isDxPlus).multiplier
-    const minRating = Math.floor(innerLv * minMultiplier);
-    const maxRating = Math.floor(innerLv * maxMultiplier);
-    if (minRating !== maxRating) {
+    maxAc -= 0.0001;
+    const minRating = Math.floor(innerLv * r.th * factor / 100);
+    const maxRating = Math.floor(innerLv * maxAc * factor / 100);
+    if (maxRating > minRating) {
       values.push(`${minRating} - ${maxRating}`);
     } else {
       values.push(minRating.toString());

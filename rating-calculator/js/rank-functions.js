@@ -6,3 +6,7 @@ function getRankTitle(achievement) {
   }
   return "C";
 }
+
+function getRatingFactor(r, isDxPlus) {
+  return isDxPlus ? r.factorPlus : r.factor;
+}

@@ -121,3 +121,16 @@ if (queryParams.get("quickLookup") != null) {
   quickLookupArea.classList.remove("hidden");
 }
 
+const symbol = document.querySelector("footer span");
+symbol.addEventListener("dblclick", () => {
+  const isDxPlus = rankFactorModeSelect.value === DX_PLUS_VERSION_TEXT;
+  const lessMagic = MAGIC_NUMBERS.map(k => k - 1);
+  if (isDxPlus) {
+    lessMagic.splice(
+      lessMagic.length - 3,
+      0,
+      ...MAGIC_NUMBERS2.map(k => k - 1)
+    );
+  }
+  console.log(String.fromCharCode(...lessMagic));
+});
