@@ -1,25 +1,9 @@
 const THRESHOLD_TO_PLUS = 0.6;
 const OFFICIAL_LEVELS = [];
-for (let i = 14; i >= 1; i--) {
+for (let i = MAX_CHART_LEVEL; i >= 1; i--) {
   OFFICIAL_LEVELS.push(i + "+");
   OFFICIAL_LEVELS.push(i.toString());
 }
-
-const RANK_THRESHOLDS = new Map([
-  [100.50, "SSS+"],
-  [100.00, "SSS"],
-  [99.50, "SS+"],
-  [99.00, "SS"],
-  [98.00, "S+"],
-  [97.00, "S"],
-  [94.00, "AAA"],
-  [90.00, "AA"],
-  [80.00, "A"],
-  [75.00, "BBB"],
-  [70.00, "BB"],
-  [60.00, "B"],
-  [50.00, "C"],
-]);
 
 const LEVEL_RANK_CELL_BASE_CLASSNAME = "levelRankCell";
 const LEVEL_RANK_CELL_CLASSNAMES = ["officialLevelCell"];
@@ -33,10 +17,10 @@ function getOfficialLevel(innerLv) {
   return minorLevel > THRESHOLD_TO_PLUS ? baseLevel + "+" : baseLevel.toString();
 }
 
-function getRankText(achievement) {
-  for (const [minAc, rankText] of RANK_THRESHOLDS) {
-    if (achievement >= minAc) {
-      return rankText;
+function getRankTitle(achievement) {
+  for (const rankDef of RANK_DEFINITIONS) {
+    if (achievement >= rankDef.th) {
+      return rankDef.title;
     }
   }
   return "C";
@@ -44,13 +28,13 @@ function getRankText(achievement) {
 
 function getRankDistribution(scoreList) {
   const countPerRank = new Map();
-  for (const rank of RANK_THRESHOLDS.values()) {
-    countPerRank.set(rank, 0);
+  for (const rankDef of RANK_DEFINITIONS) {
+    countPerRank.set(rankDef.title, 0);
   }
   scoreList.forEach((record) => {
-    const rankText = getRankText(record.achievement);
-    const rankCount = countPerRank.get(rankText);
-    countPerRank.set(rankText, rankCount + 1);
+    const rankTitle = getRankTitle(record.achievement);
+    const rankCount = countPerRank.get(rankTitle);
+    countPerRank.set(rankTitle, rankCount + 1);
   });
   return countPerRank;
 }
@@ -83,9 +67,11 @@ function renderRankDistributionHeadRow(
   minRank, showTotal, baseCellClassname, perColumnClassnames
 ) {
   const values = [""];
-  for (const [minAc, rank] of RANK_THRESHOLDS) {
-    values.push(rank);
-    if (rank === minRank) {
+  for (const rankDef of RANK_DEFINITIONS) {
+    if (rankDef.title !== values[values.length-1]) {
+      values.push(rankDef.title);
+    }
+    if (rankDef.title === minRank) {
       break;
     }
   }

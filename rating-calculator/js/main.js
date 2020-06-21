@@ -94,6 +94,30 @@ document.getElementById("calculateRatingBtn").addEventListener("click", (evt) =>
     const outputArea = document.querySelector(".outputArea");
     outputArea.classList.remove("hidden");
     outputArea.scrollIntoView({behavior: "smooth"});
+
+    const quickCalculation = document.querySelector(".quickCalculation");
+    quickCalculation.classList.remove("hidden");
   });
 });
 
+const majorLvSelect = document.getElementById("majorLvSelect");
+const minorLvSelect = document.getElementById("minorLvSelect");
+const rankSelect = document.getElementById("rankSelect");
+const chartRatingElem = document.getElementById("chartRating");
+
+function performQuickCalc() {
+  calculateChartRating(
+    majorLvSelect.value,
+    minorLvSelect.value,
+    rankSelect.value,
+    chartRating
+  );
+}
+
+
+initializeQuickCalc(majorLvSelect, minorLvSelect, rankSelect);
+performQuickCalc();
+
+majorLvSelect.addEventListener("change", performQuickCalc);
+minorLvSelect.addEventListener("change", performQuickCalc);
+rankSelect.addEventListener("change", performQuickCalc);

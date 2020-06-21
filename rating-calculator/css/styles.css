@@ -17,7 +17,8 @@ th {
   background-color: #dddddd;
 }
 
-.outputArea {
+#outputHeading {
+  margin-top: 8px;
   padding-top: 12px;
 }
 
@@ -50,4 +51,8 @@ th {
 .remaster {
   color: white;
   text-shadow: 0 0 5px #c34de5;
+}
+
+.sectionSep {
+  margin-top: 35px;
 }

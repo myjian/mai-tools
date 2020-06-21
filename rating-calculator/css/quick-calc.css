@@ -1,0 +1,19 @@
+.lvSelectHeading, .rankSelectCell {
+  width: 100px;
+}
+
+.majorLvCell {
+  text-align: right;
+}
+
+.rankSelectCell {
+  text-align: center;
+}
+
+#majorLvSelect, #minorLvSelect, #rankSelect, .chartRatingCell {
+  font-size: 18px;
+}
+
+#majorLvSelect {
+  text-align: right;
+}
