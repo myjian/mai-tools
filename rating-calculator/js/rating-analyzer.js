@@ -26,7 +26,6 @@ function compareSongRatings(record1, record2) {
 
 function _getDefaultLevel(officialLevel) {
   if (!officialLevel) {
-    console.warn("Level text is missing!");
     return MIN_LEVEL;
   }
   const baseLevel = parseInt(officialLevel);
@@ -36,35 +35,40 @@ function _getDefaultLevel(officialLevel) {
   return hasPlus ? baseLevel + 0.7 : baseLevel;
 }
 
-function _getLvIndex(difficulty) {
-  return DIFFICULTIES.indexOf(difficulty);
+function _getInnerLvFromArray(innerLevels, difficulty) {
+  const lvIndex = DIFFICULTIES.indexOf(difficulty);
+  return innerLevels[lvIndex];
 }
 
+function getSongNickname(songName, genre) {
+  if (songName === "Link") {
+    return genre.includes("niconico") ? "Link(nico)" : "Link(org)"
+  }
+  return songName;
+}
+
+/*
+ * If return value is negative, it means there is no inner lv data for the song.
+ */
 function getChartInnerLevel(innerLvMap, songName, genre, chartType, difficulty, officialLevel) {
-  const lvIndex = _getLvIndex(difficulty);
-  const innerLvArray = innerLvMap.get(songName);
-  if (innerLvArray) {
-    if (innerLvArray.length === 1) {
-      // One match. Most common case.
-      return innerLvArray[0].lv[lvIndex];
-    } else if (songName === "Link") {
-      // Duplicate song names
-      const nickname = genre.includes("niconico") ? "Link(nico)" : "Link(org)";
-      const innerLvData = innerLvArray.find(d => d.nickname === nickname);
-      if (innerLvData) {
-        return innerLvData.lv[lvIndex];
-      }
-    } else {
-      // Song has both DX and Standard charts
+  let innerLvArray = innerLvMap.get(songName);
+  if (innerLvArray && innerLvArray.length) {
+    if (innerLvArray.length > 1) {
+      // Song has multiple charts
       const isDX = chartType === "DX" ? 1 : 0;
-      const innerLvData = innerLvArray.find(d => d.dx === isDX);
-      if (innerLvData) {
-        return innerLvData.lv[lvIndex];
+      innerLvArray = innerLvArray.filter(d => d.dx === isDX);
+      if (innerLvArray.length > 1) {
+        // Duplicate song names
+        const nickname = getSongNickname(songName, genre);
+        innerLvArray = innerLvArray.filter(d => d.nickname === nickname);
       }
     }
+    if (innerLvArray.length === 1) {
+      return _getInnerLvFromArray(innerLvArray[0].lv, difficulty);
+    }
   }
-  console.warn(`Missing inner lv data for ${songName}`);
-  return _getDefaultLevel(officialLevel);
+  // Intentionally make it negative
+  return -_getDefaultLevel(officialLevel);
 }
 
 function analyzeSongRating(innerLvMap, scoreRecord) {
@@ -76,14 +80,26 @@ function analyzeSongRating(innerLvMap, scoreRecord) {
     scoreRecord.difficulty,
     scoreRecord.level
   );
+  const estimate = innerLv < 0;
+  if (estimate) {
+    innerLv = Math.abs(innerLv);
+    let debugName = getSongNickname(scoreRecord.songName, scoreRecord.genre);
+    if (scoreRecord.chartType === "DX") {
+      debugName += "[dx]";
+    }
+    debugName += ` - ${scoreRecord.difficulty} ${scoreRecord.level}`;
+    console.warn(`Missing inner lv data for ${debugName}`);
+  }
+
   return {
     ...scoreRecord,
+    estimate,
     innerLv,
     rating: Math.floor(innerLv * scoreRecord.multiplier),
   };
 }
 
-function analyzePlayerRating(innerLvMap, playerScores) {
+async function analyzePlayerRating(innerLvMap, playerScores) {
   const dxScores = playerScores.reduce((output, record) => {
     if (record.chartType === "DX") {
       const recordWithRating = analyzeSongRating(innerLvMap, record);

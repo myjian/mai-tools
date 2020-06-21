@@ -1,0 +1,22 @@
+.quickLookupHeading {
+  margin-bottom: 10px;
+}
+
+.officialLvSelectContainer {
+  margin-bottom: 20px;
+}
+
+.quickLookupTable {
+  border-collapse: collapse;
+  border: 2px solid #999;
+}
+
+.levelRatingCell {
+  width: 76px;
+  padding: 4px;
+  border: 1px dotted black;
+}
+
+td.levelRatingCell {
+  text-align: center;
+}

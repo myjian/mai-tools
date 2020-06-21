@@ -7,10 +7,17 @@
     <link rel="stylesheet" href="./css/input-styles.css">
     <link rel="stylesheet" href="./css/song-record-styles.css">
     <link rel="stylesheet" href="./css/rank-distributon-styles.css">
-    <link rel="stylesheet" href="./css/quick-calc.css">
+    <link rel="stylesheet" href="./css/quick-lookup.css">
     <link rel="stylesheet" href="./css/footer-styles.css">
   </head>
   <body>
+    <div>
+      <label for="rankFactorMode">遊戲版本：</label>
+      <select id="rankFactorMode">
+        <option value="dx">DX</option>
+        <option value="plus">DX Plus</option>
+      </select>
+    </div>
     <div>
       <h2 class="innerLvInputHeading">譜面定數輸入</h2>
       <div class="innerLvInputDescription">
@@ -35,20 +42,13 @@
     <div class="outputArea hidden">
       <h2 id="outputHeading">分析結果</h2>
       <div class="totalRatingRow">Rating： <span id="totalRating"></span></div>
-      <table>
-        <tbody>
-          <tr>
-            <td>DX 譜面</td>
-            <td>Rating：</td>
-            <td id="dxRating"></td>
-          </tr>
-          <tr>
-            <td>舊譜面</td>
-            <td>Rating：</td>
-            <td id="finaleRating"></td>
-          </tr>
-        <tbody>
-      </table>
+      <div class="ratingOverview">
+        <span>DX 譜面 Rating：</span>
+        <span id="dxRating"></span>
+        <span class="subRatingSeparator">/</span>
+        <span>STANDARD 譜面 Rating：</span>
+        <span id="finaleRating"></span>
+      </div>
       <div class="ratingObjectDistribution">
         <h3>Rating 對象曲等級與成績分布</h3>
         <div class="flexRow">
@@ -72,7 +72,7 @@
         </table>
       </div>
       <div class="finaleTopSongsContainer">
-        <h3>舊譜面 Rating 對象曲目 (取最佳 25 首)：</h3>
+        <h3>STANDARD 譜面 Rating 對象曲目 (取最佳 25 首)：</h3>
         <table id="finaleTopSongsTable">
           <thead id="finaleTopSongsThead"></thead>
           <tbody id="finaleTopSongsTbody"></tbody>
@@ -80,24 +80,15 @@
       </div>
       <hr class="sectionSep">
     </div>
-    <div class="quickCalculation hidden">
-      <h2>計算單曲 R 值</h2>
-      <table class="quickCalculationTable">
-        <thead>
-          <tr>
-            <th class="lvSelectHeading" colspan="2">譜面定數</th>
-            <th class="rankSelectHeading">Rank</th>
-            <th class="chartRatingHeading">Rating 值</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="majorLvCell"><select id="majorLvSelect"></select></td>
-            <td class="minorLvCell">.<select id="minorLvSelect"></select></td>
-            <td class="rankSelectCell"><select id="rankSelect"></select></td>
-            <td class="chartRatingCell" id="chartRating"></td>
-          </tr>
-        </tbody>
+    <div class="quickLookup">
+      <h2 class="quickLookupHeading">查詢單曲 R 值</h2>
+      <div class="officialLvSelectContainer">
+        <label for="officialLvSelect">Level:</label>
+        <select id="officialLvSelect"></select>
+      </div>
+      <table class="quickLookupTable">
+        <thead id="quickLookupThead"></thead>
+        <tbody id="quickLookupTbody"></tbody>
       </table>
       <hr class="sectionSep">
     </div>
@@ -105,12 +96,13 @@
       Made by <a class="authorLink" href="https://github.com/myjian/">myjian</a>.
     </footer>
     <script src="./js/shared-constants.js"></script>
+    <script src="./js/rank-functions.js"></script>
     <script src="./js/inner-lv-parser.js"></script>
     <script src="./js/player-score-parser.js"></script>
     <script src="./js/rating-analyzer.js"></script>
     <script src="./js/score-record-visualizer.js"></script>
     <script src="./js/rank-distribution-visualizer.js"></script>
-    <script src="./js/quick-calc.js"></script>
+    <script src="./js/quick-lookup.js"></script>
     <script src="./js/main.js"></script>
   </body>
 </html>

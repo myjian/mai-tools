@@ -1,11 +1,16 @@
 textarea {
   width: 90%;
-  min-height: 200px;
+  min-height: 140px;
   display: block;
+  padding: 4px;
+  box-sizing: border-box;
 }
 
 textarea:focus {
   outline-color: #c179ca;
+  outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 2px;
 }
 
 .innerLvInputHeading, .playerScoreInputHeading {

@@ -1,7 +1,11 @@
-const queryParams = new URLSearchParams(document.location.search);
-const quickCalcArea = document.querySelector(".quickCalculation");
+const DX_PLUS_VERSION_TEXT = "plus";
 
-function readInnerLvFromText(text) {
+const queryParams = new URLSearchParams(document.location.search);
+const dxVersionQueryParam = queryParams.get("dxVersion");
+const quickLookupArea = document.querySelector(".quickLookup");
+const rankFactorModeSelect = document.getElementById("rankFactorMode");
+
+async function readInnerLvFromText(text) {
   const lines = text.split("\n");
   // innerLvMap: song name -> array of inner lv data
   // most arrays have only 1 entry, but some arrays have more than 1 entries
@@ -16,41 +20,40 @@ function readInnerLvFromText(text) {
       innerLvMap.get(innerLvData.songName).push(innerLvData);
     }
   }
-  console.log("Read inner level done!");
-  console.log(innerLvMap);
   return innerLvMap;
 }
 
-function readPlayerScoreFromText(text) {
+async function readPlayerScoreFromText(text, isDxPlus) {
   const lines = text.split("\n");
   const playerScores = [];
   for (const line of lines) {
-    const scoreRecord = parseScoreLine(line);
+    const scoreRecord = parseScoreLine(line, isDxPlus);
     if (scoreRecord) {
       playerScores.push(scoreRecord);
     }
   }
-  console.log("Read player score is done!");
-  console.log(playerScores);
   return playerScores;
 }
 
-document.getElementById("calculateRatingBtn").addEventListener("click", (evt) => {
+document.getElementById("calculateRatingBtn").addEventListener("click", async (evt) => {
   evt.preventDefault();
-  new Promise((resolve) => {
-    const inputElem = document.getElementById("innerLvInput");
-    resolve(readInnerLvFromText(inputElem.value));
-  }).then((innerLvMap) => {
-    const inputElem = document.getElementById("playerScoreInput");
-    return {
-      innerLvMap,
-      playerScores: readPlayerScoreFromText(inputElem.value),
-    };
-  }).then((param) => {
-    return analyzePlayerRating(param.innerLvMap, param.playerScores);
-  }).then((ratingData) => {
+  const innerLvInput = document.getElementById("innerLvInput");
+  const innerLvMap = await readInnerLvFromText(innerLvInput.value);
+  console.log("Inner Level:");
+  console.log(innerLvMap);
+
+  const isDxPlus = rankFactorModeSelect.value === DX_PLUS_VERSION_TEXT;
+  console.log(`isDxPlus ${isDxPlus}`);
+  const playerScoreInput = document.getElementById("playerScoreInput");
+  const playerScores = await readPlayerScoreFromText(playerScoreInput.value, isDxPlus);
+  console.log("Player Score:");
+  console.log(playerScores);
+
+  if (playerScores.length) {
+    const ratingData = await analyzePlayerRating(innerLvMap, playerScores);
+    console.log("Rating Data:");
     console.log(ratingData);
-    
+      
     const totalRating = document.getElementById("totalRating");
     totalRating.innerText = ratingData.totalRating;
     
@@ -72,52 +75,49 @@ document.getElementById("calculateRatingBtn").addEventListener("click", (evt) =>
       document.getElementById("drDistTbody")
     );
     
-    const dxTopSongsThead = document.getElementById("dxTopSongsThead");
-    dxTopSongsThead.innerHTML = "";
-    dxTopSongsThead.appendChild(renderScoreHeadRow());
-    const dxTopSongsTbody = document.getElementById("dxTopSongsTbody");
-    dxTopSongsTbody.innerHTML = "";
-    ratingData.dxTopScores.forEach((scoreRecord, index) => {
-      dxTopSongsTbody.appendChild(renderScoreRow(scoreRecord, index + 1))
-    });
-
-    const finaleTopSongsThead = document.getElementById("finaleTopSongsThead");
-    finaleTopSongsThead.innerHTML = "";
-    finaleTopSongsThead.appendChild(renderScoreHeadRow());
-    const finaleTopSongsTbody = document.getElementById("finaleTopSongsTbody");
-    finaleTopSongsTbody.innerHTML = "";
-    ratingData.finaleTopScores.forEach((scoreRecord, index) => {
-      finaleTopSongsTbody.appendChild(renderScoreRow(scoreRecord, index + 1))
-    });
+    renderTopScores(
+      ratingData.dxTopScores,
+      document.getElementById("dxTopSongsThead"),
+      document.getElementById("dxTopSongsTbody")
+    );
+    renderTopScores(
+      ratingData.finaleTopScores,
+      document.getElementById("finaleTopSongsThead"),
+      document.getElementById("finaleTopSongsTbody")
+    );
     
     const outputArea = document.querySelector(".outputArea");
     outputArea.classList.remove("hidden");
     outputArea.scrollIntoView({behavior: "smooth"});
-
-    quickCalcArea.classList.remove("hidden");
-  });
+  }
+  quickLookupArea.classList.remove("hidden");
 });
 
-const majorLvSelect = document.getElementById("majorLvSelect");
-const minorLvSelect = document.getElementById("minorLvSelect");
-const rankSelect = document.getElementById("rankSelect");
-const chartRatingElem = document.getElementById("chartRating");
+const officialLvSelect = document.getElementById("officialLvSelect");
 
-function performQuickCalc() {
-  calculateChartRating(
-    majorLvSelect.value,
-    minorLvSelect.value,
-    rankSelect.value,
-    chartRating
+function performQuickLookup() {
+  calculateChartRatings(
+    rankFactorModeSelect.value === DX_PLUS_VERSION_TEXT,
+    officialLvSelect.value,
+    document.getElementById("quickLookupThead"),
+    document.getElementById("quickLookupTbody")
   );
 }
 
-initializeQuickCalc(majorLvSelect, minorLvSelect, rankSelect);
-performQuickCalc();
-majorLvSelect.addEventListener("change", performQuickCalc);
-minorLvSelect.addEventListener("change", performQuickCalc);
-rankSelect.addEventListener("change", performQuickCalc);
-
-if (queryParams.get("showQuickCalc") != null) {
-  quickCalcArea.classList.remove("hidden");
+if (dxVersionQueryParam) {
+  rankFactorModeSelect.value =
+    dxVersionQueryParam === DX_PLUS_VERSION_TEXT
+    ? DX_PLUS_VERSION_TEXT
+    : "dx";
 }
+
+initializeQuickLookup(officialLvSelect);
+performQuickLookup();
+
+rankFactorModeSelect.addEventListener("change", performQuickLookup);
+officialLvSelect.addEventListener("change", performQuickLookup);
+
+if (queryParams.get("quickLookup") != null) {
+  quickLookupArea.classList.remove("hidden");
+}
+

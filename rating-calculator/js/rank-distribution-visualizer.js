@@ -1,10 +1,4 @@
 const THRESHOLD_TO_PLUS = 0.6;
-const OFFICIAL_LEVELS = [];
-for (let i = MAX_CHART_LEVEL; i >= 1; i--) {
-  OFFICIAL_LEVELS.push(i + "+");
-  OFFICIAL_LEVELS.push(i.toString());
-}
-
 const LEVEL_RANK_CELL_BASE_CLASSNAME = "levelRankCell";
 const LEVEL_RANK_CELL_CLASSNAMES = ["officialLevelCell"];
 const DIFF_RANK_CELL_BASE_CLASSNAME = "diffRankCell";
@@ -15,15 +9,6 @@ function getOfficialLevel(innerLv) {
   const baseLevel = Math.floor(innerLv);
   const minorLevel = innerLv - baseLevel;
   return minorLevel > THRESHOLD_TO_PLUS ? baseLevel + "+" : baseLevel.toString();
-}
-
-function getRankTitle(achievement) {
-  for (const rankDef of RANK_DEFINITIONS) {
-    if (achievement >= rankDef.th) {
-      return rankDef.title;
-    }
-  }
-  return "C";
 }
 
 function getRankDistribution(scoreList) {

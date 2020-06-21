@@ -9,12 +9,16 @@ body {
   }
 }
 
-.hidden {
-  display: none;
-}
-
 th {
   background-color: #dddddd;
+}
+
+select, label {
+  font-size: 20px;
+}
+
+.hidden {
+  display: none;
 }
 
 #outputHeading {
@@ -29,6 +33,17 @@ th {
   color: #eee;
   padding: 5px 20px;
   margin-bottom: 6px;
+}
+
+
+.ratingOverview {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.subRatingSeparator {
+  display: inline-block;
+  padding: 0 4px;
 }
 
 .flexRow {

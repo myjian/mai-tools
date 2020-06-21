@@ -7,6 +7,11 @@
   border: 2px solid #999;
 }
 
+.scoreRecordRow:hover {
+  /* TODO: highlight row and column in lookup table */
+  /* background-color: #fffce3; */
+}
+
 .scoreRecordCell {
   border: 1px dotted #111;
   padding: 4px;
@@ -33,13 +38,16 @@ td.difficultyCell {
 }
 
 td.achievementCell {
-  width: 112px;
+  width: 110px;
 }
 
 td.innerLvCell,
-td.rankFactorCell,
 td.ratingCell {
   width: 70px;
+}
+
+td.rankFactorCell {
+  width: 100px;
 }
 
 td.difficultyCell {
