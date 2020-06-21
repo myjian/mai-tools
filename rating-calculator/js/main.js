@@ -1,4 +1,5 @@
-const pageState = {};
+const queryParams = new URLSearchParams(document.location.search);
+const quickCalcArea = document.querySelector(".quickCalculation");
 
 function readInnerLvFromText(text) {
   const lines = text.split("\n");
@@ -15,9 +16,8 @@ function readInnerLvFromText(text) {
       innerLvMap.get(innerLvData.songName).push(innerLvData);
     }
   }
-  pageState.innerLvMap = innerLvMap;
   console.log("Read inner level done!");
-  console.log(pageState.innerLvMap);
+  console.log(innerLvMap);
   return innerLvMap;
 }
 
@@ -30,9 +30,8 @@ function readPlayerScoreFromText(text) {
       playerScores.push(scoreRecord);
     }
   }
-  pageState.playerScores = playerScores;
   console.log("Read player score is done!");
-  console.log(pageState.playerScores);
+  console.log(playerScores);
   return playerScores;
 }
 
@@ -95,8 +94,7 @@ document.getElementById("calculateRatingBtn").addEventListener("click", (evt) =>
     outputArea.classList.remove("hidden");
     outputArea.scrollIntoView({behavior: "smooth"});
 
-    const quickCalculation = document.querySelector(".quickCalculation");
-    quickCalculation.classList.remove("hidden");
+    quickCalcArea.classList.remove("hidden");
   });
 });
 
@@ -114,10 +112,12 @@ function performQuickCalc() {
   );
 }
 
-
 initializeQuickCalc(majorLvSelect, minorLvSelect, rankSelect);
 performQuickCalc();
-
 majorLvSelect.addEventListener("change", performQuickCalc);
 minorLvSelect.addEventListener("change", performQuickCalc);
 rankSelect.addEventListener("change", performQuickCalc);
+
+if (queryParams.get("showQuickCalc") != null) {
+  quickCalcArea.classList.remove("hidden");
+}

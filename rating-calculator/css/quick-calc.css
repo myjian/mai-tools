@@ -1,4 +1,4 @@
-.lvSelectHeading, .rankSelectCell {
+.lvSelectHeading, .rankSelectCell, .chartRatingHeading {
   width: 100px;
 }
 
@@ -6,7 +6,8 @@
   text-align: right;
 }
 
-.rankSelectCell {
+.rankSelectCell,
+.chartRatingCell {
   text-align: center;
 }
 
