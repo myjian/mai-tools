@@ -1,8 +1,8 @@
-.dxTopSongsContainer, .finaleTopSongsContainer {
+.newTopSongsContainer, .oldTopSongsContainer {
   margin-top: 35px;
 }
 
-#dxTopSongsTable, #finaleTopSongsTable {
+#newTopSongsTable, #oldTopSongsTable {
   border-collapse: collapse;
   border: 2px solid #999;
 }
@@ -20,10 +20,28 @@
 }
 
 .songTitleCell {
-  max-width: 300px;
+  width: 300px;
   overflow: hidden;
   padding-right: 10px;
 }
+
+.difficultyCell {
+  width: 110px;
+}
+
+.innerLvCell,
+.ratingCell {
+  width: 70px;
+}
+
+.achievementCell {
+  width: 110px;
+}
+
+.rankFactorCell {
+  width: 100px;
+}
+
 
 td.orderCell,
 td.innerLvCell,
@@ -31,23 +49,6 @@ td.achievementCell,
 td.rankFactorCell,
 td.ratingCell {
   text-align: right;
-}
-
-td.difficultyCell {
-  width: 110px;
-}
-
-td.achievementCell {
-  width: 110px;
-}
-
-td.innerLvCell,
-td.ratingCell {
-  width: 70px;
-}
-
-td.rankFactorCell {
-  width: 100px;
 }
 
 td.difficultyCell {

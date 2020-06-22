@@ -35,3 +35,8 @@ for (let i = MAX_CHART_LEVEL; i >= 1; i--) {
   }
   OFFICIAL_LEVELS.push(i.toString());
 }
+
+const DX_GAME_VERSION = 13;
+const DX_PLUS_GAME_VERSION = 14;
+const NUM_TOP_NEW_SONGS = 15;
+const NUM_TOP_OLD_SONGS = 25;

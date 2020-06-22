@@ -5,22 +5,22 @@ const dxVersionQueryParam = queryParams.get("dxVersion");
 const quickLookupArea = document.querySelector(".quickLookup");
 const rankFactorModeSelect = document.getElementById("rankFactorMode");
 
-async function readInnerLvFromText(text) {
+async function readSongPropsFromText(text) {
   const lines = text.split("\n");
-  // innerLvMap: song name -> array of inner lv data
+  // songPropsByName: song name -> array of song properties
   // most arrays have only 1 entry, but some arrays have more than 1 entries
   // because song name duplicates or it has both DX and Standard charts.
-  const innerLvMap = new Map();
+  const songPropsByName = new Map();
   for (const line of lines) {
     const innerLvData = parseInnerLevelLine(line);
     if (innerLvData) {
-      if (!innerLvMap.has(innerLvData.songName)) {
-        innerLvMap.set(innerLvData.songName, []);
+      if (!songPropsByName.has(innerLvData.songName)) {
+        songPropsByName.set(innerLvData.songName, []);
       }
-      innerLvMap.get(innerLvData.songName).push(innerLvData);
+      songPropsByName.get(innerLvData.songName).push(innerLvData);
     }
   }
-  return innerLvMap;
+  return songPropsByName;
 }
 
 async function readPlayerScoreFromText(text, isDxPlus) {
@@ -38,9 +38,9 @@ async function readPlayerScoreFromText(text, isDxPlus) {
 document.getElementById("calculateRatingBtn").addEventListener("click", async (evt) => {
   evt.preventDefault();
   const innerLvInput = document.getElementById("innerLvInput");
-  const innerLvMap = await readInnerLvFromText(innerLvInput.value);
+  const songPropsByName = await readSongPropsFromText(innerLvInput.value);
   console.log("Inner Level:");
-  console.log(innerLvMap);
+  console.log(songPropsByName);
 
   const isDxPlus = rankFactorModeSelect.value === DX_PLUS_VERSION_TEXT;
   console.log(`isDxPlus ${isDxPlus}`);
@@ -50,20 +50,27 @@ document.getElementById("calculateRatingBtn").addEventListener("click", async (e
   console.log(playerScores);
 
   if (playerScores.length) {
-    const ratingData = await analyzePlayerRating(innerLvMap, playerScores);
+    const gameVersion = isDxPlus ? DX_PLUS_GAME_VERSION : DX_GAME_VERSION;
+    const ratingData = await analyzePlayerRating(
+      songPropsByName,
+      playerScores,
+      gameVersion
+    );
     console.log("Rating Data:");
     console.log(ratingData);
-      
+
     const totalRating = document.getElementById("totalRating");
     totalRating.innerText = ratingData.totalRating;
-    
-    const dxRating = document.getElementById("dxRating");
-    dxRating.innerText = ratingData.dxRating;
 
-    const finaleRating = document.getElementById("finaleRating");
-    finaleRating.innerText = ratingData.finaleRating;
-    
-    const combinedTopScores = [].concat(ratingData.dxTopScores, ratingData.finaleTopScores);
+    const newSongsRating = document.getElementById("newSongsRating");
+    newSongsRating.innerText = ratingData.newSongsRating;
+
+    const oldSongsRating = document.getElementById("oldSongsRating");
+    oldSongsRating.innerText = ratingData.oldSongsRating;
+
+    const newTopScores = ratingData.newSongScores.slice(0, ratingData.newTopSongCount);
+    const oldTopScores = ratingData.oldSongScores.slice(0, ratingData.oldTopSongCount);
+    const combinedTopScores = [].concat(newTopScores, oldTopScores);
     renderRankDistributionPerLevel(
       combinedTopScores,
       document.getElementById("lrDistThead"),
@@ -74,18 +81,18 @@ document.getElementById("calculateRatingBtn").addEventListener("click", async (e
       document.getElementById("drDistThead"),
       document.getElementById("drDistTbody")
     );
-    
+
     renderTopScores(
-      ratingData.dxTopScores,
-      document.getElementById("dxTopSongsThead"),
-      document.getElementById("dxTopSongsTbody")
+      newTopScores,
+      document.getElementById("newTopSongsThead"),
+      document.getElementById("newTopSongsTbody")
     );
     renderTopScores(
-      ratingData.finaleTopScores,
-      document.getElementById("finaleTopSongsThead"),
-      document.getElementById("finaleTopSongsTbody")
+      oldTopScores,
+      document.getElementById("oldTopSongsThead"),
+      document.getElementById("oldTopSongsTbody")
     );
-    
+
     const outputArea = document.querySelector(".outputArea");
     outputArea.classList.remove("hidden");
     outputArea.scrollIntoView({behavior: "smooth"});

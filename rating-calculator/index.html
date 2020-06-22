@@ -43,39 +43,36 @@
       <h2 id="outputHeading">分析結果</h2>
       <div class="totalRatingRow">Rating： <span id="totalRating"></span></div>
       <div class="ratingOverview">
-        <span>DX 譜面 Rating：</span>
-        <span id="dxRating"></span>
-        <span class="subRatingSeparator">/</span>
-        <span>STANDARD 譜面 Rating：</span>
-        <span id="finaleRating"></span>
+        <span>新譜面 Rating：</span>&nbsp;<span id="newSongsRating"></span><br>
+        <span>舊譜面 Rating：</span>&nbsp;<span id="oldSongsRating"></span><br>
       </div>
       <div class="ratingObjectDistribution">
         <h3>Rating 對象曲等級與成績分布</h3>
         <div class="flexRow">
-          <!-- lrDist = level-rank distribution --> 
+          <!-- lrDist = level-rank distribution -->
           <table id="lrDistTable">
             <thead id="lrDistThead"></thead>
             <tbody id="lrDistTbody"></tbody>
           </table>
-          <!-- drDist = difficulty-rank distribution --> 
+          <!-- drDist = difficulty-rank distribution -->
           <table id="drDistTable">
             <thead id="drDistThead"></thead>
             <tbody id="drDistTbody"></tbody>
           </table>
         </div>
       </div>
-      <div class="dxTopSongsContainer">
-        <h3>DX 譜面 Rating 對象曲目 (取最佳 15 首)：</h3>
-        <table id="dxTopSongsTable">
-          <thead id="dxTopSongsThead"></thead>
-          <tbody id="dxTopSongsTbody"></tbody>
+      <div class="newTopSongsContainer">
+        <h3>新譜面 Rating 對象曲目 (取最佳 15 首)：</h3>
+        <table id="newTopSongsTable">
+          <thead id="newTopSongsThead"></thead>
+          <tbody id="newTopSongsTbody"></tbody>
         </table>
       </div>
-      <div class="finaleTopSongsContainer">
-        <h3>STANDARD 譜面 Rating 對象曲目 (取最佳 25 首)：</h3>
-        <table id="finaleTopSongsTable">
-          <thead id="finaleTopSongsThead"></thead>
-          <tbody id="finaleTopSongsTbody"></tbody>
+      <div class="oldTopSongsContainer">
+        <h3>舊譜面 Rating 對象曲目 (取最佳 25 首)：</h3>
+        <table id="oldTopSongsTable">
+          <thead id="oldTopSongsThead"></thead>
+          <tbody id="oldTopSongsTbody"></tbody>
         </table>
       </div>
       <hr class="sectionSep">

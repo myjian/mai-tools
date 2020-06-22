@@ -1,6 +1,4 @@
 const MIN_LEVEL = 1;
-const DX_NUM_TOP_SONGS = 15;
-const FINALE_NUM_TOP_SONGS = 25;
 
 function compareSongRatings(record1, record2) {
   if (record1.rating > record2.rating) {
@@ -29,15 +27,9 @@ function _getDefaultLevel(officialLevel) {
     return MIN_LEVEL;
   }
   const baseLevel = parseInt(officialLevel);
-  const hasPlus = officialLevel.endsWith("+");
   // 9 : 9.0 - 9.6
   // 9+: 9.7 - 9.9
-  return hasPlus ? baseLevel + 0.7 : baseLevel;
-}
-
-function _getInnerLvFromArray(innerLevels, difficulty) {
-  const lvIndex = DIFFICULTIES.indexOf(difficulty);
-  return innerLevels[lvIndex];
+  return officialLevel.endsWith("+") ? baseLevel + 0.7 : baseLevel;
 }
 
 function getSongNickname(songName, genre) {
@@ -47,95 +39,100 @@ function getSongNickname(songName, genre) {
   return songName;
 }
 
-/*
- * If return value is negative, it means there is no inner lv data for the song.
- */
-function getChartInnerLevel(innerLvMap, songName, genre, chartType, difficulty, officialLevel) {
-  let innerLvArray = innerLvMap.get(songName);
-  if (innerLvArray && innerLvArray.length) {
-    if (innerLvArray.length > 1) {
+function getSongProperties(songPropsByName, songName, genre, chartType) {
+  let songPropsArray = songPropsByName.get(songName);
+  if (songPropsArray && songPropsArray.length > 0) {
+    if (songPropsArray.length > 1) {
       // Song has multiple charts
       const isDX = chartType === "DX" ? 1 : 0;
-      innerLvArray = innerLvArray.filter(d => d.dx === isDX);
-      if (innerLvArray.length > 1) {
+      songPropsArray = songPropsArray.filter(d => d.dx === isDX);
+      if (songPropsArray.length > 1) {
         // Duplicate song names
         const nickname = getSongNickname(songName, genre);
-        innerLvArray = innerLvArray.filter(d => d.nickname === nickname);
+        songPropsArray = songPropsArray.filter(d => d.nickname === nickname);
       }
     }
-    if (innerLvArray.length === 1) {
-      return _getInnerLvFromArray(innerLvArray[0].lv, difficulty);
+    if (songPropsArray.length === 1) {
+      return songPropsArray[0];
     }
   }
-  // Intentionally make it negative
-  return -_getDefaultLevel(officialLevel);
+  console.warn(`Could not find song properties for ${songName}`);
+  return null;
 }
 
-function analyzeSongRating(innerLvMap, scoreRecord) {
-  let innerLv = getChartInnerLevel(
-    innerLvMap,
-    scoreRecord.songName,
-    scoreRecord.genre,
-    scoreRecord.chartType,
-    scoreRecord.difficulty,
-    scoreRecord.level
-  );
-  const estimate = innerLv < 0;
-  if (estimate) {
-    innerLv = Math.abs(innerLv);
-    let debugName = getSongNickname(scoreRecord.songName, scoreRecord.genre);
-    if (scoreRecord.chartType === "DX") {
+function analyzeSongRating(record, songProps) {
+  let innerLevel = _getDefaultLevel(record.level);
+  let levelIsEstimate = true;
+  if (songProps) {
+    const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
+    const lv = songProps.lv[lvIndex];
+    if (typeof songProps.lv[lvIndex] === "number") {
+      levelIsEstimate = lv < 0;
+      innerLevel = Math.abs(lv);
+    }
+  }
+  if (levelIsEstimate) {
+    let debugName = getSongNickname(record.songName, record.genre);
+    if (record.chartType === "DX") {
       debugName += "[dx]";
     }
-    debugName += ` - ${scoreRecord.difficulty} ${scoreRecord.level}`;
+    debugName += ` - ${record.difficulty} ${record.level}`;
     console.warn(`Missing inner lv data for ${debugName}`);
   }
 
   return {
-    ...scoreRecord,
-    estimate,
-    innerLv,
-    rating: Math.floor(innerLv * scoreRecord.multiplier),
+    ...record,
+    estimate: levelIsEstimate,
+    innerLv: innerLevel,
+    rating: Math.floor(innerLevel * record.multiplier),
   };
 }
 
-async function analyzePlayerRating(innerLvMap, playerScores) {
-  const dxScores = playerScores.reduce((output, record) => {
-    if (record.chartType === "DX") {
-      const recordWithRating = analyzeSongRating(innerLvMap, record);
-      output.push(recordWithRating);
+async function analyzePlayerRating(songPropsByName, playerScores, gameVersion) {
+  const newSongScores = [];
+  const oldSongScores = [];
+  for (const record of playerScores) {
+    const songProps = getSongProperties(
+      songPropsByName,
+      record.songName,
+      record.genre,
+      record.chartType
+    );
+    let isOldChart = record.chartType === "STANDARD";
+    if (songProps) {
+      // can differentiate between DX & DX Plus
+      isOldChart = songProps.debut !== gameVersion;
     }
-    return output;
-  }, []);
-  
-  const finaleScores = playerScores.reduce((output, record) => {
-    if (record.chartType === "STANDARD") {
-      const recordWithRating = analyzeSongRating(innerLvMap, record);
-      output.push(recordWithRating);
+    const recordWithRating = analyzeSongRating(record, songProps);
+    if (isOldChart) {
+      oldSongScores.push(recordWithRating);
+    } else {
+      newSongScores.push(recordWithRating);
     }
-    return output;
-  }, []);
-  
-  dxScores.sort(compareSongRatings);
-  finaleScores.sort(compareSongRatings);
-  
-  let dxRating = 0;
-  const dxTopSongCount = Math.min(DX_NUM_TOP_SONGS, dxScores.length);
-  for (let i = 0; i < dxTopSongCount ; i++) {
-    dxRating += dxScores[i].rating;
   }
 
-  let finaleRating = 0;
-  const finaleTopSongCount = Math.min(FINALE_NUM_TOP_SONGS, finaleScores.length);
-  for (let i = 0; i < finaleTopSongCount ; i++) {
-    finaleRating += finaleScores[i].rating;
+  newSongScores.sort(compareSongRatings);
+  oldSongScores.sort(compareSongRatings);
+
+  let newSongsRating = 0;
+  const newTopSongCount = Math.min(NUM_TOP_NEW_SONGS, newSongScores.length);
+  for (let i = 0; i < newTopSongCount; i++) {
+    newSongsRating += newSongScores[i].rating;
   }
-  
+
+  let oldSongsRating = 0;
+  const oldTopSongCount = Math.min(NUM_TOP_OLD_SONGS, oldSongScores.length);
+  for (let i = 0; i < oldTopSongCount; i++) {
+    oldSongsRating += oldSongScores[i].rating;
+  }
+
   return {
-    totalRating: dxRating + finaleRating,
-    dxRating,
-    finaleRating,
-    dxTopScores: dxScores.slice(0, dxTopSongCount),
-    finaleTopScores: finaleScores.slice(0, finaleTopSongCount),
+    totalRating: newSongsRating + oldSongsRating,
+    newSongScores,
+    newSongsRating,
+    newTopSongCount,
+    oldSongScores,
+    oldSongsRating,
+    oldTopSongCount,
   };
 }

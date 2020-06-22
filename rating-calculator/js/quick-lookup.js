@@ -70,7 +70,7 @@ function _renderRankRatingRow(innerLv, isDxPlus) {
     } else {
       values.push(minRating.toString());
     }
-    
+
     if (r.title === MIN_RANK_OPTION) {
       return true; // mark done = true
     }

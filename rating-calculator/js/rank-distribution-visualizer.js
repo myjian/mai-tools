@@ -101,7 +101,7 @@ function renderRankDistributionPerLevel(scoreList, thead, tbody) {
     const levelScores = scoresPerLevel.get(officialLv);
     levelScores.push(record);
   });
-  
+
   const overallRankDistribution = getRankDistribution(scoreList);
   let minRank;
   for (const [rank, count] of overallRankDistribution) {
@@ -134,7 +134,7 @@ function renderRankDistributionPerLevel(scoreList, thead, tbody) {
 function renderRankDistributionPerDifficulty(scoreList, thead, tbody) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
-  
+
   const scoresPerDifficulty = new Map();
   const difficultiesFromHardest = [].concat(DIFFICULTIES);
   difficultiesFromHardest.reverse();
@@ -145,7 +145,7 @@ function renderRankDistributionPerDifficulty(scoreList, thead, tbody) {
     const scores = scoresPerDifficulty.get(record.difficulty);
     scores.push(record);
   });
-  
+
   const overallRankDistribution = getRankDistribution(scoreList);
   let minRank;
   for (const [rank, count] of overallRankDistribution) {
