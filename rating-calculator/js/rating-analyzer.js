@@ -66,7 +66,7 @@ function analyzeSongRating(record, songProps) {
   if (songProps) {
     const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
     const lv = songProps.lv[lvIndex];
-    if (typeof songProps.lv[lvIndex] === "number") {
+    if (typeof lv === "number") {
       levelIsEstimate = lv < 0;
       innerLevel = Math.abs(lv);
     }
@@ -84,7 +84,7 @@ function analyzeSongRating(record, songProps) {
     ...record,
     estimate: levelIsEstimate,
     innerLv: innerLevel,
-    rating: Math.floor(innerLevel * record.multiplier),
+    rating: innerLevel * record.multiplier,
   };
 }
 
@@ -117,13 +117,13 @@ async function analyzePlayerRating(songPropsByName, playerScores, gameVersion) {
   let newSongsRating = 0;
   const newTopSongCount = Math.min(NUM_TOP_NEW_SONGS, newSongScores.length);
   for (let i = 0; i < newTopSongCount; i++) {
-    newSongsRating += newSongScores[i].rating;
+    newSongsRating += Math.floor(newSongScores[i].rating);
   }
 
   let oldSongsRating = 0;
   const oldTopSongCount = Math.min(NUM_TOP_OLD_SONGS, oldSongScores.length);
   for (let i = 0; i < oldTopSongCount; i++) {
-    oldSongsRating += oldSongScores[i].rating;
+    oldSongsRating += Math.floor(oldSongScores[i].rating);
   }
 
   return {

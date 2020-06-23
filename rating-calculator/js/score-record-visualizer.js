@@ -46,7 +46,7 @@ function renderScoreRow(record, index) {
       lvText,
       record.achievement.toFixed(4) + "%",
       `${getRankTitle(record.achievement)} (${record.rankFactor})`,
-      record.rating,
+      Math.floor(record.rating),
     ],
     [SCORE_RECORD_ROW_CLASSNAME, DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)],
     false
