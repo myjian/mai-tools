@@ -75,7 +75,6 @@ async function fetchScores(url, scoreList) {
   rows.forEach(row => processRow(row, state));
 }
 
-
 function createOutputElement(container) {
   const dv = document.createElement("div");
   dv.style.position = "relative";
@@ -116,17 +115,17 @@ function createOutputElement(container) {
   return tx
 }
 
-async function fetchAllScores(cache) {
+async function fetchAllScores(cache, onError, onLog) {
   const host = document.location.host;
   if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
-    console.error("請登入 maimai NET");
+    onError("請登入 maimai NET");
     return;
   }
   const scoreList = [];
   for (const [difficulty, url] of SCORE_URLS) {
-    console.log(statusText(difficulty, false));
+    onLog(statusText(difficulty, false));
     await fetchScores(url, scoreList);
-    console.log(statusText(difficulty, true));
+    onLog(statusText(difficulty, true));
   }
   const textareaKey = Symbol.for("outputTextarea");
   if (!cache[textareaKey]) {
@@ -135,7 +134,21 @@ async function fetchAllScores(cache) {
     );
   }
   cache[textareaKey].value = scoreList.join("\n");
-  console.log(statusText("ALL", true));
+  onLog(statusText("ALL", true));
 }
 
-fetchAllScores(window);
+function handleError(msg) {
+  alert(msg);
+}
+
+function handleOutput(msg) {
+  const comment = document.querySelector(".comment_block");
+  if (comment) {
+    comment.innerText = comment.innerText + msg + "\n";
+  }
+  else {
+    console.log(msg);
+  }
+}
+
+fetchAllScores(window, handleError, handleOutput);
