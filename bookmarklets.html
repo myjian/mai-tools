@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9" >
+    <title>maimai 書籤小工具</title>
+    <link rel="stylesheet" href="./bookmarklets.css">
+  </head>
+  <body>
+    <h2>maimai 書籤小工具</h2>
+    <p>以下各標題的連結都是書籤小工具，必須在 maimai NET 上打開才有效果。如果沒使用過書籤小工具，請先閱讀 <a href="#faq">常見問題</a>。</p>
+    <div class="bookmarkletList">
+      <div class="bookmarklet">
+        <div class="bookmarkletText">
+          <h3 class="bookmarkletTitle">
+            <a href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>換算 maimai DX 成績為 maimai 舊版成績</a>
+          </h3>
+          <ul>
+            <li>功能：可轉換 DX 分數為舊版計分方式。</li>
+            <li>使用方式：登入 maimai DX NET，打開一個最近打過的歌曲成績之後執行。執行後會開啟新分頁，顯示舊版成績以及相關數據。</li>
+          </ul>
+        </div>
+        <div class="bookmarkletImage">        
+          <a href="./screenshots/convert-to-finale-score-20200630.png">
+            <img class="screenshot" alt="screenshot" src="./screenshots/convert-to-finale-score-20200630.png">
+          </a>
+        </div>
+      </div>
+      <div class="bookmarklet">
+        <div class="bookmarkletText">
+          <h3 class="bookmarkletTitle">
+            <a href='javascript:(function(d){if ((d.location.host==="maimaidx-eng.com" || d.location.host==="maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/music")){var s=d.createElement("script"); s.type=module"; s.src="https://myjian.github.io/mai-tools/scripts/score-sort.js"; d.head.appendChild(s); }})(document)'>排序 maimai NET 成績</a>
+          </h3>
+          <ul>
+            <li>功能：可依照等級、Rank、AP/FC 狀態排序成績。</li>
+            <li>使用方式：於查詢成績頁面執行。執行完後畫面上會出現選單，可按自己喜歡的方式排序。</li>
+          </ul>
+        </div>
+        <div class="bookmarkletImage">        
+          <a href="./screenshots/score-sort-20200630.png">
+            <img class="screenshot" alt="screenshot" src="./screenshots/score-sort-20200630.png">
+          </a>
+        </div>
+      </div>
+      <div class="bookmarklet">
+        <div class="bookmarkletText">
+          <h3 class="bookmarkletTitle">
+            <a href='javascript:(function(d){if (d.location.host==="maimaidx-eng.com" || d.location.host==="maimaidx.jp") {var s=d.createElement("script"); s.type="text/javascript"; s.src="https://myjian.github.io/mai-tools/scripts/score-download.js"; d.head.appendChild(s);})(document)'>下載 maimai 所有歌曲成績</a>
+          </h3>
+          <ul>
+            <li>功能：下載所有白譜、紫譜、紅譜、黃譜的成績。可用於個人紀錄或是 R 值分析。</li>
+            <li>使用方式：於 maimai NET 登入後的首頁執行。執行完後畫面會出現文字框，按下下方的按鈕就能複製所有成績。複製後可貼到 Excel、Google 試算表，或是
+              <a href="/mai-tools/rating-calculator/" target="_blank">R 值分析工具</a>。
+            </li>
+          </ul>
+        </div>
+        <div class="bookmarkletImage">        
+          <a href="./screenshots/score-download-20200630.png">
+            <img class="screenshot" alt="screenshot" src="./screenshots/score-download-20200630.png">
+          </a>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div>
+      <h2 id="faq">常見問題</h2>
+      <h3>● 在電腦上怎麼新增和使用書籤？</h3>
+      <div><p>直接把連結拖曳到書籤列就能新增書籤。使用時，先開啟最近遊玩的其中一首歌曲紀錄，再點擊書籤。</p></div>
+      <h3>● 在手機上怎麼新增書籤？</h3>
+      <div>
+        <p>最簡單的方式，是先在電腦上新增書籤，再同步到手機上。如果不方便用電腦，請依照你使用的瀏覽器參考以下步驟。</p>
+        <p>Chrome:</p>
+        <ol>
+          <li>長按並複製連結網址</li>
+          <li>打開瀏覽器右上角的選單，按星星把此頁加入書籤</li>
+          <li>畫面下方會顯示「已加入書籤」，點右邊「編輯」</li>
+          <li>把網址完全刪除，並貼上剛才複製的連結</li>
+        </ol>
+
+        <p>Firefox:</p>
+        <ol>
+          <li>長按連結</li>
+          <li>選取「將鏈結加入書籤」</li>
+        </ol>
+      </div>
+
+      <h3>● 在手機上怎麼使用書籤？</h3>
+      <div>
+        <p>Chrome:</p>
+        <ol>
+          <li>開啟成績頁面後，點網址欄</li>
+          <li>把原本的網址刪除，再打「換算」</li>
+          <li>找到剛才新增的書籤（網址開頭應該要是 javascript），點下去。</li>
+        </ol>
+
+        <p>Firefox:</p>
+        <ol>
+          <li>開啟成績頁面後，點網址欄</li>
+          <li>選「行動書籤」</li>
+          <li>找到剛才新增的書籤，點下去。</li>
+        </ol>
+      </div>
+    </div>
+  </body>
+</html>

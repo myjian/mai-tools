@@ -1,6 +1,7 @@
 body {
   background-color: #51bcf3;
   font-family: sans-serif;
+  padding: 10px;
 }
 
 hr {
@@ -21,13 +22,17 @@ hr {
 	margin-top: 6px;
 }
 
+#inputContainer {
+  margin-bottom: 20px;
+}
+
 .output {
-  margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .songTitleHeading {
   margin-bottom: 6px;
+  margin-top: 0;
 }
 
 .playerAchievement {

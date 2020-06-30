@@ -1,0 +1,55 @@
+html {
+  background-color: #e9faff;
+}
+
+body {
+  margin: 0 0 30px;
+  padding: 4px 24px;
+  font-family: sans-serif;
+  max-width: 800px;
+}
+
+.bookmarkletTitle {
+  padding-top: 18px;
+  margin: 0;
+}
+
+.screenshot {
+  max-width: 100%;
+}
+
+.bookmarklet {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.bookmarkletText {
+  padding-right: 12px;
+  flex-basis: 380px;
+  flex-shrink: 0;
+  flex-grow: 1;
+}
+
+.bookmarkletImage {
+  padding-top: 20px;
+  flex-basis: 250px;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+@media only screen and (max-width: 630px) {
+  .bookmarklet {
+    flex-direction: column;
+  }
+  .bookmarkletText, .bookmarkletImage {
+    flex-basis: auto;
+  }
+  .bookmarkletImage {
+    align-self: center;
+  }
+  .screenshot {
+    max-width: 300px;
+  }
+
+}
