@@ -87,11 +87,34 @@ function getRankTitle(row) {
   return lowercaseRank.replace("p", "+").toUpperCase();
 }
 
+function getAchievement(row) {
+  const elem = row.querySelector(".music_score_block.w_120");
+  return elem ? parseFloat(elem.innerText) : elem;
+}
+
+function compareAchievement(row1, row2) {
+  const ach1 = getAchievement(row1), ach2 = getAchievement(row2);
+  if (ach1 === null && ach2 === null) {
+    return 0;
+  } else if (ach2 === null) {
+    return -1;
+  } else if (ach1 === null) {
+    return 1;
+  }
+  return ach1 > ach2 ? -1 : ach1 < ach2 ? 1 : 0;
+}
+
 function sortRowsByRank(rows, reverse) {
   const map = createMap(RANK_TITLES, reverse);
   rows.forEach(row => {
     const rank = getRankTitle(row);
     map.get(rank).push(row);
+  });
+  map.forEach((subRows, key) => {
+    subRows.sort(compareAchievement);
+    if (reverse) {
+      subRows.reverse();
+    }
   });
   return createRowsWithSection(map, "RANK", rows.length);
 }
@@ -204,5 +227,7 @@ function createSortOptions() {
 (function() {
   expandDualChartRows();
   const firstScrewBlock = document.body.querySelector(".main_wrapper.t_c .screw_block");
-  firstScrewBlock.insertAdjacentElement("beforebegin", createSortOptions());
+  if (firstScrewBlock) {
+    firstScrewBlock.insertAdjacentElement("beforebegin", createSortOptions());
+  }
 })();
