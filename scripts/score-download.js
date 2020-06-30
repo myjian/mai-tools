@@ -3,44 +3,44 @@
     ["Re:MASTER", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=4"],
     ["MASTER", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=3"],
     ["EXPERT", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=2"],
-    ["ADVANCED", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"],
+    ["ADVANCED", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"]
   ]);
 
   function statusText(difficulty, end) {
     switch (difficulty) {
       case "Re:MASTER":
-        return end ? "✔ 白譜成績下載完畢！" : "🕓 下載白譜成績中…";
+        return (end ? "✔ 白譜成績下載完畢！" : "🕓 下載白譜成績中…");
       case "MASTER":
-        return end ? "✔ 紫譜成績下載完畢！" : "🕓 下載紫譜成績中…";
+        return (end ? "✔ 紫譜成績下載完畢！" : "🕓 下載紫譜成績中…");
       case "EXPERT":
-        return end ? "✔ 紅譜成績下載完畢！" : "🕓 下載紅譜成績中…";
+        return (end ? "✔ 紅譜成績下載完畢！" : "🕓 下載紅譜成績中…");
       case "ADVANCED":
-        return end ? "✔ 黃譜成績下載完畢！" : "🕓 下載黃譜成績中…";
+        return (end ? "✔ 黃譜成績下載完畢！" : "🕓 下載黃譜成績中…");
       case "ALL":
         return "✅ 全部成績下載完畢，請按網頁上的「複製成績」把資料複製到剪貼簿。";
     }
   }
-  
+
   function getSongName(row) {
     return row.getElementsByClassName("music_name_block")[0].innerText;
   }
-  
+
   function getChartLevel(row) {
     return row.getElementsByClassName("music_lv_block")[0].innerText;
   }
-  
+
   function getChartDifficulty(row) {
     const d = row.children[0].className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();
     return d.indexOf("RE") === 0 ? "Re:MASTER" : d;
   }
-  
+
   function getChartType(row) {
     if (row.id) {
       return row.id.includes("sta_") ? "STANDARD" : "DX";
     }
     return row.children[1].src.includes("_standard") ? "STANDARD" : "DX";
   }
-  
+
   function getAchievement(row) {
     const ach = row.querySelector(".music_score_block.w_120");
     return ach && ach.innerText;
@@ -72,7 +72,7 @@
         difficulty,
         level,
         chartType,
-        achievement,
+        achievement
       ].join("\t"));
     }
   }
@@ -91,10 +91,10 @@
     const dv = document.createElement("div");
     dv.style.position = "relative";
     dv.style.marginBottom = "16px";
-    
+
     const tx = document.createElement("textarea");
     dv.appendChild(tx);
-    
+
     const btn = document.createElement("button");
     btn.innerText = "複製成績";
     btn.style.backgroundColor = "#9f51dc";
@@ -124,7 +124,7 @@
     });
 
     container.appendChild(dv);
-    return tx
+    return tx;
   }
 
   async function fetchAllScores(cache, onError, onLog) {
