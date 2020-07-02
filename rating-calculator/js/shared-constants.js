@@ -1,8 +1,8 @@
-const DIFFICULTIES = [
+export const DIFFICULTIES = [
   "BASIC", "ADVANCED", "EXPERT", "MASTER", "Re:MASTER"
 ];
 
-const DIFFICULTY_CLASSNAME_MAP = new Map([
+export const DIFFICULTY_CLASSNAME_MAP = new Map([
   ["Re:MASTER", "remaster"],
   ["MASTER", "master"],
   ["EXPERT", "expert"],
@@ -10,7 +10,7 @@ const DIFFICULTY_CLASSNAME_MAP = new Map([
 ]);
 
 // threshold, factor, rank
-const RANK_DEFINITIONS = [
+export const RANK_DEFINITIONS = [
   {th: 100.50, factor: 15, factorPlus: 14, title: "SSS+"},
   {th: 100.00, factor: 14, factorPlus: 13.5, title: "SSS"},
   {th: 99.99, factor: 13.5, factorPlus: 13.2, title: "SS+"},
@@ -28,7 +28,7 @@ const RANK_DEFINITIONS = [
 ];
 
 const MAX_CHART_LEVEL = 15;
-const OFFICIAL_LEVELS = [];
+export const OFFICIAL_LEVELS = [];
 for (let i = MAX_CHART_LEVEL; i >= 1; i--) {
   if (i !== MAX_CHART_LEVEL) {
     OFFICIAL_LEVELS.push(i + "+");
@@ -36,7 +36,5 @@ for (let i = MAX_CHART_LEVEL; i >= 1; i--) {
   OFFICIAL_LEVELS.push(i.toString());
 }
 
-const DX_GAME_VERSION = 13;
+export const DX_GAME_VERSION = 13;
 const DX_PLUS_GAME_VERSION = 14;
-const NUM_TOP_NEW_SONGS = 15;
-const NUM_TOP_OLD_SONGS = 25;

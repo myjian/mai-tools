@@ -1,3 +1,6 @@
+import {getRankTitle} from './rank-functions.js';
+import {DIFFICULTY_CLASSNAME_MAP} from './shared-constants.js';
+
 const SCORE_RECORD_ROW_CLASSNAME = "scoreRecordRow";
 const SCORE_RECORD_CELL_BASE_CLASSNAME = "scoreRecordCell";
 const SCORE_RECORD_CELL_CLASSNAMES = [
@@ -53,7 +56,7 @@ function renderScoreRow(record, index) {
   );
 }
 
-function renderTopScores(records, thead, tbody) {
+export function renderTopScores(records, thead, tbody) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
   thead.appendChild(renderScoreHeadRow());

@@ -1,3 +1,7 @@
+import {DIFFICULTIES} from './shared-constants.js';
+
+const NUM_TOP_NEW_SONGS = 15;
+const NUM_TOP_OLD_SONGS = 25;
 const MIN_LEVEL = 1;
 
 function compareSongRatings(record1, record2) {
@@ -88,7 +92,7 @@ function analyzeSongRating(record, songProps) {
   };
 }
 
-async function analyzePlayerRating(songPropsByName, playerScores, gameVersion) {
+export async function analyzePlayerRating(songPropsByName, playerScores, gameVersion) {
   const newSongScores = [];
   const oldSongScores = [];
   for (const record of playerScores) {

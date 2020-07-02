@@ -1,3 +1,7 @@
+import {OFFICIAL_LEVELS, RANK_DEFINITIONS} from './shared-constants.js';
+import {getRatingFactor} from './rank-functions.js';
+import {renderRankDistributionRowHelper} from './rank-distribution-visualizer.js';
+
 const DEFAULT_OFFICIAL_LEVEL_OPTION = "10";
 const MIN_OFFICIAL_LEVEL_OPTION = "7";
 const MIN_RANK_OPTION = "AA";
@@ -38,7 +42,7 @@ function _renderRankRatingHeadRow(isDxPlus) {
       break;
     }
   }
-  return _renderRankDistributionRowHelper(
+  return renderRankDistributionRowHelper(
     values,
     true, // isHeading
     false, // showTotal
@@ -75,7 +79,7 @@ function _renderRankRatingRow(innerLv, isDxPlus) {
       return true; // mark done = true
     }
   }, false);
-  return _renderRankDistributionRowHelper(
+  return renderRankDistributionRowHelper(
     values,
     false, // isHeading
     false, // showTotal
@@ -85,7 +89,7 @@ function _renderRankRatingRow(innerLv, isDxPlus) {
   );
 }
 
-function calculateChartRatings(
+export function calculateChartRatings(
   isDxPlus,
   officialLvText,
   thead,
@@ -104,7 +108,7 @@ function calculateChartRatings(
   }
 }
 
-function initializeQuickLookup(officialLvSelect) {
+export function initializeQuickLookup(officialLvSelect) {
   officialLvSelect.innerHTML = "";
   _getOfficialLvOptions().forEach((option) => {
     officialLvSelect.appendChild(option);

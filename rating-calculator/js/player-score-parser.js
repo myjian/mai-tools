@@ -1,3 +1,6 @@
+import {RANK_DEFINITIONS} from './shared-constants.js';
+import {getRatingFactor} from './rank-functions.js';
+
 function getScoreMultiplier(achievement, isDxPlus) {
   // If larger than 100.50, use 100.50.
   achievement = Math.min(achievement, RANK_DEFINITIONS[0].th);
@@ -12,7 +15,7 @@ function getScoreMultiplier(achievement, isDxPlus) {
   return {factor: 5, multiplier: 5 * achievement / 100};
 }
 
-function parseScoreLine(line, isDxPlus) {
+export function parseScoreLine(line, isDxPlus) {
   const [
     songName,
     genre,

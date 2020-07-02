@@ -1,4 +1,6 @@
-function getRankTitle(achievement) {
+import {RANK_DEFINITIONS} from './shared-constants.js';
+
+export function getRankTitle(achievement) {
   for (const rankDef of RANK_DEFINITIONS) {
     if (achievement >= rankDef.th) {
       return rankDef.title;
@@ -7,6 +9,6 @@ function getRankTitle(achievement) {
   return "C";
 }
 
-function getRatingFactor(r, isDxPlus) {
+export function getRatingFactor(r, isDxPlus) {
   return isDxPlus ? r.factorPlus : r.factor;
 }

@@ -1,3 +1,11 @@
+import {
+  DIFFICULTIES,
+  DIFFICULTY_CLASSNAME_MAP,
+  OFFICIAL_LEVELS,
+  RANK_DEFINITIONS,
+} from './shared-constants.js';
+import {getRankTitle} from './rank-functions.js';
+
 const THRESHOLD_TO_PLUS = 0.6;
 const LEVEL_RANK_CELL_BASE_CLASSNAME = "levelRankCell";
 const LEVEL_RANK_CELL_CLASSNAMES = ["officialLevelCell"];
@@ -24,7 +32,7 @@ function getRankDistribution(scoreList) {
   return countPerRank;
 }
 
-function _renderRankDistributionRowHelper(
+export function renderRankDistributionRowHelper(
   values, isHeading, showTotal, rowClassname, baseCellClassname, perColumnClassnames
 ) {
   const tr = document.createElement("tr");
@@ -63,7 +71,7 @@ function renderRankDistributionHeadRow(
   if (showTotal) {
     values.push("TOTAL");
   }
-  return _renderRankDistributionRowHelper(
+  return renderRankDistributionRowHelper(
     values, true, showTotal, "", baseCellClassname, perColumnClassnames
   );
 }
@@ -83,12 +91,12 @@ function renderRankDistributionRow(
   if (showTotal) {
     values.push(totalCount);
   }
-  return _renderRankDistributionRowHelper(
+  return renderRankDistributionRowHelper(
     values, false, showTotal, rowClassname, baseCellClassname, perColumnClassnames
   );
 }
 
-function renderRankDistributionPerLevel(scoreList, thead, tbody) {
+export function renderRankDistributionPerLevel(scoreList, thead, tbody) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
   
@@ -131,7 +139,7 @@ function renderRankDistributionPerLevel(scoreList, thead, tbody) {
   }
 }
 
-function renderRankDistributionPerDifficulty(scoreList, thead, tbody) {
+export function renderRankDistributionPerDifficulty(scoreList, thead, tbody) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
 
