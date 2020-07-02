@@ -147,5 +147,9 @@
   
   const fr = createIframe();
   document.body.prepend(fr);
-  fetchAllScores(fr, handleError);
+  window.addEventListener("message", (evt) => {
+    if (evt.origin === "https://myjian.github.io/" && evt.data === "ready") {
+      fetchAllScores(fr, handleError);
+    }
+  });
 })();

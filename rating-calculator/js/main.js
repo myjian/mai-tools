@@ -172,7 +172,7 @@ if (queryParams.get("quickLookup") != null) {
 }
 
 window.addEventListener("message", (evt) => {
-  if (event.origin === "https://maimaidx-eng.com/" || event.origin === "https://maimaidx.jp/") {
+  if (evt.origin === "https://maimaidx-eng.com/" || evt.origin === "https://maimaidx.jp/") {
     switch (evt.data.action) {
       case "replacePlayerScore":
         playerScoreInput.value = evt.data.payload;
@@ -184,3 +184,6 @@ window.addEventListener("message", (evt) => {
     }
   }
 });
+
+window.parent.postMessage("ready", "https://maimaidx-eng.com/");
+window.parent.postMessage("ready", "https://maimaidx.jp/");
