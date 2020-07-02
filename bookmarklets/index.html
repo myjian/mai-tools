@@ -13,7 +13,7 @@
       <div class="bookmarklet">
         <div class="bookmarkletText">
           <h3 class="bookmarkletTitle">
-            <a href='javascript:(function(d){if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {var st=d.querySelector(".basic_block.break").childNodes[1].nodeValue, ac=d.querySelector(".playlog_achievement_txt").innerText, nd=d.querySelector(".playlog_notes_detail").innerText; window.open(`https://myjian.github.io/mai-tools/?st=${encodeURIComponent(st)}&ac=${encodeURIComponent(ac)}&nd=${encodeURIComponent(nd)}`, "_blank");}})(document)'>換算 maimai DX 成績為 maimai 舊版成績</a>
+            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js'; d.head.appendChild(s);}})(document);">換算 maimai DX 成績為 maimai 舊版成績</a>
           </h3>
           <ul>
             <li>功能：可轉換 DX 分數為舊版計分方式。</li>
@@ -29,7 +29,7 @@
       <div class="bookmarklet">
         <div class="bookmarkletText">
           <h3 class="bookmarkletTitle">
-            <a href='javascript:(function(d){if ((d.location.host==="maimaidx-eng.com" || d.location.host==="maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/music")){var s=d.createElement("script"); s.type="module"; s.src="https://myjian.github.io/mai-tools/scripts/score-sort.js"; d.head.appendChild(s); }})(document)'>排序 maimai NET 成績</a>
+            <a href="javascript:(function(d){if ((d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp') && d.location.pathname.includes('/maimai-mobile/record/music')){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/score-sort.js'; d.head.appendChild(s); }})(document)">排序 maimai NET 成績</a>
           </h3>
           <ul>
             <li>功能：可依照等級、Rank、AP/FC 狀態排序成績。</li>
@@ -45,7 +45,7 @@
       <div class="bookmarklet" id="scoreDownloader">
         <div class="bookmarkletText">
           <h3 class="bookmarkletTitle">
-            <a href='javascript:(function(d){if(d.location.host==="maimaidx-eng.com" || d.location.host==="maimaidx.jp"){var s=d.createElement("script"); s.type="text/javascript"; s.src="https://myjian.github.io/mai-tools/scripts/score-download.js"; d.head.appendChild(s);}})(document)'>下載 maimai 所有歌曲成績</a>
+            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-download.js'; d.head.appendChild(s);}})(document)">下載 maimai 所有歌曲成績</a>
           </h3>
           <ul>
             <li>功能：下載所有白譜、紫譜、紅譜、黃譜的成績。可用於個人紀錄或是 R 值分析。</li>
@@ -65,7 +65,7 @@
     <div>
       <h2 id="faq">常見問題</h2>
       <h3>● 在電腦上怎麼新增和使用書籤？</h3>
-      <div><p>直接把連結拖曳到書籤列就能新增書籤。使用時，先開啟最近遊玩的其中一首歌曲紀錄，再點擊書籤。</p></div>
+      <div><p>直接把連結拖曳到書籤列就能新增書籤。使用時，先登入 maimai NET 並進入指定的頁面後，再點擊書籤。</p></div>
       <h3>● 在手機上怎麼新增書籤？</h3>
       <div>
         <p>最簡單的方式，是先在電腦上新增書籤，再同步到手機上。如果不方便用電腦，請依照你使用的瀏覽器參考以下步驟。</p>
@@ -88,14 +88,14 @@
       <div>
         <p>Chrome:</p>
         <ol>
-          <li>開啟成績頁面後，點網址欄</li>
+          <li>登入 maimai NET 並進入指定的頁面後，點網址欄</li>
           <li>把原本的網址刪除，再打「換算」</li>
           <li>找到剛才新增的書籤（網址開頭應該要是 javascript），點下去。</li>
         </ol>
 
         <p>Firefox:</p>
         <ol>
-          <li>開啟成績頁面後，點網址欄</li>
+          <li>登入 maimai NET 並進入指定的頁面後，點網址欄</li>
           <li>選「行動書籤」</li>
           <li>找到剛才新增的書籤，點下去。</li>
         </ol>
