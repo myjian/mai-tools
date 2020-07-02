@@ -184,6 +184,3 @@ window.addEventListener("message", (evt) => {
     }
   }
 });
-
-window.parent.postMessage("ready", "https://maimaidx-eng.com/");
-window.parent.postMessage("ready", "https://maimaidx.jp/");
