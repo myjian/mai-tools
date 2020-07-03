@@ -1,6 +1,4 @@
 (function(){
-  const LOCATION_HASH = "#rating-analyzer";
-  
   const SCORE_URLS = new Map([
     ["Re:MASTER", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=4"],
     ["MASTER", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=3"],
@@ -89,12 +87,12 @@
     rows.forEach(row => processRow(row, state));
   }
   
-  function sendAllScoresToIframe(iframe, action, text) {
+  function sendAllScoresToTab(tab, action, text) {
     const obj = {action: action, payload: text};
-    iframe.contentWindow.postMessage(obj, "https://myjian.github.io");
+    tab.postMessage(obj, "https://myjian.github.io");
   }
 
-  async function fetchAllScores(iframe, onError) {
+  async function fetchAllScores(tab, onError) {
     const host = document.location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
       onError("請登入 maimai NET");
@@ -102,11 +100,11 @@
     }
     const scoreList = [];
     for (const [difficulty, url] of SCORE_URLS) {
-      sendAllScoresToIframe(iframe, "appendPlayerScore", statusText(difficulty, false));
+      sendAllScoresToTab(tab, "appendPlayerScore", statusText(difficulty, false));
       await fetchScores(url, scoreList);
-      sendAllScoresToIframe(iframe, "appendPlayerScore", statusText(difficulty, true));
+      sendAllScoresToTab(tab, "appendPlayerScore", statusText(difficulty, true));
     }
-    sendAllScoresToIframe(iframe, "replacePlayerScore", scoreList.join("\n"));
+    sendAllScoresToTab(tab, "replacePlayerScore", scoreList.join("\n"));
   }
 
   function handleError(msg) {
@@ -123,31 +121,11 @@
     }
   }
 
-  function createIframe() {
-    const fr = document.createElement("iframe");
-    document.body.style.overflow = "hidden";
-    fr.style.position = "fixed";
-    fr.style.width = "100vw";
-    fr.style.height = "100vh";
-    fr.style.zIndex = 1000;
-    fr.style.border = "none";
-    fr.src = "https://myjian.github.io/mai-tools/rating-calculator/";
-    window.location.assign("#rating-analyzer");
-    window.addEventListener('hashchange', function() {
-      if (window.location.hash === LOCATION_HASH) {
-        fr.style.display = "block";
-        document.body.style.overflow = "hidden";
-      } else {
-        fr.style.display = "none";
-        document.body.style.overflow = "visible";
-      }
-    });
-    return fr;
-  }
-  
-  const fr = createIframe();
-  document.body.prepend(fr);
-  fr.addEventListener("load", (evt) => {
-    fetchAllScores(fr, handleError);
+  const newtab = window.open(
+    "https://myjian.github.io/mai-tools/rating-calculator/",
+    "maimaiRatingCalculator"
+  );
+  newtab.addEventListener("load", (evt) => {
+    fetchAllScores(newtab, handleError);
   });
 })();

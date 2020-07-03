@@ -179,7 +179,7 @@ window.addEventListener("message", (evt) => {
         calculateAndShowRating();
         break;
       case "appendPlayerScore":
-        playerScoreInput.value += evt.data.payload;
+        playerScoreInput.value += evt.data.payload + "\n";
         break;
     }
   }
