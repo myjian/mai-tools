@@ -90,8 +90,8 @@
   }
   
   function sendAllScoresToIframe(iframe, action, text) {
-    const obj = {action: "insertPlayerScore", payload: text};
-    iframe.contentWindow.postMessage(obj, "https://myjian.github.io/");
+    const obj = {action: action, payload: text};
+    iframe.contentWindow.postMessage(obj, "https://myjian.github.io");
   }
 
   async function fetchAllScores(iframe, onError) {
@@ -106,7 +106,7 @@
       await fetchScores(url, scoreList);
       sendAllScoresToIframe(iframe, "appendPlayerScore", statusText(difficulty, true));
     }
-    sendAllScoresToIframe(iframe, scoreList.join("\n"));
+    sendAllScoresToIframe(iframe, "replacePlayerScore", scoreList.join("\n"));
   }
 
   function handleError(msg) {
