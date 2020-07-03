@@ -1,0 +1,118 @@
+#recordSummary {
+  margin-bottom: 16px;
+}
+
+.playRecordTable {
+  margin-top: 10px;
+  font-size: 14px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background-color: #7ed3ff;
+}
+
+.recordRow {
+  border-top: 1px dotted black;
+}
+
+.recordCell {
+  padding: 2px 1px;
+  user-select: all;
+}
+
+td.recordCell {
+  font-size: 12px;
+}
+
+.recordCell.dateCell {
+  width: 78px;
+}
+
+.recordCell.difficultyCell {
+  width: 74px;
+  word-break: break-all;
+}
+
+.recordCell.achievementCell {
+  width: 75px;
+}
+
+.recordCell.stampsCell {
+  width: 70px;
+}
+
+td.songTitleCell {
+  position: relative;
+  padding-left: 44px;
+  text-align: left;
+  word-break: break-all;
+}
+
+.copyBtnContainer {
+  position: relative;
+  padding: 4px;
+}
+
+.copyBtn {
+  background-color: #9f51dc;
+  border: 2px solid black;
+  border-radius: 5px;
+  color: white;
+  font-weight: 700;
+  padding: 8px 12px;
+}
+
+.copyResult {
+  position: absolute;
+  left: 300px;
+  top: 16px;
+  font-weight: 700;
+  color: #fff000;
+}
+
+.songImg {
+  top: 2px;
+  left: 0;
+  position: absolute;
+  max-width: 38px;
+  max-height: 38px;
+}
+
+.dateOptionLabel {
+  display: block;
+}
+
+.newRecordLabel, .sortByLabel {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.newRecordRadio, .sortByRadio {
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.dateCheckbox[type="checkbox"] {
+  position: static;
+  opacity: 1;
+  margin-right: 6px;
+  width: 10px;
+  height: 10px;
+}
+
+
+.advanced .difficultyCell {
+  color: #fb9c2d;
+}
+
+.expert .difficultyCell {
+  color: #f64861;
+}
+
+.master .difficultyCell {
+  color: #9e45e2;
+}
+
+.remaster .difficultyCell {
+  color: white;
+  text-shadow: -1px -1px 2px #9e45e2, -1px 1px 2px #9e45e2, 1px -1px 2px #9e45e2, 1px 1px 2px #9e45e2;
+}
