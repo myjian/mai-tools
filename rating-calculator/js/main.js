@@ -143,13 +143,13 @@ function performQuickLookup() {
 }
 
 function handleGameVersionChange() {
-  if (innerLvInput.value.length === 0) {
-    const cacheKey = getIsDxPlus() ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
-    const cachedInnerLv = readFromCache(cacheKey);
-    if (cachedInnerLv) {
-      console.log("inner lv read from cache");
-      innerLvInput.value = cachedInnerLv;
-    }
+  const cacheKey = getIsDxPlus() ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
+  const cachedInnerLv = readFromCache(cacheKey);
+  if (cachedInnerLv) {
+    console.log("inner lv read from cache");
+    innerLvInput.value = cachedInnerLv;
+  } else {
+    innerLvInput.value = "";
   }
   performQuickLookup();
 }
@@ -167,7 +167,7 @@ handleGameVersionChange();
 gameVersionSelect.addEventListener("change", handleGameVersionChange);
 officialLvSelect.addEventListener("change", performQuickLookup);
 
-if (queryParams.get("quickLookup") != null) {
+if (queryParams.get("quickLookup")) {
   quickLookupArea.classList.remove("hidden");
 }
 
@@ -186,4 +186,6 @@ if (window.opener) {
       }
     }
   });
-  window.opener.postMessage("ready", "https://maimai
+  window.opener.postMessage("ready", "https://maimaidx-eng.com");
+  window.opener.postMessage("ready", "https://maimaidx.jp");
+}
