@@ -56,7 +56,13 @@ td.difficultyCell {
 }
 
 td.innerLvCell,
-td.rankFactorCell,
+td.achievementCell,
+.topRecordTable td.rankFactorCell,
 td.ratingCell {
   padding-right: 8px;
+}
+
+.candidateTable .rankFactorCell, .candidateTable .ratingCell {
+  width: 70px;
+  text-align: center;
 }

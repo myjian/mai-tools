@@ -44,12 +44,12 @@ function renderScoreRow(record, isCandidate, index) {
   }
   const rankText = (
     isCandidate
-    ? record.nextRank
+    ? Array.from(record.nextRanks.keys()).join("\n")
     :`${getRankTitle(record.achievement)} (${record.rankFactor})`
   );
   const ratingText = (
     isCandidate
-    ? record.nextRating
+    ? Array.from(record.nextRanks.values()).join("\n")
     : Math.floor(record.rating)
   );
   const columns = [

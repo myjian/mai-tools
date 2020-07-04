@@ -1,5 +1,5 @@
-import {OFFICIAL_LEVELS, RANK_DEFINITIONS} from './shared-constants.js';
-import {getRatingFactor} from './rank-functions.js';
+import {OFFICIAL_LEVELS} from './shared-constants.js';
+import {getRankDefinitions} from './rank-functions.js';
 import {renderRankDistributionRowHelper} from './rank-distribution-visualizer.js';
 import {calculateRatingRange} from './rating-functions.js';
 
@@ -30,15 +30,9 @@ function _getOfficialLvOptions() {
 
 function _renderRankRatingHeadRow(isDxPlus) {
   const values = ["Rank\n達成率\n係數"];
-  let lastFactor;
-  for (const r of RANK_DEFINITIONS) {
-    const factor = getRatingFactor(r, isDxPlus);
-    if (factor === lastFactor) {
-      // discard previous value
-      values.pop();
-    }
-    values.push(`${r.title}\n>${r.th}%\n${factor}`)
-    lastFactor = factor;
+  const rankDefs = getRankDefinitions(isDxPlus);
+  for (const r of rankDefs) {
+    values.push(`${r.title}\n>${r.th}%\n${r.factor}`)
     if (r.title === MIN_RANK_OPTION) {
       break;
     }
@@ -55,20 +49,14 @@ function _renderRankRatingHeadRow(isDxPlus) {
 
 function _renderRankRatingRow(innerLv, isDxPlus) {
   const values = [innerLv.toFixed(1)];
-  let lastFactor;
-  for (const r of RANK_DEFINITIONS) {
-    const factor = getRatingFactor(r, isDxPlus);
-    if (factor === lastFactor) {
-      // discard previous value
-      values.pop();
-    }
+  const rankDefs = getRankDefinitions(isDxPlus);
+  for (const r of rankDefs) {
     const [minRating, maxRating] = calculateRatingRange(innerLv, r, isDxPlus);
     if (maxRating > minRating) {
       values.push(`${minRating} - ${maxRating}`);
     } else {
       values.push(minRating.toString());
     }
-    lastFactor = factor;
     if (r.title === MIN_RANK_OPTION) {
       break;
     }

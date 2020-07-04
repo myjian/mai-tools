@@ -2,9 +2,8 @@ import {
   DIFFICULTIES,
   DIFFICULTY_CLASSNAME_MAP,
   OFFICIAL_LEVELS,
-  RANK_DEFINITIONS,
 } from './shared-constants.js';
-import {getRankTitle} from './rank-functions.js';
+import {getRankDefinitions, getRankTitle} from './rank-functions.js';
 
 const THRESHOLD_TO_PLUS = 0.6;
 const LEVEL_RANK_CELL_BASE_CLASSNAME = "levelRankCell";
@@ -21,7 +20,7 @@ function getOfficialLevel(innerLv) {
 
 function getRankDistribution(scoreList) {
   const countPerRank = new Map();
-  for (const rankDef of RANK_DEFINITIONS) {
+  for (const rankDef of getRankDefinitions(true)) {
     countPerRank.set(rankDef.title, 0);
   }
   scoreList.forEach((record) => {
@@ -60,10 +59,8 @@ function renderRankDistributionHeadRow(
   minRank, showTotal, baseCellClassname, perColumnClassnames
 ) {
   const values = [""];
-  for (const rankDef of RANK_DEFINITIONS) {
-    if (rankDef.title !== values[values.length-1]) {
-      values.push(rankDef.title);
-    }
+  for (const rankDef of getRankDefinitions(true)) {
+    values.push(rankDef.title);
     if (rankDef.title === minRank) {
       break;
     }
