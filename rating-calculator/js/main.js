@@ -148,8 +148,6 @@ function handleGameVersionChange() {
   if (cachedInnerLv) {
     console.log("inner lv read from cache");
     innerLvInput.value = cachedInnerLv;
-  } else {
-    innerLvInput.value = "";
   }
   performQuickLookup();
 }
