@@ -171,16 +171,19 @@ if (queryParams.get("quickLookup") != null) {
   quickLookupArea.classList.remove("hidden");
 }
 
-window.addEventListener("message", (evt) => {
-  if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
-    switch (evt.data.action) {
-      case "replacePlayerScore":
-        playerScoreInput.value = evt.data.payload;
-        calculateAndShowRating();
-        break;
-      case "appendPlayerScore":
-        playerScoreInput.value += evt.data.payload + "\n";
-        break;
+if (window.opener) {
+  window.addEventListener("message", (evt) => {
+    console.log(evt.origin, evt.data);
+    if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+      switch (evt.data.action) {
+        case "replacePlayerScore":
+          playerScoreInput.value = evt.data.payload;
+          calculateAndShowRating();
+          break;
+        case "appendPlayerScore":
+          playerScoreInput.value += evt.data.payload + "\n";
+          break;
+      }
     }
-  }
-});
+  });
+  window.opener.postMessage("ready", "https://maimai

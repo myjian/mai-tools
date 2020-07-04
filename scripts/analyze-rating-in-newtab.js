@@ -123,9 +123,14 @@
 
   const newtab = window.open(
     "https://myjian.github.io/mai-tools/rating-calculator/",
-    "maimaiRatingCalculator"
+    "ratingcalc"
   );
-  newtab.addEventListener("load", (evt) => {
-    fetchAllScores(newtab, handleError);
+  window.addEventListener("message", (evt) => {
+    console.log(evt.origin, evt.data);
+    if (evt.origin === "https://myjian.github.io") {
+      if (evt.data === "ready") {
+        fetchAllScores(newtab, handleError);
+      }
+    }
   });
 })();
