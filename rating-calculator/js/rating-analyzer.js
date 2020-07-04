@@ -1,30 +1,10 @@
 import {DIFFICULTIES} from './shared-constants.js';
+import {compareSongsByRating} from './record-comparator.js';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
 const MIN_LEVEL = 1;
 
-function compareSongRatings(record1, record2) {
-  if (record1.rating > record2.rating) {
-    return -1;
-  }
-  if (record2.rating > record1.rating) {
-    return 1;
-  }
-  if (record1.innerLv > record2.innerLv) {
-    return -1;
-  }
-  if (record2.innerLv > record1.innerLv) {
-    return 1;
-  }
-  if (record1.achievement > record2.achievement) {
-    return -1;
-  }
-  if (record2.achievement < record1.achievement) {
-    return 1;
-  }
-  return 0;
-}
 
 function _getDefaultLevel(officialLevel) {
   if (!officialLevel) {
@@ -115,8 +95,8 @@ export async function analyzePlayerRating(songPropsByName, playerScores, gameVer
     }
   }
 
-  newSongScores.sort(compareSongRatings);
-  oldSongScores.sort(compareSongRatings);
+  newSongScores.sort(compareSongsByRating);
+  oldSongScores.sort(compareSongsByRating);
 
   let newSongsRating = 0;
   const newTopSongCount = Math.min(NUM_TOP_NEW_SONGS, newSongScores.length);

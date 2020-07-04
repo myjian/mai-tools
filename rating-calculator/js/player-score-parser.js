@@ -1,17 +1,16 @@
 import {RANK_DEFINITIONS} from './shared-constants.js';
-import {getRatingFactor} from './rank-functions.js';
+import {getRankDefinition, getRatingFactor} from './rank-functions.js';
 
 function getScoreMultiplier(achievement, isDxPlus) {
   // If larger than 100.50, use 100.50.
   achievement = Math.min(achievement, RANK_DEFINITIONS[0].th);
-  for (const r of RANK_DEFINITIONS) {
-    if (achievement >= r.th) {
-      const factor = getRatingFactor(r, isDxPlus);
-      const multiplier = factor * achievement / 100;
-      return {factor, multiplier};
-    }
+  const rank = getRankDefinition(achievement);
+  if (rank) {
+    const factor = getRatingFactor(rank, isDxPlus);
+    const multiplier = factor * achievement / 100;
+    return {factor, multiplier};
   }
-  console.warn(`Could not find score multiplier for achievement ${achievement.toFixed(4)}%`);
+  console.warn(`Could not find rank for achievement ${achievement.toFixed(4)}%`);
   return {factor: 5, multiplier: 5 * achievement / 100};
 }
 

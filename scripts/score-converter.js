@@ -1,7 +1,7 @@
 "use strict";
 (function (d) {
   function trimSpaces(textLine) {
-    return textLine.trim().replaceAll("\t", " ");
+    return textLine.trim().replace(/\t/g, " ");
   }
   if ((d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") && d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")) {
     var st = d.querySelector(".basic_block.break").childNodes[1].nodeValue;

@@ -2,6 +2,7 @@ const YEAR_IN_MILLISECOND = 365 * 24 * 60 * 60 * 1000;
 
 export function readFromCache(key) {
   const rawItem = window.localStorage.getItem(key);
+  console.log('Reading cache[' + key + '] ->', rawItem);
   if (!rawItem) {
     return rawItem;
   }
@@ -15,6 +16,7 @@ export function readFromCache(key) {
 }
 
 export function writeToCache(key, content) {
+  console.log('Updating cache[' + key + ']');
   const item = {date: new Date(), content: content};
   window.localStorage.setItem(key, JSON.stringify(item));
 }

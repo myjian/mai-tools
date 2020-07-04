@@ -1,6 +1,7 @@
 import {OFFICIAL_LEVELS, RANK_DEFINITIONS} from './shared-constants.js';
 import {getRatingFactor} from './rank-functions.js';
 import {renderRankDistributionRowHelper} from './rank-distribution-visualizer.js';
+import {calculateRatingRange} from './rating-functions.js';
 
 const DEFAULT_OFFICIAL_LEVEL_OPTION = "10";
 const MIN_OFFICIAL_LEVEL_OPTION = "7";
@@ -33,7 +34,7 @@ function _renderRankRatingHeadRow(isDxPlus) {
   for (const r of RANK_DEFINITIONS) {
     const factor = getRatingFactor(r, isDxPlus);
     if (factor === lastFactor) {
-      // Remove last value
+      // discard previous value
       values.pop();
     }
     values.push(`${r.title}\n>${r.th}%\n${factor}`)
@@ -54,31 +55,24 @@ function _renderRankRatingHeadRow(isDxPlus) {
 
 function _renderRankRatingRow(innerLv, isDxPlus) {
   const values = [innerLv.toFixed(1)];
-  RANK_DEFINITIONS.reduce((done, r, idx, arr) => {
-    if (done) {
-      return true;
-    }
+  let lastFactor;
+  for (const r of RANK_DEFINITIONS) {
     const factor = getRatingFactor(r, isDxPlus);
-    let maxAc = idx > 0 ? arr[idx - 1].th : 100.5;
-    if (idx > 1 && factor === getRatingFactor(arr[idx-1], isDxPlus)) {
-      // Deal with double entries of SS+
-      // DX plus and DX compatibility is hard :-(
+    if (factor === lastFactor) {
+      // discard previous value
       values.pop();
-      maxAc = arr[idx - 2].th;
     }
-    maxAc -= 0.0001;
-    const minRating = Math.floor(innerLv * r.th * factor / 100);
-    const maxRating = Math.floor(innerLv * maxAc * factor / 100);
+    const [minRating, maxRating] = calculateRatingRange(innerLv, r, isDxPlus);
     if (maxRating > minRating) {
       values.push(`${minRating} - ${maxRating}`);
     } else {
       values.push(minRating.toString());
     }
-
+    lastFactor = factor;
     if (r.title === MIN_RANK_OPTION) {
-      return true; // mark done = true
+      break;
     }
-  }, false);
+  }
   return renderRankDistributionRowHelper(
     values,
     false, // isHeading

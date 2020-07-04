@@ -1,8 +1,8 @@
-.newTopSongsContainer, .oldTopSongsContainer {
+.songRecordsContainer {
   margin-top: 35px;
 }
 
-#newTopSongsTable, #oldTopSongsTable {
+.songRecordTable {
   border-collapse: collapse;
   border: 2px solid #999;
 }
