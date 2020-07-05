@@ -1,9 +1,6 @@
 #resultTable {
   width: 100%;
-}
-
-#resultTable td {
-  min-width: 60px;
+  table-layout: fixed;
 }
 
 #resultTable th:first-child, #resultTable td {
