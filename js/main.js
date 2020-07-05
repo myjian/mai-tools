@@ -360,10 +360,11 @@ if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) 
   const achievementText = searchParams.get("ac");
   const noteDetail = searchParams.get("nd");
   if (songTitle && achievementText && noteDetail) {
-    document.getElementById("inputContainer").style.display = "none";
     document.title = `${songTitle} - ${document.title}`;
     const achievement = parseFloat(achievementText);
     const judgements = parseJudgement(noteDetail.split("\n"));
     performConversion(songTitle, achievement, judgements);
+  } else {
+    document.getElementById("inputContainer").classList.add("hidden");
   }
 }
