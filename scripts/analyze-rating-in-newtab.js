@@ -16,8 +16,6 @@
         return (end ? "✔ 紅譜成績下載完畢！" : "🕓 下載紅譜成績中…");
       case "ADVANCED":
         return (end ? "✔ 黃譜成績下載完畢！" : "🕓 下載黃譜成績中…");
-      case "ALL":
-        return "✅ 全部成績下載完畢，請按網頁上的「複製成績」把資料複製到剪貼簿。";
     }
   }
 
@@ -87,7 +85,7 @@
     rows.forEach(row => processRow(row, state));
   }
   
-  function sendAllScoresToTab(tab, action, text) {
+  function postMessageToTab(tab, action, text) {
     const obj = {action: action, payload: text};
     tab.postMessage(obj, "https://myjian.github.io");
   }
@@ -100,11 +98,15 @@
     }
     const scoreList = [];
     for (const [difficulty, url] of SCORE_URLS) {
-      sendAllScoresToTab(tab, "appendPlayerScore", statusText(difficulty, false));
+      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, false) + "\n");
       await fetchScores(url, scoreList);
-      sendAllScoresToTab(tab, "appendPlayerScore", statusText(difficulty, true));
+      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, true) + "\n");
     }
-    sendAllScoresToTab(tab, "replacePlayerScore", scoreList.join("\n"));
+    postMessageToTab(tab, "replacePlayerScore", "");
+    for (let i = 0; i < scoreList.length; i += 50) {
+      postMessageToTab(tab, "appendPlayerScore", scoreList.slice(i, i + 50).join("\n"));
+    }
+    postMessageToTab(tab, "calculateRating", "");
   }
 
   function handleError(msg) {

@@ -197,10 +197,12 @@ if (window.opener) {
       switch (evt.data.action) {
         case "replacePlayerScore":
           playerScoreInput.value = evt.data.payload;
-          calculateAndShowRating();
           break;
         case "appendPlayerScore":
-          playerScoreInput.value += evt.data.payload + "\n";
+          playerScoreInput.value += evt.data.payload;
+          break;
+        case "calculateRating":
+          calculateAndShowRating();
           break;
       }
     }
