@@ -199,7 +199,7 @@ if (window.opener) {
           playerScoreInput.value = evt.data.payload;
           break;
         case "appendPlayerScore":
-          playerScoreInput.value += evt.data.payload;
+          playerScoreInput.value += evt.data.payload + "\n";
           break;
         case "calculateRating":
           calculateAndShowRating();

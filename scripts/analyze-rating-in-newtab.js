@@ -98,9 +98,9 @@
     }
     const scoreList = [];
     for (const [difficulty, url] of SCORE_URLS) {
-      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, false) + "\n");
+      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, false));
       await fetchScores(url, scoreList);
-      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, true) + "\n");
+      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, true));
     }
     postMessageToTab(tab, "replacePlayerScore", "");
     for (let i = 0; i < scoreList.length; i += 50) {
@@ -124,7 +124,7 @@
   }
 
   const newtab = window.open(
-    "https://myjian.github.io/mai-tools/rating-calculator/",
+    "https://myjian.github.io/mai-tools/rating-calculator/?t="+Math.floor(Date.now()/60000),
     "ratingcalc"
   );
   window.addEventListener("message", (evt) => {
