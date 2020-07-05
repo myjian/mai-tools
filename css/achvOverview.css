@@ -27,6 +27,7 @@
 
 .totalAchievementLoss {
   padding: 0;
+  display: inline-block;
 }
 
 .totalAchievementLoss::before {

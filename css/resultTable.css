@@ -1,8 +1,12 @@
-#resultTable td {
-  width: 70px;
+#resultTable {
+  width: 100%;
 }
 
-#resultTable th, #resultTable td {
+#resultTable td {
+  min-width: 60px;
+}
+
+#resultTable th:first-child, #resultTable td {
   padding-right: 4px;
 }
 
@@ -12,6 +16,7 @@ tr.tap, tr.slide, tr.break {
 
 .criticalPerfect {
   color: #ffbc09;
+  padding: 1px;
 }
 
 .perfect {

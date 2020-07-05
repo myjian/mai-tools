@@ -8,8 +8,9 @@ table.infoTable {
 }
 
 .noteCount td {
-  min-width: 60px;
+  min-width: 51px;
   font-weight: normal;
+  box-sizing: border-box;
 }
 
 .notePercentage td {

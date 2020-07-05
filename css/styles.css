@@ -118,4 +118,7 @@ td.achievementLoss {
   th.achievementLoss {
     max-width: unset;
   }
+  .achievementLoss br {
+    display: none;
+  }
 }

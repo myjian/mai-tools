@@ -20,8 +20,8 @@
     achievementSpans.forEach((span) => {
       span.innerText = "達成率";
     });
-    achievementLossDX.innerText = "達成率損失\n(DX)";
-    achievementLossFinale.innerText = "達成率損失\n(舊版)";
+    achievementLossDX.innerText = "達成率損失\n (DX)";
+    achievementLossFinale.innerText = "達成率損失\n (舊版)";
     descriptionArea.innerText = `
 使用方式一：自動代入成績
 1. 把網頁下方的連結加入書籤
