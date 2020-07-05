@@ -6,7 +6,7 @@ import {SSSPLUS_MIN_ACHIEVEMENT} from './shared-constants.js';
 const CANDIDATE_SONGS_COUNT = 20;
 
 function getNextRating(record, isDxPlus) {
-  const rankDefIdx = getRankIndexByAchievement(record.achievement);
+  const rankDefIdx = getRankIndexByAchievement(record.achievement, isDxPlus);
   if (rankDefIdx <= 0) {
     return [record.rating, record.achievement];
   }

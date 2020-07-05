@@ -8,18 +8,17 @@ import {
 } from './rank-distribution-visualizer.js';
 import {analyzePlayerRating} from './rating-analyzer.js';
 import {renderSongScores} from './score-record-visualizer.js';
-import {DX_GAME_VERSION} from './shared-constants.js';
+import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from './shared-constants.js';
 import {
   calculateChartRatings,
   initializeQuickLookup,
 } from './quick-lookup.js';
 
-const GAME_VERSION_PLUS = "plus";
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
 
 const queryParams = new URLSearchParams(document.location.search);
-const dxVersionQueryParam = queryParams.get("dxVersion");
+const dxVersionQueryParam = queryParams.get("gameVersion");
 const quickLookupArea = document.querySelector(".quickLookup");
 const gameVersionSelect = document.getElementById("gameVersion");
 const innerLvInput = document.getElementById("innerLvInput");
@@ -27,7 +26,7 @@ const playerScoreInput = document.getElementById("playerScoreInput");
 const officialLvSelect = document.getElementById("officialLvSelect");
 
 function getIsDxPlus() {
-  return gameVersionSelect.value === GAME_VERSION_PLUS;
+  return gameVersionSelect.value === DX_PLUS_GAME_VERSION.toString();
 }
 
 function performQuickLookup() {
@@ -43,7 +42,6 @@ function handleGameVersionChange() {
   const cacheKey = getIsDxPlus() ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
   const cachedInnerLv = readFromCache(cacheKey);
   if (cachedInnerLv) {
-    console.log("inner lv read from cache");
     innerLvInput.value = cachedInnerLv;
   }
   performQuickLookup();
@@ -177,9 +175,9 @@ document.getElementById("calculateRatingBtn").addEventListener("click", async (e
 
 if (dxVersionQueryParam) {
   gameVersionSelect.value =
-    dxVersionQueryParam === GAME_VERSION_PLUS
-    ? GAME_VERSION_PLUS
-    : "dx";
+    dxVersionQueryParam === DX_PLUS_GAME_VERSION.toString()
+    ? DX_PLUS_GAME_VERSION
+    : DX_GAME_VERSION;
 }
 
 initializeQuickLookup(officialLvSelect);
