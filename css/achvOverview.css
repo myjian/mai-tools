@@ -1,33 +1,41 @@
 .playerAchievement {
   margin-bottom: 20px;
+  border-collapse: collapse;
 }
 
-.scoreWrapper {
-  margin-bottom: 8px;
+.playerAchievement tr {
+  background-color: transparent;
 }
 
-.playerScore {
-  display: inline-block;
-  width: 94px;
+.playerAchievement td {
+  border-style: none;
+  font-weight: normal;
+}
+
+.scoreWrapper:nth-child(2) td {
+  padding-bottom: 8px;
+}
+
+td.playerScore {
   font-weight: bold;
   position: relative;
+  padding-right: 14px;
 }
 
 .playerScore::after {
   content: "/";
   position: absolute;
+  font-weight: bold;
   right: 0;
 }
 
 .maxAchievement {
-  display: inline-block;
-  width: 92px;
-  margin-left: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .totalAchievementLoss {
   padding: 0;
-  display: inline-block;
 }
 
 .totalAchievementLoss::before {
