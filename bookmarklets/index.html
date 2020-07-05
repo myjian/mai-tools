@@ -9,15 +9,16 @@
   <body>
     <h2>maimai 書籤小工具</h2>
     <p>以下各標題的連結都是書籤小工具，必須在 maimai NET 上打開才有效果。如果沒使用過書籤小工具，請先閱讀 <a href="#faq">常見問題</a>。</p>
+
     <div class="bookmarkletList">
       <div class="bookmarklet">
         <div class="bookmarkletText">
           <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js'; d.head.appendChild(s);}})(document);">換算 maimai DX 成績為 maimai 舊版成績</a>
+            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document);">換算為舊版成績</a>
           </h3>
           <ul>
             <li>功能：可轉換 DX 分數為舊版計分方式。</li>
-            <li>使用方式：登入 maimai DX NET，打開一個最近打過的歌曲成績之後執行。執行後會開啟新分頁，顯示舊版成績以及相關數據。</li>
+            <li>使用方式：登入 maimai NET，點選最近遊玩的其中一筆紀錄後執行。執行後會開啟新分頁，顯示舊版成績以及相關數據。</li>
           </ul>
         </div>
         <div class="bookmarkletImage">
@@ -26,14 +27,15 @@
           </a>
         </div>
       </div>
+
       <div class="bookmarklet">
         <div class="bookmarkletText">
           <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if ((d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp') && d.location.pathname.includes('/maimai-mobile/record/music')){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/score-sort.js'; d.head.appendChild(s); }})(document)">排序 maimai NET 成績</a>
+            <a href="javascript:(function(d){if ((d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp') && d.location.pathname.includes('/maimai-mobile/record/music')){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/score-sort.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">排序 maimai NET 成績</a>
           </h3>
           <ul>
             <li>功能：可依照等級、Rank、AP/FC 狀態排序成績。</li>
-            <li>使用方式：於查詢成績頁面執行。執行完後畫面上會出現選單，可按自己喜歡的方式排序。</li>
+            <li>使用方式：於分類查詢成績頁執行。執行完後畫面上會出現選單，可按自己喜歡的方式排序。</li>
           </ul>
         </div>
         <div class="bookmarkletImage">
@@ -42,10 +44,45 @@
           </a>
         </div>
       </div>
+
+      <div class="bookmarklet">
+        <div class="bookmarkletText">
+          <h3 class="bookmarkletTitle">
+            <a href="javascript:(function(d){if ((d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp') && d.location.pathname==='/maimai-mobile/record/'){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/recent-play-downloader.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">整理最近遊玩紀錄</a>
+          </h3>
+          <ul>
+            <li>功能：以表格方式整理最近的遊玩紀錄，並將遊戲時間修正為當地時間。</li>
+            <li>使用方式：於 maimai NET 的最近成績列表執行。執行後會在頁面中產生表格，可以選取日期和排序。</li>
+          </ul>
+        </div>
+        <div class="bookmarkletImage">
+          <a href="./screenshots/recent-play-summary-20200704.png">
+            <img class="screenshot" alt="screenshot" src="./screenshots/recent-play-summary-20200704.png">
+          </a>
+        </div>
+      </div>
+
+      <div class="bookmarklet">
+        <div class="bookmarkletText">
+          <h3 class="bookmarkletTitle">
+            <a href="javascript:(function(d){if (d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/analyze-rating-in-newtab.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">分析 DX Rating</a>
+          </h3>
+          <ul>
+            <li>功能：可分析玩家的 DX Rating 組成。</li>
+            <li>使用方式：於 maimai NET 任何頁面執行。執行時會開新分頁，載入成績並進行分析。</li>
+          </ul>
+        </div>
+        <div class="bookmarkletImage">
+          <a href="./screenshots/rating-analyzer-20200702.png">
+            <img class="screenshot" alt="screenshot" src="./screenshots/rating-analyzer-20200702.png">
+          </a>
+        </div>
+      </div>
+
       <div class="bookmarklet" id="scoreDownloader">
         <div class="bookmarkletText">
           <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-download.js'; d.head.appendChild(s);}})(document)">下載 maimai 所有歌曲成績</a>
+            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-download.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">下載所有歌曲成績</a>
           </h3>
           <ul>
             <li>功能：下載所有白譜、紫譜、紅譜、黃譜的成績。可用於個人紀錄或是 R 值分析。</li>
@@ -62,6 +99,7 @@
       </div>
     </div>
     <br>
+
     <div>
       <h2 id="faq">常見問題</h2>
       <h3>● 在電腦上怎麼新增和使用書籤？</h3>

@@ -14,7 +14,7 @@
 .levelRatingCell {
   width: 76px;
   padding: 4px;
-  border: 1px dotted black;
+  border: 1px solid #aaa;
 }
 
 td.levelRatingCell {

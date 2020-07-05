@@ -13,7 +13,7 @@
 }
 
 .scoreRecordCell {
-  border: 1px dotted #111;
+  border: 1px solid #aaa;
   padding: 4px;
   font-weight: bold;
   box-sizing: border-box;
