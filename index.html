@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.9" >
     <title>Convert maimai DX score to FiNALE score</title>
     <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/grid.css">
     <link rel="stylesheet" href="./css/achvOverview.css">
     <link rel="stylesheet" href="./css/resultTable.css">
     <link rel="stylesheet" href="./css/scoreDiffTable.css">
@@ -144,43 +145,43 @@
             </tbody>
           </table>
         </div>
+        <div class="chartInfoContainer">
+          <h3 id="chartInfoHeading">Chart info</h3>
+          <table class="infoTable">
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th class="tap">TAP</th>
+                <th class="hold">HOLD</th>
+                <th class="slide">SLIDE</th>
+                <th class="touch touchColumn">TOUCH</th>
+                <th class="break">BREAK</th>
+                <th class="totalNoteCount">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody class="textAlignCenter">
+              <tr class="noteCount">
+                <th>#</th>
+                <td id="tapCount"></td>
+                <td id="holdCount"></td>
+                <td id="slideCount"></td>
+                <td id="touchCount" class="touchColumn"></td>
+                <td id="breakCount"></td>
+                <td id="totalNoteCount"></td>
+              </tr>
+              <tr class="notePercentage">
+                <th>%</th>
+                <td id="pctPerTap"></td>
+                <td id="pctPerHold"></td>
+                <td id="pctPerSlide"></td>
+                <td id="pctPerTouch" class="touchColumn"></td>
+                <td id="pctPerBreak"></td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-    <div class="chartInfoContainer">
-      <h3 id="chartInfoHeading">Chart info</h3>
-      <table class="infoTable">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th class="tap">TAP</th>
-            <th class="hold">HOLD</th>
-            <th class="slide">SLIDE</th>
-            <th class="touch touchColumn">TOUCH</th>
-            <th class="break">BREAK</th>
-            <th class="totalNoteCount">TOTAL</th>
-          </tr>
-        </thead>
-        <tbody class="textAlignCenter">
-          <tr class="noteCount">
-            <th>#</th>
-            <td id="tapCount"></td>
-            <td id="holdCount"></td>
-            <td id="slideCount"></td>
-            <td id="touchCount" class="touchColumn"></td>
-            <td id="breakCount"></td>
-            <td id="totalNoteCount"></td>
-          </tr>
-          <tr class="notePercentage">
-            <th>%</th>
-            <td id="pctPerTap"></td>
-            <td id="pctPerHold"></td>
-            <td id="pctPerSlide"></td>
-            <td id="pctPerTouch" class="touchColumn"></td>
-            <td id="pctPerBreak"></td>
-            <td>&nbsp;</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
     <hr>
     <div class="howto">
