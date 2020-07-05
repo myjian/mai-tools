@@ -1,0 +1,38 @@
+.playerAchievement {
+  margin-bottom: 20px;
+}
+
+.scoreWrapper {
+  margin-bottom: 8px;
+}
+
+.playerScore {
+  display: inline-block;
+  width: 94px;
+  font-weight: bold;
+  position: relative;
+}
+
+.playerScore::after {
+  content: "/";
+  position: absolute;
+  right: 0;
+}
+
+.maxAchievement {
+  display: inline-block;
+  width: 92px;
+  margin-left: 4px;
+}
+
+.totalAchievementLoss {
+  padding: 0;
+}
+
+.totalAchievementLoss::before {
+  content: "( ";
+}
+
+.totalAchievementLoss::after {
+  content: " )";
+}

@@ -1,0 +1,35 @@
+#resultTable td {
+  width: 70px;
+}
+
+#resultTable th, #resultTable td {
+  padding-right: 4px;
+}
+
+tr.tap, tr.slide, tr.break {
+  background-color: #e1f1f9;
+}
+
+.criticalPerfect {
+  color: #ffbc09;
+}
+
+.perfect {
+  color: #ff9d00;
+}
+
+.great {
+  color: #f75ea3;
+}
+
+.good {
+  color: #2fca4c;
+}
+
+.miss {
+  color: #8c8c8c;
+}
+
+tr.break td.break span:not(:last-child)::after {
+  content: "-";
+}

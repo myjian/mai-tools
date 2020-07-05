@@ -1,0 +1,121 @@
+body {
+  background-color: #51bcf3;
+  font-family: sans-serif;
+  padding: 10px;
+}
+
+hr {
+  margin-top: 30px;
+  border-top-style: none;
+  border-bottom: solid 2px #d8d8d8;
+}
+
+tr {
+  background-color: white;
+}
+
+th, td {
+  border: 1px solid #c0e5f7;
+}
+
+th {
+  font-family: sans-serif;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: navy;
+  font-size: 0.9em;
+}
+
+td {
+  font-weight: bold;
+}
+
+h4 {
+  margin-bottom: 6px;
+}
+
+.textAlignRight {
+  text-align: right;
+}
+
+.textAlignCenter {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.input {
+  min-width: 95%;
+  max-width: 500px;
+  height: 10rem;
+}
+
+#convert {
+	padding: 6px 14px;
+	font-size: 20px;
+	margin-top: 6px;
+}
+
+#inputContainer {
+  margin-bottom: 20px;
+}
+
+.output {
+  margin-bottom: 20px;
+}
+
+.songTitleHeading {
+  margin-bottom: 6px;
+  margin-top: 0;
+}
+
+#resultTable, table.infoTable, #scoreDiffTable, #achievementLossTable {
+  border: 2px solid #3e9cf5;
+  border-radius: 4px;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-sizing: border-box;
+}
+
+th.achievementLoss {
+  max-width: 100px;
+}
+
+td.achievementLoss {
+  text-align: right;
+  padding-right: 4px;
+  color: rgb(153, 128, 255);
+}
+
+.scoreGrid {
+   display: grid;
+   grid-template-rows: max-content max-content;
+   grid-template-columns: max-content max-content;
+   row-gap: 20px;
+   column-gap: 10px;
+}
+
+#resultTableContainer {  
+  grid-area: 1 / 1 / 3 / 2;
+}
+
+#achievementLossContainer {
+  grid-area: 1 / 2 / 3 / 3;
+}
+
+@media only screen and (max-width: 780px) {
+  #resultTableContainer {  
+    grid-area: 1 / 1 / 2 / 3;
+  }
+  #achievementLossContainer {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+  #achievementLossTable {
+    width: 100%;
+  }
+  th.achievementLoss {
+    max-width: unset;
+  }
+}

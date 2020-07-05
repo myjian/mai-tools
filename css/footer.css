@@ -1,0 +1,26 @@
+#howtoHeading {
+  margin-bottom: 0;
+}
+
+#description {
+  margin-bottom: 20px;
+}
+
+.footer {
+  height: 3rem;
+  padding-top: 20px;
+}
+
+.credit {
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.credit a {
+  color: rgb(0, 56, 216);
+  text-decoration: none;
+}
+
+.credit a:visited {
+  color: rgb(0, 56, 216);
+}

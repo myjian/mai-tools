@@ -7,3 +7,5 @@ export const BASE_SCORE_PER_TYPE = {
 };
 export const BREAK_BONUS_POINTS = 100;
 export const MAX_BREAK_POINTS = BASE_SCORE_PER_TYPE.break + BREAK_BONUS_POINTS;
+export const STD_NOTE_TYPES = ["tap", "hold", "slide", "break"];
+export const DX_NOTE_TYPES = ["tap", "hold", "slide", "touch", "break"];

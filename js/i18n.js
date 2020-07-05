@@ -7,19 +7,16 @@
   const howtoHeading = document.getElementById("howtoHeading");
   const descriptionArea = document.getElementById("description");
   const bookmarklet = document.getElementById("bookmarklet");
-  const finaleBorder = document.getElementById("finaleBorder");
   const totalNoteCount = document.getElementsByClassName("totalNoteCount")[0];
   const achievementLossDX = document.querySelector("th.achievementLoss.dx");
   const achievementLossFinale = document.querySelector("th.achievementLoss.finale");
-  const totalAchievementLoss = document.querySelector(".totalAchievementLossLabel");
 
   if (navigator.language.startsWith("zh")) {
     howtoHeading.innerText = "使用方式";
     chartInfoHeading.innerText = "譜面資訊";
     bookmarklet.innerText = document.title = "換算 maimai DX 成績為 maimai 舊版成績";
     convertBtn.innerText = "分析";
-    totalAchievementLoss.innerText = totalNoteCount.innerText = "總計";
-    finaleBorder.innerText = "距離下個 Rank 的分數差 (舊版計分方式)";
+    totalNoteCount.innerText = "總計";
     achievementSpans.forEach((span) => {
       span.innerText = "達成率";
     });

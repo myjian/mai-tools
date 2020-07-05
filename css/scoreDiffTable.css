@@ -1,0 +1,20 @@
+#scoreDiffTable {
+  width: 100%;
+}
+
+#scoreDiffTable th {
+  width: 150px;
+  border-right-style: none;
+}
+
+#scoreDiffTable td {
+  text-align: right;
+  border-left-style: none;
+  padding-left: 30px;
+  padding-right: 4px;
+}
+
+.nextRankTitle {
+  padding-right: 16px;
+  opacity: 0.5;
+}

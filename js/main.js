@@ -1,6 +1,14 @@
 'use strict';
-import {BASE_SCORE_PER_TYPE, BREAK_BONUS_POINTS, MAX_BREAK_POINTS} from './constants.js';
+import {
+  BASE_SCORE_PER_TYPE,
+  BREAK_BONUS_POINTS,
+  DX_NOTE_TYPES,
+  MAX_BREAK_POINTS,
+  STD_NOTE_TYPES,
+} from './constants.js';
 import {walkBreakDistributions} from './backtracing.js';
+import {calculateAchvLoss} from './achvLoss.js';
+import {roundFloat} from './formatHelper.js';
 
 const inputElem = document.getElementsByClassName("input")[0];
 const convertBtn = document.getElementById("convert");
@@ -8,8 +16,6 @@ const convertBtn = document.getElementById("convert");
 const WIKI_URL_PREFIX = "https://maimai.fandom.com/zh/wiki/";
 const WIKI_URL_SUFFIX = "?variant=zh-hant";
 
-const STD_NOTE_TYPES = ["tap", "hold", "slide", "break"];
-const DX_NOTE_TYPES = ["tap", "hold", "slide", "touch", "break"];
 const JUDGEMENT_RESULTS = [
   "criticalPerfect",
   "perfect",
@@ -18,16 +24,7 @@ const JUDGEMENT_RESULTS = [
   "miss"
 ];
 const ZERO_JUDGEMENT = [0, 0, 0, 0, 0];
-
 const REGULAR_BASE_SCORE_MULTIPLIER = [1, 1, 0.8, 0.5, 0];
-
-const EPSILON = 0.00011;
-
-
-
-function roundFloat(num, method, unit) {
-  return Math[method](unit * num) / unit;
-}
 
 function calculateBorder(totalBaseScore, breakCount, achievement, playerNoteScore) {
   if (achievement === "AP+") {
@@ -95,25 +92,20 @@ function calculateFinaleScore(
       "Could not find a valid break distribution! Please report the issue to the developer."
     );
     // Assume the worst case
-    breakDistribution = new Map([
-      [MAX_BREAK_POINTS, 0],
-      [2550, 0],
-      [2500, 0],
-      [2000, 0],
-      [1500, 0],
-      [1250, 0],
-      [1000, 0],
-      [0, 0]
-    ]);
     let offset = 0;
     if (breakJudgements.length === JUDGEMENT_RESULTS.length) {
-      breakDistribution.set(MAX_BREAK_POINTS, breakJudgements[0]);
       offset = 1;
     }
-    breakDistribution.set(2500, breakJudgements[offset]);
-    breakDistribution.set(1250, breakJudgements[offset + 1]);
-    breakDistribution.set(1000, breakJudgements[offset + 2]);
-    breakDistribution.set(0, breakJudgements[offset + 3]);
+    breakDistribution = new Map([
+      [MAX_BREAK_POINTS, offset && breakJudgements[0]], // CP
+      [2550, 0], // P
+      [2500, breakJudgements[offset]], // P
+      [2000, 0], // Great
+      [1500, 0], // Great
+      [1250, breakJudgements[offset + 1]], // Great
+      [1000, breakJudgements[offset + 2]], // Good
+      [0, breakJudgements[offset + 3]] // Miss
+    ]);
   }
   
   // Figure out FiNALE achievement
@@ -129,33 +121,13 @@ function calculateFinaleScore(
   const finaleMaxAchievement = roundFloat((100.0 * maxNoteScore) / totalBaseScore, "floor", 100);
   
   // Figure out achievement loss per note type
-  let dxAchievementLoss = 101 - playerAchievement;
-  let finaleAchievementLoss = finaleMaxAchievement - finaleAchievement;
-  const achievementLossPerType = {
-    dx: new Map([["total", dxAchievementLoss && dxAchievementLoss.toFixed(4)]]),
-    finale: new Map([
-      [
-        "total",
-        finaleAchievementLoss && finaleAchievementLoss.toFixed(2)
-      ]
-    ]),
-  };
-  DX_NOTE_TYPES.forEach((noteType) => {
-    if (noteType === "break") {
-      return;
-    }
-    const loss = 100.0 * (lostScorePerType[noteType] || 0) / totalBaseScore;
-    let dxLoss = dxAchievementLoss - loss <= EPSILON ? dxAchievementLoss : loss;
-    dxLoss = roundFloat(dxLoss, "round", 10000);
-    dxAchievementLoss -= dxLoss;
-    achievementLossPerType.dx.set(noteType, dxLoss && dxLoss.toFixed(4));
-    let finaleLoss = finaleAchievementLoss - loss <= EPSILON ? finaleAchievementLoss : loss;
-    finaleLoss = roundFloat(finaleLoss, "round", 100);
-    finaleAchievementLoss -= finaleLoss;
-    achievementLossPerType.finale.set(noteType, finaleLoss && finaleLoss.toFixed(2));
-  });
-  achievementLossPerType.dx.set("break", dxAchievementLoss && dxAchievementLoss.toFixed(4));
-  achievementLossPerType.finale.set("break", finaleAchievementLoss && finaleAchievementLoss.toFixed(2));
+  const achvLossPerType = calculateAchvLoss(
+    playerAchievement,
+    finaleAchievement,
+    finaleMaxAchievement,
+    totalBaseScore,
+    lostScorePerType
+  );
 
   // Figure out score diff vs. higher ranks
   console.log(`totalBaseScore ${totalBaseScore}`);
@@ -168,13 +140,25 @@ function calculateFinaleScore(
     ["SSS", calculateBorder(totalBaseScore, totalBreakCount, 1, playerNoteScore)],
     ["AP+", calculateBorder(totalBaseScore, totalBreakCount, "AP+", playerNoteScore)],
   ]);
-  
+
+  // Figure out percentage per note
+  const pctPerNoteType = new Map();
+  const pctPerTap = 100 * 500 / totalBaseScore;
+  const bonusPctPerBreak = 1 / totalBreakCount;
+  pctPerNoteType.set("tap", pctPerTap);
+  pctPerNoteType.set("hold", pctPerTap * 2);
+  pctPerNoteType.set("slide", pctPerTap * 3);
+  pctPerNoteType.set("touch", pctPerTap);
+  pctPerNoteType.set("breakDx", pctPerTap * 5 + bonusPctPerBreak);
+  pctPerNoteType.set("break", pctPerTap * 5.2);
+
   return [
     finaleAchievement,
     finaleMaxAchievement,
     breakDistribution,
-    achievementLossPerType,
+    achvLossPerType,
     border,
+    pctPerNoteType
   ];
 }
 
@@ -202,10 +186,12 @@ function performConversion(songTitle, achievement, judgements) {
       const playerJ = judgementsPerType.get(noteType) || [];
       const noteCount = playerJ.reduce((acc, c) => acc + c, 0);
       if (noteType === "touch") {
-        document.querySelector(`th.${noteType}`).style.display = noteCount === 0 ? "none" : "";
-        document.querySelector(`td.${noteType}Count`).style.display = noteCount === 0 ? "none" : "";
+        const displayValue = noteCount === 0 ? "none" : "";
+        document.querySelectorAll(".touchColumn").forEach((elem) => {
+          elem.style.display = displayValue;
+        });
       }
-      document.querySelector(`td.${noteType}Count`).innerText = noteCount;
+      document.getElementById(`${noteType}Count`).innerText = noteCount;
       return combo + noteCount;
     }, 0);
     document.getElementById("totalNoteCount").innerText = totalNoteCount;
@@ -217,6 +203,7 @@ function performConversion(songTitle, achievement, judgements) {
       breakDistribution,
       achievementLossPerType,
       border,
+      pctPerNoteType,
     ] = calculateFinaleScore(
       judgementsPerType,
       achievement
@@ -224,9 +211,7 @@ function performConversion(songTitle, achievement, judgements) {
     
     // Update player score table UI
     document.getElementById("finaleScore").innerText = finaleAchievement.toFixed(2);
-    document.querySelectorAll(".maxFinaleScore").forEach((elem) => {
-      elem.innerText = maxFinaleScore.toFixed(2);
-    });
+    document.getElementById("maxFinaleScore").innerText = maxFinaleScore.toFixed(2);
     judgementsPerType.forEach((playerJ, noteType) => {
       if (noteType === "break") {
         return;
@@ -245,37 +230,66 @@ function performConversion(songTitle, achievement, judgements) {
       const tableCell = document.querySelector(`span.break${score}`);
       tableCell.innerText = count;
     });
-    
+
+    // Update border info UI
+    const scoreDiffTable = document.getElementById("scoreDiffTable");
+    const scoreDiffTbody = scoreDiffTable.querySelector("tbody");
+    scoreDiffTbody.innerHTML = "";
+    let th = null;
+    let rowCount = 0;
+    border.forEach((score, rank) => {
+      if (score > 0 && !th) {
+        const tr = document.createElement("tr");
+        th = document.createElement("th");
+        th.innerText = "NEXT RANK";
+        tr.append(th);
+        const td = document.createElement("td");
+        const rankSpan = document.createElement("span");
+        rankSpan.className = "nextRankTitle";
+        rankSpan.innerText = rank;
+        const scoreSpan = document.createElement("span");
+        scoreSpan.innerText = score;
+        td.append(rankSpan, scoreSpan);
+        tr.append(td);
+        scoreDiffTbody.append(tr);
+        rowCount++;
+      }
+    });
+    if (th) {
+      th.rowSpan = rowCount;
+      scoreDiffTable.classList.remove("hidden");
+    } else {
+      scoreDiffTable.classList.add("hidden");
+    }
+
     // Update achievement loss UI
     achievementLossPerType.dx.forEach((loss, noteType) => {
-      const lossElem = document.querySelector(`td.achievementLoss.dx .${noteType}`);
+      const lossElem = document.getElementById(`${noteType}DxAchvLoss`);
       lossElem.innerText = loss;
     })
     achievementLossPerType.finale.forEach((loss, noteType) => {
-      const lossElem = document.querySelector(`td.achievementLoss.finale .${noteType}`);
+      const lossElem = document.getElementById(`${noteType}FinaleAchvLoss`);
       lossElem.innerText = loss;
     })
-
-    // Update border info UI
-    const scoreDiffContainer = document.querySelector(".scoreDiffContainer");
-    const scoreDiffTable = document.querySelector("#scoreDiffTable tbody");
-    scoreDiffTable.innerHTML = "";
-    border.forEach((score, rank) => {
-      if (score > 0) {
-        const tr = document.createElement("tr");
-        const th = document.createElement("th");
-        const td = document.createElement("td");
-        th.innerText = rank;
-        td.innerText = score;
-        tr.append(th, td);
-        scoreDiffTable.append(tr);
+    
+    // Update chart info - percentage per note type
+    pctPerNoteType.forEach((pct, nt) => {
+      nt = nt.charAt(0).toUpperCase() + nt.substring(1);
+      let elem = document.getElementById("pctPer" + nt);
+      switch (nt) {
+        case "Break":
+          elem.innerText += "\nmaimai: " + pct.toFixed(2);
+          break;
+        case "BreakDx":
+          elem = document.getElementById("pctPerBreak");
+          elem.innerText = "DX: " + pct.toFixed(4);
+          break;
+        default:
+          elem.innerText = pct.toFixed(2);
+          break;
       }
+      elem.innerText += "%";
     });
-    if (scoreDiffTable.innerHTML.length) {
-      scoreDiffContainer.classList.remove("hidden");
-    } else {
-      scoreDiffContainer.classList.add("hidden");
-    }
   }
 }
 
