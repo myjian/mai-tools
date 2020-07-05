@@ -1,6 +1,9 @@
+html {
+  background-color: #eee;
+}
+
 body {
   font-family: sans-serif;
-  background-color: #eee;
 }
 
 @media only screen and (min-width: 550px) {

@@ -38,6 +38,24 @@ body {
   flex-shrink: 1;
 }
 
+.footer {
+  margin-top: 40px;
+}
+
+.credit {
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.credit a {
+  color: rgb(0, 56, 216);
+  text-decoration: none;
+}
+
+.credit a:visited {
+  color: rgb(0, 56, 216);
+}
+
 @media only screen and (max-width: 630px) {
   .bookmarklet {
     flex-direction: column;
