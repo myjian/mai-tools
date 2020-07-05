@@ -365,6 +365,6 @@ if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) 
     const judgements = parseJudgement(noteDetail.split("\n"));
     performConversion(songTitle, achievement, judgements);
   } else {
-    document.getElementById("inputContainer").classList.add("hidden");
+    document.getElementById("inputContainer").classList.remove("hidden");
   }
 }
