@@ -35,6 +35,6 @@ tr.tap, tr.slide, tr.break {
   color: #8c8c8c;
 }
 
-tr.break td.break span:not(:last-child)::after {
+tr.break td.break span:not(:last-child):not(:empty):after {
   content: "-";
 }
