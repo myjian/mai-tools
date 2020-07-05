@@ -355,6 +355,7 @@ convertBtn.addEventListener("click", (evt) => {
 
 // Handle parameters from URL
 const searchParams = new URLSearchParams(document.location.search);
+let shouldShowInput = true;
 if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) {
   const songTitle = searchParams.get("st");
   const achievementText = searchParams.get("ac");
@@ -364,7 +365,9 @@ if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) 
     const achievement = parseFloat(achievementText);
     const judgements = parseJudgement(noteDetail.split("\n"));
     performConversion(songTitle, achievement, judgements);
-  } else {
-    document.getElementById("inputContainer").classList.remove("hidden");
+    shouldShowInput = false;
   }
+}
+if (shouldShowInput) {
+  document.getElementById("inputContainer").classList.remove("hidden");
 }
