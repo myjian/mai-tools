@@ -11,11 +11,15 @@
 }
 
 .recordRow {
-  border-top: 1px dotted black;
+  box-shadow: 0 1px #888;
+}
+
+tbody .recordRow:last-child {
+  box-shadow: none;
 }
 
 .recordCell {
-  padding: 2px 1px;
+  padding: 3px 1px 1px;
   user-select: all;
 }
 
@@ -70,11 +74,9 @@ td.songTitleCell {
 }
 
 .songImg {
-  top: 2px;
-  left: 0;
-  position: absolute;
-  max-width: 38px;
-  max-height: 38px;
+  background-position: 2px center;
+  background-size: 37px;
+  background-repeat: no-repeat;
 }
 
 .dateOptionLabel {

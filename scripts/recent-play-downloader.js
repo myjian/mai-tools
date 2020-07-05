@@ -180,7 +180,9 @@
     columnValues.forEach((v, index) => {
       const cell = ce(isHeading ? "th" : "td");
       if (v instanceof Array) {
-        v.forEach((elem) => cell.append(elem));
+        cell.classList.add("songImg");
+        cell.style.backgroundImage = 'url("' + v[1] + '")';
+        cell.append(v[0]);
       } else {
         cell.append(v);
       }
@@ -200,20 +202,17 @@
         UI_STRINGS.achievement,
         UI_STRINGS.stamps
       ],
-      [],
+      [SCORE_RECORD_ROW_CLASSNAME],
       true
     );
   }
 
   function renderScoreRow(record) {
     const difficultyWithoutDxPrefix = record.difficulty.split(" ").pop();
-    const songImg = ce("img");
-    songImg.className = "m_r_5 p_l_5 songImg";
-    songImg.src = record.songImgSrc;
     return _renderScoreRowHelper(
       [
         formatDate(record.date),
-        [songImg, record.songName],
+        [record.songName, record.songImgSrc],
         record.difficulty,
         record.achievement.toFixed(4) + "%",
         record.stamps,
@@ -418,10 +417,10 @@
 
   const titleImg = document.querySelector(".main_wrapper > img.title");
   if (titleImg) {
-    createOutputElement(collectRecentPlays(), titleImg);
     const css = ce("link");
     css.rel = "stylesheet";
     css.href = "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.css";
     document.head.append(css);
+    createOutputElement(collectRecentPlays(), titleImg);
   }
 })();
