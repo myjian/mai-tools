@@ -26,13 +26,21 @@ export function calculateAchvLoss(
       return;
     }
     const loss = 100.0 * (lostScorePerType[noteType] || 0) / totalBaseScore;
-    let dxLoss = dxAchievementLoss - loss <= EPSILON ? dxAchievementLoss : loss;
-    dxLoss = roundFloat(dxLoss, "round", 10000);
-    dxAchievementLoss -= dxLoss;
+    let dxLoss = roundFloat(loss, "round", 10000);
+    if (dxAchievementLoss - dxLoss <= EPSILON) {
+      dxLoss = dxAchievementLoss;
+      dxAchievementLoss = 0;
+    } else {
+      dxAchievementLoss -= dxLoss;
+    }
     achievementLossPerType.dx.set(noteType, dxLoss && dxLoss.toFixed(4));
-    let finaleLoss = finaleAchievementLoss - loss <= EPSILON ? finaleAchievementLoss : loss;
-    finaleLoss = roundFloat(finaleLoss, "round", 100);
-    finaleAchievementLoss -= finaleLoss;
+    let finaleLoss = roundFloat(loss, "round", 100);
+    if (finaleAchievementLoss - finaleLoss <= EPSILON) {
+      finaleLoss = finaleAchievementLoss;
+      finaleAchievementLoss = 0;
+    } else {
+      finaleAchievementLoss -= finaleLoss;
+    }
     achievementLossPerType.finale.set(noteType, finaleLoss && finaleLoss.toFixed(2));
   });
   achievementLossPerType.dx.set("break", dxAchievementLoss && dxAchievementLoss.toFixed(4));
