@@ -473,15 +473,15 @@
 
   const titleImg = document.querySelector(".main_wrapper > img.title");
   if (titleImg) {
-    //const css = ce("link");
-    //css.rel = "stylesheet";
-    //css.href = "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.css";
-    //css.addEventListener("load", () => {
+    const css = ce("link");
+    css.rel = "stylesheet";
+    css.href = "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.css";
+    css.addEventListener("load", () => {
       collectRecentPlays().then((plays) => {
         createOutputElement(plays, titleImg);
       });
-    //});
-    //document.head.append(css);
+    });
+    document.head.append(css);
     const dom2img = ce("script");
     dom2img.type = "text/javascript";
     dom2img.src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js";
