@@ -236,42 +236,17 @@
     );
   }
 
-  function renderTopScores(records, options, thead, tbody) {
+  function renderTopScores(records, container, thead, tbody) {
     thead.innerHTML = "";
     tbody.innerHTML = "";
     thead.append(renderScoreHeadRow());
-    console.log(options);
-    if (options.dates) {
-      records = records.filter((r) => {
-        return options.dates.has(formatDate(r.date).split(" ")[0]);
-      });
-    }
-    if (!options.showAll) {
-      const nameRecordMap = new Map();
-      records.forEach((r) => {
-        if (r.isNewRecord) {
-          const mapKey = r.difficulty + " " + r.songName;
-          nameRecordMap.delete(mapKey);
-          nameRecordMap.set(mapKey, r);
-        }
-      });
-      records = [];
-      nameRecordMap.forEach((r) => {
-        records.push(r);
-      });
-    }
-    if (!options.olderFirst) {
-      records.reverse();
-    }
     records.forEach((r, index) => {
-      tbody.append(renderScoreRow(r))
+      tbody.append(renderScoreRow(r));
     });
-    if (!options.olderFirst) {
-      records.reverse();
-    }
+    container.style.paddingBottom = Math.floor(records.length / 2) + 2 + "px";
   }
 
-  function getFilterAndOptions(dateSelect) {
+  function getFilterAndOptions() {
     const dateOptions = document.querySelectorAll("input." + DATE_CHECKBOX_CLASSNAME);
     const selectedDates = new Set();
     dateOptions.forEach((op) => {
@@ -296,6 +271,34 @@
     return {dates: selectedDates, showAll: showAllRecords, olderFirst};
   }
   
+  function filterRecords(allRecords, options) {
+    let records = [].concat(allRecords);
+    console.log(options);
+    if (options.dates) {
+      records = records.filter((r) => {
+        return options.dates.has(formatDate(r.date).split(" ")[0]);
+      });
+    }
+    if (!options.showAll) {
+      const nameRecordMap = new Map();
+      records.forEach((r) => {
+        if (r.isNewRecord) {
+          const mapKey = r.difficulty + " " + r.songName;
+          nameRecordMap.delete(mapKey);
+          nameRecordMap.set(mapKey, r);
+        }
+      });
+      records = [];
+      nameRecordMap.forEach((r) => {
+        records.push(r);
+      });
+    }
+    if (!options.olderFirst) {
+      records.reverse();
+    }
+    return records;
+  }
+
   function createDateOptions(playDates, onChange) {
     const div = ce("div");
     div.className = "m_b_10 dateOptionsContainer";
@@ -409,14 +412,14 @@
         console.warn("domtoimage not available");
         return;
       }
-      const elem = document.querySelector(".playRecordTable");
+      const elem = document.querySelector(".playRecordContainer");
       domtoimage.toPng(elem).then(function (dataUrl) {
         const dtStr = formatDate(new Date()).replace(" ", "_").replace(":", "-");
         const filename = "record_" + dtStr + ".png";
         const a = document.createElement("a");
         a.href = dataUrl;
         a.download = filename;
-        console.log(a);
+        //console.log(a);
         a.click();
         //a.innerText = filename;
         //a.target = "_blank";
@@ -430,8 +433,8 @@
     return div;
   }
 
-  function createOutputElement(records, insertBefore) {
-    const playDates = records.reduce((s, r) => {
+  function createOutputElement(allRecords, insertBefore) {
+    const playDates = allRecords.reduce((s, r) => {
       s.add(formatDate(r.date).split(" ")[0]);
       return s;
     }, new Set());
@@ -444,13 +447,18 @@
       dv.id = "recordSummary";
     }
 
+    const playRecordContainer = ce("div");
+    playRecordContainer.className = "playRecordContainer";
     const table = ce("table"), thead = ce("thead"), tbody = ce("tbody");
     table.className = "playRecordTable";
     table.append(thead, tbody);
+    playRecordContainer.append(table);
 
     const handleOptionChange = () => {
-      const options = getFilterAndOptions();
-      renderTopScores(records, options, thead, tbody);
+      renderTopScores(
+        filterRecords(allRecords, getFilterAndOptions()),
+        playRecordContainer, thead, tbody
+      );
     };
     dv.append(createDateOptions(playDates, handleOptionChange));
     dv.append(createNewRecordToggle(handleOptionChange));
@@ -465,10 +473,12 @@
     });
     dv.append(btn);
     
-    renderTopScores(records, {olderFirst: false}, thead, tbody);
-    dv.append(table);
+    renderTopScores(
+      filterRecords(allRecords, {olderFirst: false}),
+      playRecordContainer, thead, tbody
+    );
+    dv.append(playRecordContainer);
     insertBefore.insertAdjacentElement('beforebegin', dv);
-    return table;
   }
 
   const titleImg = document.querySelector(".main_wrapper > img.title");
@@ -482,7 +492,7 @@
       });
     });
     document.head.append(css);
-    const dom2img = ce("script");
+    const dom2img = document.createElement("script");
     dom2img.type = "text/javascript";
     dom2img.src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js";
     document.body.append(dom2img);

@@ -2,15 +2,15 @@
   margin-bottom: 16px;
 }
 
+.playRecordContainer {
+  background-color: #7ed3ff;
+  padding: 2px;
+}
+
 .playRecordTable {
   font-size: 14px;
   border-collapse: collapse;
   table-layout: fixed;
-  background-color: #7ed3ff;
-}
-
-.recordRow {
-  background-color: #7ed3ff;
 }
 
 tbody tr.recordRow {
@@ -20,7 +20,6 @@ tbody tr.recordRow {
 .recordCell {
   padding: 3px 1px 1px;
   user-select: all;
-  background-color: #7ed3ff;
 }
 
 td.recordCell {
