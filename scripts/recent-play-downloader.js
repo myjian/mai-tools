@@ -22,6 +22,7 @@
       newerFirst: "由新到舊",
       copy: "複製",
       copied: "已複製到剪貼簿",
+      downloadAsImage: "存成圖片",
     },
     en: {
       date: "Date",
@@ -38,6 +39,7 @@
       newerFirst: "Newer first",
       copy: "Copy",
       copied: "Copied to clipboard",
+      downloadAsImage: "Save as image",
     }
   }[LANG];
   
@@ -54,7 +56,7 @@
     ["fsd", "FULL SYNC DX"],
     ["fsdplus", "FULL SYNC DX+"],
   ]);
-
+  const IMG_HW = 90; // height and width
   const DATE_CHECKBOX_CLASSNAME = "dateCheckbox";
   const NEW_RECORD_RADIO_NAME = "newRecordRadio";
   const SORT_BY_RADIO_NAME = "sortByRadio";
@@ -99,8 +101,14 @@
     return row.querySelector(".m_5.p_5.f_13").childNodes[1].wholeText
   }
 
-  function getSongImgSrc(row) {
-    return row.querySelector(".music_img").src;
+  async function getSongImgSrc(row, canvas, context) {
+    context.drawImage(row.querySelector(".music_img"), 0, 0, canvas.width, canvas.height);
+    return new Promise((resolve) => {
+      resolve(canvas.toDataURL());
+      //canvas.toBlob((blob) => {
+      //  resolve(URL.createObjectURL(blob));
+      //}, 'image/jpeg', 1.0);
+    });
   }
 
   function getDifficulty(row) {
@@ -138,22 +146,28 @@
     return !!row.querySelector(".playlog_achievement_label_block + img.playlog_achievement_newrecord");
   }
   
-  function collectRecentPlays() {
-    const scoreList = document.querySelector(".main_wrapper").querySelectorAll(".p_10.t_l.f_0.v_b")
+  async function collectRecentPlays() {
+    const scoreList = Array.from(
+      document.querySelectorAll(".main_wrapper .p_10.t_l.f_0.v_b")
+    );
     const results = [];
-    scoreList.forEach((row) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = IMG_HW;
+    canvas.height = IMG_HW;
+    const context = canvas.getContext('2d');
+    for (const row of scoreList) {
       results.push(
         {
           date: getPlayDate(row),
           songName: getSongName(row),
-          songImgSrc: getSongImgSrc(row),
+          songImgSrc: await getSongImgSrc(row, canvas, context),
           difficulty: getDifficulty(row),
           achievement: getAchievement(row),
           stamps: getStamps(row),
           isNewRecord: getIsNewRecord(row),
         }
       );
-    });
+    }
     results.reverse();
     return results;
   }
@@ -334,7 +348,7 @@
     heading.className = "t_c m_5";
     heading.append(UI_STRINGS.sortBy);
     div.append(heading);
-    ["olderFirst", "newerFirst"].forEach((op, idx) => {
+    ["newerFirst", "olderFirst"].forEach((op, idx) => {
       const label = ce("label");
       label.className = "f_14 sortByLabel";
       const input = ce("input");
@@ -354,23 +368,65 @@
     const div = ce("div");
     div.className = "copyBtnContainer";
     
-    const btn = ce("button");
-    btn.className = "copyBtn";
-    btn.append(UI_STRINGS.copy);
-    div.append(btn)
+    const copyTextBtn = ce("button");
+    copyTextBtn.className = "copyBtn";
+    copyTextBtn.append(UI_STRINGS.copy);
+    div.append(copyTextBtn)
     
-    const res = ce("span");
-    res.className = "f_16 copyResult"
-    div.append(res);
+    let snackbarContainer = document.querySelector(".snackbarContainer");
+    let snackbar = document.querySelector(".snackbar");
+    if (!snackbarContainer) {
+      snackbarContainer = ce("div");
+      snackbarContainer.className = "snackbarContainer";
+      snackbarContainer.style.display = "none";
+      document.body.append(snackbarContainer);
+    }
+    if (!snackbar) {
+      snackbar = ce("div");
+      snackbar.className = "wrapper snackbar";
+      snackbar.innerText = UI_STRINGS.copied;
+      snackbarContainer.append(snackbar);
+    }
     
-    btn.addEventListener("click", () => {
+    copyTextBtn.addEventListener("click", () => {
       onClick();
       document.execCommand("copy");
-      res.innerText = UI_STRINGS.copied;
+      snackbarContainer.style.display = "block";
+      snackbar.style.opacity = 1;
       setTimeout(() => {
-        res.innerText = "";
-      }, 5000);
+        snackbar.style.opacity = 0;
+        setTimeout(() => {
+          snackbarContainer.style.display = "none";
+        }, 500);
+      }, 4000);
     });
+    
+    const downloadBtn = ce("button");
+    downloadBtn.className = "downloadImgBtn";
+    downloadBtn.append(UI_STRINGS.downloadAsImage);
+    downloadBtn.addEventListener("click", () => {
+      if (!domtoimage) {
+        console.warn("domtoimage not available");
+        return;
+      }
+      const elem = document.querySelector(".playRecordTable");
+      domtoimage.toPng(elem).then(function (dataUrl) {
+        const dtStr = formatDate(new Date()).replace(" ", "_").replace(":", "-");
+        const filename = "record_" + dtStr + ".png";
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = filename;
+        console.log(a);
+        a.click();
+        //a.innerText = filename;
+        //a.target = "_blank";
+        //a.style.fontSize = "16px";
+        //a.style.color = "blue";
+        //a.style.display = "block";
+        //document.querySelector(".title.m_10").insertAdjacentElement("beforebegin", a);
+      });
+    });
+    div.append(downloadBtn);
     return div;
   }
 
@@ -409,7 +465,7 @@
     });
     dv.append(btn);
     
-    renderTopScores(records, {olderFirst: true}, thead, tbody);
+    renderTopScores(records, {olderFirst: false}, thead, tbody);
     dv.append(table);
     insertBefore.insertAdjacentElement('beforebegin', dv);
     return table;
@@ -417,10 +473,18 @@
 
   const titleImg = document.querySelector(".main_wrapper > img.title");
   if (titleImg) {
-    const css = ce("link");
-    css.rel = "stylesheet";
-    css.href = "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.css";
-    document.head.append(css);
-    createOutputElement(collectRecentPlays(), titleImg);
+    //const css = ce("link");
+    //css.rel = "stylesheet";
+    //css.href = "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.css";
+    //css.addEventListener("load", () => {
+      collectRecentPlays().then((plays) => {
+        createOutputElement(plays, titleImg);
+      });
+    //});
+    //document.head.append(css);
+    const dom2img = ce("script");
+    dom2img.type = "text/javascript";
+    dom2img.src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js";
+    document.body.append(dom2img);
   }
 })();

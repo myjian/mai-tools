@@ -3,7 +3,6 @@
 }
 
 .playRecordTable {
-  margin-top: 10px;
   font-size: 14px;
   border-collapse: collapse;
   table-layout: fixed;
@@ -11,16 +10,17 @@
 }
 
 .recordRow {
-  box-shadow: 0 1px #888;
+  background-color: #7ed3ff;
 }
 
-tbody .recordRow:last-child {
-  box-shadow: none;
+tbody tr.recordRow {
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .recordCell {
   padding: 3px 1px 1px;
   user-select: all;
+  background-color: #7ed3ff;
 }
 
 td.recordCell {
@@ -45,7 +45,6 @@ td.recordCell {
 }
 
 td.songTitleCell {
-  position: relative;
   padding-left: 44px;
   text-align: left;
   word-break: break-all;
@@ -56,21 +55,14 @@ td.songTitleCell {
   padding: 4px;
 }
 
-.copyBtn {
+.copyBtn, .downloadImgBtn {
   background-color: #9f51dc;
   border: 2px solid black;
   border-radius: 5px;
   color: white;
   font-weight: 700;
   padding: 8px 12px;
-}
-
-.copyResult {
-  position: absolute;
-  left: 300px;
-  top: 16px;
-  font-weight: 700;
-  color: #fff000;
+  margin: 0 10px 10px;
 }
 
 .songImg {
@@ -101,7 +93,6 @@ td.songTitleCell {
   height: 10px;
 }
 
-
 .advanced .difficultyCell {
   color: #fb9c2d;
 }
@@ -117,4 +108,21 @@ td.songTitleCell {
 .remaster .difficultyCell {
   color: white;
   text-shadow: -1px -1px 2px #9e45e2, -1px 1px 2px #9e45e2, 1px -1px 2px #9e45e2, 1px 1px 2px #9e45e2;
+}
+
+.snackbarContainer {
+  position: fixed;
+  bottom: 6px;
+  width: 100%;
+}
+
+.snackbar {
+  transition: opacity 0.3s ease-in-out;
+  text-align: center;
+  background-color: #666;
+  padding: 8px 4px;
+  border-radius: 4px;
+  color: white;
+  opacity: 0;
+  user-select: none;
 }
