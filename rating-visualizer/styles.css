@@ -1,0 +1,231 @@
+body {
+  font-family: sans-serif;
+  background-color: #f2f2f2;
+  margin: 0 10px 10px 0;
+}
+
+.container {
+  max-width: 666px;
+  margin: 0 auto;
+}
+
+.container:focus {
+  outline: none;
+}
+
+.optionsContainer {
+  padding: 10px;
+  padding-right: 0;
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  background-color: #f2f2f2;
+  z-index: 40;
+}
+
+.optionGroup {
+  margin-right: 10px;
+}
+
+.lvRangeLabel {
+  text-decoration: underline;
+  margin-right: 5px;
+}
+
+.resetZoomButton {
+  display: inline-block;
+}
+
+.ratingContainer {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.lvRatingContainer {
+  position: relative;
+  padding: 0 2px 0 3px;
+  flex: 1 1 30px;
+}
+
+.lvRatingContainer:nth-child(2n) {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.lvLabel {
+  position: sticky;
+  top: 45px;
+  width: calc(100% + 5px);
+  z-index: 30;
+}
+
+.lvLabelButtonContainer {
+  width: calc(100% - 2px);  
+  position: absolute;
+  left: -2px;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lvLabelButton {
+  position: relative;
+  text-align: center;
+  background-color: #7d7d7d;
+  color: white;
+  padding: 4px 0;
+  font-family: monospace;
+  font-size: 14px;
+  box-sizing: border-box;
+  border: 1px solid #333;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.lvLabelButton:not(:disabled) {
+  cursor: pointer;
+}
+
+.ratingSegment {
+  background-color: #7d7d7d;
+  position: absolute;
+  width: calc(100% - 5px);
+  opacity: 0.7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: crosshair;
+}
+
+.ratingSegment:hover, .ratingSegment:focus {
+  opacity: 1;
+  z-index: 10;
+  box-shadow: 0 0 2px #333;
+}
+
+.ratingSegmentLabel {
+  font-family: sans-serif;
+  font-size: 11px;
+  opacity: 1;
+}
+
+.segmentA {
+  background-color: #3ba47d;
+}
+
+.segmentAA {
+  background-color: #1298b7;
+}
+
+.segmentAAA {
+  background-color: #2197ff;
+}
+
+.segmentS {
+  background-color: #9e8aff;
+}
+
+.segmentSP {
+  background-color: #f476f2;
+}
+
+.segmentSS {
+  background-color: #ff6b6b;
+}
+
+.segmentSSP {
+  background-color: #ff9f9a;
+}
+
+.segmentSSS {
+  background-color: #ffc99a;
+}
+
+.segmentSSSP {
+  background-color: #ffe34b;
+}
+
+.axisLabelContainer {
+  flex: 0 0 40px;
+  position: relative;
+  border-right: 1px solid navy;
+}
+
+.axisLabel {
+  position: absolute;
+  font-size: 14px;
+  font-family: monospace;
+  text-align: right;
+  width: 100%;
+}
+
+.axisLabel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: calc(40px - 3px);
+  width: calc(666px - 37px - 2px);
+  border-top: 1px solid #ccc;
+}
+
+.axisLabelText {
+  position: relative;
+  top: 8px;
+  right: 6px;
+}
+
+.intervalBoundary {
+  position: absolute;
+  width: calc(666px - 37px - 2px);
+  border-bottom: 2px solid rgba(255, 48, 48, 0.44);
+  left: 37px;
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.intervalLabel {
+  position: absolute;
+  font-size: 14px;
+  font-family: monospace;
+  text-align: right;
+  color: #e32020;
+  font-weight: bold;
+  left: 0;
+  width: 40px;
+}
+
+.intervalLabelText {
+  background-color: rgba(234, 234, 234, 1);
+  padding: 1px 2px;
+  border-radius: 5px;
+  display: inline-block;
+  right: 4px;
+}
+
+
+@media only screen and (max-width: 500px) {
+  .optionsContainer {
+    height: 70px;
+  }
+  .lvLabel {
+    top: 70px;
+  }
+  .lvLabelButton {
+    transform: rotateZ(90deg);
+    width: 50px;
+    padding: 0;
+    top: 20px;
+    right: 0;
+  }
+  .lvRangeLabelContainer {
+    margin-top: 4px;
+    display: block;
+  }
+}
