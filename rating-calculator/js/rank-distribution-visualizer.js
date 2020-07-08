@@ -31,7 +31,7 @@ function getRankDistribution(scoreList) {
   return countPerRank;
 }
 
-export function renderRankDistributionRowHelper(
+function renderRankDistributionRowHelper(
   values, isHeading, showTotal, rowClassname, baseCellClassname, perColumnClassnames
 ) {
   const tr = document.createElement("tr");

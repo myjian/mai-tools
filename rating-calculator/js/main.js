@@ -9,10 +9,7 @@ import {
 import {analyzePlayerRating} from './rating-analyzer.js';
 import {renderSongScores} from './score-record-visualizer.js';
 import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from './shared-constants.js';
-import {
-  calculateChartRatings,
-  initializeQuickLookup,
-} from './quick-lookup.js';
+import {calculateRankMultipliers} from './quick-lookup.js';
 
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
@@ -23,19 +20,9 @@ const quickLookupArea = document.querySelector(".quickLookup");
 const gameVersionSelect = document.getElementById("gameVersion");
 const innerLvInput = document.getElementById("innerLvInput");
 const playerScoreInput = document.getElementById("playerScoreInput");
-const officialLvSelect = document.getElementById("officialLvSelect");
 
 function getIsDxPlus() {
   return gameVersionSelect.value === DX_PLUS_GAME_VERSION.toString();
-}
-
-function performQuickLookup() {
-  calculateChartRatings(
-    getIsDxPlus(),
-    officialLvSelect.value,
-    document.getElementById("quickLookupThead"),
-    document.getElementById("quickLookupTbody")
-  );
 }
 
 function handleGameVersionChange() {
@@ -44,7 +31,11 @@ function handleGameVersionChange() {
   if (cachedInnerLv) {
     innerLvInput.value = cachedInnerLv;
   }
-  performQuickLookup();
+  calculateRankMultipliers(
+    getIsDxPlus(),
+    document.getElementById("quickLookupThead"),
+    document.getElementById("quickLookupTbody")
+  );
 }
 
 async function readSongPropsFromText(text) {
@@ -180,11 +171,8 @@ if (dxVersionQueryParam) {
     : DX_GAME_VERSION;
 }
 
-initializeQuickLookup(officialLvSelect);
 handleGameVersionChange();
-
 gameVersionSelect.addEventListener("change", handleGameVersionChange);
-officialLvSelect.addEventListener("change", performQuickLookup);
 
 if (queryParams.get("quickLookup") === "hide") {
   quickLookupArea.classList.add("hidden");

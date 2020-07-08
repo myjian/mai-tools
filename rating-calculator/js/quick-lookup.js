@@ -1,98 +1,57 @@
-import {OFFICIAL_LEVELS} from './shared-constants.js';
 import {getRankDefinitions} from './rank-functions.js';
-import {renderRankDistributionRowHelper} from './rank-distribution-visualizer.js';
 import {calculateRatingRange} from './rating-functions.js';
 
-const DEFAULT_OFFICIAL_LEVEL_OPTION = "10";
-const MIN_OFFICIAL_LEVEL_OPTION = "7";
-const MIN_RANK_OPTION = "AA";
-const LEVEL_RATING_CELL_BASE_CLASSNAME = "levelRatingCell";
-const LEVEL_RATING_CELL_CLASSNAMES = ["innerLvCell"];
+const MIN_RANK_OPTION = "A";
+const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";
+const RANK_FACTOR_CELL_CLASSNAMES = ["qlRankTitleCell", "qlThresholdCell"];
 
-function _getOfficialLvOptions() {
-  const options = [];
-  for (const lv of OFFICIAL_LEVELS) {
-    if (lv.endsWith("+")) {
-      continue;
-    }
-    const option = document.createElement("option");
-    option.value = lv;
-    option.innerText = `${lv} & ${lv}+`;
-    option.selected = lv === DEFAULT_OFFICIAL_LEVEL_OPTION;
-    options.push(option);
-    if (lv === MIN_OFFICIAL_LEVEL_OPTION) {
-      break;
-    }
+function renderRankFactorRow(columnValues, rowClassnames, isHeading) {
+  const tr = document.createElement("tr");
+  for (const cn of rowClassnames) {
+    tr.classList.add(cn);
   }
-  options.reverse();
-  return options;
+  columnValues.forEach((v, index) => {
+    const cell = document.createElement(
+      (isHeading || index === 0) ? "th" : "td"
+    );
+    cell.innerText = v;
+    cell.classList.add(RANK_FACTOR_CELL_BASE_CLASSNAME);
+    if (index < RANK_FACTOR_CELL_CLASSNAMES.length) {
+      cell.classList.add(RANK_FACTOR_CELL_CLASSNAMES[index]);
+    }
+    tr.append(cell);
+  });
+  return tr;
 }
 
-function _renderRankRatingHeadRow(isDxPlus) {
-  const values = ["Rank\n達成率\n係數"];
-  const rankDefs = getRankDefinitions(isDxPlus);
-  for (const r of rankDefs) {
-    values.push(`${r.title}\n>${r.th}%\n${r.factor}`)
-    if (r.title === MIN_RANK_OPTION) {
-      break;
-    }
-  }
-  return renderRankDistributionRowHelper(
-    values,
-    true, // isHeading
-    false, // showTotal
-    "", // rowClassname
-    LEVEL_RATING_CELL_BASE_CLASSNAME,
-    LEVEL_RATING_CELL_CLASSNAMES
-  );
-}
-
-function _renderRankRatingRow(innerLv, isDxPlus) {
-  const values = [innerLv.toFixed(1)];
-  const rankDefs = getRankDefinitions(isDxPlus);
-  for (const r of rankDefs) {
-    const [minRating, maxRating] = calculateRatingRange(innerLv, r, isDxPlus);
-    if (maxRating > minRating) {
-      values.push(`${minRating} - ${maxRating}`);
-    } else {
-      values.push(minRating.toString());
-    }
-    if (r.title === MIN_RANK_OPTION) {
-      break;
-    }
-  }
-  return renderRankDistributionRowHelper(
-    values,
-    false, // isHeading
-    false, // showTotal
-    "", // rowClassname
-    LEVEL_RATING_CELL_BASE_CLASSNAME,
-    LEVEL_RATING_CELL_CLASSNAMES
-  );
-}
-
-export function calculateChartRatings(
+export function calculateRankMultipliers(
   isDxPlus,
-  officialLvText,
   thead,
   tbody
 ) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
-  thead.appendChild(_renderRankRatingHeadRow(isDxPlus))
-  const baseLevel = parseInt(officialLvText);
-  const isPlus = officialLvText.endsWith("+");
-  const maxInnerLevel = baseLevel + 0.9;
-  let innerLv = maxInnerLevel;
-  for (let i = 0; i < 10; i++) {
-    tbody.appendChild(_renderRankRatingRow(innerLv, isDxPlus));
-    innerLv -= 0.1;
-  }
-}
-
-export function initializeQuickLookup(officialLvSelect) {
-  officialLvSelect.innerHTML = "";
-  _getOfficialLvOptions().forEach((option) => {
-    officialLvSelect.appendChild(option);
+  thead.appendChild(
+    renderRankFactorRow(
+      ["Rank", "達成率", "係數", "倍率 (係數 × 達成率)"],
+      [], // rowClassname
+      true, // isHeading
+    )
+  );
+  const rankDefs = getRankDefinitions(isDxPlus);
+  const stopIndex = rankDefs.findIndex(r => r.title === MIN_RANK_OPTION) + 1;
+  rankDefs.slice(0, stopIndex).forEach((r, idx, arr) => {
+    const minMultiplier = r.th * r.factor / 100;
+    const maxMultiplier = idx > 0 ? (arr[idx-1].th - 0.0001) * r.factor / 100 : minMultiplier;
+    const minMulText = minMultiplier.toFixed(3);
+    const maxMulText = maxMultiplier.toFixed(3);
+    const multiplierRange = minMulText !== maxMulText ? `${minMulText} - ${maxMulText}` : minMulText;
+    tbody.appendChild(
+      renderRankFactorRow(
+        [r.title, r.th, r.factor, multiplierRange],
+        [],
+        false
+      )
+    );
   });
 }

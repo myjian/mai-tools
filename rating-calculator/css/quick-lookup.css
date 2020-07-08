@@ -1,22 +1,20 @@
-.quickLookupHeading {
-  margin-bottom: 10px;
-}
-
-.officialLvSelectContainer {
-  margin-bottom: 20px;
-}
-
 .quickLookupTable {
   border-collapse: collapse;
   border: 2px solid #999;
 }
 
-.levelRatingCell {
-  width: 76px;
+.qlRankFactorCell {
+  min-width: 76px;
   padding: 4px;
   border: 1px solid #aaa;
+  text-align: center;
 }
 
-td.levelRatingCell {
-  text-align: center;
+th.qlRankFactorCell {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+td.qlThresholdCell::after {
+  content: "%"
 }
