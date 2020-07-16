@@ -302,21 +302,23 @@ body {
   font-weight: bold;
   padding: 0 8px;
   flex: 2;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  flex-direction: column-reverse;
   text-align: center;
+  position: relative;
+  top: 3px;
 }
 
 .achievement {
   font-size: 18px;
+  flex: 1 1 22px;;
   display: flex;
   padding: 0 8px;
   justify-content: center;
   align-items: center;
-  flex: 1;
   white-space: nowrap;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  position: relative;
+  top: 2px;
 }
 
 .achvNum {
@@ -331,6 +333,7 @@ body {
 
 .hasMaxAchv {
   font-size: 16px;
+  flex-basis: 20px;
 }
 
 .judgementContainer {
