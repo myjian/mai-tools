@@ -48,7 +48,7 @@ function calculateBorder(
  * @param playerAchievement number
  * @return various properties of playerScore
  */
-export function calculateFinaleScore(
+export function calculateScoreInfo(
   judgementsPerType: Map<NoteType, StrictJudgementMap>,
   playerAchievement: number,
 ) {
@@ -82,7 +82,7 @@ export function calculateFinaleScore(
       playerRegularNoteScore += playerNoteScore;
     }
   });
-    
+
   // Figure out break distribution
   const scorePerPercentage = totalBaseScore / 100;
   const playerRegularNotePercentage = playerRegularNoteScore / scorePerPercentage;
@@ -97,7 +97,7 @@ export function calculateFinaleScore(
     remainingAchievement,
     basePercentagePerBreak
   );
-  console.log(validBreakDistributions);
+  console.log("valid break distributions", validBreakDistributions);
   let breakDistribution = validBreakDistributions[0];
   if (!breakDistribution) {
     console.warn("Could not find a valid break distribution!");
@@ -114,7 +114,7 @@ export function calculateFinaleScore(
       [0, breakJudgements.miss],
     ]);
   }
-  
+
   // Figure out FiNALE achievement
   let totalBreakCount = 0;
   let playerBreakNoteScore = 0;
@@ -136,7 +136,7 @@ export function calculateFinaleScore(
   const finaleMaxAchievement = roundFloat(maxNoteScore / scorePerPercentage, "floor", 0.01);
 
   // Figure out player achv per note type
-  console.log(playerScorePerType);
+  console.log("player score per note type", playerScorePerType);
   const dxAchvPerType = new Map();
   dxAchvPerType.set("tap", {
     score: roundFloat(playerScorePerType.get("tap").score / scorePerPercentage, "round", 0.0001),
@@ -162,14 +162,15 @@ export function calculateFinaleScore(
     score: roundFloat(playerAchievement, "round", 0.0001),
     isMax: playerScorePerType.get("total").isMax,
   })
- 
+
   // Figure out achievement loss per note type
   const achvLossDetail = calculateAchvLoss(
     judgementsPerType,
     breakDistribution,
     scorePerPercentage,
   );
-    
+  console.log("achievement loss detail", achvLossDetail);
+
   // Figure out score diff vs. higher ranks
   const finaleBorder = new Map([
     ["S", calculateBorder(totalBaseScore, totalBreakCount, 0.97, playerTotalNoteScore)],

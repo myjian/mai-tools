@@ -28,44 +28,44 @@ export function calculateAchvLoss(
     const finaleNoteLoss = createEmptyJudgementMap();
     const dxNoteLoss = createEmptyJudgementMap();
     if (noteType === "break") {
-      finaleNoteLoss.perfect = breakDistribution.get(2550) * -50 + breakDistribution.get(2500) * -100;
+      finaleNoteLoss.perfect = breakDistribution.get(2550) * 50 + breakDistribution.get(2500) * 100;
       finaleNoteLoss.great = (
-        breakDistribution.get(2000) * -600
-        + breakDistribution.get(1500) * -1100
-        + breakDistribution.get(1250) * -1350
+        breakDistribution.get(2000) * 600
+        + breakDistribution.get(1500) * 1100
+        + breakDistribution.get(1250) * 1350
       );
-      finaleNoteLoss.good = breakDistribution.get(1000) * -1600;
-      finaleNoteLoss.miss = breakDistribution.get(0) * -2600;
+      finaleNoteLoss.good = breakDistribution.get(1000) * 1600;
+      finaleNoteLoss.miss = breakDistribution.get(0) * 2600;
       finaleNoteLoss.total = Object.values(finaleNoteLoss).reduce((a, b) => (a + b), 0);
 
       dxNoteLoss.perfect = (
-        breakDistribution.get(2550) * (BREAK_BONUS_MULTIPLIER.get(2550) - 1)
-        + breakDistribution.get(2500) * (BREAK_BONUS_MULTIPLIER.get(2500) - 1)
+        breakDistribution.get(2550) * (1 - BREAK_BONUS_MULTIPLIER.get(2550))
+        + breakDistribution.get(2500) * (1 - BREAK_BONUS_MULTIPLIER.get(2500))
       ) / totalBreakCount;
       dxNoteLoss.great = (
-        breakDistribution.get(2000) * (BREAK_BASE_SCORE_MULTIPLIER.get(2000) - 1)
-        + breakDistribution.get(1500) * (BREAK_BASE_SCORE_MULTIPLIER.get(1500) - 1)
-        + breakDistribution.get(1250) * (BREAK_BASE_SCORE_MULTIPLIER.get(1250) - 1)
+        breakDistribution.get(2000) * (1 - BREAK_BASE_SCORE_MULTIPLIER.get(2000))
+        + breakDistribution.get(1500) * (1 - BREAK_BASE_SCORE_MULTIPLIER.get(1500))
+        + breakDistribution.get(1250) * (1 - BREAK_BASE_SCORE_MULTIPLIER.get(1250))
       ) * baseScore / scorePerPercentage + (
-        breakDistribution.get(2000) * (BREAK_BONUS_MULTIPLIER.get(2000) - 1)
-        + breakDistribution.get(1500) * (BREAK_BONUS_MULTIPLIER.get(1500) - 1)
-        + breakDistribution.get(1250) * (BREAK_BONUS_MULTIPLIER.get(1250) - 1)
+        breakDistribution.get(2000) * (1 - BREAK_BONUS_MULTIPLIER.get(2000))
+        + breakDistribution.get(1500) * (1 - BREAK_BONUS_MULTIPLIER.get(1500))
+        + breakDistribution.get(1250) * (1 - BREAK_BONUS_MULTIPLIER.get(1250))
       ) / totalBreakCount;
       dxNoteLoss.good = (
-        breakDistribution.get(1000) * (BREAK_BASE_SCORE_MULTIPLIER.get(1000) - 1)
+        breakDistribution.get(1000) * (1 - BREAK_BASE_SCORE_MULTIPLIER.get(1000))
       ) * baseScore / scorePerPercentage + (
-        breakDistribution.get(1000) * (BREAK_BONUS_MULTIPLIER.get(1000) - 1)
+        breakDistribution.get(1000) * (1 - BREAK_BONUS_MULTIPLIER.get(1000))
       ) / totalBreakCount;
-      dxNoteLoss.miss = -(
+      dxNoteLoss.miss = (
         breakDistribution.get(0) * baseScore / scorePerPercentage
         + breakDistribution.get(0) / totalBreakCount
       );
       dxNoteLoss.total = Object.values(dxNoteLoss).reduce((a, b) => (a + b), 0);
     } else {
       finaleNoteLoss.perfect = 0;
-      finaleNoteLoss.great = judgements.great * baseScore * (REGULAR_BASE_SCORE_MULTIPLIER.great - 1);
-      finaleNoteLoss.good = judgements.good * baseScore * (REGULAR_BASE_SCORE_MULTIPLIER.good - 1);
-      finaleNoteLoss.miss = judgements.miss * baseScore * (-1);
+      finaleNoteLoss.great = Math.round(judgements.great * baseScore * (1 - REGULAR_BASE_SCORE_MULTIPLIER.great));
+      finaleNoteLoss.good = Math.round(judgements.good * baseScore * (1 - REGULAR_BASE_SCORE_MULTIPLIER.good));
+      finaleNoteLoss.miss = judgements.miss * baseScore;
       finaleNoteLoss.total = Object.values(finaleNoteLoss).reduce((a, b) => (a + b), 0);
       for (const [j, loss] of Object.entries(finaleNoteLoss)) {
         dxNoteLoss[j as MapKey] = loss / scorePerPercentage;

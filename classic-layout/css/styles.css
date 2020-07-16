@@ -14,6 +14,11 @@ body {
   background: rgba(0, 0, 0, 0.1);
 }
 
+.error {
+  color: #ffe9e9;
+  text-align: center;
+}
+
 .remaster {
   color: #bd6bd5;
 }
@@ -50,7 +55,7 @@ body {
   color: #6a648a;
 }
 
-.score {
+.score, .rowHead {
   color: #254a76;
 }
 
@@ -68,10 +73,9 @@ body {
 
 .widthLimit {
   width: 480px;
-  margin: 0 auto;
-  border: solid #256ac4;
-  border-width: 2px 0 2px 0;
+  margin: 20px auto;
   padding: 6px;
+  border-radius: 18px;
   background-color: #e5b323;
 /*  background-image: url(../maimai-img/bg_star.png); */
   background-size: 540px;
@@ -82,12 +86,29 @@ body {
 .container {
   background-color: #223641;
   padding: 6px;
-  padding-bottom: 30px;
-  min-height: 100vh;
+  padding-bottom: 10px;
+  border-radius: 14px;
+}
+
+.pageTitle {
+  font-size: 18px;
+  text-align: center;
+  margin: 5px 0 0;
+  padding: 0;
+  color: white;
+  font-weight: normal;
+}
+
+.pageSectionSeparator {
+  height: 7px;
+  width: 100%;
+  background-color: #fad80b;
+  margin: 5px 0;
 }
 
 .songScoreContainer {
   width: 100%;
+  margin: 11px 0 10px;
   background-color: white;
   box-sizing: border-box;
 }
@@ -208,18 +229,53 @@ body {
 }
 
 .achvInfoSpace {
-  flex: 10 0 5px;
+  flex: 100 0 5px;
+}
+
+.rank {
+  /* sc = shadow color */
+  --c: #ff6509;
+}
+
+.apfc {
+  --c: #0a99fd;
+}
+
+.apfc.fcplus {
+  --c: #f58223;
+}
+
+.apfc.ap {
+  --c: #ff2525;
+}
+
+.sync {
+  --c: #1061d0;
+  font-weight: bold;
 }
 
 .rank, .apfc, .sync {
-  flex: 0 0 52px;
+  --sc: rgba(190, 190, 190, 0.685);
+  flex: 1 0 52px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
-  text-shadow: 0 -1px 2px #ff6509, -1px 0 2px #ff6509, 1px 0 2px #ff6509, 0 1px 2px #ff6509;
+  padding: 0 3px;
+  color: var(--c);
+  text-shadow: 1px 1px 4px var(--sc);
+  /* text-shadow: 0 -1px 2px var(--sc), -1px 0 2px var(--sc), 1px 0 2px var(--sc), 0 1px 2px var(--sc); */
   font-size: 22px;
+}
+
+.rank, .apfc {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 900;
+}
+
+.sync {
+  font-size: 14px;
+  line-height: 16px;
 }
 
 .apfc:empty, .sync:empty {
@@ -268,7 +324,7 @@ body {
 }
 
 .judgementContainer {
-  margin: 4px 4px 8px;
+  margin: 4px 2px 8px;
 }
 
 .judgement {
@@ -279,7 +335,7 @@ body {
 }
 
 .judgement td, .judgement th {
-  border: 2px solid #dcb335;
+  border: 2px solid #e5b323;
   vertical-align: middle;
   padding: 0 2px;
   font-weight: 700;
@@ -361,6 +417,35 @@ td.perfect, td.great, td.good, td.miss, td.score {
 
 .score {
   width: 94px;
+}
+
+.pageFooter {
+  padding-top: 4px;
+  color: #00a4ac;
+  text-align: center;
+}
+
+.credit {
+  color: #eee;
+  text-align: center;
+  margin: 16px 0;
+}
+
+.closePage, .authorLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.closePage:hover, .authorLink:hover {
+  text-decoration: underline;
+}
+
+.closePage:visited {
+  color: inherit;
+}
+
+.authorLink, .authorLink:visited {
+  color: #fff;
 }
 
 .hidden {

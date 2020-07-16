@@ -1,37 +1,105 @@
 import React from 'react';
 
-interface AchievementInfoProps {
+import {getFinaleRankTitle, getRankTitle} from '../rankFunctions';
+
+const MAX_DX_ACHIEVEMENT = 101;
+
+function calculateRankTitle(
+  finaleAchv: number,
+  isDxMode: boolean,
+  dxAchv: number,
+  apFcStatus: string
+) {
+  if (isDxMode) {
+    return getRankTitle(dxAchv);
+  }
+  if (apFcStatus === "AP+") {
+    return "SSS+";
+  }
+  return getFinaleRankTitle(finaleAchv);
+}
+
+function getApFcClassName(apFcStatus?: string) {
+  const base = "apfc";
+  if (!apFcStatus) {
+    return base;
+  } else if (apFcStatus === "FC+") {
+    return base + " fcplus";
+  }
+  return apFcStatus.includes("AP") ? base + " ap" : base;
+}
+
+interface Props {
   apFcStatus: string;
   apFcImg?: string;
-  rankTitle?: string;
-  rankImg?: string;
+  rankImgMap: Map<string, string>;
   syncStatus?: string;
   syncImg?: string;
   showMaxAchv: boolean;
   isDxMode: boolean;
   isHighScore?: boolean;
-  achievement: number;
-  maxAchv: number;
+  dxAchv: number;
+  finaleAchv: number;
+  maxFinaleAchv: number;
+  fetchRankImage: (title: string) => void;
   toggleDisplayMode: () => void;
 }
-export class AchievementInfo extends React.PureComponent<AchievementInfoProps> {
-  state = {showMaxAchv: false};
+interface State {
+  rankTitle: string;
+}
+export class AchievementInfo extends React.PureComponent<Props, State> {
+  static getDerivedStateFromProps(props: Props) {
+    const {dxAchv, apFcStatus, finaleAchv, isDxMode} = props;
+    return {rankTitle: calculateRankTitle(finaleAchv, isDxMode, dxAchv, apFcStatus)};
+  }
+
+  componentDidMount() {
+    this.fetchRankImage();
+  }
+
+  componentDidUpdate() {
+    this.fetchRankImage();
+  }
+
   render() {
     const {
-      apFcStatus, apFcImg, rankTitle, rankImg, isHighScore,
-      syncStatus, syncImg, maxAchv, achievement, isDxMode,
-      toggleDisplayMode, showMaxAchv
+      apFcStatus,
+      apFcImg,
+      rankImgMap,
+      isHighScore,
+      syncStatus,
+      syncImg,
+      maxFinaleAchv,
+      dxAchv,
+      finaleAchv,
+      isDxMode,
+      toggleDisplayMode,
+      showMaxAchv,
     } = this.props;
-    const rankElem = rankImg ? <img className="rankImg" src={rankImg} alt={rankTitle} /> : rankTitle;
-    const apFcElem = apFcImg ? <img className="apFcImg" src={apFcImg} alt={apFcStatus} /> : apFcStatus;
-    const syncElem = syncImg ? <img className="syncImg" src={syncImg} alt={syncStatus} /> : this.getSyncStatusText(syncStatus, isDxMode);
-    const achvText = isDxMode ? achievement.toFixed(4) : achievement.toFixed(2);
-    const maxAchvText = isDxMode ? maxAchv.toFixed(4) : maxAchv.toFixed(2);
+    const {rankTitle} = this.state;
+    const rankImg = rankImgMap.get(rankTitle);
+    const rankElem = rankImg ? (
+      <img className="rankImg" src={rankImg} alt={rankTitle} />
+    ) : (
+      rankTitle
+    );
+    const apFcElem = apFcImg ? (
+      <img className="apFcImg" src={apFcImg} alt={apFcStatus} />
+    ) : (
+      apFcStatus
+    );
+    const syncElem = syncImg ? (
+      <img className="syncImg" src={syncImg} alt={syncStatus} />
+    ) : (
+      this.getSyncStatusText(syncStatus, isDxMode)
+    );
+    const achvText = isDxMode ? dxAchv.toFixed(4) : finaleAchv.toFixed(2);
+    const maxAchvText = isDxMode ? MAX_DX_ACHIEVEMENT.toFixed(4) : maxFinaleAchv.toFixed(2);
     return (
       <div className="achievementInfo">
         <div className="achvInfoSpace"></div>
         <div className="rank">{rankElem}</div>
-        <div className="apfc">{apFcElem}</div>
+        <div className={getApFcClassName(apFcStatus)}>{apFcElem}</div>
         <div className="sync">{syncElem}</div>
         <div className="playerScore">
           <div className="highScore">{isHighScore ? "HIGH SCORE!!" : " "}</div>
@@ -42,11 +110,11 @@ export class AchievementInfo extends React.PureComponent<AchievementInfoProps> {
               {showMaxAchv && <span className="maxAchv">{maxAchvText}％</span>}
             </div>
           </div>
-        </div>  
+        </div>
       </div>
     );
   }
-  
+
   private getSyncStatusText(syncStatus?: string, isDxMode?: boolean) {
     if (syncStatus && !isDxMode) {
       switch (syncStatus) {
@@ -59,5 +127,13 @@ export class AchievementInfo extends React.PureComponent<AchievementInfoProps> {
       }
     }
     return syncStatus;
+  }
+
+  private fetchRankImage() {
+    const {rankImgMap, fetchRankImage} = this.props;
+    const {rankTitle} = this.state;
+    if (!rankImgMap.has(rankTitle)) {
+      fetchRankImage(rankTitle);
+    }
   }
 }

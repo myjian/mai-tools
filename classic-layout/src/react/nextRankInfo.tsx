@@ -14,14 +14,14 @@ export class NextRankInfo extends React.PureComponent<NextRankInfoProps> {
     return (
       <tr className="nextRank">
         <th className="noRightBorder" colSpan={4}>NEXT RANK</th>
-        <td className="noLeftBorder" colSpan={2} id="nextRank">
+        <td className="noLeftBorder" colSpan={2}>
           {nextRankTitle && <span className="nextRankTitle">{nextRankTitle}</span>}
           {nextRankDiff && <span className="nextRankDiff">{nextRankDiff}</span>}
         </td>
       </tr>
     );
   }
-  
+
   private getNextRankDiff() {
     const {nextRank} = this.props;
     if (!nextRank) {

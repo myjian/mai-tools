@@ -3,12 +3,12 @@ import React from 'react';
 import {DisplayMode} from '../constants';
 import {formatFloat} from '../numberHelper';
 import {JudgementDisplayMap} from '../types';
-import {NoteJudgement} from './noteJudgement';
+import {getLastColumnText, NoteJudgement} from './noteJudgement';
 
 interface BreakNoteJudgementProps {
   judgements: JudgementDisplayMap;
   distribution: Map<number, number>;
-  lastColumn: {score: number, isMax: boolean};
+  lastColumn: {score: number|string, isMax: boolean};
   isDxMode: boolean;
   displayMode: DisplayMode;
 }
@@ -16,7 +16,6 @@ export class BreakNoteJudgement extends React.PureComponent<BreakNoteJudgementPr
   render() {
     const {judgements, distribution, lastColumn, isDxMode, displayMode} = this.props;
     const scoreClass = lastColumn.isMax ? "score maxScore" : "score";
-    const score = lastColumn.score;
     if (displayMode === DisplayMode.DETAIL) {
       return (
         <tr className="breakNoteRow">
@@ -33,7 +32,7 @@ export class BreakNoteJudgement extends React.PureComponent<BreakNoteJudgementPr
             </div>
           </td>
           <td className="noLeftBorder"><div className="miss missWithBefore">{distribution.get(0)}</div></td>
-          <td className={scoreClass}>{formatFloat(score, 4)}</td>
+          <td className={scoreClass}>{getLastColumnText(lastColumn.score, isDxMode)}</td>
         </tr>
       );
     } else {
@@ -42,6 +41,7 @@ export class BreakNoteJudgement extends React.PureComponent<BreakNoteJudgementPr
           noteType="break"
           judgements={judgements}
           lastColumn={lastColumn}
+          isDxMode={isDxMode}
         />
       );
     }

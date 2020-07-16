@@ -9,6 +9,9 @@ function parseNumArrayFromText(line: string, fallback: StrictJudgementMap): Stri
   if (!textArr) {
     return fallback;
   }
+  if (textArr.length < 4) {
+    throw new Error("Cannot parse note judgements");
+  }
   const numArr = textArr.map((num) => parseInt(num, 10));
   if (numArr.length > 4) {
     return {cp: numArr[0], perfect: numArr[1], great: numArr[2], good: numArr[3], miss: numArr[4]};
@@ -17,7 +20,13 @@ function parseNumArrayFromText(line: string, fallback: StrictJudgementMap): Stri
 }
 
 export function parseJudgements(text: string): Map<NoteType, StrictJudgementMap> {
-  const jTextLines = text.split("\n");
+  let jTextLines = text.split("_")
+  if (jTextLines.length === 1) {
+    jTextLines = text.split("\n");
+  }
+  if (jTextLines.length < 4) {
+    throw new Error("Cannot parse note judgement lines");
+  }
   const judgementsPerType = new Map();
   const breakJ = parseNumArrayFromText(jTextLines.pop(), ZERO_JUDGEMENT);
   judgementsPerType.set("break", breakJ);
@@ -31,5 +40,5 @@ export function parseJudgements(text: string): Map<NoteType, StrictJudgementMap>
   judgementsPerType.set("hold", holdJ);
   const tapJ = parseNumArrayFromText(jTextLines.pop(), ZERO_JUDGEMENT);
   judgementsPerType.set("tap", tapJ);
-  return judgementsPerType; 
+  return judgementsPerType;
 }

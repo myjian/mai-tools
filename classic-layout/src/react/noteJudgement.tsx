@@ -11,14 +11,22 @@ function getPerfectCount(j: JudgementDisplayMap | StrictJudgementMap) {
   return j.perfect;
 }
 
+export function getLastColumnText(score: number|string, isDxMode: boolean) {
+  if (typeof score === "string") {
+    return score;
+  }
+  return isDxMode ? formatFloat(score, 4) + "%" : score.toLocaleString("en");
+}
+
 interface NoteJudgementProps {
   noteType: string;
   judgements: JudgementDisplayMap | StrictJudgementMap;
-  lastColumn: {score: number, isMax: boolean};
+  lastColumn: {score: number|string, isMax: boolean};
+  isDxMode: boolean;
 }
 export class NoteJudgement extends React.PureComponent<NoteJudgementProps> {
   render() {
-    const {noteType, judgements, lastColumn} = this.props;
+    const {noteType, judgements, lastColumn, isDxMode} = this.props;
     if (!judgements) {
       return null;
     }
@@ -32,14 +40,8 @@ export class NoteJudgement extends React.PureComponent<NoteJudgementProps> {
         <td className="great">{judgements.great}</td>
         <td className="good">{judgements.good}</td>
         <td className="miss">{judgements.miss}</td>
-        <td className={scoreClass}>{this.getLastColumnText()}</td>
+        <td className={scoreClass}>{getLastColumnText(lastColumn.score, isDxMode)}</td>
       </tr>
     );
-  }
-  
-  private getLastColumnText() {
-    const {lastColumn} = this.props;
-    const score = lastColumn.score;
-    return formatFloat(score, 4);
   }
 }

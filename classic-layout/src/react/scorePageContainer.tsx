@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {calculateFinaleScore} from '../scoreCalc';
+import {calculateScoreInfo} from '../scoreCalc';
 import {
   BreakScoreMap,
   FullJudgementMap,
@@ -50,11 +50,11 @@ interface Props {
   songImgSrc?: string;
   achievement: number;
   noteJudgements: Map<NoteType, StrictJudgementMap>;
-  difficulty: string;
+  difficulty?: string;
   track: string;
   date: string;
   highScore?: boolean;
-  combo: string;
+  combo?: string;
   syncStatus?: string;
   rankImg: Map<string, string>;
   apFcImg?: string;
@@ -75,17 +75,12 @@ interface State {
 }
 export class ScorePageContainer extends React.PureComponent<Props, State> {
   static getDerivedStateFromProps(nextProps: Props) {
-    const info = calculateFinaleScore(nextProps.noteJudgements, nextProps.achievement);
+    const info = calculateScoreInfo(nextProps.noteJudgements, nextProps.achievement);
     const totalJudgements = calculateTotalJudgements(nextProps.noteJudgements);
     const apFcStatus = calculateApFcStatus(totalJudgements, info.finaleBorder);
     return {...info, totalJudgements, apFcStatus};
   }
-  
-  constructor(props: Props) {
-    super(props);
-    this.state = ScorePageContainer.getDerivedStateFromProps(props);
-  }
-  
+
   render() {
     return <ScorePage {...this.props} {...this.state} />;
   }

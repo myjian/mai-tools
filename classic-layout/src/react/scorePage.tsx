@@ -1,13 +1,8 @@
 import React from 'react';
 
 import {DisplayMode} from '../constants';
-import {formatFloat, roundFloat} from '../numberHelper';
-import {
-  getFinaleRankTitle,
-  getRankDefinitions,
-  getRankIndexByAchievement,
-  getRankTitle,
-} from '../rank-functions';
+import {formatFloat} from '../numberHelper';
+import {getRankDefinitions, getRankIndexByAchievement} from '../rankFunctions';
 import {
   BreakScoreMap,
   FullJudgementMap,
@@ -24,6 +19,8 @@ import {JudgementContainer} from './judgementContainer';
 import {SongImg} from './songImg';
 import {SongInfo} from './songInfo';
 
+const LOSS_PREFIX = "-";
+
 function getNextDisplayMode(m: DisplayMode): DisplayMode {
   switch (m) {
     case DisplayMode.NORMAL:
@@ -35,14 +32,21 @@ function getNextDisplayMode(m: DisplayMode): DisplayMode {
   }
 }
 
+function formatLossNumber(loss: number, digits: number) {
+  if (digits) {
+    return LOSS_PREFIX + formatFloat(loss, digits) + "%";
+  }
+  return LOSS_PREFIX + loss.toLocaleString("en");
+}
+
 interface ScorePageProps {
   songTitle: string;
   songImgSrc?: string;
   achievement: number;
   apFcImg?: string;
-  combo: string;
+  combo?: string;
   date: string;
-  difficulty: string;
+  difficulty?: string;
   finaleAchievement: number;
   finaleBorder: Map<string, number>;
   highScore?: boolean;
@@ -70,15 +74,6 @@ interface ScorePageState {
 
 export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageState> {
   state: ScorePageState = {isDxMode: false, displayMode: DisplayMode.NORMAL};
-  
-  componentDidMount() {
-    const {achievement, finaleAchievement, rankImg, fetchRankImage} = this.props;
-    const {isDxMode} = this.state;
-    const rankTitle = isDxMode ? getRankTitle(achievement) : getFinaleRankTitle(finaleAchievement);
-    if (!rankImg.has(rankTitle)) {
-      fetchRankImage(rankTitle);
-    }
-  }
 
   render() {
     const {
@@ -89,10 +84,6 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
       breakDistribution, totalJudgements, playerScorePerType,
     } = this.props;
     const {isDxMode, displayMode, displayScorePerType, displayNoteJudgements} = this.state;
-    const isLossMode = displayMode === DisplayMode.LOSS;
-    const achv = isDxMode ? achievement : finaleAchievement;
-    const maxAchv = isDxMode ? 101 : maxFinaleScore;
-    const rankTitle = isDxMode ? getRankTitle(achv) : getFinaleRankTitle(achv);
     return (
       <div className="songScoreContainer">
         <DateAndPlace date={date} isDxMode={isDxMode} toggleDxMode={this.toggleDxMode} />
@@ -107,32 +98,33 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
           <AchievementInfo
             apFcStatus={apFcStatus}
             apFcImg={apFcImg}
-            rankTitle={rankTitle}
-            rankImg={rankImg.get(rankTitle)}
+            rankImgMap={rankImg}
             syncStatus={syncStatus}
             syncImg={syncImg}
             isDxMode={isDxMode}
             isHighScore={highScore}
-            achievement={achv}
-            maxAchv={maxAchv}
+            dxAchv={achievement}
+            finaleAchv={finaleAchievement}
+            maxFinaleAchv={maxFinaleScore}
             showMaxAchv={displayMode !== DisplayMode.NORMAL}
             toggleDisplayMode={this.toggleDisplayMode}
+            fetchRankImage={this.props.fetchRankImage}
           />
           <JudgementContainer
             noteJudgements={displayNoteJudgements || noteJudgements}
             breakDistribution={breakDistribution}
             totalJudgements={displayNoteJudgements ? displayNoteJudgements.get("total") : totalJudgements}
             scorePerType={displayScorePerType || playerScorePerType}
-            nextRank={this.getNextRankEntry(achv, isDxMode)}
+            nextRank={this.getNextRankEntry(isDxMode)}
             combo={combo}
             isDxMode={isDxMode}
             displayMode={displayMode}
           />
         </div>
       </div>
-    );    
+    );
   }
-  
+
   private toggleDxMode = () => {
     this.setState(state => {
       const isDxMode = !state.isDxMode;
@@ -142,7 +134,7 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
       return {isDxMode, displayNoteJudgements, displayScorePerType};
     });
   }
-  
+
   private toggleDisplayMode = () => {
     this.setState(state => {
       const displayMode = getNextDisplayMode(state.displayMode);
@@ -153,7 +145,8 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
     });
   }
 
-  private getNextRankEntry(achv: number, isDxMode: boolean) {
+  private getNextRankEntry(isDxMode: boolean) {
+    const achv = isDxMode ? this.props.achievement : this.props.finaleAchievement;
     if (isDxMode) {
       if (achv === 101) {
         return undefined;
@@ -185,10 +178,10 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
       const map = new Map<FullNoteType, JudgementDisplayMap>();
       lossDetail.forEach((d, noteType) => {
         map.set(noteType, {
-          perfect: formatFloat(d.perfect, digits),
-          great: formatFloat(d.great, digits),
-          good: formatFloat(d.good, digits),
-          miss: formatFloat(d.miss, digits),
+          perfect: formatLossNumber(d.perfect, digits),
+          great: formatLossNumber(d.great, digits),
+          good: formatLossNumber(d.good, digits),
+          miss: formatLossNumber(d.miss, digits),
         });
       });
       return map;
@@ -202,10 +195,11 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
     const {achvLossDetail} = this.props;
     const lossDetail = isDxMode ? achvLossDetail.dx : achvLossDetail.finale;
     if (displayMode === DisplayMode.LOSS) {
+      const digits = isDxMode ? 4 : 0;
       const displayScorePerType = new Map();
       lossDetail.forEach((detail, noteType) => {
-        const score = detail.total;
-        const isMax = score === 0;
+        const isMax = detail.total === 0;
+        const score = formatLossNumber(detail.total, digits);
         displayScorePerType.set(noteType, {isMax, score});
       });
       return displayScorePerType;
