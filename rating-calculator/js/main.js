@@ -195,6 +195,11 @@ if (window.opener) {
       }
     }
   });
-  window.opener.postMessage("ready", "https://maimaidx-eng.com");
-  window.opener.postMessage("ready", "https://maimaidx.jp");
+  const referrer = document.referrer && new URL(document.referrer).origin;
+  if (referrer) {
+    window.opener.postMessage("ready", referrer);
+  } else {
+    window.opener.postMessage("ready", "https://maimaidx-eng.com");
+    window.opener.postMessage("ready", "https://maimaidx.jp");
+  }
 }

@@ -10,7 +10,7 @@ import {walkBreakDistributions} from './backtracing.js';
 import {calculateAchvLoss} from './achvLoss.js';
 import {roundFloat} from './formatHelper.js';
 
-const inputElem = document.getElementsByClassName("input")[0];
+const inputElem = document.querySelector(".input");
 const convertBtn = document.getElementById("convert");
 
 const WIKI_URL_PREFIX = "https://maimai.fandom.com/zh/wiki/";
@@ -107,7 +107,7 @@ function calculateFinaleScore(
       [0, breakJudgements[offset + 3]] // Miss
     ]);
   }
-  
+
   // Figure out FiNALE achievement
   let totalBreakCount = 0;
   let playerBreakNoteScore = 0;
@@ -119,7 +119,7 @@ function calculateFinaleScore(
   const maxNoteScore = totalBaseScore + BREAK_BONUS_POINTS * totalBreakCount;
   const finaleAchievement = roundFloat((100.0 * playerNoteScore) / totalBaseScore, "floor", 100);
   const finaleMaxAchievement = roundFloat((100.0 * maxNoteScore) / totalBaseScore, "floor", 100);
-  
+
   // Figure out achievement loss per note type
   const achvLossPerType = calculateAchvLoss(
     playerAchievement,
@@ -162,6 +162,10 @@ function calculateFinaleScore(
   ];
 }
 
+function trimSpaces(textLine) {
+  return textLine.trim().replace(/\s+/g, "-");
+}
+
 function parseNumArrayFromText(line, fallback) {
   const textArr = line.match(/\d+/g);
   return textArr ? textArr.map((num) => parseInt(num, 10)) : fallback;
@@ -173,7 +177,7 @@ function performConversion(songTitle, achievement, judgements) {
     const songTitleElem = document.getElementById("songTitle");
     songTitleElem.innerText = songTitle || "";
     songTitleElem.href = WIKI_URL_PREFIX + encodeURIComponent(songTitle) + WIKI_URL_SUFFIX;
-    
+
     const noteTypes = judgements.length === 4 ? STD_NOTE_TYPES : DX_NOTE_TYPES;
     const judgementsPerType = new Map();
     judgements.forEach((j, idx) => {
@@ -208,7 +212,7 @@ function performConversion(songTitle, achievement, judgements) {
       judgementsPerType,
       achievement
     );
-    
+
     // Update player score table UI
     document.getElementById("finaleScore").innerText = finaleAchievement.toFixed(2);
     document.getElementById("maxFinaleScore").innerText = maxFinaleScore.toFixed(2);
@@ -271,7 +275,7 @@ function performConversion(songTitle, achievement, judgements) {
       const lossElem = document.getElementById(`${noteType}FinaleAchvLoss`);
       lossElem.innerText = loss;
     })
-    
+
     // Update chart info - percentage per note type
     pctPerNoteType.forEach((pct, nt) => {
       nt = nt.charAt(0).toUpperCase() + nt.substring(1);
@@ -293,7 +297,11 @@ function performConversion(songTitle, achievement, judgements) {
   }
 }
 
-function parseJudgement(jTextLines) {
+function parseJudgement(text) {
+  let lines = text.split("_");
+  if (lines.length < 5) {
+    lines = text.split("\n");
+  }
   const breakJ = parseNumArrayFromText(jTextLines.pop(), undefined);
   // zeroJ is a placeholder for non-existent note types
   const zeroJ = ZERO_JUDGEMENT.slice(0, breakJ.length);
@@ -339,14 +347,11 @@ convertBtn.addEventListener("click", (evt) => {
     }
   }
   if (songTitle && achievementText && noteDetails.length) {
-    const baseUrl = document.location.href.substring(
-      0,
-      document.location.href.indexOf(document.location.pathname) + document.location.pathname.length
-    );
+    const baseUrl = document.location.origin + document.location.pathname;
     const query = new URLSearchParams();
     query.set("st", songTitle);
     query.set("ac", achievementText);
-    query.set("nd", noteDetails.join("\n"));
+    query.set("nd", noteDetails.map(trimSpaces).join("_"));
     const newUrl = baseUrl + "?" + query;
     console.log(newUrl);
     window.location.assign(newUrl);
@@ -363,7 +368,7 @@ if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) 
   if (songTitle && achievementText && noteDetail) {
     document.title = `${songTitle} - ${document.title}`;
     const achievement = parseFloat(achievementText);
-    const judgements = parseJudgement(noteDetail.split("\n"));
+    const judgements = parseJudgement(noteDetail);
     performConversion(songTitle, achievement, judgements);
     shouldShowInput = false;
   }
