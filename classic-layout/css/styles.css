@@ -72,7 +72,7 @@ body {
 }
 
 .widthLimit {
-  width: 480px;
+  width: 460px;
   margin: 20px auto;
   padding: 6px;
   border-radius: 18px;
@@ -81,6 +81,7 @@ body {
   background-size: 540px;
   background-repeat: repeat;
   box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.4), 0px 2px 5px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
 }
 
 .container {
@@ -338,7 +339,7 @@ body {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 .judgement td, .judgement th {
@@ -435,6 +436,7 @@ td.perfect, td.great, td.good, td.miss, td.score {
 .credit {
   color: #eee;
   text-align: center;
+  padding-bottom: 40px;
   margin: 16px 0;
 }
 

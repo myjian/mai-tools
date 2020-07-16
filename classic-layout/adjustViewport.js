@@ -1,6 +1,6 @@
 (function(w, d, n){
   const BASEW = 700;
-  const CW = 500;
+  const CW = 466;
   function updateMetaViewport() {
     const viewport = d.querySelector("meta[name='viewport']");
 		const ua = n.userAgent.toLowerCase();
