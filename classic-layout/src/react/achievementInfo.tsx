@@ -29,6 +29,10 @@ function getApFcClassName(apFcStatus?: string) {
   return apFcStatus.includes("AP") ? base + " ap" : base;
 }
 
+function getSyncClassName(isDxMode: boolean) {
+  return isDxMode ? "sync" : "sync finaleSync";
+}
+
 interface Props {
   apFcStatus: string;
   apFcImg?: string;
@@ -100,7 +104,7 @@ export class AchievementInfo extends React.PureComponent<Props, State> {
         <div className="achvInfoSpace"></div>
         <div className="rank">{rankElem}</div>
         <div className={getApFcClassName(apFcStatus)}>{apFcElem}</div>
-        <div className="sync">{syncElem}</div>
+        <div className={getSyncClassName(isDxMode)}>{syncElem}</div>
         <div className="playerScore">
           <div className="highScore">{isHighScore ? "HIGH SCORE!!" : " "}</div>
           <div className="achievement" tabIndex={0} onClick={toggleDisplayMode}>

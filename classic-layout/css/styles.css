@@ -204,6 +204,7 @@ body {
   margin-top: 3px;
   height: 50px;
   mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 40px);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 40px);
   transform: rotateX(180deg);
 }
 
@@ -251,7 +252,6 @@ body {
 
 .sync {
   --c: #1061d0;
-  font-weight: bold;
 }
 
 .rank, .apfc, .sync {
@@ -266,14 +266,13 @@ body {
   text-shadow: 1px 1px 4px var(--sc);
   /* text-shadow: 0 -1px 2px var(--sc), -1px 0 2px var(--sc), 1px 0 2px var(--sc), 0 1px 2px var(--sc); */
   font-size: 22px;
-}
-
-.rank, .apfc {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 900;
 }
 
-.sync {
+.finaleSync {
+  font-weight: bold;
+  font-family: unset;
   font-size: 14px;
   line-height: 16px;
 }
@@ -287,10 +286,10 @@ body {
 }
 
 .playerScore {
-  flex: 1 1 max-content;
+  flex: 1 1 140px;
   text-align: center;
   padding: 0 10px 0 15px;
-  height: 54px;
+  min-height: 54px;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -300,6 +299,12 @@ body {
   color: #ea3a69;
   font-size: 17px;
   font-weight: bold;
+  flex: 2;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column-reverse;
+  text-align: center;
 }
 
 .achievement {
@@ -307,6 +312,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
+  white-space: nowrap;
 }
 
 .achvNum {
