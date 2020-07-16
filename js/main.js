@@ -302,14 +302,14 @@ function parseJudgement(text) {
   if (lines.length < 5) {
     lines = text.split("\n");
   }
-  const breakJ = parseNumArrayFromText(jTextLines.pop(), undefined);
+  const breakJ = parseNumArrayFromText(lines.pop(), undefined);
   // zeroJ is a placeholder for non-existent note types
   const zeroJ = ZERO_JUDGEMENT.slice(0, breakJ.length);
 
-  const touchJ = parseNumArrayFromText(jTextLines.pop(), undefined);
-  const slideJ = parseNumArrayFromText(jTextLines.pop(), zeroJ);
-  const holdJ = parseNumArrayFromText(jTextLines.pop(), zeroJ);
-  const tapJ = parseNumArrayFromText(jTextLines.pop(), zeroJ);
+  const touchJ = parseNumArrayFromText(lines.pop(), undefined);
+  const slideJ = parseNumArrayFromText(lines.pop(), zeroJ);
+  const holdJ = parseNumArrayFromText(lines.pop(), zeroJ);
+  const tapJ = parseNumArrayFromText(lines.pop(), zeroJ);
   const judgements = [tapJ, holdJ, slideJ, breakJ];
   if (touchJ) {
     judgements.splice(3, 0, touchJ);
