@@ -1,0 +1,368 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #606fb3;
+  font-family: "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, "ＭＳ Ｐゴシック","MS P Gothic", sans-serif;
+}
+
+[tabindex] {
+  cursor: pointer;
+  outline: none;
+}
+
+[tabIndex]:focus {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.remaster {
+  color: #bd6bd5;
+}
+
+.master {
+  color: #916dd2;
+}
+
+.expert {
+  color: #bc2141;
+}
+
+.advanced {
+  color: #fbb822;
+}
+
+.basic {
+  color: #49b63e;
+}
+
+.perfect {
+  color: #de8235;
+}
+
+.great {
+  color: #e730a4;
+}
+
+.good {
+  color: #229337;
+}
+
+.miss {
+  color: #6a648a;
+}
+
+.score {
+  color: #254a76;
+}
+
+.nextRank {
+  color: #ba32b8;
+}
+
+.maxCombo {
+  color: #ed245b;
+}
+
+.maxScore {
+  color: #f6a82c;
+}
+
+.widthLimit {
+  width: 480px;
+  margin: 0 auto;
+  border: solid #256ac4;
+  border-width: 2px 0 2px 0;
+  padding: 6px;
+  background-color: #e5b323;
+/*  background-image: url(../maimai-img/bg_star.png); */
+  background-size: 540px;
+  background-repeat: repeat;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.4), 0px 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.container {
+  background-color: #223641;
+  padding: 6px;
+  padding-bottom: 30px;
+  min-height: 100vh;
+}
+
+.songScoreContainer {
+  width: 100%;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.dateAndPlace {
+  background-color: #0095d7;
+  color: white;
+  border: 1px solid #dddce0;
+  border-bottom-style: none;
+  padding: 10px;
+  line-height: 24px;
+  font-family: serif;
+  letter-spacing: 0.3px;
+}
+
+.date, .place {
+  padding: 2px 4px;
+}
+
+.date {
+  padding-bottom: 1px;
+}
+
+.place {
+  padding-top: 1px;
+}
+
+.songScoreBody {
+  border: 6px solid #dddce0;
+  padding: 4px 6px;
+}
+
+.trackTopLine {
+  color: #999999;
+  box-shadow: 1px 1px 1px #ececec;
+  margin-bottom: 10px;
+}
+
+.track {
+  color: #fd3569;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.songTitle {
+  margin: -5px 0 0;
+  font-size: 25px;
+}
+
+.songWikiLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.songImgContainer {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.songImg {
+  width: 300px;
+  height: 300px;
+}
+
+.songImgPlaceholder {
+  --c1: #eee;
+  --c2: #bbb;
+  --c3: #ccc;
+  --t: 48px;
+  --angle: 70deg;
+  --grad: var(--c1) var(--t), var(--c1) calc(var(--t) * 2), var(--c2) calc(var(--t) * 2), var(--c2) calc(var(--t) * 3), var(--c3) calc(var(--t) * 3), var(--c3) calc(var(--t) * 4);
+  background: repeating-linear-gradient(var(--angle), var(--grad)), var(--c1);
+  position: relative;
+}
+
+.songImgPlaceholder::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+  background: repeating-linear-gradient(calc(var(--angle) * -1), var(--grad)), var(--c1);
+}
+
+.songImgReflecContainer {
+  position: relative;
+  width: 300px;
+  margin-top: 3px;
+  height: 50px;
+  mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 40px);
+  transform: rotateX(180deg);
+}
+
+.songImgReflec {
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 300px;
+}
+
+.songImgReflecPlaceholder {
+  height: 100%;
+  width: 100%;
+}
+
+.achievementInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  padding: 0 10px;
+  margin-top: 4px;
+}
+
+.achvInfoSpace {
+  flex: 10 0 5px;
+}
+
+.rank, .apfc, .sync {
+  flex: 0 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  text-shadow: 0 -1px 2px #ff6509, -1px 0 2px #ff6509, 1px 0 2px #ff6509, 0 1px 2px #ff6509;
+  font-size: 22px;
+}
+
+.apfc:empty, .sync:empty {
+  display: none;
+}
+
+.rankImg, .apFcImg, .syncImg {
+  max-width: 45px;
+}
+
+.playerScore {
+  flex: 1 1 max-content;
+  text-align: center;
+  padding: 0 10px 0 15px;
+  height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
+.highScore {
+  color: #ea3a69;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.achievement {
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.achvNum {
+  display: flex;
+  flex-direction: column;
+}
+
+.maxAchv {
+  border-top: 1px solid black;
+  padding: 0 3px;
+}
+
+.hasMaxAchv {
+  font-size: 14px;
+}
+
+.judgementContainer {
+  margin: 4px 4px 8px;
+}
+
+.judgement {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+.judgement td, .judgement th {
+  border: 2px solid #dcb335;
+  vertical-align: middle;
+  padding: 0 2px;
+  font-weight: 700;
+}
+
+th {
+  text-align: center;
+}
+
+td.perfect, td.great, td.good, td.miss, td.score {
+  text-align: right;
+}
+
+.breakDistribution {
+  display: flex;
+}
+
+.breakDistribution span {
+  flex: 3 1 20px;
+  text-align: center;
+  padding-left: 3px;
+  position: relative;
+}
+
+.breakDistribution .perfect, .breakDistribution .great {
+  flex-grow: 1;
+}
+
+.breakNoteRow .miss {
+  position: relative;
+  text-align: right;
+}
+
+.breakDistribution .perfect:after,
+.breakDistribution .great:after,
+.missWithBefore:before {
+  content: "-";
+  position: absolute;
+  right: -5px;
+  color: #888;
+  opacity: 0.3;
+}
+
+.missWithBefore:before {
+  position: static;
+  padding-right: 26px;
+}
+
+.breakDistribution .good {
+  text-align: right;
+  padding-right: 1px;
+}
+
+.judgement .noLeftBorder {
+  border-left-style: none;
+}
+
+.judgement .noRightBorder {
+  border-right-style: none;
+}
+
+.nextRank td, .maxCombo td {
+  text-align: right;
+}
+
+.nextRankTitle {
+  padding-right: 18px;
+  opacity: 0.5;
+}
+
+.tableSeparator td {
+  border-style: none;
+  height: 22px;
+}
+
+.rowHead {
+  width: 54px;
+}
+
+.score {
+  width: 94px;
+}
+
+.hidden {
+  display: none;
+}

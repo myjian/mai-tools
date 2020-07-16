@@ -1,0 +1,33 @@
+{
+  "name": "mai-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "build": "webpack",
+    "start": "serve -l 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myjian/mai-tools.git"
+  },
+  "keywords": [],
+  "author": "Ming-Yuan Jian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/myjian/mai-tools/issues"
+  },
+  "homepage": "https://myjian.github.com/mai-tools",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.43",
+    "@types/react-dom": "^16.9.8",
+    "ts-loader": "^8.0.1",
+    "typescript": "^3.9.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  }
+}
