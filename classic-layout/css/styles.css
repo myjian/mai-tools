@@ -345,8 +345,19 @@ body {
 .judgement td, .judgement th {
   border: 2px solid #e5b323;
   vertical-align: middle;
-  padding: 0 2px;
+  padding: 1px 2px;
   font-weight: 700;
+}
+
+@media only screen and (max-width: 700px) {
+  .judgement {
+    table-layout: auto;
+    font-size: 1.1rem;
+  }
+
+  .judgement td, .judgement th {
+    padding: 2px 2px;
+  }
 }
 
 th {
