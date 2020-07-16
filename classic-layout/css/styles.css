@@ -96,6 +96,7 @@ body {
   text-align: center;
   margin: 5px 0 0;
   padding: 0;
+  padding-bottom: 4px;
   color: white;
   font-weight: normal;
 }
@@ -166,7 +167,6 @@ body {
 }
 
 .songImgContainer {
-  height: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -174,8 +174,8 @@ body {
 }
 
 .songImg {
-  width: 300px;
-  height: 300px;
+  width: 290px;
+  height: 290px;
 }
 
 .songImgPlaceholder {
@@ -201,9 +201,9 @@ body {
 
 .songImgReflecContainer {
   position: relative;
-  width: 300px;
+  width: 290px;
   margin-top: 3px;
-  height: 50px;
+  height: 45px;
   mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 40px);
   -webkit-mask-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4) 40px);
   transform: rotateX(180deg);
@@ -289,7 +289,7 @@ body {
 .playerScore {
   flex: 1 1 140px;
   text-align: center;
-  padding: 0 10px 0 15px;
+  padding: 0 2px 0 7px;
   min-height: 54px;
   display: flex;
   flex-direction: column;
@@ -300,6 +300,7 @@ body {
   color: #ea3a69;
   font-size: 17px;
   font-weight: bold;
+  padding: 0 8px;
   flex: 2;
   display: flex;
   justify-content: start;
@@ -311,6 +312,7 @@ body {
 .achievement {
   font-size: 18px;
   display: flex;
+  padding: 0 8px;
   justify-content: center;
   align-items: center;
   flex: 1;
@@ -328,7 +330,7 @@ body {
 }
 
 .hasMaxAchv {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .judgementContainer {
@@ -349,14 +351,29 @@ body {
   font-weight: 700;
 }
 
+.rowHead {
+  width: 54px;
+}
+
+.score {
+  width: 94px;
+}
+
 @media only screen and (max-width: 700px) {
   .judgement {
-    table-layout: auto;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .judgement td, .judgement th {
     padding: 2px 2px;
+  }
+
+  .rowHead {
+    width: 50px;
+  }
+
+  .score {
+    width: 90px;
   }
 }
 
@@ -428,14 +445,6 @@ td.perfect, td.great, td.good, td.miss, td.score {
 .tableSeparator td {
   border-style: none;
   height: 22px;
-}
-
-.rowHead {
-  width: 54px;
-}
-
-.score {
-  width: 94px;
 }
 
 .pageFooter {
