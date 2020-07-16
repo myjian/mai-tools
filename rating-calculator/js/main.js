@@ -38,22 +38,32 @@ function handleGameVersionChange() {
   );
 }
 
-async function readSongPropsFromText(text) {
-  const lines = text.split("\n");
-  // songPropsByName: song name -> array of song properties
-  // most arrays have only 1 entry, but some arrays have more than 1 entries
-  // because song name duplicates or it has both DX and Standard charts.
-  const songPropsByName = new Map();
-  for (const line of lines) {
-    const innerLvData = parseInnerLevelLine(line);
-    if (innerLvData) {
-      if (!songPropsByName.has(innerLvData.songName)) {
-        songPropsByName.set(innerLvData.songName, []);
+async function readSongProperties() {
+  const processText = (text) => {
+    const lines = text.split("\n");
+    // songPropsByName: song name -> array of song properties
+    // most arrays have only 1 entry, but some arrays have more than 1 entries
+    // because song name duplicates or it has both DX and Standard charts.
+    const songPropsByName = new Map();
+    for (const line of lines) {
+      const innerLvData = parseInnerLevelLine(line);
+      if (innerLvData) {
+        if (!songPropsByName.has(innerLvData.songName)) {
+          songPropsByName.set(innerLvData.songName, []);
+        }
+        songPropsByName.get(innerLvData.songName).push(innerLvData);
       }
-      songPropsByName.get(innerLvData.songName).push(innerLvData);
     }
-  }
-  return songPropsByName;
+    return songPropsByName;
+  };
+  return Promise((resolve) => {
+    let linesFromInput = innerLvInput.value.split("\n");
+    if (linesFromInput.length > 1) {
+      resolve(processText(linesFromInput));
+    } else {
+      fetch();
+    }
+  });
 }
 
 async function readPlayerScoreFromText(text, isDxPlus) {
@@ -69,7 +79,7 @@ async function readPlayerScoreFromText(text, isDxPlus) {
 }
 
 async function calculateAndShowRating() {
-  const songPropsByName = await readSongPropsFromText(innerLvInput.value);
+  const songPropsByName = await readSongProperties();
   console.log("Inner Level:");
   console.log(songPropsByName);
   if (songPropsByName.size > 600) {

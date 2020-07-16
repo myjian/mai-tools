@@ -49,7 +49,7 @@ function renderScoreRow(record, isCandidate, index) {
   );
   const ratingText = (
     isCandidate
-    ? Array.from(record.nextRanks.values()).join("\n")
+    ? Array.from(record.nextRanks.values()).map(r => r.minRt).join("\n")
     : Math.floor(record.rating)
   );
   const columns = [

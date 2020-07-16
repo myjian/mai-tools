@@ -1,11 +1,13 @@
 import {getRankDefinitions, getRankIndexByAchievement} from './rank-functions.js';
 import {calculateRatingRange} from './rating-functions.js';
-import {compareSongsByNextRating} from './record-comparator.js';
+import {getSongsByNextRatingComparator} from './record-comparator.js';
 import {SSSPLUS_MIN_ACHIEVEMENT} from './shared-constants.js';
 
+const CANDIDATE_SONGS_POOL_COUNT = 50;
 const CANDIDATE_SONGS_COUNT = 20;
+const MIN_RATING_ADJUSTMENT = 10; // for sorting order tweak
 
-function getNextRating(record, isDxPlus) {
+function getNextRating(record, isDxPlus, ratingThreshold) {
   const rankDefIdx = getRankIndexByAchievement(record.achievement, isDxPlus);
   if (rankDefIdx <= 0) {
     return [record.rating, record.achievement];
@@ -18,24 +20,30 @@ function getNextRating(record, isDxPlus) {
       continue;
     }
     const [minRt, maxRt] = calculateRatingRange(record.innerLv, rank, isDxPlus);
-    ratingByRank.set(rank.title, minRt);
+    if (maxRt >= ratingThreshold) {
+      ratingByRank.set(rank.title, {minRt, rank});
+    }
   }
   return ratingByRank;
 }
 
 export function getCandidateSongs(songScores, startIndex, isDxPlus) {
   const candidates = [];
+  const minRating = songScores[startIndex-1].rating;
   for (let i = startIndex; i < songScores.length; i++) {
     const record = songScores[i]
     if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
-      const ratingByRank = getNextRating(record, isDxPlus);
+      const ratingByRank = getNextRating(record, isDxPlus, minRating);
+      if (!ratingByRank.size) {
+        continue;
+      }
       record.nextRanks = ratingByRank;
       candidates.push(record);
-      if (candidates.length >= CANDIDATE_SONGS_COUNT) {
+      if (candidates.length >= CANDIDATE_SONGS_POOL_COUNT) {
         break;
       }
     }
   }
-  //candidates.sort(compareSongsByNextRating);
-  return candidates;
+  candidates.sort(getSongsByNextRatingComparator(minRating - MIN_RATING_ADJUSTMENT));
+  return candidates.slice(0, CANDIDATE_SONGS_COUNT);
 }
