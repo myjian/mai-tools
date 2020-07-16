@@ -72,7 +72,8 @@ body {
 }
 
 .widthLimit {
-  width: 460px;
+  max-width: 500px;
+  min-width: 460px;
   margin: 20px auto;
   padding: 6px;
   border-radius: 18px;
@@ -355,7 +356,7 @@ body {
 }
 
 .rowHead {
-  width: 54px;
+  width: 48px;
 }
 
 .score {
@@ -369,10 +370,6 @@ body {
 
   .judgement td, .judgement th {
     padding: 2px 2px;
-  }
-
-  .rowHead {
-    width: 50px;
   }
 
   .score {

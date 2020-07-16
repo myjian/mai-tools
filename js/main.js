@@ -347,7 +347,7 @@ convertBtn.addEventListener("click", (evt) => {
     }
   }
   if (songTitle && achievementText && noteDetails.length) {
-    const baseUrl = document.location.origin + document.location.pathname;
+    const baseUrl = document.location.origin + document.location.pathname + 'classic-layout/';
     const query = new URLSearchParams();
     query.set("st", songTitle);
     query.set("ac", achievementText);

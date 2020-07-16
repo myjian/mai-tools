@@ -1,6 +1,6 @@
 "use strict";
 (function (d) {
-  const BASE_NEWTAB_URL = "https://myjian.github.io/mai-tools/";
+  const BASE_NEWTAB_URL = "https://myjian.github.io/mai-tools/classic-layout/";
   const FINALE_RANK_IMG = new Map([
     ["S", "/maimai-mobile/maimai-img/icon_s.png"],
     ["S+", "/maimai-mobile/maimai-img/icon_s_plus.png"],
