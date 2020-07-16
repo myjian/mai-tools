@@ -338,7 +338,7 @@ body {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  font-size: 14px;
+  font-size: 0.92rem;
 }
 
 .judgement td, .judgement th {
