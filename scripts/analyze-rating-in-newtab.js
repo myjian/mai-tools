@@ -6,8 +6,8 @@
     ["ADVANCED", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"]
   ]);
 
-  function statusText(difficulty, end) {
-    switch (difficulty) {
+  function statusText(what, end) {
+    switch (what) {
       case "Re:MASTER":
         return (end ? "✔ 白譜成績下載完畢！" : "🕓 下載白譜成績中…");
       case "MASTER":
@@ -75,27 +75,58 @@
     }
   }
 
-  async function fetchScores(url, scoreList) {
+  async function fetchPage(url) {
     const response = await fetch(url);
     const html = await response.text();
     const parser = new DOMParser();
-    const dom = parser.parseFromString(html, "text/html");
+    return parser.parseFromString(html, "text/html");
+  }
+
+  async function fetchScores(url, scoreList) {
+    const dom = await fetchPage(url);
     const rows = dom.querySelectorAll(".main_wrapper.t_c .m_15");
     const state = {genre: "", scoreList: scoreList};
     rows.forEach(row => processRow(row, state));
   }
-  
+
+  async function fetchGameVersion(dom) {
+    const gameVer = dom.querySelector("select[name=version] option:last-of-type");
+    if (gameVer) {
+      return gameVer.value;
+    }
+    dom = await fetchPage("/maimai-mobile/record/musicVersion/");
+    return fetchGameVersion(dom);
+  }
+
+  function fetchPlayerGrade(dom) {
+    const gradeImg = dom.querySelector(".user_data_block_line ~ img.h_25");
+    if (gradeImg) {
+      const gradeIdx = gradeImg.src.lastIndexOf("grade_");
+      return gradeImg.src.substring(gradeIdx + 6, gradeIdx + 8);
+    }
+    return null;
+  }
+
   function postMessageToTab(tab, action, text) {
     const obj = {action: action, payload: text};
     tab.postMessage(obj, "https://myjian.github.io");
   }
 
-  async function fetchAllScores(tab, onError) {
+  async function fetchRatingInput(tab, onError) {
     const host = document.location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
       onError("請登入 maimai NET");
       return;
     }
+    // Fetch DX version
+    const gameVer = await fetchGameVersion(document.body);
+    postMessageToTab(tab, "gameVersion", gameVer);
+    // Fetch player grade
+    const playerGrade = fetchPlayerGrade(document.body);
+    if (playerGrade) {
+      postMessageToTab(tab, "playerGrade", playerGrade);
+    }
+    // Fetch all scores
     const scoreList = [];
     for (const [difficulty, url] of SCORE_URLS) {
       postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, false));
@@ -113,25 +144,15 @@
     alert(msg);
   }
 
-  function handleOutput(msg) {
-    const comment = document.querySelector(".comment_block");
-    if (comment) {
-      comment.innerText = comment.innerText + msg + "\n";
-    }
-    else {
-      console.log(msg);
-    }
-  }
-
   const newtab = window.open(
-    "https://myjian.github.io/mai-tools/rating-calculator/?t="+Math.floor(Date.now()/60000),
+    "https://myjian.github.io/mai-tools/rating-calculator/",
     "ratingcalc"
   );
   window.addEventListener("message", (evt) => {
     console.log(evt.origin, evt.data);
     if (evt.origin === "https://myjian.github.io") {
       if (evt.data === "ready") {
-        fetchAllScores(newtab, handleError);
+        fetchRatingInput(newtab, handleError);
       }
     }
   });

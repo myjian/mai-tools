@@ -43,8 +43,30 @@
       <h2 id="outputHeading">分析結果</h2>
       <div class="totalRatingRow">Rating： <span id="totalRating"></span></div>
       <div class="ratingOverview">
-        <span>新譜面 Rating：</span>&nbsp;<span id="newSongsRating"></span><br>
-        <span>舊譜面 Rating：</span>&nbsp;<span id="oldSongsRating"></span><br>
+        <table>
+          <tbody>
+            <tr>
+              <td>新譜面 Rating</td>
+              <td>：</td>
+              <td id="oldSongsRating"></td>
+            </tr>
+            <tr>
+              <td>舊譜面 Rating</td>
+              <td>：</td>
+              <td id="newSongsRating"></td>
+            </tr>
+            <tr id="gradeRating" class="hidden">
+              <td>
+                段位
+                (<span id="gradeTitle"></span>)
+              </td>
+              <td>：</td>
+              <td>
+                <span id="gradeBonus"></span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="ratingObjectDistribution">
         <h3>Rating 對象曲等級與成績分布</h3>

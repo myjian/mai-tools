@@ -11,6 +11,7 @@ import {renderSongScores} from './score-record-visualizer.js';
 import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from './shared-constants.js';
 import {calculateRankMultipliers} from './quick-lookup.js';
 import {iWantSomeMagic} from './magic.js';
+import {getGradeByIndex} from './grade.js';
 
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
@@ -21,6 +22,8 @@ const quickLookupArea = document.querySelector(".quickLookup");
 const gameVersionSelect = document.getElementById("gameVersion");
 const innerLvInput = document.getElementById("innerLvInput");
 const playerScoreInput = document.getElementById("playerScoreInput");
+
+let playerGradeIndex = 0;
 
 function getIsDxPlus() {
   return gameVersionSelect.value === DX_PLUS_GAME_VERSION.toString();
@@ -108,6 +111,14 @@ async function calculateAndShowRating() {
     );
     console.log("Rating Data:");
     console.log(ratingData);
+
+    const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex, isDxPlus) : null;
+    if (playerGrade) {
+      ratingData.totalRating += playerGrade.bonus;
+      document.querySelector("#gradeTitle").innerText = playerGrade.title;
+      document.querySelector("#gradeBonus").innerText = playerGrade.bonus;
+      document.querySelector("#gradeRating").classList.remove("hidden");
+    }
 
     const totalRating = document.getElementById("totalRating");
     totalRating.innerText = ratingData.totalRating;
@@ -198,7 +209,19 @@ if (window.opener) {
   window.addEventListener("message", (evt) => {
     console.log(evt.origin, evt.data);
     if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+      let payloadAsInt;
       switch (evt.data.action) {
+        case "gameVersion":
+          payloadAsInt = parseInt(evt.data.payload);
+          if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
+            gameVersionSelect.value = DX_PLUS_GAME_VERSION;
+          }
+          break;
+        case "playerGrade":
+          payloadAsInt = parseInt(evt.data.payload);
+          if (payloadAsInt) {
+            playerGradeIndex = payloadAsInt;
+          }
         case "replacePlayerScore":
           playerScoreInput.value = evt.data.payload;
           break;

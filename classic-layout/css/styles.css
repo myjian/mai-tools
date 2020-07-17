@@ -180,9 +180,9 @@ body {
 }
 
 .songImgPlaceholder {
-  --c1: #eee;
-  --c2: #bbb;
-  --c3: #ccc;
+  --c2: #8995ca;
+  --c3: #6c79b3;
+  --c1: #a8b2e1;
   --t: 48px;
   --angle: 70deg;
   --grad: var(--c1) var(--t), var(--c1) calc(var(--t) * 2), var(--c2) calc(var(--t) * 2), var(--c2) calc(var(--t) * 3), var(--c3) calc(var(--t) * 3), var(--c3) calc(var(--t) * 4);
