@@ -32,6 +32,8 @@ export interface ChartRecordWithRating extends ChartRecord {
 export interface RatingData {
   oldChartsRating: number;
   oldTopChartsCount: number;
+  oldChartRecords: ChartRecordWithRating[];
   newChartsRating: number;
   newTopChartsCount: number;
+  newChartRecords: ChartRecordWithRating[];
 }

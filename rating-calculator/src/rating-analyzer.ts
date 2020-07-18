@@ -1,6 +1,6 @@
 import {compareSongsByRating} from './record-comparator';
 import {DIFFICULTIES} from './shared-constants';
-import {ChartRecord, ChartRecordWithRating, SongProperties} from './types';
+import {ChartRecord, ChartRecordWithRating, RatingData, SongProperties} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
@@ -73,9 +73,9 @@ export async function analyzePlayerRating(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   playerScores: ReadonlyArray<ChartRecord>,
   gameVersion: number
-) {
-  const newSongScores = [];
-  const oldSongScores = [];
+): Promise<RatingData> {
+  const newChartRecords = [];
+  const oldChartRecords = [];
   for (const record of playerScores) {
     const songProps = getSongProperties(
       songPropsByName,
@@ -90,32 +90,32 @@ export async function analyzePlayerRating(
     }
     const recordWithRating = analyzeSongRating(record, songProps);
     if (isOldChart) {
-      oldSongScores.push(recordWithRating);
+      oldChartRecords.push(recordWithRating);
     } else {
-      newSongScores.push(recordWithRating);
+      newChartRecords.push(recordWithRating);
     }
   }
 
-  newSongScores.sort(compareSongsByRating);
-  oldSongScores.sort(compareSongsByRating);
+  newChartRecords.sort(compareSongsByRating);
+  oldChartRecords.sort(compareSongsByRating);
 
   let newChartsRating = 0;
-  const newTopChartsCount = Math.min(NUM_TOP_NEW_SONGS, newSongScores.length);
+  const newTopChartsCount = Math.min(NUM_TOP_NEW_SONGS, newChartRecords.length);
   for (let i = 0; i < newTopChartsCount; i++) {
-    newChartsRating += Math.floor(newSongScores[i].rating);
+    newChartsRating += Math.floor(newChartRecords[i].rating);
   }
 
   let oldChartsRating = 0;
-  const oldTopChartsCount = Math.min(NUM_TOP_OLD_SONGS, oldSongScores.length);
+  const oldTopChartsCount = Math.min(NUM_TOP_OLD_SONGS, oldChartRecords.length);
   for (let i = 0; i < oldTopChartsCount; i++) {
-    oldChartsRating += Math.floor(oldSongScores[i].rating);
+    oldChartsRating += Math.floor(oldChartRecords[i].rating);
   }
 
   return {
-    newSongScores,
+    newChartRecords,
     newChartsRating,
     newTopChartsCount,
-    oldSongScores,
+    oldChartRecords,
     oldChartsRating,
     oldTopChartsCount,
   };

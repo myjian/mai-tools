@@ -42,7 +42,7 @@ textarea:focus {
   padding-top: 22px;
 }
 
-#calculateRatingBtn {
+.analyzeRatingBtn {
   font-size: 28px;
   padding: 8px 20px;
   background-color: #ffc542;

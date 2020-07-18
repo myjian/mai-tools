@@ -14,7 +14,7 @@ const UIStringByLang = {
     manualLv: "Manual input",
     autoLv: "Automatic",
     scoreInputHeading: "Player Score",
-    scoreInputDescPrefix: 'Please use "Calculate DX Rating" or "Download Scores" from ',
+    scoreInputDescPrefix: 'Please use "Calculate DX Rating" or "Download All Scores" from ',
     bookmarketLinkLabel: "maimai bookmarklets",
     scoreInputDescSuffix: " to fill this field.",
     otherToolsHeading: "Other Tools",
@@ -26,6 +26,7 @@ const UIStringByLang = {
     newChartsRating: "New charts rating",
     oldChartsRating: "Old charts rating",
     analysisResult: "Analysis Result",
+    subtotal: "Subtotal",
   },
   zh: {
     innerLvHeading: "譜面定數",
@@ -44,6 +45,7 @@ const UIStringByLang = {
     newChartsRating: "新譜面 Rating",
     oldChartsRating: "舊譜面 Rating",
     analysisResult: "分析結果",
+    subtotal: "小計",
   },
 };
 
