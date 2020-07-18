@@ -1,5 +1,5 @@
 import {BREAK_BASE_SCORE_MULTIPLIER, BREAK_BONUS_MULTIPLIER, MAX_BREAK_POINTS} from './constants';
-import {BreakScoreMap, JudgementMap, StrictJudgementMap} from './types';
+import {BreakScoreMap} from './types';
 
 /*
  * @param breakDistribution Map<number, number>

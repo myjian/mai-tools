@@ -1,5 +1,3 @@
-const EPSILON = 0.00001;
-
 export function sum(values: IterableIterator<number> | ReadonlyArray<number>) {
   let total = 0;
   for (const v of values) {

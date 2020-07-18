@@ -56,7 +56,7 @@ const GRADES_DX_PLUS = [
   {title: "拾皆伝", bonus: 2100},
 ];
 
-export function getGradeByIndex(index, isDxPlus) {
+export function getGradeByIndex(index: number, isDxPlus: boolean) {
   const grades = isDxPlus ? GRADES_DX_PLUS : GRADES_DX;
   return grades[index];
 }

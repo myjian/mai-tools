@@ -1,4 +1,6 @@
-const RANK_DEFINITIONS = [
+import {RankDef} from './types';
+
+const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
   {th: 100.50, factor: 15, title: "SSS+"},
   {th: 100.00, factor: 14, title: "SSS"},
   {th: 99.99, factor: 13.5, title: "SS+"},
@@ -15,7 +17,7 @@ const RANK_DEFINITIONS = [
   {th: 50.00, factor: 5, title: "C"},
 ];
 
-const RANK_DEFINITIONS_PLUS = [
+const RANK_DEFINITIONS_PLUS: ReadonlyArray<RankDef> = [
   {th: 100.50, factor: 14, title: "SSS+"},
   {th: 100.00, factor: 13.5, title: "SSS"},
   {th: 99.50, factor: 13.2, title: "SS+"},
@@ -32,22 +34,22 @@ const RANK_DEFINITIONS_PLUS = [
 ];
 
 
-export function getRankDefinitions(isDxPlus) {
+export function getRankDefinitions(isDxPlus: boolean) {
   return isDxPlus ? RANK_DEFINITIONS_PLUS : RANK_DEFINITIONS;
 }
 
-export function getRankIndexByAchievement(achievement, isDxPlus) {
+export function getRankIndexByAchievement(achievement: number, isDxPlus: boolean) {
   return getRankDefinitions(isDxPlus).findIndex((rank) => {
     return achievement >= rank.th;
   });
 }
 
-export function getRankByAchievement(achievement, isDxPlus) {
+export function getRankByAchievement(achievement: number, isDxPlus: boolean) {
   const idx = getRankIndexByAchievement(achievement, isDxPlus);
   return idx < 0 ? null : getRankDefinitions(isDxPlus)[idx];
 }
 
-export function getRankTitle(achievement) {
+export function getRankTitle(achievement: number) {
   const rankDef = getRankByAchievement(achievement, true);
   return rankDef ? rankDef.title : "C";
 }

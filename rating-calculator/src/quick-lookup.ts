@@ -1,11 +1,14 @@
-import {getRankDefinitions} from './rank-functions.js';
-import {calculateRatingRange} from './rating-functions.js';
+import {getRankDefinitions} from './rank-functions';
 
 const MIN_RANK_OPTION = "A";
 const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";
 const RANK_FACTOR_CELL_CLASSNAMES = ["qlRankTitleCell", "qlThresholdCell"];
 
-function renderRankFactorRow(columnValues, rowClassnames, isHeading) {
+function renderRankFactorRow(
+  columnValues: ReadonlyArray<string>,
+  rowClassnames: ReadonlyArray<string>,
+  isHeading: boolean,
+) {
   const tr = document.createElement("tr");
   for (const cn of rowClassnames) {
     tr.classList.add(cn);
@@ -25,9 +28,9 @@ function renderRankFactorRow(columnValues, rowClassnames, isHeading) {
 }
 
 export function calculateRankMultipliers(
-  isDxPlus,
-  thead,
-  tbody
+  isDxPlus: boolean,
+  thead: HTMLTableSectionElement,
+  tbody: HTMLTableSectionElement
 ) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
@@ -48,7 +51,7 @@ export function calculateRankMultipliers(
     const multiplierRange = minMulText !== maxMulText ? `${minMulText} - ${maxMulText}` : minMulText;
     tbody.appendChild(
       renderRankFactorRow(
-        [r.title, r.th, r.factor, multiplierRange],
+        [r.title, r.th.toString(), r.factor.toString(), multiplierRange],
         [],
         false
       )

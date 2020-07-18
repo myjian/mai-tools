@@ -1,6 +1,7 @@
-import {getRankDefinitions} from './rank-functions.js';
+import {getRankDefinitions} from './rank-functions';
+import {RankDef} from './types';
 
-export function calculateRatingRange(innerLv, rank, isDxPlus) {
+export function calculateRatingRange(innerLv: number, rank: RankDef, isDxPlus: boolean) {
   const rankDefs = getRankDefinitions(isDxPlus);
   const idx = rankDefs.indexOf(rank);
   const maxAchv = idx >= 1 ? rankDefs[idx - 1].th - 0.0001: rank.th;

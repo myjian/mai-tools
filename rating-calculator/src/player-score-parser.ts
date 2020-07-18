@@ -1,7 +1,20 @@
-import {getRankDefinitions, getRankByAchievement} from './rank-functions.js';
-import {SSSPLUS_MIN_ACHIEVEMENT} from './shared-constants.js';
+import {getRankByAchievement} from './rank-functions';
+import {SSSPLUS_MIN_ACHIEVEMENT} from './shared-constants';
+import {ChartRecord} from './types';
 
-function getScoreMultiplier(achievement, isDxPlus) {
+const MIN_LEVEL = 1;
+
+function getDefaultLevel(officialLevel: string) {
+  if (!officialLevel) {
+    return MIN_LEVEL;
+  }
+  const baseLevel = parseInt(officialLevel);
+  // 9 : 9.0 - 9.6
+  // 9+: 9.7 - 9.9
+  return officialLevel.endsWith("+") ? baseLevel + 0.7 : baseLevel;
+}
+
+function getScoreMultiplier(achievement: number, isDxPlus: boolean) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
   const rank = getRankByAchievement(achievement, isDxPlus);
   if (!rank) {
@@ -12,7 +25,7 @@ function getScoreMultiplier(achievement, isDxPlus) {
   return {factor, multiplier};
 }
 
-export function parseScoreLine(line, isDxPlus) {
+export function parseScoreLine(line: string, isDxPlus: boolean): ChartRecord | undefined {
   const [
     songName,
     genre,
@@ -28,7 +41,8 @@ export function parseScoreLine(line, isDxPlus) {
       songName,
       genre,
       difficulty,
-      level,
+      level: getDefaultLevel(level),
+      levelIsEstimate: true,
       chartType,
       achievement,
       multiplier: scoreMultiplier.multiplier,

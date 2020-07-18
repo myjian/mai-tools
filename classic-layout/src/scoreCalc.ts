@@ -12,18 +12,9 @@ import {
   BreakScoreMap,
   FullNoteType,
   NoteType,
-  ScorePerType,
   StrictJudgementMap,
   StrictJudgementType,
 } from './types';
-
-const JUDGEMENT_RESULTS = [
-  "criticalPerfect",
-  "perfect",
-  "great",
-  "good",
-  "miss"
-];
 
 function calculateBorder(
   totalBaseScore: number,

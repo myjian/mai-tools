@@ -10,7 +10,7 @@ export const DIFFICULTY_CLASSNAME_MAP = new Map([
 ]);
 
 const MAX_CHART_LEVEL = 15;
-export const OFFICIAL_LEVELS = [];
+export const OFFICIAL_LEVELS: string[] = [];
 for (let i = MAX_CHART_LEVEL; i >= 1; i--) {
   if (i !== MAX_CHART_LEVEL) {
     OFFICIAL_LEVELS.push(i + "+");

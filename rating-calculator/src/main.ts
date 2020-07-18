@@ -1,17 +1,18 @@
-import {readFromCache, writeToCache} from './cache.js';
-import {getCandidateSongs} from './candidate-songs.js';
-import {parseInnerLevelLine} from './inner-lv-parser.js';
-import {parseScoreLine} from './player-score-parser.js';
+import {readFromCache, writeToCache} from './cache';
+import {getCandidateSongs} from './candidate-songs';
+import {getGradeByIndex} from './grade';
+import {parseInnerLevelLine} from './inner-lv-parser';
+import {iWantSomeMagic} from './magic';
+import {parseScoreLine} from './player-score-parser';
+import {calculateRankMultipliers} from './quick-lookup';
 import {
   renderRankDistributionPerDifficulty,
   renderRankDistributionPerLevel,
-} from './rank-distribution-visualizer.js';
-import {analyzePlayerRating} from './rating-analyzer.js';
-import {renderSongScores} from './score-record-visualizer.js';
-import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from './shared-constants.js';
-import {calculateRankMultipliers} from './quick-lookup.js';
-import {iWantSomeMagic} from './magic.js';
-import {getGradeByIndex} from './grade.js';
+} from './rank-distribution-visualizer';
+import {analyzePlayerRating} from './rating-analyzer';
+import {renderSongScores} from './score-record-visualizer';
+import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from './shared-constants';
+import {SongProperties} from './types';
 
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
@@ -19,9 +20,9 @@ const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
 const queryParams = new URLSearchParams(document.location.search);
 const dxVersionQueryParam = queryParams.get("gameVersion");
 const quickLookupArea = document.querySelector(".quickLookup");
-const gameVersionSelect = document.getElementById("gameVersion");
-const innerLvInput = document.getElementById("innerLvInput");
-const playerScoreInput = document.getElementById("playerScoreInput");
+const gameVersionSelect = document.getElementById("gameVersion") as HTMLSelectElement;
+const innerLvInput = document.getElementById("innerLvInput") as HTMLTextAreaElement;
+const playerScoreInput = document.getElementById("playerScoreInput") as HTMLTextAreaElement;
 
 let playerGradeIndex = 0;
 
@@ -30,20 +31,16 @@ function getIsDxPlus() {
 }
 
 function handleGameVersionChange() {
-  const cacheKey = getIsDxPlus() ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
-  const cachedInnerLv = readFromCache(cacheKey);
-  if (cachedInnerLv) {
-    innerLvInput.value = cachedInnerLv;
-  }
   calculateRankMultipliers(
     getIsDxPlus(),
-    document.getElementById("quickLookupThead"),
-    document.getElementById("quickLookupTbody")
+    document.getElementById("quickLookupThead") as HTMLTableSectionElement,
+    document.getElementById("quickLookupTbody") as HTMLTableSectionElement
   );
 }
 
-function readSongProperties(isDxPlus) {
-  const processText = (lines) => {
+function readSongProperties(isDxPlus: boolean): Promise<Map<string, SongProperties[]>> {
+  const processText = (text: string) => {
+    const lines = text.split("\n");
     // songPropsByName: song name -> array of song properties
     // most arrays have only 1 entry, but some arrays have more than 1 entries
     // because song name duplicates or it has both DX and Standard charts.
@@ -60,22 +57,32 @@ function readSongProperties(isDxPlus) {
     return songPropsByName;
   };
   return new Promise((resolve) => {
-    let linesFromInput = innerLvInput.value.split("\n");
-    if (linesFromInput.length > 1) {
-      resolve(processText(linesFromInput));
-    } else {
-      console.log("Magic happening...");
-      fetch(iWantSomeMagic(isDxPlus))
-        .then(response => response.text())
-        .then(responseText => {
-          innerLvInput.value = responseText;
-          resolve(processText(responseText.split("\n")));
-        });
+    // Read from user input
+    const input = innerLvInput.value;
+    if (input.length > 0) {
+      resolve(processText(input));
+      return;
     }
+    // Read from cache
+    const cacheKey = isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
+    const cachedInnerLv = readFromCache(cacheKey);
+    if (cachedInnerLv) {
+      innerLvInput.value = cachedInnerLv;
+      resolve(processText(cachedInnerLv));
+      return;
+    }
+    // Read from Internet
+    console.log("Magic happening...");
+    fetch(iWantSomeMagic(isDxPlus))
+      .then(response => response.text())
+      .then(responseText => {
+        innerLvInput.value = responseText;
+        resolve(processText(responseText));
+      });
   });
 }
 
-async function readPlayerScoreFromText(text, isDxPlus) {
+async function readPlayerScoreFromText(text: string, isDxPlus: boolean) {
   const lines = text.split("\n");
   const playerScores = [];
   for (const line of lines) {
@@ -115,45 +122,45 @@ async function calculateAndShowRating() {
     const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex, isDxPlus) : null;
     if (playerGrade) {
       ratingData.totalRating += playerGrade.bonus;
-      document.querySelector("#gradeTitle").innerText = playerGrade.title;
-      document.querySelector("#gradeBonus").innerText = playerGrade.bonus;
-      document.querySelector("#gradeRating").classList.remove("hidden");
+      document.getElementById("gradeTitle").innerText = playerGrade.title;
+      document.getElementById("gradeBonus").innerText = playerGrade.bonus.toString();
+      document.getElementById("gradeRating").classList.remove("hidden");
     }
 
     const totalRating = document.getElementById("totalRating");
-    totalRating.innerText = ratingData.totalRating;
+    totalRating.innerText = ratingData.totalRating.toString();
 
     const newSongsRating = document.getElementById("newSongsRating");
-    newSongsRating.innerText = ratingData.newSongsRating;
+    newSongsRating.innerText = ratingData.newSongsRating.toString();
 
     const oldSongsRating = document.getElementById("oldSongsRating");
-    oldSongsRating.innerText = ratingData.oldSongsRating;
+    oldSongsRating.innerText = ratingData.oldSongsRating.toString();
 
     const newTopScores = ratingData.newSongScores.slice(0, ratingData.newTopSongCount);
     const oldTopScores = ratingData.oldSongScores.slice(0, ratingData.oldTopSongCount);
     const combinedTopScores = [].concat(newTopScores, oldTopScores);
     renderRankDistributionPerLevel(
       combinedTopScores,
-      document.getElementById("lrDistThead"),
-      document.getElementById("lrDistTbody")
+      document.getElementById("lrDistThead") as HTMLTableSectionElement,
+      document.getElementById("lrDistTbody") as HTMLTableSectionElement
     );
     renderRankDistributionPerDifficulty(
       combinedTopScores,
-      document.getElementById("drDistThead"),
-      document.getElementById("drDistTbody")
+      document.getElementById("drDistThead") as HTMLTableSectionElement,
+      document.getElementById("drDistTbody") as HTMLTableSectionElement
     );
 
     renderSongScores(
       newTopScores,
       false, // isCandidate
-      document.getElementById("newTopSongsThead"),
-      document.getElementById("newTopSongsTbody")
+      document.getElementById("newTopSongsThead") as HTMLTableSectionElement,
+      document.getElementById("newTopSongsTbody") as HTMLTableSectionElement
     );
     renderSongScores(
       oldTopScores,
       false, // isCandidate
-      document.getElementById("oldTopSongsThead"),
-      document.getElementById("oldTopSongsTbody")
+      document.getElementById("oldTopSongsThead") as HTMLTableSectionElement,
+      document.getElementById("oldTopSongsTbody") as HTMLTableSectionElement
     );
 
     const newCandidateScores = getCandidateSongs(
@@ -169,14 +176,14 @@ async function calculateAndShowRating() {
     renderSongScores(
       newCandidateScores,
       true, // isCandidate
-      document.getElementById("newCandidateSongsThead"),
-      document.getElementById("newCandidateSongsTbody")
+      document.getElementById("newCandidateSongsThead") as HTMLTableSectionElement,
+      document.getElementById("newCandidateSongsTbody") as HTMLTableSectionElement
     );
     renderSongScores(
       oldCandidateScores,
       true, // isCandidate
-      document.getElementById("oldCandidateSongsThead"),
-      document.getElementById("oldCandidateSongsTbody")
+      document.getElementById("oldCandidateSongsThead") as HTMLTableSectionElement,
+      document.getElementById("oldCandidateSongsTbody") as HTMLTableSectionElement
     );
 
     const outputArea = document.querySelector(".outputArea");
@@ -194,8 +201,8 @@ document.getElementById("calculateRatingBtn").addEventListener("click", async (e
 if (dxVersionQueryParam) {
   gameVersionSelect.value =
     dxVersionQueryParam === DX_PLUS_GAME_VERSION.toString()
-    ? DX_PLUS_GAME_VERSION
-    : DX_GAME_VERSION;
+    ? DX_PLUS_GAME_VERSION.toString()
+    : DX_GAME_VERSION.toString();
 }
 
 handleGameVersionChange();
@@ -214,7 +221,7 @@ if (window.opener) {
         case "gameVersion":
           payloadAsInt = parseInt(evt.data.payload);
           if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
-            gameVersionSelect.value = DX_PLUS_GAME_VERSION;
+            gameVersionSelect.value = DX_PLUS_GAME_VERSION.toString();
           }
           break;
         case "playerGrade":
@@ -222,6 +229,7 @@ if (window.opener) {
           if (payloadAsInt) {
             playerGradeIndex = payloadAsInt;
           }
+          break;
         case "replacePlayerScore":
           playerScoreInput.value = evt.data.payload;
           break;

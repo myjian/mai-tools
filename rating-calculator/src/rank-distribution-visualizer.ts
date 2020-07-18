@@ -1,9 +1,6 @@
-import {
-  DIFFICULTIES,
-  DIFFICULTY_CLASSNAME_MAP,
-  OFFICIAL_LEVELS,
-} from './shared-constants.js';
-import {getRankDefinitions, getRankTitle} from './rank-functions.js';
+import {getRankDefinitions, getRankTitle} from './rank-functions';
+import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP, OFFICIAL_LEVELS} from './shared-constants';
+import {ChartRecord} from './types';
 
 const THRESHOLD_TO_PLUS = 0.6;
 const LEVEL_RANK_CELL_BASE_CLASSNAME = "levelRankCell";
@@ -12,13 +9,13 @@ const DIFF_RANK_CELL_BASE_CLASSNAME = "diffRankCell";
 const DIFF_RANK_TOP_LEFT_CELL_CLASSNAME = "difficultyRankDistHead";
 const LAST_CELL_CLASSNAME = "totalCell";
 
-function getOfficialLevel(innerLv) {
-  const baseLevel = Math.floor(innerLv);
-  const minorLevel = innerLv - baseLevel;
+function getOfficialLevel(level: number) {
+  const baseLevel = Math.floor(level);
+  const minorLevel = level - baseLevel;
   return minorLevel > THRESHOLD_TO_PLUS ? baseLevel + "+" : baseLevel.toString();
 }
 
-function getRankDistribution(scoreList) {
+function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>) {
   const countPerRank = new Map();
   for (const rankDef of getRankDefinitions(true)) {
     countPerRank.set(rankDef.title, 0);
@@ -32,13 +29,18 @@ function getRankDistribution(scoreList) {
 }
 
 function renderRankDistributionRowHelper(
-  values, isHeading, showTotal, rowClassname, baseCellClassname, perColumnClassnames
+  values: ReadonlyArray<string>,
+  isHeading: boolean,
+  showTotal: boolean,
+  rowClassname: string | undefined,
+  baseCellClassname: string,
+  perColumnClassnames: ReadonlyArray<string>,
 ) {
   const tr = document.createElement("tr");
   if (rowClassname) {
     tr.classList.add(rowClassname);
   }
-  let cell;
+  let cell: HTMLTableCellElement;
   values.forEach((v, index) => {
     const tagName = (isHeading || index === 0) ? "th" : "td"
     cell = document.createElement(tagName);
@@ -56,7 +58,10 @@ function renderRankDistributionRowHelper(
 }
 
 function renderRankDistributionHeadRow(
-  minRank, showTotal, baseCellClassname, perColumnClassnames
+  minRank: string,
+  showTotal: boolean,
+  baseCellClassname: string | undefined,
+  perColumnClassnames: ReadonlyArray<string>,
 ) {
   const values = [""];
   for (const rankDef of getRankDefinitions(true)) {
@@ -74,7 +79,13 @@ function renderRankDistributionHeadRow(
 }
 
 function renderRankDistributionRow(
-  rowHead, rankDist, minRank, showTotal, rowClassname, baseCellClassname, perColumnClassnames
+  rowHead: string,
+  rankDist: ReturnType<typeof getRankDistribution>,
+  minRank: string,
+  showTotal: boolean,
+  rowClassname: string | undefined,
+  baseCellClassname: string,
+  perColumnClassnames: ReadonlyArray<string>,
 ) {
   const values = [rowHead];
   let totalCount = 0;
@@ -86,23 +97,27 @@ function renderRankDistributionRow(
     }
   }
   if (showTotal) {
-    values.push(totalCount);
+    values.push(totalCount.toString());
   }
   return renderRankDistributionRowHelper(
     values, false, showTotal, rowClassname, baseCellClassname, perColumnClassnames
   );
 }
 
-export function renderRankDistributionPerLevel(scoreList, thead, tbody) {
+export function renderRankDistributionPerLevel(
+  scoreList: ReadonlyArray<ChartRecord>,
+  thead: HTMLTableSectionElement,
+  tbody: HTMLTableSectionElement
+) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
-  
+
   const scoresPerLevel = new Map();
   OFFICIAL_LEVELS.forEach((level) => {
     scoresPerLevel.set(level, []);
   });
   scoreList.forEach((record) => {
-    const officialLv = record.level || getOfficialLevel(record.innerLv);
+    const officialLv = getOfficialLevel(record.level);
     const levelScores = scoresPerLevel.get(officialLv);
     levelScores.push(record);
   });
@@ -136,7 +151,11 @@ export function renderRankDistributionPerLevel(scoreList, thead, tbody) {
   }
 }
 
-export function renderRankDistributionPerDifficulty(scoreList, thead, tbody) {
+export function renderRankDistributionPerDifficulty(
+  scoreList: ReadonlyArray<ChartRecord>,
+  thead: HTMLTableSectionElement,
+  tbody: HTMLTableSectionElement,
+) {
   thead.innerHTML = "";
   tbody.innerHTML = "";
 

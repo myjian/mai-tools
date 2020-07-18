@@ -10,25 +10,28 @@
 .levelRankCell, .diffRankCell {
   padding: 4px;
   width: 60px;
+  box-sizing: border-box;
 }
 
 td.levelRankCell, td.diffRankCell {
   text-align: center;
 }
 
-
 .officialLevelCell {
-  width: 40px;
-  padding-right: 8px;
-  text-align: right;
+  width: unset;
+  padding-right: 12px;
+  padding-left: 12px;
 }
 
 .difficultyRankDistHead {
   width: 110px;
 }
 
+.totalCell {
+  width: 80px;
+}
+
 td.totalCell {
   color: rgba(0, 0, 0, 0.8);
   text-shadow: none;
-  width: 80px;
 }

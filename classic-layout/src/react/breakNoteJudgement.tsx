@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {DisplayMode} from '../constants';
-import {formatFloat} from '../numberHelper';
 import {JudgementDisplayMap} from '../types';
 import {getLastColumnText, NoteJudgement} from './noteJudgement';
 

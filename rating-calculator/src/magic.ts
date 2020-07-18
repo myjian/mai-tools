@@ -74,7 +74,7 @@ const MAGIC_NUMBERS = [
 
 const MAGIC_NUMBERS2 = [113, 109, 118, 116];
 
-export function iWantSomeMagic(isDxPlus) {
+export function iWantSomeMagic(isDxPlus: boolean): string {
   const lessMagic = MAGIC_NUMBERS.map(k => k - 1);
   if (isDxPlus) {
     lessMagic.splice(

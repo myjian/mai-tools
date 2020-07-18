@@ -1,34 +1,33 @@
-import {DIFFICULTIES} from './shared-constants.js';
-import {compareSongsByRating} from './record-comparator.js';
+import {compareSongsByRating} from './record-comparator';
+import {DIFFICULTIES} from './shared-constants';
+import {ChartRecord, ChartRecordWithRating, SongProperties} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
-const MIN_LEVEL = 1;
 
-
-function _getDefaultLevel(officialLevel) {
-  if (!officialLevel) {
-    return MIN_LEVEL;
-  }
-  const baseLevel = parseInt(officialLevel);
-  // 9 : 9.0 - 9.6
-  // 9+: 9.7 - 9.9
-  return officialLevel.endsWith("+") ? baseLevel + 0.7 : baseLevel;
+function isDxChart(chartType: string) {
+  return chartType === "DX";
 }
 
-function getSongNickname(songName, genre) {
+function getSongNickname(
+  songName: string, genre: string, chartType?: string) {
   if (songName === "Link") {
     return genre.includes("niconico") ? "Link(nico)" : "Link(org)"
   }
-  return songName;
+  return isDxChart(chartType) ? songName + "[dx]" : songName;
 }
 
-function getSongProperties(songPropsByName, songName, genre, chartType) {
+function getSongProperties(
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  songName: string,
+  genre: string,
+  chartType: string
+) {
   let songPropsArray = songPropsByName.get(songName);
   if (songPropsArray && songPropsArray.length > 0) {
     if (songPropsArray.length > 1) {
       // Song has multiple charts
-      const isDX = chartType === "DX" ? 1 : 0;
+      const isDX = isDxChart(chartType) ? 1 : 0;
       songPropsArray = songPropsArray.filter(d => d.dx === isDX);
       if (songPropsArray.length > 1) {
         // Duplicate song names
@@ -44,35 +43,34 @@ function getSongProperties(songPropsByName, songName, genre, chartType) {
   return null;
 }
 
-function analyzeSongRating(record, songProps) {
-  let innerLevel = _getDefaultLevel(record.level);
-  let levelIsEstimate = true;
+function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): ChartRecordWithRating {
   if (songProps) {
     const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
     const lv = songProps.lv[lvIndex];
     if (typeof lv === "number") {
-      levelIsEstimate = lv < 0;
-      innerLevel = Math.abs(lv);
+      record.levelIsEstimate = lv < 0;
+      record.level = Math.abs(lv);
     }
   }
-  if (levelIsEstimate) {
-    let debugName = getSongNickname(record.songName, record.genre);
-    if (record.chartType === "DX") {
-      debugName += "[dx]";
-    }
-    debugName += ` - ${record.difficulty} ${record.level}`;
+  if (record.levelIsEstimate) {
+    const debugName = (
+      getSongNickname(record.songName, record.genre, record.chartType)
+      + " - " + record.difficulty + " " + record.level
+    );
     console.warn(`Missing inner lv data for ${debugName}`);
   }
 
   return {
     ...record,
-    estimate: levelIsEstimate,
-    innerLv: innerLevel,
-    rating: innerLevel * record.multiplier,
+    rating: record.level * record.multiplier,
   };
 }
 
-export async function analyzePlayerRating(songPropsByName, playerScores, gameVersion) {
+export async function analyzePlayerRating(
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  playerScores: ReadonlyArray<ChartRecord>,
+  gameVersion: number
+) {
   const newSongScores = [];
   const oldSongScores = [];
   for (const record of playerScores) {

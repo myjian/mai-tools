@@ -4,7 +4,7 @@ module.exports = {
   mode: "production",
   entry: {
     "classic-layout": "./classic-layout/src/main.tsx",
-    "rating-calculator": "./rating-calculator/src/main.js",
+    "rating-calculator": "./rating-calculator/src/main.ts",
   },
   output: {
     path: __dirname,
