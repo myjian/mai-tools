@@ -12,8 +12,13 @@ body {
   }
 }
 
-th {
+tbody th {
   background-color: #dddddd;
+}
+
+thead {
+  background: #999;
+  color: #eee;
 }
 
 select, label {
