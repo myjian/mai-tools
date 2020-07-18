@@ -44,7 +44,7 @@ export class RatingOutput extends React.PureComponent<Props> {
           playerGradeIndex={playerGradeIndex}
         />
         <div className="ratingTargetDistribution">
-          <h3>Rating 對象曲等級與成績分布</h3>
+          <h3>{UIString.ratingTargetDistribution}</h3>
           <div className="flexRow">
             <LevelRankDistribution
               newChartRecords={newChartRecords}
@@ -61,20 +61,20 @@ export class RatingOutput extends React.PureComponent<Props> {
           </div>
         </div>
         <div className="songRecordsContainer">
-          <h3>▶ 新譜面 Rating 對象曲目 (取最佳 15 首)：</h3>
+    <h3>▶ {UIString.newChartsRatingTargets}</h3>
           <ChartRecordsTable records={newChartRecords.slice(0, newTopChartsCount)} />
         </div>
         <div className="songRecordsContainer">
-          <h3>▶ 舊譜面 Rating 對象曲目 (取最佳 25 首)：</h3>
+    <h3>▶ {UIString.oldChartsRatingTargets}</h3>
           <ChartRecordsTable records={oldChartRecords.slice(0, oldTopChartsCount)} />
         </div>
         {/* TODO: filter by song name from user input */}
         <div className="songRecordsContainer">
-          <h3>▷ 新譜面 Rating 候選曲目：</h3>
+          <h3>▷ {UIString.newChartsRatingCandidates}</h3>
           <ChartRecordsTable records={newCandidateScores} isCandidate />
         </div>
         <div className="songRecordsContainer">
-          <h3>▷ 舊譜面 Rating 候選曲目：</h3>
+          <h3>▷ {UIString.oldChartsRatingCandidates}</h3>
           <ChartRecordsTable records={oldCandidateScores} isCandidate />
         </div>
         <hr className="sectionSep" />

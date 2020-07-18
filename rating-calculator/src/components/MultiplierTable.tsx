@@ -1,19 +1,21 @@
 import React from 'react';
 
+import {UIString} from '../i18n';
 import {getRankDefinitions} from '../rank-functions';
 
 const MIN_RANK_OPTION = "A";
 const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";
 const RANK_FACTOR_CELL_CLASSNAMES = ["qlRankTitleCell", "qlThresholdCell"];
 
-function renderRankFactorRow(
-  columnValues: ReadonlyArray<string>,
-  rowClassnames: ReadonlyArray<string>,
-  isHeading: boolean
-) {
+interface RankFactorRowProps {
+  values: ReadonlyArray<string|number>;
+  isHeading?: boolean;
+}
+const RankFactorRow: React.FC<RankFactorRowProps> = (props) => {
+  const {isHeading} = props;
   return (
-    <tr className={rowClassnames.join(" ")}>
-      {columnValues.map((v, index) => {
+    <tr>
+      {props.values.map((v, index) => {
         const useTh = isHeading || index === 0;
         let className = RANK_FACTOR_CELL_BASE_CLASSNAME;
         if (index < RANK_FACTOR_CELL_CLASSNAMES.length) {
@@ -23,7 +25,7 @@ function renderRankFactorRow(
       })}
     </tr>
   );
-}
+};
 
 interface Props {
   isDxPlus: boolean;
@@ -43,14 +45,13 @@ export class MultiplierTable extends React.PureComponent<Props, State> {
     const stopIndex = rankDefs.findIndex((r) => r.title === minRankOption) + 1;
     return (
       <div className="quickLookup">
-        <h2 className="quickLookupHeading">Rank 係數表</h2>
+        <h2 className="quickLookupHeading">{UIString.rankFactorTable}</h2>
         <table className="quickLookupTable">
           <thead>
-            {renderRankFactorRow(
-              ["Rank", "達成率", "係數", "倍率 (係數 × 達成率)"],
-              [], // rowClassname
-              true // isHeading
-            )}
+            <RankFactorRow
+              values={[UIString.rank, UIString.achievement, UIString.factor, UIString.multiplier]}
+              isHeading
+            />
           </thead>
           <tbody>
             {rankDefs.slice(0, stopIndex).map((r, idx, arr) => {
@@ -61,10 +62,10 @@ export class MultiplierTable extends React.PureComponent<Props, State> {
               const maxMulText = maxMultiplier.toFixed(3);
               const multiplierRange =
                 minMulText !== maxMulText ? `${minMulText} - ${maxMulText}` : minMulText;
-              return renderRankFactorRow(
-                [r.title, r.th.toString(), r.factor.toString(), multiplierRange],
-                [],
-                false
+              return (
+                <RankFactorRow
+                  values={[r.title, r.th, r.factor, multiplierRange]}
+                />
               );
             })}
           </tbody>

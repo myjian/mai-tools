@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {readFromCache, writeToCache} from '../cache';
+import {UIString} from '../i18n';
 import {parseInnerLevelLine} from '../inner-lv-parser';
 import {iWantSomeMagic} from '../magic';
 import {parseScoreLine} from '../player-score-parser';
@@ -108,7 +109,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         <ScoreInput ref={this.scoreInput} />
         <div className="actionArea">
           <button className="analyzeRatingBtn" onClick={this.analyzeRating}>
-            計算 Rating 值
+            {UIString.computeRating}
           </button>
         </div>
         <hr className="sectionSep" />

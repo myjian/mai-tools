@@ -27,7 +27,7 @@ export class RatingOverview extends React.PureComponent<Props> {
           <tbody>
             <tr>
               <td>{UIString.newChartsRating}</td>
-              <td>{UIString.column}</td>
+              <td className="columnColumn">{UIString.column}</td>
               <td>{oldChartsRating}</td>
             </tr>
             <tr>

@@ -18,6 +18,7 @@ const LEVEL_RANK_CELL_CLASSNAMES = ["officialLevelCell"];
 function getRecordsPerLevel(records: ReadonlyArray<ChartRecord>) {
   const levels = records.map((r) => r.level);
   levels.sort(compareNumber);
+  levels.reverse();
   const recordsPerLevel = new Map<string, ChartRecord[]>();
   for (const lv of levels) {
     const officialLv = getOfficialLevel(lv);

@@ -7,11 +7,6 @@
   border: 2px solid #999;
 }
 
-.scoreRecordRow:hover {
-  /* TODO: highlight row and column in lookup table */
-  /* background-color: #fffce3; */
-}
-
 .scoreRecordCell {
   border: 1px solid #aaa;
   padding: 4px;
@@ -20,49 +15,42 @@
 }
 
 .songTitleCell {
-  width: 300px;
   overflow: hidden;
   padding-right: 10px;
+  word-break: break-word;
 }
 
-.difficultyCell {
-  width: 110px;
+@media only screen and (min-width: 770px) {
+  .songTitleCell {
+    width: 300px;
+  }
+  .difficultyCell {
+    width: 110px;
+  }
+  .innerLvCell {
+    width: 70px;
+  }
+  .achievementCell {
+    width: 110px;
+  }
+  .rankFactorCell {
+    width: 100px;
+  }
+  .ratingCell {
+    width: 70px;
+  }
 }
-
-.innerLvCell,
-.ratingCell {
-  width: 70px;
-}
-
-.achievementCell {
-  width: 110px;
-}
-
-.rankFactorCell {
-  width: 100px;
-}
-
 
 td.orderCell,
-td.innerLvCell,
 td.achievementCell,
-td.rankFactorCell,
-td.ratingCell {
+.topRecordTable td.rankFactorCell {
   text-align: right;
 }
 
-td.difficultyCell {
-  text-align: center;
-}
-
+td.difficultyCell,
 td.innerLvCell,
-td.achievementCell,
-.topRecordTable td.rankFactorCell,
-td.ratingCell {
-  padding-right: 8px;
-}
-
-.candidateTable .rankFactorCell, .candidateTable .ratingCell {
-  width: 70px;
+td.ratingCell,
+.candidateTable .rankFactorCell,
+.candidateTable .ratingCell {
   text-align: center;
 }
