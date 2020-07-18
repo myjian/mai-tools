@@ -43,6 +43,10 @@ function getSongProperties(
   return null;
 }
 
+/**
+ * Compute rating value based on the chart level and player achievement.
+ * If we don't find the inner level for the chart, use its estimated level and move on.
+ */
 function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): ChartRecordWithRating {
   if (songProps) {
     const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
@@ -59,7 +63,6 @@ function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): Cha
     );
     console.warn(`Missing inner lv data for ${debugName}`);
   }
-
   return {
     ...record,
     rating: record.level * record.multiplier,

@@ -4,6 +4,12 @@ import {ChartRecord} from './types';
 
 const MIN_LEVEL = 1;
 
+/**
+ * Compute the default level based on the official level.
+ * For example:
+ *   Lv10 => 10.0 (actual range: 10.0 - 10.6)
+ *   Lv10 => 10.7 (actual range: 10.7 - 10.9)
+ */
 function getDefaultLevel(officialLevel: string) {
   if (!officialLevel) {
     return MIN_LEVEL;

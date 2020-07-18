@@ -19,13 +19,7 @@
         <option value="14">DX Plus</option>
       </select>
     </div>
-    <div>
-      <h2 class="innerLvInputHeading">譜面定數輸入</h2>
-      <div class="innerLvInputDescription">
-        沒有也沒關係。若歌曲找不到對應的譜面定數，會採取該等級最低的譜面定數。例如 Lv10 採用 10.0 計算 (實際範圍是 10.0 - 10.6)，Lv10+ 採用 10.7 (實際範圍是 10.7 - 10.9)，依此類推。
-      </div>
-      <textarea id="innerLvInput"></textarea>
-    </div>
+    <div id="innerLvArea"></div>
     <div>
       <h2 class="playerScoreInputHeading">玩家成績輸入</h2>
       <div>
@@ -134,6 +128,10 @@
     <footer>
       Made by <a class="authorLink" href="https://github.com/myjian/">myjian</a>.
     </footer>
+    <!-- <script crossorigin src="https://unpkg.com/react@16.13.1/umd/react.production.min.js"></script> -->
+    <!-- <script crossorigin src="https://unpkg.com/react-dom@16.13.1/umd/react-dom.production.min.js"></script> -->
+    <script src="../node_modules/react/umd/react.production.min.js"></script>
+    <script src="../node_modules/react-dom/umd/react-dom.production.min.js"></script>
     <script type="module" src="./dist/main.bundle.js"></script>
   </body>
 </html>

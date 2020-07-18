@@ -1,5 +1,6 @@
 import {readFromCache, writeToCache} from './cache';
 import {getCandidateSongs} from './candidate-songs';
+import {renderInnerLvInput} from './components/InnerLvInput';
 import {getGradeByIndex} from './grade';
 import {parseInnerLevelLine} from './inner-lv-parser';
 import {iWantSomeMagic} from './magic';
@@ -16,12 +17,12 @@ import {SongProperties} from './types';
 
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
+const INNER_LV_INPUT_ID = "innerLvTextarea";
 
 const queryParams = new URLSearchParams(document.location.search);
 const dxVersionQueryParam = queryParams.get("gameVersion");
 const quickLookupArea = document.querySelector(".quickLookup");
 const gameVersionSelect = document.getElementById("gameVersion") as HTMLSelectElement;
-const innerLvInput = document.getElementById("innerLvInput") as HTMLTextAreaElement;
 const playerScoreInput = document.getElementById("playerScoreInput") as HTMLTextAreaElement;
 
 let playerGradeIndex = 0;
@@ -58,25 +59,25 @@ function readSongProperties(isDxPlus: boolean): Promise<Map<string, SongProperti
   };
   return new Promise((resolve) => {
     // Read from user input
-    const input = innerLvInput.value;
-    if (input.length > 0) {
-      resolve(processText(input));
+    const inputElem = document.getElementById(INNER_LV_INPUT_ID) as HTMLTextAreaElement;
+    const inputText = inputElem ? inputElem.value : "";
+    if (inputText.length > 0) {
+      resolve(processText(inputText));
       return;
     }
     // Read from cache
     const cacheKey = isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
     const cachedInnerLv = readFromCache(cacheKey);
     if (cachedInnerLv) {
-      innerLvInput.value = cachedInnerLv;
       resolve(processText(cachedInnerLv));
       return;
     }
     // Read from Internet
     console.log("Magic happening...");
     fetch(iWantSomeMagic(isDxPlus))
-      .then(response => response.text())
-      .then(responseText => {
-        innerLvInput.value = responseText;
+      .then((response) => response.text())
+      .then((responseText) => {
+        writeToCache(cacheKey, responseText);
         resolve(processText(responseText));
       });
   });
@@ -96,26 +97,16 @@ async function readPlayerScoreFromText(text: string, isDxPlus: boolean) {
 
 async function calculateAndShowRating() {
   const isDxPlus = getIsDxPlus();
-  console.log(`isDxPlus ${isDxPlus}`);
+  console.log("isDxPlus", isDxPlus);
   const songPropsByName = await readSongProperties(isDxPlus);
-  console.log("Inner Level:");
-  console.log(songPropsByName);
-  if (songPropsByName.size > 600) {
-    const cacheKey = isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
-    writeToCache(cacheKey, innerLvInput.value);
-  }
+  console.log("Song properties:", songPropsByName);
 
   const playerScores = await readPlayerScoreFromText(playerScoreInput.value, isDxPlus);
-  console.log("Player Score:");
-  console.log(playerScores);
+  console.log("Player scores:", playerScores);
 
   if (playerScores.length) {
     const gameVersion = isDxPlus ? DX_PLUS_GAME_VERSION : DX_GAME_VERSION;
-    const ratingData = await analyzePlayerRating(
-      songPropsByName,
-      playerScores,
-      gameVersion
-    );
+    const ratingData = await analyzePlayerRating(songPropsByName, playerScores, gameVersion);
     console.log("Rating Data:");
     console.log(ratingData);
 
@@ -193,60 +184,65 @@ async function calculateAndShowRating() {
   quickLookupArea.classList.remove("hidden");
 }
 
-document.getElementById("calculateRatingBtn").addEventListener("click", async (evt) => {
-  evt.preventDefault();
-  calculateAndShowRating();
-});
-
-if (dxVersionQueryParam) {
-  gameVersionSelect.value =
-    dxVersionQueryParam === DX_PLUS_GAME_VERSION.toString()
-    ? DX_PLUS_GAME_VERSION.toString()
-    : DX_GAME_VERSION.toString();
-}
-
-handleGameVersionChange();
-gameVersionSelect.addEventListener("change", handleGameVersionChange);
-
-if (queryParams.get("quickLookup") === "hide") {
-  quickLookupArea.classList.add("hidden");
-}
-
-if (window.opener) {
-  window.addEventListener("message", (evt) => {
-    console.log(evt.origin, evt.data);
-    if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
-      let payloadAsInt;
-      switch (evt.data.action) {
-        case "gameVersion":
-          payloadAsInt = parseInt(evt.data.payload);
-          if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
-            gameVersionSelect.value = DX_PLUS_GAME_VERSION.toString();
-          }
-          break;
-        case "playerGrade":
-          payloadAsInt = parseInt(evt.data.payload);
-          if (payloadAsInt) {
-            playerGradeIndex = payloadAsInt;
-          }
-          break;
-        case "replacePlayerScore":
-          playerScoreInput.value = evt.data.payload;
-          break;
-        case "appendPlayerScore":
-          playerScoreInput.value += evt.data.payload + "\n";
-          break;
-        case "calculateRating":
-          calculateAndShowRating();
-          break;
-      }
-    }
+function main() {
+  renderInnerLvInput(document.getElementById("innerLvArea"), {textareaId: INNER_LV_INPUT_ID});
+  document.getElementById("calculateRatingBtn").addEventListener("click", async (evt) => {
+    evt.preventDefault();
+    calculateAndShowRating();
   });
-  const referrer = document.referrer && new URL(document.referrer).origin;
-  if (referrer) {
-    window.opener.postMessage("ready", referrer);
-  } else {
-    window.opener.postMessage("ready", "https://maimaidx-eng.com");
-    window.opener.postMessage("ready", "https://maimaidx.jp");
+
+  if (dxVersionQueryParam) {
+    gameVersionSelect.value =
+      dxVersionQueryParam === DX_PLUS_GAME_VERSION.toString()
+        ? DX_PLUS_GAME_VERSION.toString()
+        : DX_GAME_VERSION.toString();
+  }
+
+  handleGameVersionChange();
+  gameVersionSelect.addEventListener("change", handleGameVersionChange);
+
+  if (queryParams.get("quickLookup") === "hide") {
+    quickLookupArea.classList.add("hidden");
+  }
+
+  if (window.opener) {
+    window.addEventListener("message", (evt) => {
+      console.log(evt.origin, evt.data);
+      if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+        let payloadAsInt;
+        switch (evt.data.action) {
+          case "gameVersion":
+            payloadAsInt = parseInt(evt.data.payload);
+            if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
+              gameVersionSelect.value = DX_PLUS_GAME_VERSION.toString();
+            }
+            break;
+          case "playerGrade":
+            payloadAsInt = parseInt(evt.data.payload);
+            if (payloadAsInt) {
+              playerGradeIndex = payloadAsInt;
+            }
+            break;
+          case "replacePlayerScore":
+            playerScoreInput.value = evt.data.payload;
+            break;
+          case "appendPlayerScore":
+            playerScoreInput.value += evt.data.payload + "\n";
+            break;
+          case "calculateRating":
+            calculateAndShowRating();
+            break;
+        }
+      }
+    });
+    const referrer = document.referrer && new URL(document.referrer).origin;
+    if (referrer) {
+      window.opener.postMessage("ready", referrer);
+    } else {
+      window.opener.postMessage("ready", "https://maimaidx-eng.com");
+      window.opener.postMessage("ready", "https://maimaidx.jp");
+    }
   }
 }
+
+main();

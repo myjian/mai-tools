@@ -13,12 +13,20 @@ textarea:focus {
   outline-width: 2px;
 }
 
-.innerLvInputHeading, .playerScoreInputHeading {
+.lvInputHeading, .playerScoreInputHeading {
   margin-bottom: 10px;
 }
 
-.innerLvInputDescription {
-  width: 90%;
+.lvInput {
+  margin-top: 14px;
+}
+
+.lvFormLabel:first-child {
+  margin-right: 20px;
+}
+
+.lvFormRadio {
+  margin-right: 8px;
 }
 
 .actionArea {
@@ -31,6 +39,6 @@ textarea:focus {
   background-color: #ffc542;
 }
 
-#innerLvInput, #playerScoreInput {
+#playerScoreInput {
   margin-top: 20px;
 }
