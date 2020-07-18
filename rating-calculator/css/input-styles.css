@@ -1,5 +1,10 @@
-textarea {
+.w90 {
   width: 90%;
+  position: relative;
+}
+
+textarea {
+  width: 100%;
   min-height: 140px;
   display: block;
   padding: 4px;
@@ -13,7 +18,7 @@ textarea:focus {
   outline-width: 2px;
 }
 
-.lvInputHeading, .playerScoreInputHeading {
+.lvInputHeading, .scoreInputHeading {
   margin-bottom: 10px;
 }
 
@@ -29,6 +34,10 @@ textarea:focus {
   margin-right: 8px;
 }
 
+.scoreInputArea {
+  margin-top: 18px;
+}
+
 .actionArea {
   padding-top: 22px;
 }
@@ -37,8 +46,4 @@ textarea:focus {
   font-size: 28px;
   padding: 8px 20px;
   background-color: #ffc542;
-}
-
-#playerScoreInput {
-  margin-top: 20px;
 }

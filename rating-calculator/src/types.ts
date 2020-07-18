@@ -28,3 +28,10 @@ export interface ChartRecordWithRating extends ChartRecord {
   rating: number;
   nextRanks?: Map<string, {minRt: number, rank: RankDef}>;
 }
+
+export interface RatingData {
+  oldChartsRating: number;
+  oldTopChartsCount: number;
+  newChartsRating: number;
+  newTopChartsCount: number;
+}

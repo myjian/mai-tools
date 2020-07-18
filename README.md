@@ -12,3 +12,9 @@ Run
 ----
 
     npm start
+
+Development
+----
+
+    npm run-script build -- --watch
+    npm start

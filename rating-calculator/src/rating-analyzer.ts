@@ -99,25 +99,24 @@ export async function analyzePlayerRating(
   newSongScores.sort(compareSongsByRating);
   oldSongScores.sort(compareSongsByRating);
 
-  let newSongsRating = 0;
-  const newTopSongCount = Math.min(NUM_TOP_NEW_SONGS, newSongScores.length);
-  for (let i = 0; i < newTopSongCount; i++) {
-    newSongsRating += Math.floor(newSongScores[i].rating);
+  let newChartsRating = 0;
+  const newTopChartsCount = Math.min(NUM_TOP_NEW_SONGS, newSongScores.length);
+  for (let i = 0; i < newTopChartsCount; i++) {
+    newChartsRating += Math.floor(newSongScores[i].rating);
   }
 
-  let oldSongsRating = 0;
-  const oldTopSongCount = Math.min(NUM_TOP_OLD_SONGS, oldSongScores.length);
-  for (let i = 0; i < oldTopSongCount; i++) {
-    oldSongsRating += Math.floor(oldSongScores[i].rating);
+  let oldChartsRating = 0;
+  const oldTopChartsCount = Math.min(NUM_TOP_OLD_SONGS, oldSongScores.length);
+  for (let i = 0; i < oldTopChartsCount; i++) {
+    oldChartsRating += Math.floor(oldSongScores[i].rating);
   }
 
   return {
-    totalRating: newSongsRating + oldSongsRating,
     newSongScores,
-    newSongsRating,
-    newTopSongCount,
+    newChartsRating,
+    newTopChartsCount,
     oldSongScores,
-    oldSongsRating,
-    oldTopSongCount,
+    oldChartsRating,
+    oldTopChartsCount,
   };
 }

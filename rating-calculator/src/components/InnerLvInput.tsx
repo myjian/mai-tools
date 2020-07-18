@@ -1,24 +1,20 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import {UIString} from '../i18n';
-
-interface Props {
-  textareaId: string;
-}
 
 interface State {
   showTextarea: boolean;
 }
 
-class InnerLvInput extends React.PureComponent<Props, State> {
+export class InnerLvInput extends React.PureComponent<{}, State> {
   state: State = {showTextarea: false};
 
+  private textareaRef = React.createRef<HTMLTextAreaElement>();
+
   render() {
-    const {textareaId} = this.props;
     const {showTextarea} = this.state;
     return (
-      <React.Fragment>
+      <div className="w90">
         <h2 className="lvInputHeading">{UIString.innerLvHeading}</h2>
         <form>
           <label className="lvFormLabel">
@@ -44,16 +40,21 @@ class InnerLvInput extends React.PureComponent<Props, State> {
             {UIString.manualLv}
           </label>
         </form>
-        {showTextarea && <textarea className="lvInput" id={textareaId}></textarea>}
-      </React.Fragment>
+        {showTextarea && (
+          <textarea className="lvInput" ref={this.textareaRef} />
+        )}
+      </div>
     );
+  }
+
+  getInput(): string {
+    if (this.textareaRef.current) {
+      return this.textareaRef.current.value;
+    }
+    return "";
   }
 
   private handleRadioChange = (evt: React.FormEvent<HTMLInputElement>) => {
     this.setState({showTextarea: evt.currentTarget.value === "1"});
   };
-}
-
-export function renderInnerLvInput(container: HTMLElement, props: Props) {
-  ReactDOM.render(<InnerLvInput {...props} />, container);
 }
