@@ -72,6 +72,8 @@ td.songTitleCell {
 
 .dateOptionLabel {
   display: block;
+  margin: 0;
+  padding: 4px;
 }
 
 .newRecordLabel, .sortByLabel {
