@@ -28,12 +28,12 @@ export class RatingOverview extends React.PureComponent<Props> {
             <tr>
               <td>{UIString.newChartsRating}</td>
               <td className="columnColumn">{UIString.column}</td>
-              <td>{oldChartsRating}</td>
+              <td>{newChartsRating}</td>
             </tr>
             <tr>
               <td>{UIString.oldChartsRating}</td>
               <td>{UIString.column}</td>
-              <td>{newChartsRating}</td>
+              <td>{oldChartsRating}</td>
             </tr>
             {playerGrade && (
               <tr>

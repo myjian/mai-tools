@@ -17,12 +17,10 @@ export const ScoreDataRow: React.FC<Props> = React.memo((props) => {
     lvText = "*" + lvText;
   }
   const rankText = isCandidate
-    ? Array.from(record.nextRanks.keys()).join("\n")
+    ? record.nextRanks.keys().next().value
     : `${getRankTitle(record.achievement)} (${record.rankFactor})`;
   const ratingText = isCandidate
-    ? Array.from(record.nextRanks.values())
-        .map((r) => r.minRt)
-        .join("\n")
+    ? record.nextRanks.values().next().value.minRt.toFixed(0)
     : Math.floor(record.rating).toString();
   const columns = [
     index.toString(),
