@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {LANG} from '../../rating-calculator/src/i18n';
 import {BookmarkItem} from './BookmarkItem';
 import {
   ratingAnalyzer,
@@ -9,7 +8,7 @@ import {
   scoreDownloader,
   scoreSorter,
 } from './bookmarklets';
-import {PAGE_TITLE} from './i18n';
+import {LANG, PAGE_TITLE} from './i18n';
 import {MobileCreateManual} from './MobileCreateManual';
 import {MobileUseManual} from './MobileUseManual';
 import {PCManual} from './PCManual';
