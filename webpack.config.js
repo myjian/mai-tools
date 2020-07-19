@@ -5,16 +5,12 @@ module.exports = {
   entry: {
     "classic-layout": "./classic-layout/src/main.tsx",
     "rating-calculator": "./rating-calculator/src/main.ts",
+    "rating-visualizer": "./rating-visualizer/src/main.tsx",
   },
   output: {
     path: __dirname,
     filename: (pathData) => {
-      switch (pathData.chunk.name) {
-        case "classic-layout":
-          return "classic-layout/dist/main.bundle.js";
-        case "rating-calculator":
-          return "rating-calculator/dist/main.bundle.js";
-      }
+      return pathData.chunk.name + "/dist/main.bundle.js";
     },
   },
   module: {

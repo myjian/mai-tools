@@ -23,6 +23,13 @@ function getInnerLvCacheKey(isDxPlus: boolean) {
   return isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
 }
 
+function getDebugText(data: number|string) {
+  if (typeof data === "string") {
+    return "string of length " + data.length;
+  }
+  return data;
+}
+
 function readSongProperties(
   isDxPlus: boolean,
   inputText: string
@@ -153,10 +160,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.setState({ratingData, showMultiplierTable: true});
   };
 
-  private initWindowCommunication = () => {
+  private initWindowCommunication() {
     if (window.opener) {
       window.addEventListener("message", (evt) => {
-        console.log(evt.origin, evt.data);
+        console.log(evt.origin, evt.data.action, getDebugText(evt.data.payload));
         if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
           let payloadAsInt;
           switch (evt.data.action) {
@@ -192,5 +199,5 @@ export class RootComponent extends React.PureComponent<{}, State> {
         window.opener.postMessage("ready", "https://maimaidx.jp");
       }
     }
-  };
+  }
 }

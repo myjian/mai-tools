@@ -1,12 +1,13 @@
 type LangType = "zh" | "en";
 
 const queryParams = new URLSearchParams(document.location.search);
-let LANG: LangType = "en";
+let lang: LangType = "en";
 if (queryParams.get("hl")) {
-  LANG = queryParams.get("hl").startsWith("zh") ? "zh" : "en";
+  lang = queryParams.get("hl").startsWith("zh") ? "zh" : "en";
 } else if (navigator.language.startsWith("zh")) {
-  LANG = "zh";
+  lang = "zh";
 }
+export const LANG = lang;
 
 const UIStringByLang = {
   en: {
