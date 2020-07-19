@@ -214,20 +214,20 @@
     // const span = document.createElement("span");
     // span.className = "f_16";
     // span.innerText = "Sort: ";
-    // div.appendChild(span);
+    // div.append(span);
     const select = document.createElement("select");
     select.className = "w_300 m_10";
     select.addEventListener("change", (evt: Event) => {
       performSort((evt.target as HTMLSelectElement).value);
     });
-    select.appendChild(createOption("-- Choose Sort Option --", "none"));
-    select.appendChild(createOption("Level (high \u2192 low)", "level_des"));
-    select.appendChild(createOption("Level (low \u2192 high)", "level_asc"));
-    select.appendChild(createOption("Rank (high \u2192 low)", "rank_des"));
-    select.appendChild(createOption("Rank (low \u2192 high)", "rank_asc"));
-    select.appendChild(createOption("AP/FC (AP+ \u2192 FC)", "ap_fc_des"));
-    select.appendChild(createOption("AP/FC (FC \u2192 AP+)", "ap_fc_asc"));
-    div.appendChild(select);
+    select.append(createOption("-- Choose Sort Option --", "none"));
+    select.append(createOption("Level (high \u2192 low)", "level_des"));
+    select.append(createOption("Level (low \u2192 high)", "level_asc"));
+    select.append(createOption("Rank (high \u2192 low)", "rank_des"));
+    select.append(createOption("Rank (low \u2192 high)", "rank_asc"));
+    select.append(createOption("AP/FC (AP+ \u2192 FC)", "ap_fc_des"));
+    select.append(createOption("AP/FC (FC \u2192 AP+)", "ap_fc_asc"));
+    div.append(select);
     return div;
   }
 

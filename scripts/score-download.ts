@@ -23,7 +23,7 @@ import {fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/u
 
     const tx = document.createElement("textarea");
     tx.id = "outputText";
-    dv.appendChild(tx);
+    dv.append(tx);
 
     const btn = document.createElement("button");
     btn.innerText = UIString.copy;
@@ -33,7 +33,7 @@ import {fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/u
     btn.style.color = "white";
     btn.style.fontWeight = "700";
     btn.style.padding = "8px 12px";
-    dv.appendChild(btn);
+    dv.append(btn);
 
     const res = document.createElement("span");
     res.className = "f_16";
@@ -42,7 +42,7 @@ import {fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/u
     res.style.bottom = "10px";
     res.style.fontWeight = "700";
     res.style.color = "#fff000";
-    dv.appendChild(res);
+    dv.append(res);
 
     btn.addEventListener("click", () => {
       tx.select();
@@ -53,7 +53,7 @@ import {fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/u
       }, 5000);
     });
 
-    container.appendChild(dv);
+    container.append(dv);
     return tx;
   }
 

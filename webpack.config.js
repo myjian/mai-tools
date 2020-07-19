@@ -13,6 +13,7 @@ fs.readdirSync(SCRIPTS_DIR).filter(
 module.exports = {
   mode: "production",
   entry: {
+    "bookmarklets": "./bookmarklets/src/main.tsx",
     "classic-layout": "./classic-layout/src/main.tsx",
     "rating-calculator": "./rating-calculator/src/main.ts",
     "rating-visualizer": "./rating-visualizer/src/main.tsx",

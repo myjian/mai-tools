@@ -16,7 +16,7 @@ const UIStringByLang = {
     manualLv: "Manual input",
     autoLv: "Automatic",
     scoreInputHeading: "Player Score",
-    scoreInputDescPrefix: 'Please use "Calculate DX Rating" or "Download All Scores" from ',
+    scoreInputDescPrefix: 'Please use "Analyze DX Rating" or "Download all scores" from ',
     bookmarketLinkLabel: "maimai bookmarklets",
     scoreInputDescSuffix: " to fill in this field.",
     computeRating: "Calculate Rating",
@@ -88,7 +88,7 @@ const UIStringByLang = {
     otherToolsHeading: "其他工具",
     ratingVisualizer: "R 值視覺化互動式網頁",
     bookmarketList: "書籤小工具列表",
-    scoreConverter: "DX 分數轉換與分析工具",
+    scoreConverter: "新舊版分數轉換 & 分析",
   },
 };
 

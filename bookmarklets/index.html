@@ -3,145 +3,15 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.9" >
-    <title>maimai 書籤小工具</title>
+    <title>maimai Bookmarklets</title>
     <link rel="stylesheet" href="./bookmarklets.css">
   </head>
   <body>
-    <h2>maimai 書籤小工具</h2>
-    <p>以下各標題的連結都是書籤小工具，必須在 maimai NET 上打開才有效果。如果沒使用過書籤小工具，請先閱讀 <a href="#faq">常見問題</a>。</p>
-
-    <div class="bookmarkletList">
-      <div class="bookmarklet">
-        <div class="bookmarkletText">
-          <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document);">換算為舊版成績</a>
-          </h3>
-          <ul>
-            <li>功能：可轉換 DX 分數為舊版計分方式。</li>
-            <li>使用方式：登入 maimai NET，點選最近遊玩的其中一筆紀錄後執行。執行後會開啟新分頁，顯示舊版成績以及相關數據。</li>
-          </ul>
-        </div>
-        <div class="bookmarkletImage">
-          <a href="./screenshots/convert-to-finale-score-20200718.jpg">
-            <img class="screenshot" alt="screenshot" src="./screenshots/convert-to-finale-score-20200718.jpg">
-          </a>
-        </div>
-      </div>
-
-      <div class="bookmarklet">
-        <div class="bookmarkletText">
-          <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if ((d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp') && d.location.pathname.includes('/maimai-mobile/record/music')){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/score-sort.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">排序 maimai NET 成績</a>
-          </h3>
-          <ul>
-            <li>功能：可依照等級、Rank、AP/FC 狀態排序成績。</li>
-            <li>使用方式：於分類查詢成績頁執行。執行完後畫面上會出現選單，可按自己喜歡的方式排序。</li>
-          </ul>
-        </div>
-        <div class="bookmarkletImage">
-          <a href="./screenshots/score-sort-20200630.png">
-            <img class="screenshot" alt="screenshot" src="./screenshots/score-sort-20200630.png">
-          </a>
-        </div>
-      </div>
-
-      <div class="bookmarklet">
-        <div class="bookmarkletText">
-          <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if ((d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp') && d.location.pathname==='/maimai-mobile/record/'){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/recent-play-downloader.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">整理最近遊玩紀錄</a>
-          </h3>
-          <ul>
-            <li>功能：以表格方式整理最近的遊玩紀錄，並將遊戲時間修正為當地時間。</li>
-            <li>使用方式：於 maimai NET 的最近成績列表執行。執行後會在頁面中產生表格，可以選取日期和排序。</li>
-          </ul>
-        </div>
-        <div class="bookmarkletImage">
-          <a href="./screenshots/recent-play-summary-20200704.png">
-            <img class="screenshot" alt="screenshot" src="./screenshots/recent-play-summary-20200704.png">
-          </a>
-        </div>
-      </div>
-
-      <div class="bookmarklet">
-        <div class="bookmarkletText">
-          <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if (d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='module'; s.src='https://myjian.github.io/mai-tools/scripts/analyze-rating-in-newtab.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">分析 DX Rating</a>
-          </h3>
-          <ul>
-            <li>功能：可分析玩家的 DX Rating 組成。</li>
-            <li>使用方式：於 maimai NET 任何頁面執行。執行時會開新分頁，載入成績並進行分析。</li>
-          </ul>
-        </div>
-        <div class="bookmarkletImage">
-          <a href="./screenshots/rating-analyzer-20200702.png">
-            <img class="screenshot" alt="screenshot" src="./screenshots/rating-analyzer-20200702.png">
-          </a>
-        </div>
-      </div>
-
-      <div class="bookmarklet" id="scoreDownloader">
-        <div class="bookmarkletText">
-          <h3 class="bookmarkletTitle">
-            <a href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-download.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document)">下載所有歌曲成績</a>
-          </h3>
-          <ul>
-            <li>功能：下載所有白譜、紫譜、紅譜、黃譜的成績。可用於個人紀錄或是 R 值分析。</li>
-            <li>使用方式：於 maimai NET 登入後的首頁執行。執行完後畫面會出現文字框，按下下方的按鈕就能複製所有成績。複製後可貼到 Excel、Google 試算表，或是
-              <a href="/mai-tools/rating-calculator/" target="_blank">R 值分析工具</a>。
-            </li>
-          </ul>
-        </div>
-        <div class="bookmarkletImage">
-          <a href="./screenshots/score-download-20200630.png">
-            <img class="screenshot" alt="screenshot" src="./screenshots/score-download-20200630.png">
-          </a>
-        </div>
-      </div>
-    </div>
-    <br>
-
-    <div>
-      <h2 id="faq">常見問題</h2>
-      <h3>● 在電腦上怎麼新增和使用書籤？</h3>
-      <div><p>直接把連結拖曳到書籤列就能新增書籤。使用時，先登入 maimai NET 並進入指定的頁面後，再點擊書籤。</p></div>
-      <h3>● 在手機上怎麼新增書籤？</h3>
-      <div>
-        <p>最簡單的方式，是先在電腦上新增書籤，再同步到手機上。如果不方便用電腦，請依照你使用的瀏覽器參考以下步驟。</p>
-        <p>Chrome:</p>
-        <ol>
-          <li>長按並複製連結網址</li>
-          <li>打開瀏覽器右上角的選單，按星星把此頁加入書籤</li>
-          <li>畫面下方會顯示「已加入書籤」，點右邊「編輯」</li>
-          <li>把網址完全刪除，並貼上剛才複製的連結</li>
-        </ol>
-
-        <p>Firefox:</p>
-        <ol>
-          <li>長按連結</li>
-          <li>選取「將鏈結加入書籤」</li>
-        </ol>
-      </div>
-
-      <h3>● 在手機上怎麼使用書籤？</h3>
-      <div>
-        <p>Chrome:</p>
-        <ol>
-          <li>登入 maimai NET 並進入指定的頁面後，點網址欄</li>
-          <li>把原本的網址刪除，再打「換算」</li>
-          <li>找到剛才新增的書籤（網址開頭應該要是 javascript），點下去。</li>
-        </ol>
-
-        <p>Firefox:</p>
-        <ol>
-          <li>登入 maimai NET 並進入指定的頁面後，點網址欄</li>
-          <li>選「行動書籤」</li>
-          <li>找到剛才新增的書籤，點下去。</li>
-        </ol>
-      </div>
-    </div>
-    <div class="footer credit">
-      <hr>
-      Made by <a href="https://github.com/myjian" target="_blank">myjian</a>.
-    </div>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@16.13.1/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16.13.1/umd/react-dom.production.min.js"></script>
+    <!-- <script src="../node_modules/react/umd/react.production.min.js"></script> -->
+    <!-- <script src="../node_modules/react-dom/umd/react-dom.production.min.js"></script> -->
+    <script src="./dist/main.bundle.js"></script>
   </body>
 </html>
