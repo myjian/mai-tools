@@ -53,20 +53,20 @@ export function statusText(what: string, end?: boolean) {
   }
 }
 
-function getSongName(row: HTMLElement) {
+export function getSongName(row: HTMLElement) {
   return (row.getElementsByClassName("music_name_block")[0] as HTMLElement).innerText;
 }
 
-function getChartLevel(row: HTMLElement) {
+export function getChartLevel(row: HTMLElement) {
   return (row.getElementsByClassName("music_lv_block")[0] as HTMLElement).innerText;
 }
 
-function getChartDifficulty(row: HTMLElement) {
+export function getChartDifficulty(row: HTMLElement) {
   const d = row.children[0].className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();
   return d.indexOf("RE") === 0 ? "Re:MASTER" : d;
 }
 
-function getChartType(row: HTMLElement) {
+export function getChartType(row: HTMLElement) {
   if (row.id) {
     return row.id.includes("sta_") ? "STANDARD" : "DX";
   }
