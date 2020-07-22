@@ -25,7 +25,7 @@ export class LvRatingContainer extends React.PureComponent<LvRatingContainerProp
     return (
       <div className="lvRatingContainer" style={style}>
         <LvLabel title={lvTitle} onClick={this.handleLabelClick} canZoomIn={canZoomIn} />
-        {ranks.map((rank) => (
+        {heightUnit ? ranks.map((rank) => (
           <LvRankRatingSegment
             key={rank.title}
             minLv={minLv}
@@ -38,7 +38,7 @@ export class LvRatingContainer extends React.PureComponent<LvRatingContainerProp
             title={rank.title}
             highlightInterval={this.props.highlightInterval}
           />
-        ))}
+        )) : null}
       </div>
     );
   }

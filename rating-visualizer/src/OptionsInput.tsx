@@ -32,6 +32,7 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
           <label className="optionGroup">
             Scale:&nbsp;
             <select onChange={this.handleChangeHeightUnit}>
+              <option value="0">Hide</option>
               <option value="3">3x</option>
               <option value="4">4x</option>
               <option value="5">5x</option>

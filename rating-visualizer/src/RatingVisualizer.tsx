@@ -5,6 +5,7 @@ import {IntervalLines} from './IntervalLines';
 import {LvRatingContainer} from './LvRatingContainer';
 import {OptionsInput} from './OptionsInput';
 import {RatingAxis} from './RatingAxis';
+import {RatingTable} from './RatingTable';
 
 interface RatingVisualizerState {
   width: number;
@@ -68,13 +69,15 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
           tabIndex={-1}
         >
           <div className="ratingContainer">
-            <RatingAxis
-              maxRating={maxRating}
-              heightUnit={heightUnit}
-              containerHeight={containerHeight}
-              step={axisLabelStep}
-              onClick={this.removeHighlightInterval}
-            />
+            {heightUnit ? (
+              <RatingAxis
+                maxRating={maxRating}
+                heightUnit={heightUnit}
+                containerHeight={containerHeight}
+                step={axisLabelStep}
+                onClick={this.removeHighlightInterval}
+              />
+            ) : null}
             {levels.map((lv) => {
               return (
                 <LvRatingContainer
@@ -99,6 +102,15 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
               />
             )}
           </div>
+        </div>
+        <div className="container">
+          <RatingTable ranks={ranks} levels={levels} />
+          <footer className="footer">
+            <hr className="footerSep" />
+            <span>Made by </span>
+            <a className="authorLink" href="https://github.com/myjian" target="_blank">myjian</a>
+            <span>.</span>
+          </footer>
         </div>
       </div>
     );
@@ -136,6 +148,9 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   private handleChangeHeightUnit = (unit: number) => {
     this.setState({heightUnit: unit});
+    if (unit === 0) {
+      this.removeHighlightInterval();
+    }
   };
 
   private handleSelectLv = (lvTitle: string, minLv: number, maxLv: number) => {

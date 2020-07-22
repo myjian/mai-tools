@@ -64,7 +64,7 @@ body {
 }
 
 .lvLabelButtonContainer {
-  width: calc(100% - 2px);  
+  width: calc(100% - 2px);
   position: absolute;
   left: -2px;
   top: 0;
@@ -228,4 +228,51 @@ body {
     margin-top: 4px;
     display: block;
   }
+}
+
+.lookupTable {
+  width: 99%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: 2px solid #666;
+  margin-left: 6px;
+}
+
+.lookupTableHead {
+  background-color: #888;
+  color: white;
+  border-bottom: 2px solid #666;
+}
+
+.lookupTopLeftCell {
+  width: 50px;
+  box-sizing: border-box;
+}
+
+.lookupTopLeftCell,
+.lookupTableBody th {
+  border-right: 2px solid #666;
+}
+
+.lookupTableBody td {
+  text-align: center;
+}
+
+.lookupTableBody tr:nth-child(2n) {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.footer {
+  margin-left: 6px;
+  margin-top: 30px;
+  padding-bottom: 40px;
+  color: #222;
+}
+
+.footerSep {
+  margin-bottom: 10px;
+}
+
+.authorLink, .authorLink:visited {
+  color: inherit;
 }
