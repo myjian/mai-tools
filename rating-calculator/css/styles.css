@@ -74,3 +74,7 @@ select, label {
 .sectionSep {
   margin-top: 35px;
 }
+
+.ratingTargetDistribution {
+  margin-bottom: 35px;
+}
