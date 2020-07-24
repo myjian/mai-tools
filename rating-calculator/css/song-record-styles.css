@@ -23,17 +23,15 @@
   margin-top: 0;
 }
 
-.crSecTitle {
-  color: inherit;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  font-size: 1.2rem;
-  font-family: inherit;
-  display: inline-block;
+.crSecTitleContainer {
   margin: 4px 0 16px;
+  padding: 0;
+}
+
+.crSecTitle {
+  cursor: pointer;
   padding: 0 4px;
-  font-weight: bold;
+  display: inline-block;
 }
 
 .crSecTitle:focus {
@@ -59,19 +57,20 @@
 }
 
 .songRecordTableContainer {
-  max-height: 4000px;
+  max-height: 9999px;
+  margin-bottom: 35px;
 }
 
 .songRecordTableContainer.hidden {
   max-height: 0;
   overflow-y: hidden;
   transition: max-height 0.3s;
+  margin-bottom: 0;
 }
 
 .songRecordTable {
   border-collapse: collapse;
   border: 2px solid #999;
-  margin-bottom: 35px;
 }
 
 .scoreRecordRow:nth-child(2n) {
@@ -83,6 +82,10 @@
   font-weight: bold;
   box-sizing: border-box;
   font-size: 1rem;
+}
+
+.scoreRecordCell[tabIndex] {
+  cursor: pointer;
 }
 
 .songTitleCell {
@@ -124,4 +127,9 @@ td.ratingCell,
 .candidateTable .rankFactorCell,
 .candidateTable .ratingCell {
   text-align: center;
+}
+
+.showMore {
+  display: inline-block;
+  margin-top: 10px;
 }

@@ -26,7 +26,8 @@ export interface ChartRecord {
 
 export interface ChartRecordWithRating extends ChartRecord {
   rating: number;
-  nextRanks?: Map<string, {minRt: number, rank: RankDef}>;
+  nextRanks?: Map<string, {minRt: number; rank: RankDef}>;
+  order?: number;
 }
 
 export interface RatingData {
@@ -36,4 +37,16 @@ export interface RatingData {
   newChartsRating: number;
   newTopChartsCount: number;
   newChartRecords: ChartRecordWithRating[];
+}
+
+export const enum ColumnType {
+  NO,
+  SONG_TITLE,
+  DIFFICULTY,
+  LEVEL,
+  ACHIEVEMENT,
+  RANK_FACTOR,
+  NEXT_RANK,
+  RATING,
+  NEXT_RATING,
 }

@@ -12,6 +12,19 @@ body {
   }
 }
 
+h2, h3 {
+  /* Work around an Android Chrome bug where span in heading has smaller font size */
+  max-height: 999px;
+}
+
+h2 {
+  font-size: 26px;
+}
+
+h3 {
+  font-size: 22px;
+}
+
 tbody th {
   background-color: #dddddd;
 }
@@ -22,7 +35,7 @@ thead {
 }
 
 select, label {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 #outputHeading {

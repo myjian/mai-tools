@@ -15,16 +15,23 @@ export class ChartRecordSectionTitle extends React.PureComponent<Props> {
       symbolClasses += " crSecHidden";
     }
     return (
-      <div className="crSecTitle" tabIndex={0} onClick={this.handleClick} onKeyPress={this.handleKeyPress}>
-        <span className={symbolClasses}>{symbol}</span> {title}
-      </div>
+      <h3 className="crSecTitleContainer">
+        <span
+          className="crSecTitle"
+          tabIndex={0}
+          onClick={this.handleClick}
+          onKeyPress={this.handleKeyPress}
+        >
+          <span className={symbolClasses}>{symbol}</span> {title}
+        </span>
+      </h3>
     );
   }
 
   private handleClick = (evt: React.SyntheticEvent<HTMLElement>) => {
     evt.preventDefault();
     this.props.onClick(evt);
-  }
+  };
 
   private handleKeyPress = (evt: React.KeyboardEvent<HTMLElement>) => {
     evt.preventDefault();
@@ -33,5 +40,5 @@ export class ChartRecordSectionTitle extends React.PureComponent<Props> {
     if (evt.key === "Enter") {
       this.props.onClick(evt);
     }
-  }
+  };
 }

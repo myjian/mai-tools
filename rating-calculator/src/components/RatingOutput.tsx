@@ -1,12 +1,17 @@
 import React from 'react';
 
+import {getCandidateSongs} from '../candidate-songs';
 import {UIString} from '../i18n';
 import {RatingData} from '../types';
+import {CandidateChartRecords} from './CandidatesChartRecords';
 import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
-import {ChartRecordsTable} from './ChartRecordsTable';
 import {DifficultyRankDistribution} from './DifficultyRankDistribution';
 import {LevelRankDistribution} from './LevelRankDistribution';
 import {RatingOverview} from './RatingOverview';
+import {TopChartRecords} from './TopChartRecords';
+
+const NEW_CANDIDATE_SONGS_POOL_SIZE = 40;
+const OLD_CANDIDATE_SONGS_POOL_SIZE = 60;
 
 interface Props {
   isDxPlus: boolean;
@@ -51,6 +56,18 @@ export class RatingOutput extends React.PureComponent<Props, State> {
       hideOldCandidateSongs,
       hideOldTopSongs,
     } = this.state;
+    const newChartCandidates = getCandidateSongs(
+      newChartRecords,
+      newTopChartsCount,
+      isDxPlus,
+      NEW_CANDIDATE_SONGS_POOL_SIZE
+    );
+    const oldChartCandidates = getCandidateSongs(
+      oldChartRecords,
+      oldTopChartsCount,
+      isDxPlus,
+      OLD_CANDIDATE_SONGS_POOL_SIZE
+    );
     return (
       <div className="outputArea" ref={this.outputArea}>
         <h2 id="outputHeading">{UIString.analysisResult}</h2>
@@ -83,10 +100,9 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             contentHidden={hideNewTopSongs}
             onClick={this.toggleNewTopChartsDisplay}
           />
-          <ChartRecordsTable
-          isDxPlus={isDxPlus}
+          <TopChartRecords
             records={newChartRecords}
-            count={newTopChartsCount}
+            limit={newTopChartsCount}
             hidden={hideNewTopSongs}
           />
         </div>
@@ -96,10 +112,9 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             contentHidden={hideOldTopSongs}
             onClick={this.toggleOldTopChartsDisplay}
           />
-          <ChartRecordsTable
-            isDxPlus={isDxPlus}
+          <TopChartRecords
             records={oldChartRecords}
-            count={oldTopChartsCount}
+            limit={oldTopChartsCount}
             hidden={hideOldTopSongs}
           />
         </div>
@@ -111,13 +126,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             onClick={this.toggleNewCandidateChartsDisplay}
             isCandidateList
           />
-          <ChartRecordsTable
-            isDxPlus={isDxPlus}
-            records={newChartRecords}
-            offset={newTopChartsCount}
-            isCandidate
-            hidden={hideNewCandidateSongs}
-          />
+          <CandidateChartRecords records={newChartCandidates} hidden={hideNewCandidateSongs} />
         </div>
         <div className="songRecordsContainer">
           <ChartRecordSectionTitle
@@ -126,13 +135,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             onClick={this.toggleOldCandidateChartsDisplay}
             isCandidateList
           />
-          <ChartRecordsTable
-            isDxPlus={isDxPlus}
-            records={oldChartRecords}
-            offset={oldTopChartsCount}
-            isCandidate
-            hidden={hideOldCandidateSongs}
-          />
+          <CandidateChartRecords records={oldChartCandidates} hidden={hideOldCandidateSongs} />
         </div>
         <hr className="sectionSep" />
       </div>

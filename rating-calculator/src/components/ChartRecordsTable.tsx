@@ -1,51 +1,41 @@
 import React from 'react';
 
-import {getCandidateSongs} from '../candidate-songs';
-import {ChartRecordWithRating} from '../types';
+import {ChartRecordWithRating, ColumnType} from '../types';
 import {ScoreDataRow} from './ChartRecordDataRow';
 import {ScoreHeadRow} from './ChartRecordHeadRow';
 
 interface Props {
+  columns: ReadonlyArray<ColumnType>;
   records: ReadonlyArray<ChartRecordWithRating>;
-  offset?: number;
-  count?: number;
-  sortable?: boolean;
-  isCandidate?: boolean;
-  isDxPlus: boolean;
   hidden?: boolean;
+  tableClassname: string;
+  sortBy?: (col: ColumnType) => void;
+  children?: React.ReactNode;
 }
-export const ChartRecordsTable: React.FC<Props> = React.memo((props) => {
-  const {isCandidate, isDxPlus, count, hidden} = props;
-  let {offset, records} = props;
-  if (offset) {
-    if (isCandidate) {
-      records = getCandidateSongs(records, offset, isDxPlus);
-    } else {
-      records = records.slice(offset);
+export class ChartRecordsTable extends React.PureComponent<Props> {
+  render() {
+    const {children, hidden, columns, sortBy} = this.props;
+    let {records, tableClassname} = this.props;
+    tableClassname += " songRecordTable ";
+    let className = "songRecordTableContainer";
+    if (hidden) {
+      className += " hidden";
     }
+    return (
+      <div className={className}>
+        <table className={tableClassname}>
+          <thead>
+            <ScoreHeadRow sortBy={sortBy} columns={columns} />
+          </thead>
+          <tbody>
+            {records.map((r, index) => {
+              index = r.order || index + 1;
+              return <ScoreDataRow record={r} columns={columns} index={index} />;
+            })}
+          </tbody>
+        </table>
+        {children}
+      </div>
+    );
   }
-  if (count) {
-    records = records.slice(0, count);
-  }
-  const tableClassName = isCandidate
-    ? "songRecordTable candidateTable"
-    : "songRecordTable topRecordTable";
-  let className = "songRecordTableContainer";
-  if (hidden) {
-    className += " hidden";
-  }
-  return (
-    <div className={className}>
-      <table className={tableClassName}>
-        <thead>
-          <ScoreHeadRow isCandidate={isCandidate} />
-        </thead>
-        <tbody>
-          {records.map((r, index) => (
-            <ScoreDataRow record={r} isCandidate={isCandidate} index={index + 1} />
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-});
+}

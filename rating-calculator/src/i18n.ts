@@ -49,6 +49,8 @@ const UIStringByLang = {
     ratingVisualizer: "Rating Visualizer (Interactive Page)",
     bookmarketList: "Bookmarklets list",
     scoreConverter: "Convert DX score to old score system",
+    showMore: "Show more",
+    showLess: "Show less",
   },
   zh: {
     gameVer: "遊戲版本：",
@@ -89,6 +91,8 @@ const UIStringByLang = {
     ratingVisualizer: "R 值視覺化互動式網頁",
     bookmarketList: "書籤小工具列表",
     scoreConverter: "新舊版分數轉換 & 分析",
+    showMore: "顯示更多",
+    showLess: "顯示較少",
   },
 };
 
