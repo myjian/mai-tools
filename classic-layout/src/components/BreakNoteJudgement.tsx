@@ -2,7 +2,7 @@ import React from 'react';
 
 import {DisplayMode} from '../constants';
 import {JudgementDisplayMap} from '../types';
-import {getLastColumnText, NoteJudgement} from './noteJudgement';
+import {getLastColumnText, NoteJudgement} from './NoteJudgement';
 
 interface BreakNoteJudgementProps {
   judgements: JudgementDisplayMap;

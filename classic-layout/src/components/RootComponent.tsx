@@ -2,11 +2,11 @@ import React from 'react';
 
 import {parseJudgements} from '../parser';
 import {NoteType, StrictJudgementMap} from '../types';
-import {CreditInfo} from './creditInfo';
-import {PageFooter} from './footer';
-import {PageTitle} from './pageTitle';
-import {ScorePageContainer} from './scorePageContainer';
-import {SectionSep} from './sectionSeparator';
+import {CreditInfo} from './CreditInfo';
+import {PageFooter} from './PageFooter';
+import {PageTitle} from './PageTitle';
+import {ScorePageContainer} from './ScorePageContainer';
+import {SectionSep} from './SectionSeparator';
 
 type MessageType = {
   action: string;

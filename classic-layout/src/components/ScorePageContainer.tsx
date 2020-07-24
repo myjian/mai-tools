@@ -12,7 +12,7 @@ import {
   StrictJudgementMap,
   StrictJudgementType,
 } from '../types';
-import {ScorePage} from './scorePage';
+import {ScorePage} from './ScorePage';
 
 function calculateTotalJudgements(noteJudgements: Map<NoteType, StrictJudgementMap>) {
   const res: {[j in JudgementType]: number} = {perfect: 0, great: 0, good: 0, miss: 0};

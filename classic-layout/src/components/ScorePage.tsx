@@ -13,11 +13,11 @@ import {
   ScorePerType,
   StrictJudgementMap,
 } from '../types';
-import {AchievementInfo} from './achievementInfo';
-import {DateAndPlace} from './dateAndPlace';
-import {JudgementContainer} from './judgementContainer';
-import {SongImg} from './songImg';
-import {SongInfo} from './songInfo';
+import {AchievementInfo} from './AchievementInfo';
+import {DateAndPlace} from './DateAndPlace';
+import {JudgementContainer} from './JudgementContainer';
+import {SongImg} from './SongImg';
+import {SongInfo} from './SongInfo';
 
 const LOSS_PREFIX = "-";
 

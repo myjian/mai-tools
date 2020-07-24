@@ -8,9 +8,9 @@ import {
   ScorePerType,
   StrictJudgementMap,
 } from '../types';
-import {BreakNoteJudgement} from './breakNoteJudgement';
-import {NextRankInfo} from './nextRankInfo';
-import {NoteJudgement} from './noteJudgement';
+import {BreakNoteJudgement} from './BreakNoteJudgement';
+import {NextRankInfo} from './NextRankInfo';
+import {NoteJudgement} from './NoteJudgement';
 
 interface JudgementContainerProps {
   noteJudgements: Map<FullNoteType, JudgementDisplayMap | StrictJudgementMap>;
