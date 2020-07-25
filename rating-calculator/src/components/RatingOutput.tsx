@@ -17,6 +17,7 @@ interface Props {
   isDxPlus: boolean;
   ratingData: RatingData;
   playerGradeIndex: number;
+  playerName: string | null;
 }
 interface State {
   hideNewTopSongs: boolean;
@@ -41,7 +42,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const {isDxPlus, playerGradeIndex} = this.props;
+    const {isDxPlus, playerName, playerGradeIndex} = this.props;
     const {
       newChartRecords,
       newChartsRating,
@@ -70,7 +71,10 @@ export class RatingOutput extends React.PureComponent<Props, State> {
     );
     return (
       <div className="outputArea" ref={this.outputArea}>
-        <h2 id="outputHeading">{UIString.analysisResult}</h2>
+        <h2 id="outputHeading">
+          {UIString.analysisResult}
+          {playerName ? ` - ${playerName}` : null}
+        </h2>
         <RatingOverview
           newChartsRating={newChartsRating}
           oldChartsRating={oldChartsRating}

@@ -1,75 +1,59 @@
-import {fetchPage, fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/util';
+import {fetchPlayerGrade, getPlayerName} from './shared/fetch-score-util';
+import {DIFFICULTIES, fetchScores} from './shared/fetch-self-score';
+import {LANG} from './shared/i18n';
+import {statusText} from './shared/score-fetch-progress';
+import {ALLOWED_ORIGINS, fetchGameVersion, getPostMessageFunc, handleError} from './shared/util';
 
 (function () {
+  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
+  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk?";
   const UIString = {
-    zh: {
-      pleaseLogIn: "請登入 maimai NET",
-    },
-    en: {
-      pleaseLogIn: "Please log in to maimai DX NET.",
-    },
+    zh: {pleaseLogIn: "請登入 maimai NET"},
+    en: {pleaseLogIn: "Please log in to maimai DX NET."},
   }[LANG];
 
-  function postMessageToTab(tab: WindowProxy, action: string, text: string) {
-    const obj = {action: action, payload: text};
-    tab.postMessage(obj, "https://myjian.github.io");
-  }
-
-  async function fetchGameVersion(dom: Document | HTMLElement): Promise<string> {
-    const gameVer = dom.querySelector(
-      "select[name=version] option:last-of-type"
-    ) as HTMLOptionElement;
-    if (gameVer) {
-      return gameVer.value;
-    }
-    dom = await fetchPage("/maimai-mobile/record/musicVersion/");
-    return fetchGameVersion(dom);
-  }
-
-  function fetchPlayerGrade(dom: Document | HTMLElement) {
-    const gradeImg = dom.querySelector(".user_data_block_line ~ img.h_25") as HTMLImageElement;
-    if (gradeImg) {
-      const gradeIdx = gradeImg.src.lastIndexOf("grade_");
-      return gradeImg.src.substring(gradeIdx + 6, gradeIdx + 8);
-    }
-    return null;
-  }
-
-  async function fetchRatingInput(tab: WindowProxy, onError: (msg: string) => void) {
-    const host = document.location.host;
-    if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
-      onError(UIString.pleaseLogIn);
-      return;
-    }
+  async function fetchSelfRecords(send: (action: string, payload: string) => void) {
     // Fetch DX version
     const gameVer = await fetchGameVersion(document.body);
-    postMessageToTab(tab, "gameVersion", gameVer);
+    send("gameVersion", gameVer);
     // Fetch player grade
     const playerGrade = fetchPlayerGrade(document.body);
     if (playerGrade) {
-      postMessageToTab(tab, "playerGrade", playerGrade);
+      send("playerGrade", playerGrade);
     }
     // Fetch all scores
     const scoreList: string[] = [];
-    for (const [difficulty, url] of SCORE_URLS) {
-      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, false));
-      await fetchScores(url, scoreList);
-      postMessageToTab(tab, "appendPlayerScore", statusText(difficulty, true));
+    for (const difficulty of DIFFICULTIES) {
+      send("appendPlayerScore", statusText(difficulty, false));
+      await fetchScores(difficulty, scoreList);
+      send("appendPlayerScore", statusText(difficulty, true));
     }
-    postMessageToTab(tab, "replacePlayerScore", "");
+    send("replacePlayerScore", "");
     for (let i = 0; i < scoreList.length; i += 50) {
-      postMessageToTab(tab, "appendPlayerScore", scoreList.slice(i, i + 50).join("\n"));
+      send("appendPlayerScore", scoreList.slice(i, i + 50).join("\n"));
     }
-    postMessageToTab(tab, "calculateRating", "");
+    send("calculateRating", "");
   }
 
-  const newtab = window.open("https://myjian.github.io/mai-tools/rating-calculator/", "ratingcalc");
-  window.addEventListener("message", (evt) => {
-    console.log(evt.origin, evt.data);
-    if (evt.origin === "https://myjian.github.io") {
-      if (evt.data === "ready") {
-        fetchRatingInput(newtab, handleError);
-      }
+  function main() {
+    const host = document.location.host;
+    if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
+      handleError(UIString.pleaseLogIn);
+      return;
     }
-  });
+    const queryParams = new URLSearchParams();
+    queryParams.set("playerName", getPlayerName(document.body));
+    const url = BASE_URL + queryParams.toString();
+    window.open(url, "selfRating");
+    window.addEventListener("message", (evt) => {
+      console.log(evt.origin, evt.data);
+      if (ALLOWED_ORIGINS.includes(evt.origin)) {
+        if (evt.data === "ready") {
+          fetchSelfRecords(getPostMessageFunc(evt.source as WindowProxy, evt.origin));
+        }
+      }
+    });
+  }
+
+  main();
 })();

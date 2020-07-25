@@ -91,11 +91,14 @@ interface State {
   isDxPlus: boolean;
   showMultiplierTable: boolean;
   ratingData?: RatingData;
+  playerName: string | null;
+  friendIdx: string | null;
 }
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
   private lvInput = React.createRef<InnerLvInput>();
   private scoreInput = React.createRef<ScoreInput>();
+  private referrer = document.referrer && new URL(document.referrer).origin;
 
   constructor(props: {}) {
     super(props);
@@ -103,12 +106,22 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const dxVersionQueryParam = queryParams.get("gameVersion");
     let isDxPlus = dxVersionQueryParam === DX_PLUS_GAME_VERSION.toString();
     let showMultiplierTable = queryParams.get("quickLookup") !== "hide";
-    this.state = {isDxPlus, showMultiplierTable};
-    this.initWindowCommunication();
+
+    const friendIdx = queryParams.get("friendIdx");
+    const playerName = queryParams.get("playerName");
+    this.state = {
+      isDxPlus,
+      showMultiplierTable,
+      friendIdx,
+      playerName,
+    };
+    if (window.opener) {
+      this.initWindowCommunication();
+    }
   }
 
   render() {
-    const {isDxPlus, showMultiplierTable, ratingData} = this.state;
+    const {isDxPlus, showMultiplierTable, playerName, ratingData} = this.state;
     return (
       <React.Fragment>
         <VersionSelect isDxPlus={isDxPlus} handleVersionSelect={this.selectVersion} />
@@ -125,6 +138,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
             isDxPlus={isDxPlus}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
+            playerName={playerName}
           />
         )}
         {showMultiplierTable && <MultiplierTable isDxPlus={isDxPlus} />}
@@ -160,44 +174,49 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.setState({ratingData, showMultiplierTable: true});
   };
 
-  private initWindowCommunication() {
+  private postMessageToOpener(data: string | {[key: string]: string}) {
     if (window.opener) {
-      window.addEventListener("message", (evt) => {
-        console.log(evt.origin, evt.data.action, getDebugText(evt.data.payload));
-        if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
-          let payloadAsInt;
-          switch (evt.data.action) {
-            case "gameVersion":
-              payloadAsInt = parseInt(evt.data.payload);
-              if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
-                this.setState({isDxPlus: true});
-              }
-              break;
-            case "playerGrade":
-              payloadAsInt = parseInt(evt.data.payload);
-              if (payloadAsInt) {
-                this.playerGradeIndex = payloadAsInt;
-              }
-              break;
-            case "replacePlayerScore":
-              this.scoreInput.current.setText(evt.data.payload);
-              break;
-            case "appendPlayerScore":
-              this.scoreInput.current.appendText(evt.data.payload);
-              break;
-            case "calculateRating":
-              this.analyzeRating();
-              break;
-          }
+      window.opener.postMessage(data, this.referrer);
+    }
+  }
+
+  private initWindowCommunication() {
+    window.addEventListener("message", (evt) => {
+      console.log(evt.origin, evt.data.action, getDebugText(evt.data.payload));
+      if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+        let payloadAsInt;
+        switch (evt.data.action) {
+          case "gameVersion":
+            payloadAsInt = parseInt(evt.data.payload);
+            if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
+              this.setState({isDxPlus: true});
+            }
+            break;
+          case "playerGrade":
+            payloadAsInt = parseInt(evt.data.payload);
+            if (payloadAsInt) {
+              this.playerGradeIndex = payloadAsInt;
+            }
+            break;
+          case "replacePlayerScore":
+            this.scoreInput.current.setText(evt.data.payload);
+            break;
+          case "appendPlayerScore":
+            this.scoreInput.current.appendText(evt.data.payload);
+            break;
+          case "calculateRating":
+            this.analyzeRating();
+            break;
         }
-      });
-      const referrer = document.referrer && new URL(document.referrer).origin;
-      if (referrer) {
-        window.opener.postMessage("ready", referrer);
-      } else {
-        window.opener.postMessage("ready", "https://maimaidx-eng.com");
-        window.opener.postMessage("ready", "https://maimaidx.jp");
       }
+    });
+    const {friendIdx} = this.state;
+    if (friendIdx) {
+      // Analyze friend rating
+      this.postMessageToOpener({action: "getFriendRecords", idx: friendIdx})
+    } else {
+      // Analyze self rating
+      this.postMessageToOpener("ready");
     }
   }
 }

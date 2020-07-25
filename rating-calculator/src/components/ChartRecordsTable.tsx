@@ -14,9 +14,9 @@ interface Props {
 }
 export class ChartRecordsTable extends React.PureComponent<Props> {
   render() {
-    const {children, hidden, columns, sortBy} = this.props;
-    let {records, tableClassname} = this.props;
-    tableClassname += " songRecordTable ";
+    const {children, hidden, columns, sortBy, records} = this.props;
+    let {tableClassname} = this.props;
+    tableClassname += " songRecordTable";
     let className = "songRecordTableContainer";
     if (hidden) {
       className += " hidden";

@@ -1,4 +1,7 @@
-import {fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/util';
+import {DIFFICULTIES, fetchScores} from './shared/fetch-self-score';
+import {LANG} from './shared/i18n';
+import {statusText} from './shared/score-fetch-progress';
+import {handleError} from './shared/util';
 
 (function () {
   const UIString = {
@@ -64,9 +67,9 @@ import {fetchScores, handleError, LANG, SCORE_URLS, statusText} from './shared/u
       return;
     }
     const scoreList: string[] = [];
-    for (const [difficulty, url] of SCORE_URLS) {
+    for (const difficulty of DIFFICULTIES) {
       onLog(statusText(difficulty, false));
-      await fetchScores(url, scoreList);
+      await fetchScores(difficulty, scoreList);
       onLog(statusText(difficulty, true));
     }
     let textarea = document.getElementById("outputText") as HTMLTextAreaElement;

@@ -1,0 +1,115 @@
+import {DIFFICULTIES, fetchScores} from './shared/fetch-friend-score';
+import {fetchPlayerGrade, getPlayerName} from './shared/fetch-score-util';
+import {LANG} from './shared/i18n';
+import {statusText} from './shared/score-fetch-progress';
+import {ALLOWED_ORIGINS, fetchGameVersion, getPostMessageFunc, handleError} from './shared/util';
+
+declare global {
+  interface Window {
+    // add you custom properties and methods
+    ratingCalcMsgListener?: (evt: MessageEvent) => void;
+  }
+}
+type FriendInfo = {
+  name: string;
+  idx: string;
+  elem: HTMLElement;
+};
+
+(function (d) {
+  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
+  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/VGAWNxYXgGjr?";
+  const UIString = {
+    zh: {
+      pleaseLogIn: "請登入 maimai NET",
+      analyze: "分析 Rating",
+    },
+    en: {
+      pleaseLogIn: "Please log in to maimai DX NET.",
+      analyze: "Analyze Rating",
+    },
+  }[LANG];
+  const friends_cache: {[idx: string]: FriendInfo} = {};
+
+  function getFriendIdx(n: HTMLElement) {
+    return (n.querySelector("[name=idx]") as HTMLInputElement).value;
+  }
+
+  function insertAnalyzeButton(friend: FriendInfo) {
+    const container = friend.elem.querySelector(".basic_block > .p_l_10");
+    let analyzeLink = friend.elem.querySelector(".analyzeLink") as HTMLAnchorElement;
+    if (analyzeLink) {
+      analyzeLink.remove();
+    }
+    analyzeLink = d.createElement("a");
+    analyzeLink.className = "analyzeLink f_r f_14";
+    analyzeLink.style.color = "#1477e6";
+    analyzeLink.target = "friendRating";
+    analyzeLink.innerText = UIString.analyze;
+    const queryParams = new URLSearchParams();
+    queryParams.set("friendIdx", friend.idx);
+    queryParams.set("playerName", friend.name);
+    analyzeLink.href = BASE_URL + queryParams.toString();
+    container.append(analyzeLink);
+  }
+
+  async function fetchFriendRecords(
+    friend: FriendInfo,
+    send: (action: string, payload: string) => void
+  ) {
+    // Fetch DX version
+    const gameVer = await fetchGameVersion(document.body);
+    send("gameVersion", gameVer);
+    // Fetch player grade
+    const playerGrade = fetchPlayerGrade(friend.elem);
+    if (playerGrade) {
+      send("playerGrade", playerGrade);
+    }
+    // Fetch all scores
+    const scoreList: string[] = [];
+    for (const difficulty of DIFFICULTIES) {
+      send("appendPlayerScore", statusText(difficulty, false));
+      await fetchScores(friend.idx, difficulty, scoreList);
+      send("appendPlayerScore", statusText(difficulty, true));
+    }
+    send("replacePlayerScore", "");
+    for (let i = 0; i < scoreList.length; i += 50) {
+      send("appendPlayerScore", scoreList.slice(i, i + 50).join("\n"));
+    }
+    send("calculateRating", "");
+  }
+
+  function main() {
+    const host = document.location.host;
+    if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
+      handleError(UIString.pleaseLogIn);
+      return;
+    }
+    const list = Array.from(
+      d.querySelectorAll("img.friend_favorite_icon") as NodeListOf<HTMLImageElement>
+    ).map((n) => n.parentElement);
+    list.forEach((elem) => {
+      const idx = getFriendIdx(elem);
+      const info = {idx, name: getPlayerName(elem), elem};
+      friends_cache[idx] = info;
+      insertAnalyzeButton(info);
+    });
+    if (self.ratingCalcMsgListener) {
+      window.removeEventListener("message", self.ratingCalcMsgListener);
+    }
+    self.ratingCalcMsgListener = (evt) => {
+      console.log(evt.origin, evt.data);
+      if (ALLOWED_ORIGINS.includes(evt.origin)) {
+        if (evt.data.action === "getFriendRecords") {
+          const friend = friends_cache[evt.data.idx];
+          if (friend) {
+            fetchFriendRecords(friend, getPostMessageFunc(evt.source as WindowProxy, evt.origin));
+          }
+        }
+      }
+    }
+    window.addEventListener("message", self.ratingCalcMsgListener);
+  }
+
+  main();
+})(document);
