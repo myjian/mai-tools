@@ -3,7 +3,7 @@ import {
   getChartLevel,
   getChartType,
   getSongName,
-} from './shared/fetch-score-util';
+} from '../js/common/fetch-score-util';
 
 export const INTL_LINK_NICO_ID =
   "023899fc4dbdd98b113f7bebf7df8e9f8ffb4d76676b3b540eb8dd01b497d01755d3af60e627f75573f1240ff5bbda6ca3e6778bcfa44d221ce8299b789735c64DPVQG1451GaSZWDqdbrHlEjQueD+xHaBqqorXqcaHY=";

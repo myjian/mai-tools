@@ -1,8 +1,13 @@
-import {DIFFICULTIES, fetchScores} from './shared/fetch-friend-score';
-import {fetchPlayerGrade, getPlayerName} from './shared/fetch-score-util';
-import {LANG} from './shared/i18n';
-import {statusText} from './shared/score-fetch-progress';
-import {ALLOWED_ORIGINS, fetchGameVersion, getPostMessageFunc, handleError} from './shared/util';
+import {DIFFICULTIES, fetchScores} from '../js/common/fetch-friend-score';
+import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
+import {LANG} from '../js/common/lang';
+import {statusText} from '../js/common/score-fetch-progress';
+import {
+  ALLOWED_ORIGINS,
+  fetchGameVersion,
+  getPostMessageFunc,
+  handleError,
+} from '../js/common/util';
 
 declare global {
   interface Window {

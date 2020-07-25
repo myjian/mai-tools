@@ -1,7 +1,7 @@
-import {DIFFICULTIES, fetchScores} from './shared/fetch-self-score';
-import {LANG} from './shared/i18n';
-import {statusText} from './shared/score-fetch-progress';
-import {handleError} from './shared/util';
+import {DIFFICULTIES, fetchScores} from '../js/common/fetch-self-score';
+import {LANG} from '../js/common/lang';
+import {statusText} from '../js/common/score-fetch-progress';
+import {handleError} from '../js/common/util';
 
 (function () {
   const UIString = {

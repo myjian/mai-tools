@@ -1,3 +1,5 @@
+import {LANG} from '../js/common/lang';
+
 type ScoreRecord = {
   date: Date;
   songName: string;
@@ -14,13 +16,6 @@ type Options = {
 };
 declare var domtoimage: any;
 (function () {
-  const queryParams = new URLSearchParams(document.location.search);
-  let LANG: "en" | "zh" = "en";
-  if (queryParams.get("hl")) {
-    LANG = queryParams.get("hl").startsWith("zh") ? "zh" : "en";
-  } else if (navigator.language.startsWith("zh")) {
-    LANG = "zh";
-  }
   const UIString = {
     zh: {
       date: "日期",

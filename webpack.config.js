@@ -13,10 +13,10 @@ fs.readdirSync(SCRIPTS_DIR).filter(
 module.exports = {
   mode: "production",
   entry: {
-    "bookmarklets": "./bookmarklets/src/main.tsx",
-    "classic-layout": "./classic-layout/src/main.tsx",
-    "rating-calculator": "./rating-calculator/src/main.ts",
-    "rating-visualizer": "./rating-visualizer/src/main.tsx",
+    "bookmarklets": "./js/bookmarklets/main.tsx",
+    "classic-layout": "./js/classic-layout/main.tsx",
+    "rating-calculator": "./js/rating-calculator/main.ts",
+    "rating-visualizer": "./js/rating-visualizer/main.tsx",
     ...scriptEntryPoints,
   },
   output: {
@@ -26,7 +26,7 @@ module.exports = {
       if (scriptEntryPoints[chunkName]) {
         return path.join(SCRIPTS_DIR, chunkName + ".js");
       }
-      return chunkName + "/dist/main.bundle.js";
+      return chunkName + "/main.bundle.js";
     },
   },
   module: {
