@@ -2,6 +2,7 @@ import React from 'react';
 
 import {BookmarkItem} from './BookmarkItem';
 import {
+  analyzeFriendRating,
   ratingAnalyzer,
   recentPlaySummary,
   scoreConverter,
@@ -42,6 +43,7 @@ export const RootComponent: React.FC = () => (
       <BookmarkItem {...scoreConverter} />
       <BookmarkItem {...scoreSorter} />
       <BookmarkItem {...ratingAnalyzer} />
+      <BookmarkItem {...analyzeFriendRating} />
       <BookmarkItem {...scoreDownloader} />
       <br />
 

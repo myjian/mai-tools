@@ -10,12 +10,23 @@ export interface Bookmarklet {
   scriptUrl: string;
 }
 
-function getBookmarkletLink(scriptUrl: string, path?: string, strictPathMatch?: boolean) {
-  const pathCheck = path
-    ? strictPathMatch
-      ? " && d.location.pathname==='" + path + "'"
-      : " && d.location.pathname.indexOf('" + path + "')>=0"
-    : "";
+function getBookmarkletLink(scriptUrl: string, paths: string[] = [], strictPathMatch?: boolean) {
+  const pathCheck = paths.reduce((code, path, index, array) => {
+    if (index === 0) {
+      code += " && ("
+    } else if (index > 0) {
+      code += " || ";
+    }
+    if (strictPathMatch) {
+      code += "d.location.pathname==='" + path + "'";
+    } else {
+      code += "d.location.pathname.indexOf('" + path + "')>=0";
+    }
+    if (index === array.length - 1) {
+      code += ")";
+    }
+    return code;
+  }, "");
   let js = `javascript:void (function(d){if (
 ['maimaidx-eng.com','maimaidx.jp'].indexOf(d.location.host)>=0
 ${pathCheck}
@@ -41,7 +52,7 @@ export const scoreConverter: Bookmarklet = {
   }[LANG],
   scriptUrl: getBookmarkletLink(
     "https://myjian.github.io/mai-tools/scripts/score-converter.js",
-    "/maimai-mobile/record/playlogDetail/"
+    ["/maimai-mobile/record/playlogDetail/"],
   ),
   screenshotUrl: "./screenshots/convert-to-finale-score-20200718.jpg",
 };
@@ -61,7 +72,7 @@ export const scoreSorter: Bookmarklet = {
   }[LANG],
   scriptUrl: getBookmarkletLink(
     "https://myjian.github.io/mai-tools/scripts/score-sort.js",
-    "/maimai-mobile/record/music"
+    ["/maimai-mobile/record/music"]
   ),
   screenshotUrl: "./screenshots/score-sort-20200630.png",
 };
@@ -81,7 +92,7 @@ export const recentPlaySummary: Bookmarklet = {
   }[LANG],
   scriptUrl: getBookmarkletLink(
     "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.js",
-    "/maimai-mobile/record/",
+    ["/maimai-mobile/record/"],
     true
   ),
   screenshotUrl: "./screenshots/recent-play-summary-20200704.png",
@@ -93,8 +104,8 @@ export const ratingAnalyzer: Bookmarklet = {
     en: "Analyze DX Rating",
   }[LANG],
   feature: {
-    zh: "功能：可分析玩家的 DX Rating 組成。",
-    en: "Feature: Analyze player's DX Rating composition."
+    zh: "功能：可分析自己的 DX Rating 組成。",
+    en: "Feature: Analyze your DX Rating composition."
   }[LANG],
   howTo: {
     zh: "使用方式：於 maimai NET 首頁或個人檔案頁面執行。執行時會開新分頁，載入成績並進行分析。",
@@ -105,6 +116,27 @@ export const ratingAnalyzer: Bookmarklet = {
   ),
   screenshotUrl: "./screenshots/rating-analyzer-20200702.png",
 };
+
+export const analyzeFriendRating: Bookmarklet = {
+  itemTitle: {
+    zh: "分析好友 DX Rating",
+    en: "Analyze Friend's DX Rating",
+  }[LANG],
+  feature: {
+    zh: "功能：可分析朋友的 DX Rating 組成。",
+    en: "Feature: Analyze your favorite friend's DX Rating composition.",
+  }[LANG],
+  howTo: {
+    zh: "使用方式：於朋友清單頁面，先將想分析的好友加入最愛（ADD to FAVORITE），再執行書籤。設成最愛的好友檔案中會出現「分析 Rating」的連結，點擊後會分析該玩家的 R 值。",
+    en: 'Usage: Open friend list. Add the friend you want to analyze to FAVORITE. Execute the bookmarklet. There will have an "Analyze Rating" link for each favorite friend. Click on one of the links to analyze rating for that player.',
+  }[LANG],
+  scriptUrl: getBookmarkletLink(
+    "https://myjian.github.io/mai-tools/scripts/analyze-friend-rating-in-new-tab.js",
+    ["/maimai-mobile/friend/", "/maimai-mobile/friend/pages/"],
+    true
+  ),
+  screenshotUrl: "./screenshots/analyze-friend-rating-20200725.png",
+}
 
 const scoreDownloaderUsageText = {
   en: {
