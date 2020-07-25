@@ -132,7 +132,7 @@ export const analyzeFriendRating: Bookmarklet = {
   }[LANG],
   scriptUrl: getBookmarkletLink(
     "https://myjian.github.io/mai-tools/scripts/analyze-friend-rating-in-new-tab.js",
-    ["/maimai-mobile/friend/", "/maimai-mobile/friend/pages/"],
+    ["/maimai-mobile/friend/", "/maimai-mobile/friend/favoriteOn/", "/maimai-mobile/friend/pages/"],
     true
   ),
   screenshotUrl: "./screenshots/analyze-friend-rating-20200725.png",
