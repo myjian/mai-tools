@@ -13,7 +13,7 @@ export interface Bookmarklet {
 function getBookmarkletLink(scriptUrl: string, paths: string[] = [], strictPathMatch?: boolean) {
   const pathCheck = paths.reduce((code, path, index, array) => {
     if (index === 0) {
-      code += " && ("
+      code += " && (";
     } else if (index > 0) {
       code += " || ";
     }
@@ -44,23 +44,25 @@ export const scoreConverter: Bookmarklet = {
   }[LANG],
   feature: {
     zh: "功能：可轉換 DX 達成率為舊版計分方式，以及分析各指令扣分比例。",
-    en: "Feature: Convert DX achievement to old achievement (maimai FiNALE & older), and analyze score penalty by note type.",
+    en:
+      "Feature: Convert DX achievement to old achievement (maimai FiNALE & older), and analyze score penalty by note type.",
   }[LANG],
   howTo: {
-    zh: "使用方式：登入 maimai NET，點選最近遊玩的其中一筆紀錄後執行。執行後會開啟新分頁，顯示舊版成績以及相關數據。",
-    en: "Usage: Log in to maimai NET. Open a recent song record and execute the bookmarklet."
+    zh:
+      "使用方式：登入 maimai NET，點選最近遊玩的其中一筆紀錄後執行。執行後會開啟新分頁，顯示舊版成績以及相關數據。點擊地點（Cafe MiLK）可切換計分方式，點擊達成率可切換詳細顯示。",
+    en:
+      'Usage: Log in to maimai NET. Open a recent song record and execute the bookmarklet. New tab will open and display score in old achievement system. You can click on "Cafe MiLK" to switch to DX achievement, and click on the achievement % to see how much percentage was lost per note type.',
   }[LANG],
-  scriptUrl: getBookmarkletLink(
-    "https://myjian.github.io/mai-tools/scripts/score-converter.js",
-    ["/maimai-mobile/record/playlogDetail/"],
-  ),
+  scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-converter.js", [
+    "/maimai-mobile/record/playlogDetail/",
+  ]),
   screenshotUrl: "./screenshots/convert-to-finale-score-20200718.jpg",
 };
 
 export const scoreSorter: Bookmarklet = {
   itemTitle: {
     zh: "排序成績",
-    en: "Sort scores"
+    en: "Sort scores",
   }[LANG],
   feature: {
     zh: "功能：可依照等級、Rank、AP/FC 狀態排序成績。",
@@ -68,12 +70,12 @@ export const scoreSorter: Bookmarklet = {
   }[LANG],
   howTo: {
     zh: "使用方式：於分類查詢成績頁執行。執行完後畫面上會出現選單，可按自己喜歡的方式排序。",
-    en: "Usage: Open historical scores (by genre, level, song title, version, etc.) and execute the bookmarklet.",
+    en:
+      "Usage: Open historical scores (by genre, level, song title, version, etc.) and execute the bookmarklet.",
   }[LANG],
-  scriptUrl: getBookmarkletLink(
-    "https://myjian.github.io/mai-tools/scripts/score-sort.js",
-    ["/maimai-mobile/record/music"]
-  ),
+  scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-sort.js", [
+    "/maimai-mobile/record/music",
+  ]),
   screenshotUrl: "./screenshots/score-sort-20200630.png",
 };
 
@@ -84,7 +86,7 @@ export const recentPlaySummary: Bookmarklet = {
   }[LANG],
   feature: {
     zh: "功能：以表格方式整理最近的遊玩紀錄，並將遊戲時間修正為當地時間。",
-    en: "Feature: Organize recent game records into a condensed table."
+    en: "Feature: Organize recent game records into a condensed table.",
   }[LANG],
   howTo: {
     zh: "使用方式：於最近成績列表執行。執行後會在頁面中產生表格，可以選取日期和排序。",
@@ -105,7 +107,7 @@ export const ratingAnalyzer: Bookmarklet = {
   }[LANG],
   feature: {
     zh: "功能：可分析自己的 DX Rating 組成。",
-    en: "Feature: Analyze your DX Rating composition."
+    en: "Feature: Analyze your DX Rating composition.",
   }[LANG],
   howTo: {
     zh: "使用方式：於 maimai NET 首頁或個人檔案頁面執行。執行時會開新分頁，載入成績並進行分析。",
@@ -127,8 +129,10 @@ export const analyzeFriendRating: Bookmarklet = {
     en: "Feature: Analyze your favorite friend's DX Rating composition.",
   }[LANG],
   howTo: {
-    zh: "使用方式：於朋友清單頁面，先將想分析的好友加入最愛（ADD to FAVORITE），再執行書籤。設成最愛的好友檔案中會出現「分析 Rating」的連結，點擊後會分析該玩家的 R 值。",
-    en: 'Usage: Open friend list. Add the friend you want to analyze to FAVORITE. Execute the bookmarklet. There will have an "Analyze Rating" link for each favorite friend. Click on one of the links to analyze rating for that player.',
+    zh:
+      "使用方式：於朋友清單頁面，先將想分析的好友加入最愛（ADD to FAVORITE），再執行書籤。設成最愛的好友檔案中會出現「分析 Rating」的連結，點擊後會分析該玩家的 R 值。",
+    en:
+      'Usage: Open friend list. Add the friend you want to analyze to FAVORITE. Execute the bookmarklet. There will have an "Analyze Rating" link for each favorite friend. Click on one of the links to analyze rating for that player.',
   }[LANG],
   scriptUrl: getBookmarkletLink(
     "https://myjian.github.io/mai-tools/scripts/analyze-friend-rating-in-new-tab.js",
@@ -136,16 +140,18 @@ export const analyzeFriendRating: Bookmarklet = {
     true
   ),
   screenshotUrl: "./screenshots/analyze-friend-rating-20200725.png",
-}
+};
 
 const scoreDownloaderUsageText = {
   en: {
-    part1: 'Usage: Execute the bookmarklet on maimai NET home page. After several seconds, a "Copy" button will appear on screen. Click the Copy button to copy scores. You can paste them in Excel, Google Sheets, or ',
+    part1:
+      'Usage: Execute the bookmarklet on maimai NET home page. After several seconds, a "Copy" button will appear on screen. Click the Copy button to copy scores. You can paste them in Excel, Google Sheets, or ',
     ratingAnalyzer: "Rating Analyzer",
     part2: ".",
   },
   zh: {
-    part1: "使用方式：於 maimai NET 首頁執行。執行完後點下畫面上的「複製」按鈕就能複製所有成績。複製後可貼到 Excel、Google 試算表，或是 ",
+    part1:
+      "使用方式：於 maimai NET 首頁執行。執行完後點下畫面上的「複製」按鈕就能複製所有成績。複製後可貼到 Excel、Google 試算表，或是 ",
     ratingAnalyzer: "R 值分析工具",
     part2: "。",
   },

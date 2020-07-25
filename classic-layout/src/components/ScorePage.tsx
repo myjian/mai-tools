@@ -24,9 +24,9 @@ const LOSS_PREFIX = "-";
 function getNextDisplayMode(m: DisplayMode): DisplayMode {
   switch (m) {
     case DisplayMode.NORMAL:
-      return DisplayMode.DETAIL;
-    case DisplayMode.DETAIL:
       return DisplayMode.LOSS;
+    case DisplayMode.LOSS:
+      return DisplayMode.DETAIL;
     default:
       return DisplayMode.NORMAL;
   }
