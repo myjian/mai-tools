@@ -11,6 +11,7 @@ export async function fetchPage(url: string) {
   return parser.parseFromString(html, "text/html");
 }
 
+/** Returns "13" if version is DX, "14" if version is DX Plus. */
 export async function fetchGameVersion(dom: Document | HTMLElement): Promise<string> {
   const gameVer = dom.querySelector(
     "select[name=version] option:last-of-type"

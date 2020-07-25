@@ -1,13 +1,13 @@
 import React from 'react';
 
+import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from '../../common/constants';
+import {buildSongPropertyMap, SongProperties} from '../../common/inner-lv-util';
+import {iWantSomeMagic} from '../../common/magic';
 import {readFromCache, writeToCache} from '../cache';
 import {UIString} from '../i18n';
-import {parseInnerLevelLine} from '../inner-lv-parser';
-import {iWantSomeMagic} from '../magic';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
-import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from '../shared-constants';
-import {RatingData, SongProperties} from '../types';
+import {RatingData} from '../types';
 import {InnerLvInput} from './InnerLvInput';
 import {MultiplierTable} from './MultiplierTable';
 import {OtherTools} from './OtherTools';
@@ -23,7 +23,7 @@ function getInnerLvCacheKey(isDxPlus: boolean) {
   return isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
 }
 
-function getDebugText(data: number|string) {
+function getDebugText(data: number | string) {
   if (typeof data === "string") {
     return "string of length " + data.length;
   }
@@ -34,44 +34,25 @@ function readSongProperties(
   isDxPlus: boolean,
   inputText: string
 ): Promise<Map<string, SongProperties[]>> {
-  const processText = (text: string) => {
-    const lines = text.split("\n");
-    // songPropsByName: song name -> array of song properties
-    // most arrays have only 1 entry, but some arrays have more than 1 entries
-    // because song name duplicates or it has both DX and Standard charts.
-    const songPropsByName = new Map();
-    for (const line of lines) {
-      const innerLvData = parseInnerLevelLine(line);
-      if (innerLvData) {
-        if (!songPropsByName.has(innerLvData.songName)) {
-          songPropsByName.set(innerLvData.songName, []);
-        }
-        songPropsByName.get(innerLvData.songName).push(innerLvData);
-      }
-    }
-    return songPropsByName;
-  };
   return new Promise((resolve) => {
     // Read from user input
     if (inputText.length > 0) {
-      resolve(processText(inputText));
+      resolve(buildSongPropertyMap(inputText));
       return;
     }
     // Read from cache
     const cacheKey = getInnerLvCacheKey(isDxPlus);
     const cachedInnerLv = readFromCache(cacheKey);
     if (cachedInnerLv) {
-      resolve(processText(cachedInnerLv));
+      resolve(buildSongPropertyMap(cachedInnerLv));
       return;
     }
     // Read from Internet
     console.log("Magic happening...");
-    fetch(iWantSomeMagic(isDxPlus))
-      .then((response) => response.text())
-      .then((responseText) => {
-        writeToCache(cacheKey, responseText);
-        resolve(processText(responseText));
-      });
+    iWantSomeMagic(isDxPlus).then((responseText) => {
+      writeToCache(cacheKey, responseText);
+      resolve(buildSongPropertyMap(responseText));
+    });
   });
 }
 
@@ -218,7 +199,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const {friendIdx} = this.state;
     if (friendIdx) {
       // Analyze friend rating
-      this.postMessageToOpener({action: "getFriendRecords", idx: friendIdx})
+      this.postMessageToOpener({action: "getFriendRecords", idx: friendIdx});
     } else {
       // Analyze self rating
       this.postMessageToOpener("ready");

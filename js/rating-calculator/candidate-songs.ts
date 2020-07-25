@@ -1,7 +1,7 @@
+import {SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
 import {getRankDefinitions, getRankIndexByAchievement} from '../common/rank-functions';
 import {calculateRatingRange} from './rating-functions';
 import {getCandidateComparator} from './record-comparator';
-import {SSSPLUS_MIN_ACHIEVEMENT} from './shared-constants';
 import {ChartRecordWithRating} from './types';
 
 const MIN_RATING_ADJUSTMENT = 10; // for sorting order tweak

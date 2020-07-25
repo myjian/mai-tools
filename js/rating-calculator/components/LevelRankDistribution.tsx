@@ -1,7 +1,7 @@
 import React from 'react';
 
+import {getOfficialLevel} from '../../common/level-helper';
 import {compareNumber} from '../../common/number-helper';
-import {getOfficialLevel} from '../level-helper';
 import {
   getMinRank,
   getRankDistribution,

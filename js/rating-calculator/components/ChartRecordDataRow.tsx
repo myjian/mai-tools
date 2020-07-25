@@ -1,7 +1,7 @@
 import React from 'react';
 
+import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
-import {DIFFICULTY_CLASSNAME_MAP} from '../shared-constants';
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ScoreRow} from './ChartRecordRow';
 

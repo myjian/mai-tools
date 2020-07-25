@@ -23,7 +23,7 @@ const UIString = {
   },
 }[LANG];
 
-export function statusText(what: string, end?: boolean) {
+export function statusText(what: string, end?: boolean): string {
   switch (what) {
     case "Re:MASTER":
       return end ? UIString.remDone : UIString.remStart;
@@ -34,4 +34,5 @@ export function statusText(what: string, end?: boolean) {
     case "ADVANCED":
       return end ? UIString.advDone : UIString.advStart;
   }
+  return "";
 }

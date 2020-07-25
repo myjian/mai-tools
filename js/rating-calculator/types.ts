@@ -1,13 +1,5 @@
 import {RankDef} from '../common/rank-functions';
 
-export interface SongProperties {
-  dx: number;
-  lv: ReadonlyArray<number>;
-  debut: number;
-  songName: string;
-  nickname: string;
-}
-
 export interface ChartRecord {
   songName: string;
   genre: string;

@@ -1,5 +1,5 @@
+import {DIFFICULTIES} from '../common/constants';
 import {RankDef} from '../common/rank-functions';
-import {DIFFICULTIES} from './shared-constants';
 import {ChartRecord, ChartRecordWithRating} from './types';
 
 type RecordNumberProp = "rating" | "level" | "achievement";

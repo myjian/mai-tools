@@ -1,12 +1,12 @@
 import React from 'react';
 
+import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {
   getMinRank,
   getRankDistribution,
   mergeRecords,
   RatingTargetData,
 } from '../rank-distribution';
-import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP} from '../shared-constants';
 import {ChartRecord} from '../types';
 import {RankDistributionDataRow} from './RankDistributionDataRow';
 import {RankDistributionHeadRow} from './RankDistributionHeadRow';

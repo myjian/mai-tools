@@ -1,24 +1,7 @@
+import {SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {getDefaultLevel} from '../common/level-helper';
 import {getRankByAchievement} from '../common/rank-functions';
-import {SSSPLUS_MIN_ACHIEVEMENT} from './shared-constants';
 import {ChartRecord} from './types';
-
-const MIN_LEVEL = 1;
-
-/**
- * Compute the default level based on the official level.
- * For example:
- *   Lv10 => 10.0 (actual range: 10.0 - 10.6)
- *   Lv10 => 10.7 (actual range: 10.7 - 10.9)
- */
-function getDefaultLevel(officialLevel: string) {
-  if (!officialLevel) {
-    return MIN_LEVEL;
-  }
-  const baseLevel = parseInt(officialLevel);
-  // 9 : 9.0 - 9.6
-  // 9+: 9.7 - 9.9
-  return officialLevel.endsWith("+") ? baseLevel + 0.7 : baseLevel;
-}
 
 function getScoreMultiplier(achievement: number, isDxPlus: boolean) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);

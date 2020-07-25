@@ -1,20 +1,94 @@
-(function() {
+import {DIFFICULTIES, DX_PLUS_GAME_VERSION} from '../js/common/constants';
+import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
+import {buildSongPropertyMap, getSongProperties, SongProperties} from '../js/common/inner-lv-util';
+import {getDefaultLevel} from '../js/common/level-helper';
+import {iWantSomeMagic} from '../js/common/magic';
+import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
+import {fetchGameVersion} from '../js/common/util';
+
+type SortBy =
+  | "none"
+  | "level_des"
+  | "level_asc"
+  | "inlv_des"
+  | "inlv_asc"
+  | "rank_des"
+  | "rank_asc"
+  | "apfc_des"
+  | "apfc_asc";
+type Cache = {
+  songProps?: Map<string, SongProperties[]>;
+};
+
+(function (d) {
   const CHART_LEVELS = [
-    "1", "2", "3", "4", "5",
-    "6", "7", "7+", "8", "8+",
-    "9", "9+", "10", "10+", "11",
-    "11+", "12", "12+", "13", "13+",
-    "14", "14+", "15"
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "7+",
+    "8",
+    "8+",
+    "9",
+    "9+",
+    "10",
+    "10+",
+    "11",
+    "11+",
+    "12",
+    "12+",
+    "13",
+    "13+",
+    "14",
+    "14+",
+    "15",
   ];
-
   const RANK_TITLES = [
-    "SSS+", "SSS", "SS+", "SS", "S+", "S",
-    "AAA", "AA", "A", "BBB", "BB", "B", null
+    "SSS+",
+    "SSS",
+    "SS+",
+    "SS",
+    "S+",
+    "S",
+    "AAA",
+    "AA",
+    "A",
+    "BBB",
+    "BB",
+    "B",
+    null,
   ];
+  const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
+  const LV_DELTA = 0.02;
 
-  const AP_FC_TYPES = [
-    "AP+", "AP", "FC+", "FC", null
-  ];
+  const cache: Cache = {};
+
+  function addOfficialLvDataset() {
+    Array.from(d.getElementsByClassName("music_lv_block") as HTMLCollectionOf<HTMLElement>).forEach(
+      (n) => {
+        if (!n.dataset["lv"]) n.dataset["lv"] = n.innerText;
+      }
+    );
+  }
+
+  function isEstimateLv(lv: number) {
+    const majorLv = Math.floor(lv);
+    const minorLv = lv - majorLv;
+    return (minorLv > 0.95) ? 1 : (minorLv > 0.65 && minorLv < 0.69) ? 0.7 : 0;
+  }
+
+  function getInLvSecTitle(lv: number) {
+    const isEstimate = isEstimateLv(lv);
+    if (!isEstimate) {
+      return "INTERNAL LEVEL " + lv.toFixed(1);
+    } else if (isEstimate < 1) {
+      return "UNKNOWN LEVEL " + Math.floor(lv) + "+";
+    }
+    return "UNKNOWN LEVEL " + lv.toFixed(0);
+  }
 
   function createMap(sections: string[], reverse: boolean) {
     const map = new Map();
@@ -44,14 +118,21 @@
     return title + "\u25D7\u3000\u3000\u3000" + size + "/" + totalSize;
   }
 
-  function createRowsWithSection(map: Map<string, HTMLElement[]>, headingPrefix: string, totalSize: number) {
+  function createRowsWithSection(
+    map: Map<string, HTMLElement[]>,
+    headingPrefix: string,
+    totalSize: number
+  ) {
     let rows: HTMLElement[] = [];
     map.forEach((subRows, section) => {
       if (subRows.length) {
-        const sectionHeading = document.createElement("div");
+        const sectionHeading = d.createElement("div");
         sectionHeading.className = "screw_block m_15 f_15";
         sectionHeading.innerText = getSectionTitle(
-          headingPrefix, section, subRows.length, totalSize
+          headingPrefix,
+          section,
+          subRows.length,
+          totalSize
         );
         rows.push(sectionHeading);
         rows = rows.concat(subRows);
@@ -60,14 +141,63 @@
     return rows;
   }
 
-  function getChartLevel(row: HTMLElement) {
-    return (row.getElementsByClassName("music_lv_block")[0] as HTMLElement).innerText;
+  function getChartLvElem(row: HTMLElement) {
+    return row.getElementsByClassName("music_lv_block")[0] as HTMLElement;
+  }
+
+  function getChartLv(row: HTMLElement, key: string = "lv"): string {
+    return getChartLvElem(row).dataset[key];
+  }
+
+  function saveInLv(row: HTMLElement, lv: number) {
+    const elem = getChartLvElem(row);
+    if (!elem.dataset["inlv"]) {
+      const isEstimate = isEstimateLv(lv);
+      elem.dataset["inlv"] = lv.toFixed(2);
+      const t = (isEstimate ? "*" : "") + lv.toFixed(1);
+      if (t.length > 4) {
+        elem.classList.remove("f_14");
+        elem.classList.add("f_13");
+      }
+      elem.innerText = t;
+    }
+  }
+
+  async function getChartInLv(row: HTMLElement) {
+    const inLvText = getChartLv(row, "inlv");
+    if (inLvText) {
+      return parseFloat(inLvText);
+    }
+    const song = getSongName(row);
+    const d = getChartDifficulty(row);
+    const t = getChartType(row);
+    let props = getSongProperties(cache.songProps, song, "", t);
+    if (song === "Link") {
+      const idx = getSongIdx(row);
+      const genre = await isNicoNicoLink(idx) ? "niconico" : "";
+      props = getSongProperties(cache.songProps, song, genre, t);
+      console.log(props);
+    }
+    if (props) {
+      const lvIndex = DIFFICULTIES.indexOf(d);
+      const lv = props.lv[lvIndex];
+      if (typeof lv === "number") {
+        if (lv > 0) {
+          return lv;
+        }
+        // console.warn("lv is negative for song " + song, props);
+        return Math.abs(lv) - LV_DELTA;
+      }
+    }
+    console.warn("missing lv data for song " + song, props);
+    const lv = getDefaultLevel(getChartLv(row)) - LV_DELTA;
+    return lv;
   }
 
   function sortRowsByLevel(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(CHART_LEVELS, reverse);
-    rows.forEach(row => {
-      const lv = getChartLevel(row);
+    rows.forEach((row) => {
+      const lv = getChartLv(row);
       map.get(lv).push(row);
     });
     return createRowsWithSection(map, "LEVEL", rows.length);
@@ -78,7 +208,7 @@
     if (imgs.length < 5) {
       return null;
     }
-    const rankImgSrc = imgs[imgs.length-1].src;
+    const rankImgSrc = imgs[imgs.length - 1].src;
     const lastUnderscoreIdx = rankImgSrc.lastIndexOf("_");
     const lastDotIdx = rankImgSrc.lastIndexOf(".");
     const lowercaseRank = rankImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
@@ -91,7 +221,8 @@
   }
 
   function compareAchievement(row1: HTMLElement, row2: HTMLElement) {
-    const ach1 = getAchievement(row1), ach2 = getAchievement(row2);
+    const ach1 = getAchievement(row1),
+      ach2 = getAchievement(row2);
     if (ach1 === null && ach2 === null) {
       return 0;
     } else if (ach2 === null) {
@@ -104,7 +235,7 @@
 
   function sortRowsByRank(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(RANK_TITLES, reverse);
-    rows.forEach(row => {
+    rows.forEach((row) => {
       const rank = getRankTitle(row);
       map.get(rank).push(row);
     });
@@ -122,7 +253,7 @@
     if (imgs.length < 5) {
       return null;
     }
-    const statusImgSrc = imgs[imgs.length-2].src;
+    const statusImgSrc = imgs[imgs.length - 2].src;
     const lastUnderscoreIdx = statusImgSrc.lastIndexOf("_");
     const lastDotIdx = statusImgSrc.lastIndexOf(".");
     const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
@@ -134,17 +265,48 @@
 
   function sortRowsByApFc(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(AP_FC_TYPES, reverse);
-    rows.forEach(row => {
+    rows.forEach((row) => {
       const rank = getApFcStatus(row);
       map.get(rank).push(row);
     });
     return createRowsWithSection(map, "", rows.length);
   }
 
-  function performSort(sortBy: string) {
-    const rows = document.body.querySelectorAll(".main_wrapper.t_c .w_450.m_15.f_0") as NodeListOf<HTMLElement>;
+  async function sortRowsByInLv(rows: NodeListOf<HTMLElement>, reverse: boolean) {
+    const inLvSet = new Map<number, boolean>();
+    const inLvs: number[] = [];
+    for (const row of Array.from(rows)) {
+      let lv = await getChartInLv(row);
+      saveInLv(row, lv);
+      inLvSet.set(lv, true);
+      inLvs.push(lv);
+    }
+    const sortedInLv = Array.from(inLvSet.keys()).sort((lv1, lv2) => {
+      return lv1 > lv2 ? -1 : lv1 < lv2 ? 1 : 0;
+    });
+    if (reverse) {
+      sortedInLv.reverse();
+    }
+    const map = new Map<string, HTMLElement[]>();
+    sortedInLv.forEach((lv) => {
+      map.set(getInLvSecTitle(lv), []);
+    });
+    Array.from(rows).forEach((row, index) => {
+      map.get(getInLvSecTitle(inLvs[index])).push(row);
+    });
+    return createRowsWithSection(map, "", rows.length);
+  }
+
+  function getScoreRows() {
+    return d.body.querySelectorAll(".main_wrapper.t_c .w_450.m_15.f_0") as NodeListOf<
+      HTMLElement
+    >;
+  }
+
+  async function performSort(sortBy: SortBy) {
+    const rows = getScoreRows();
     const screwBlocks = Array.from(
-      document.body.querySelectorAll(".main_wrapper.t_c .screw_block") as NodeListOf<HTMLElement>
+      d.body.querySelectorAll(".main_wrapper.t_c .screw_block") as NodeListOf<HTMLElement>
     );
     let sortedRows = null;
     switch (sortBy) {
@@ -160,11 +322,17 @@
       case "rank_asc":
         sortedRows = sortRowsByRank(rows, true);
         break;
-      case "ap_fc_des":
+      case "apfc_des":
         sortedRows = sortRowsByApFc(rows, false);
         break;
-      case "ap_fc_asc":
+      case "apfc_asc":
         sortedRows = sortRowsByApFc(rows, true);
+        break;
+      case "inlv_des":
+        sortedRows = await sortRowsByInLv(rows, false);
+        break;
+      case "inlv_asc":
+        sortedRows = await sortRowsByInLv(rows, true);
         break;
       default:
         return;
@@ -180,14 +348,14 @@
   }
 
   function expandDualChartRows() {
-    const songRecords = document.querySelectorAll('div.w_450.m_15.p_r.f_0[id]') as NodeListOf<HTMLElement>;
+    const songRecords = d.querySelectorAll("div.w_450.m_15.p_r.f_0[id]") as NodeListOf<HTMLElement>;
     songRecords.forEach((row) => {
       row.style.removeProperty("display");
       row.style.removeProperty("margin-top");
       if (row.id.includes("sta_")) {
-        row.querySelector(".music_kind_icon_dx").remove();
+        row.querySelector(".music_kind_icon_dx")?.remove();
       } else {
-        row.querySelector(".music_kind_icon_standard").remove();
+        row.querySelector(".music_kind_icon_standard")?.remove();
       }
       const chartTypeImg = row.children[1] as HTMLImageElement;
       chartTypeImg.onclick = null;
@@ -195,46 +363,73 @@
     });
   }
 
-  function createOption(label: string, value: string) {
-    const option = document.createElement("option");
-    option.innerText = label;
-    option.value = value;
+  function createOption(label: string, value: SortBy, hidden?: boolean) {
+    let option = d.getElementsByClassName("option_" + value)[0] as HTMLOptionElement;
+    if (!option) {
+      option = d.createElement("option");
+      option.className = "option_" + value;
+      option.innerText = label;
+      option.value = value;
+    }
+    if (hidden) {
+      option.classList.add("d_n");
+    } else {
+      option.classList.remove("d_n");
+    }
     return option;
   }
 
   function createSortOptions() {
     const id = "scoreSortContainer";
-    let div = document.getElementById(id);
+    let div = d.getElementById(id);
     if (div) {
       return div;
     }
-    div = document.createElement("div");
+    div = d.createElement("div");
     div.id = id;
     div.className = "w_450 m_15";
-    // const span = document.createElement("span");
-    // span.className = "f_16";
-    // span.innerText = "Sort: ";
-    // div.append(span);
-    const select = document.createElement("select");
+    const select = d.createElement("select");
     select.className = "w_300 m_10";
     select.addEventListener("change", (evt: Event) => {
-      performSort((evt.target as HTMLSelectElement).value);
+      performSort((evt.target as HTMLSelectElement).value as SortBy);
     });
     select.append(createOption("-- Choose Sort Option --", "none"));
     select.append(createOption("Level (high \u2192 low)", "level_des"));
     select.append(createOption("Level (low \u2192 high)", "level_asc"));
+    select.append(createOption("Internal Level (high \u2192 low)", "inlv_des", true));
+    select.append(createOption("Internal Level (low \u2192 high)", "inlv_asc", true));
     select.append(createOption("Rank (high \u2192 low)", "rank_des"));
     select.append(createOption("Rank (low \u2192 high)", "rank_asc"));
-    select.append(createOption("AP/FC (AP+ \u2192 FC)", "ap_fc_des"));
-    select.append(createOption("AP/FC (FC \u2192 AP+)", "ap_fc_asc"));
+    select.append(createOption("AP/FC (AP+ \u2192 FC)", "apfc_des"));
+    select.append(createOption("AP/FC (FC \u2192 AP+)", "apfc_asc"));
     div.append(select);
     return div;
   }
 
+  async function fetchAndAddInnerLvSort() {
+    const isDxPlus = parseInt(await fetchGameVersion(d.body)) >= DX_PLUS_GAME_VERSION;
+    cache.songProps = buildSongPropertyMap(await iWantSomeMagic(isDxPlus));
+    createOption("Internal Level (high \u2192 low)", "inlv_des", false);
+    createOption("Internal Level (low \u2192 high)", "inlv_asc", false);
+  }
+
+  async function prefetchLinkSongIdx() {
+    getScoreRows().forEach((row) => {
+      const song = getSongName(row);
+      if (song === "Link") {
+        const idx = getSongIdx(row);
+        isNicoNicoLink(idx);
+      }
+    });
+  }
+
   // main
   expandDualChartRows();
-  const firstScrewBlock = document.body.querySelector(".main_wrapper.t_c .screw_block");
+  addOfficialLvDataset();
+  prefetchLinkSongIdx();
+  const firstScrewBlock = d.body.querySelector(".main_wrapper.t_c .screw_block");
   if (firstScrewBlock) {
     firstScrewBlock.insertAdjacentElement("beforebegin", createSortOptions());
+    fetchAndAddInnerLvSort();
   }
-})();
+})(document);

@@ -1,3 +1,4 @@
+import {DIFFICULTY_CLASSNAME_MAP} from '../js/common/constants';
 import {LANG} from '../js/common/lang';
 
 type ScoreRecord = {
@@ -79,13 +80,6 @@ declare var domtoimage: any;
     "achievementCell",
     "stampsCell",
   ];
-
-  const DIFFICULTY_CLASSNAME_MAP = new Map([
-    ["Re:MASTER", "remaster"],
-    ["MASTER", "master"],
-    ["EXPERT", "expert"],
-    ["ADVANCED", "advanced"],
-  ]);
 
   const ce = document.createElement.bind(document);
 

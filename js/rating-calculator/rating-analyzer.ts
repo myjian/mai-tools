@@ -1,53 +1,17 @@
+import {DIFFICULTIES} from '../common/constants';
+import {getSongProperties, SongProperties} from '../common/inner-lv-util';
+import {getSongNickname} from '../common/song-util';
 import {compareSongsByRating} from './record-comparator';
-import {DIFFICULTIES} from './shared-constants';
-import {ChartRecord, ChartRecordWithRating, RatingData, SongProperties} from './types';
+import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
-
-function isDxChart(chartType: string) {
-  return chartType === "DX";
-}
-
-function getSongNickname(
-  songName: string, genre: string, chartType?: string) {
-  if (songName === "Link") {
-    return genre.includes("niconico") ? "Link(nico)" : "Link(org)"
-  }
-  return isDxChart(chartType) ? songName + "[dx]" : songName;
-}
-
-function getSongProperties(
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
-  songName: string,
-  genre: string,
-  chartType: string
-) {
-  let songPropsArray = songPropsByName.get(songName);
-  if (songPropsArray && songPropsArray.length > 0) {
-    if (songPropsArray.length > 1) {
-      // Song has multiple charts
-      const isDX = isDxChart(chartType) ? 1 : 0;
-      songPropsArray = songPropsArray.filter(d => d.dx === isDX);
-      if (songPropsArray.length > 1) {
-        // Duplicate song names
-        const nickname = getSongNickname(songName, genre);
-        songPropsArray = songPropsArray.filter(d => d.nickname === nickname);
-      }
-    }
-    if (songPropsArray.length === 1) {
-      return songPropsArray[0];
-    }
-  }
-  console.warn(`Could not find song properties for ${songName}`);
-  return null;
-}
 
 /**
  * Compute rating value based on the chart level and player achievement.
  * If we don't find the inner level for the chart, use its estimated level and move on.
  */
-function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): ChartRecordWithRating {
+export function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): ChartRecordWithRating {
   if (songProps) {
     const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
     const lv = songProps.lv[lvIndex];
@@ -58,7 +22,7 @@ function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): Cha
   }
   if (record.levelIsEstimate) {
     const debugName = (
-      getSongNickname(record.songName, record.genre, record.chartType)
+      getSongNickname(record.songName, record.genre, record.chartType === "DX")
       + " - " + record.difficulty + " " + record.level
     );
     console.warn(`Missing inner lv data for ${debugName}`);

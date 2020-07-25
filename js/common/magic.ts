@@ -74,7 +74,7 @@ const MAGIC_NUMBERS = [
 
 const MAGIC_NUMBERS2 = [113, 109, 118, 116];
 
-export function iWantSomeMagic(isDxPlus: boolean): string {
+export async function iWantSomeMagic(isDxPlus: boolean): Promise<string> {
   const lessMagic = MAGIC_NUMBERS.map(k => k - 1);
   if (isDxPlus) {
     lessMagic.splice(
@@ -83,5 +83,6 @@ export function iWantSomeMagic(isDxPlus: boolean): string {
       ...MAGIC_NUMBERS2.map(k => k - 1)
     );
   }
-  return String.fromCharCode(...lessMagic);
+  const res = await fetch(String.fromCharCode(...lessMagic));
+  return await res.text();
 }

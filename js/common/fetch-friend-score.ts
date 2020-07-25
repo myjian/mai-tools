@@ -10,7 +10,7 @@ const SCORE_URLS = new Map([
   ["EXPERT", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=2&idx="],
   ["ADVANCED", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=1&idx="],
 ]);
-export const DIFFICULTIES = Array.from(SCORE_URLS.keys());
+export const FRIEND_DIFFICULTIES = SCORE_URLS.keys();
 
 function getAchievement(row: HTMLElement): string | null {
   const ach = row.querySelector("td.w_120.f_b:last-child") as HTMLElement;

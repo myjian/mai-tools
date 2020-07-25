@@ -7,7 +7,7 @@ const SCORE_URLS = new Map([
   ["EXPERT", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=2"],
   ["ADVANCED", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"],
 ]);
-export const DIFFICULTIES = Array.from(SCORE_URLS.keys());
+export const SELF_DIFFICULTIES = SCORE_URLS.keys();
 
 function getAchievement(row: HTMLElement) {
   const ach = row.querySelector(".music_score_block.w_120") as HTMLElement;
