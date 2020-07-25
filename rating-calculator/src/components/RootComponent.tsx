@@ -176,7 +176,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   private postMessageToOpener(data: string | {[key: string]: string}) {
     if (window.opener) {
-      window.opener.postMessage(data, this.referrer);
+      if (this.referrer) {
+        window.opener.postMessage(data, this.referrer);
+      } else {
+        window.opener.postMessage("ready", "https://maimaidx-eng.com");
+        window.opener.postMessage("ready", "https://maimaidx.jp");
+      }
     }
   }
 
