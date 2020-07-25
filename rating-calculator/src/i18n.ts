@@ -21,6 +21,8 @@ const UIStringByLang = {
     scoreInputDescSuffix: " to fill in this field.",
     computeRating: "Calculate Rating",
     analysisResult: "Analysis Result",
+    newCharts: "New Charts",
+    oldCharts: "Old Charts",
     newChartsRating: "New Charts Rating",
     oldChartsRating: "Old Charts Rating",
     grade: "Grade",
@@ -51,6 +53,10 @@ const UIStringByLang = {
     scoreConverter: "Convert DX score to old score system",
     showMore: "Show more",
     showLess: "Show less",
+    recommendedLevels: "Recommended levels",
+    tilde: "~",
+    projectedRating: "Rating",
+    levelComment: "Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+."
   },
   zh: {
     gameVer: "遊戲版本：",
@@ -63,6 +69,8 @@ const UIStringByLang = {
     scoreInputDescSuffix: " 中的「分析 DX Rating」或「下載所有歌曲成績」填入此欄。",
     computeRating: "計算 Rating 值",
     analysisResult: "分析結果",
+    newCharts: "新譜面",
+    oldCharts: "舊譜面",
     newChartsRating: "新譜面 Rating",
     oldChartsRating: "舊譜面 Rating",
     grade: "段位",
@@ -93,6 +101,10 @@ const UIStringByLang = {
     scoreConverter: "新舊版分數轉換 & 分析",
     showMore: "顯示更多",
     showLess: "顯示較少",
+    recommendedLevels: "刷分目標",
+    tilde: "～",
+    projectedRating: "可獲得 R 值",
+    levelComment: "註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。"
   },
 };
 

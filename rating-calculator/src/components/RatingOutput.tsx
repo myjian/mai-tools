@@ -8,6 +8,7 @@ import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
 import {DifficultyRankDistribution} from './DifficultyRankDistribution';
 import {LevelRankDistribution} from './LevelRankDistribution';
 import {RatingOverview} from './RatingOverview';
+import {RecommendedLevels} from './RecommendedLevels';
 import {TopChartRecords} from './TopChartRecords';
 
 const NEW_CANDIDATE_SONGS_POOL_SIZE = 40;
@@ -80,6 +81,13 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           oldChartsRating={oldChartsRating}
           isDxPlus={isDxPlus}
           playerGradeIndex={playerGradeIndex}
+        />
+        <RecommendedLevels
+          isDxPlus={isDxPlus}
+          newChartsRating={newChartsRating}
+          newTopChartsCount={newTopChartsCount}
+          oldChartsRating={oldChartsRating}
+          oldTopChartsCount={oldTopChartsCount}
         />
         <div className="ratingTargetDistribution">
           <h3>{UIString.ratingTargetDistribution}</h3>

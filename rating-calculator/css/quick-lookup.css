@@ -1,8 +1,3 @@
-.quickLookupTable {
-  border-collapse: collapse;
-  border: 2px solid #999;
-}
-
 .qlRankFactorCell {
   min-width: 76px;
   padding: 4px;

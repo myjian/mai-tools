@@ -1,0 +1,28 @@
+.recLvSection {
+  margin-bottom: 35px;
+}
+
+.recLvTitle {
+  margin-bottom: 6px;
+}
+
+.recLvDesc {
+  margin: 0 0 14px;
+}
+
+.recLvTable {
+  table-layout: fixed;
+}
+
+.recLvTable th,
+.recLvTable td {
+  min-width: 64px;
+  padding: 4px 16px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.recLvRankTitle,
+.recLvRankAchv {
+  display: block;
+}

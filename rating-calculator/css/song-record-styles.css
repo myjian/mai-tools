@@ -73,11 +73,6 @@
   margin-bottom: 0;
 }
 
-.songRecordTable {
-  border-collapse: collapse;
-  border: 2px solid #999;
-}
-
 .scoreRecordRow:nth-child(2n) {
   background-color: rgba(90, 90, 90, 0.1);
 }

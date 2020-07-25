@@ -23,7 +23,7 @@ export class RatingOverview extends React.PureComponent<Props> {
         <div className="totalRatingRow">
           Rating： <span>{totalRating}</span>
         </div>
-        <table>
+        <table className="ratingOverviewTable">
           <tbody>
             <tr>
               <td>{UIString.newChartsRating}</td>

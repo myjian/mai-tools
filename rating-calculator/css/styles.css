@@ -25,6 +25,11 @@ h2 {
 
 h3 {
   font-size: 22px;
+  margin-bottom: 16px;
+}
+
+table {
+  border: 2px solid #999;
 }
 
 tbody th {
@@ -61,8 +66,12 @@ label {
   padding-bottom: 8px;
 }
 
+.ratingOverviewTable {
+  border-style: none;
+}
+
 .columnColumn {
-  padding-right: 10px;
+  padding-right: 4px;
 }
 
 .flexRow {
