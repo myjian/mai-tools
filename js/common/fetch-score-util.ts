@@ -7,7 +7,10 @@ export function getChartLevel(row: HTMLElement) {
 }
 
 export function getChartDifficulty(row: HTMLElement) {
-  const d = row.children[0].className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();
+  if (!row.classList.contains("pointer")) {
+    row = row.querySelector("pointer");
+  }
+  const d = row.className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();
   return d.indexOf("RE") === 0 ? "Re:MASTER" : d;
 }
 
@@ -15,11 +18,11 @@ export function getChartType(row: HTMLElement) {
   if (row.id) {
     return row.id.includes("sta_") ? "STANDARD" : "DX";
   }
-  return (row.children[1] as HTMLImageElement).src.includes("_standard") ? "STANDARD" : "DX";
+  return (row.querySelector("img:nth-child(2)") as HTMLImageElement).src.includes("_standard") ? "STANDARD" : "DX";
 }
 
 export function getPlayerName(n: HTMLElement) {
-  return (n.querySelector(".name_block") as HTMLElement).innerText;
+  return (n.querySelector(".name_block") as HTMLElement)?.innerText;
 }
 
 export function fetchPlayerGrade(n: Document | HTMLElement) {

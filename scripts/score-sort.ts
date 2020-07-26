@@ -18,6 +18,8 @@ type SortBy =
   | "apfc_asc";
 type Cache = {
   songProps?: Map<string, SongProperties[]>;
+  nicoLinkIdx?: string;
+  originalLinkIdx?: string;
 };
 
 (function (d) {
@@ -163,35 +165,46 @@ type Cache = {
     }
   }
 
-  async function getChartInLv(row: HTMLElement) {
+  function coalesceInLv(row: HTMLElement, lvIndex: number, props?: SongProperties) {
+    let lv = 0;
+    if (props) {
+      lv = props.lv[lvIndex];
+      if (typeof lv !== "number") {
+        lv = 0;
+      } else if (lv < 0) {
+        // console.warn("lv is negative for song " + song, props);
+        lv = Math.abs(lv) - LV_DELTA;
+      }
+    }
+    return lv || getDefaultLevel(getChartLv(row)) - LV_DELTA;
+  }
+
+  function getChartInLv(row: HTMLElement) {
     const inLvText = getChartLv(row, "inlv");
     if (inLvText) {
       return parseFloat(inLvText);
     }
+    console.log("inlv not in dataset", row)
     const song = getSongName(row);
-    const d = getChartDifficulty(row);
     const t = getChartType(row);
+    const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
     let props = getSongProperties(cache.songProps, song, "", t);
     if (song === "Link") {
       const idx = getSongIdx(row);
-      const genre = await isNicoNicoLink(idx) ? "niconico" : "";
-      props = getSongProperties(cache.songProps, song, genre, t);
+      if (cache.nicoLinkIdx === idx) {
+        props = getSongProperties(cache.songProps, song, "niconico", t);
+      } else if (cache.originalLinkIdx === idx) {
+        props = getSongProperties(cache.songProps, song, "", t);
+      }
       console.log(props);
     }
-    if (props) {
-      const lvIndex = DIFFICULTIES.indexOf(d);
-      const lv = props.lv[lvIndex];
-      if (typeof lv === "number") {
-        if (lv > 0) {
-          return lv;
-        }
-        // console.warn("lv is negative for song " + song, props);
-        return Math.abs(lv) - LV_DELTA;
-      }
-    }
-    console.warn("missing lv data for song " + song, props);
-    const lv = getDefaultLevel(getChartLv(row)) - LV_DELTA;
-    return lv;
+    return coalesceInLv(row, lvIndex, props);
+  }
+
+  function compareInLv(row1: HTMLElement, row2: HTMLElement) {
+    const lv1 = getChartInLv(row1);
+    const lv2 = getChartInLv(row2);
+    return lv1 < lv2 ? -1 : lv2 < lv1 ? 1 : 0;
   }
 
   function sortRowsByLevel(rows: NodeListOf<HTMLElement>, reverse: boolean) {
@@ -199,6 +212,12 @@ type Cache = {
     rows.forEach((row) => {
       const lv = getChartLv(row);
       map.get(lv).push(row);
+    });
+    map.forEach((subRows) => {
+      subRows.sort(compareInLv);
+      if (reverse) {
+        subRows.reverse();
+      }
     });
     return createRowsWithSection(map, "LEVEL", rows.length);
   }
@@ -272,12 +291,11 @@ type Cache = {
     return createRowsWithSection(map, "", rows.length);
   }
 
-  async function sortRowsByInLv(rows: NodeListOf<HTMLElement>, reverse: boolean) {
+  function sortRowsByInLv(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const inLvSet = new Map<number, boolean>();
     const inLvs: number[] = [];
     for (const row of Array.from(rows)) {
-      let lv = await getChartInLv(row);
-      saveInLv(row, lv);
+      const lv = getChartInLv(row);
       inLvSet.set(lv, true);
       inLvs.push(lv);
     }
@@ -303,7 +321,7 @@ type Cache = {
     >;
   }
 
-  async function performSort(sortBy: SortBy) {
+  function performSort(sortBy: SortBy) {
     const rows = getScoreRows();
     const screwBlocks = Array.from(
       d.body.querySelectorAll(".main_wrapper.t_c .screw_block") as NodeListOf<HTMLElement>
@@ -329,10 +347,10 @@ type Cache = {
         sortedRows = sortRowsByApFc(rows, true);
         break;
       case "inlv_des":
-        sortedRows = await sortRowsByInLv(rows, false);
+        sortedRows = sortRowsByInLv(rows, false);
         break;
       case "inlv_asc":
-        sortedRows = await sortRowsByInLv(rows, true);
+        sortedRows = sortRowsByInLv(rows, true);
         break;
       default:
         return;
@@ -357,7 +375,7 @@ type Cache = {
       } else {
         row.querySelector(".music_kind_icon_standard")?.remove();
       }
-      const chartTypeImg = row.children[1] as HTMLImageElement;
+      const chartTypeImg = row.querySelector("img:nth-child(2)") as HTMLImageElement;
       chartTypeImg.onclick = null;
       chartTypeImg.className = "music_kind_icon";
     });
@@ -409,24 +427,38 @@ type Cache = {
   async function fetchAndAddInnerLvSort() {
     const isDxPlus = parseInt(await fetchGameVersion(d.body)) >= DX_PLUS_GAME_VERSION;
     cache.songProps = buildSongPropertyMap(await iWantSomeMagic(isDxPlus));
-    createOption("Internal Level (high \u2192 low)", "inlv_des", false);
-    createOption("Internal Level (low \u2192 high)", "inlv_asc", false);
-  }
-
-  async function prefetchLinkSongIdx() {
-    getScoreRows().forEach((row) => {
+    const rows = Array.from(getScoreRows());
+    for (const row of rows) {
       const song = getSongName(row);
       if (song === "Link") {
         const idx = getSongIdx(row);
-        isNicoNicoLink(idx);
+        const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
+        try {
+          const isNico = await isNicoNicoLink(idx);
+          let props: SongProperties;
+          if (isNico) {
+            cache.nicoLinkIdx = idx;
+            props = getSongProperties(cache.songProps, song, "niconico", "STANDARD");
+          } else {
+            cache.originalLinkIdx = idx;
+            props = getSongProperties(cache.songProps, song, "", "STANDARD");
+          }
+          saveInLv(row, coalesceInLv(row, lvIndex, props));
+        } catch(e) {
+          saveInLv(row, coalesceInLv(row, lvIndex));
+        }
+      } else {
+        const lv = getChartInLv(row);
+        saveInLv(row, lv);
       }
-    });
+    }
+    createOption("Internal Level (high \u2192 low)", "inlv_des", false);
+    createOption("Internal Level (low \u2192 high)", "inlv_asc", false);
   }
 
   // main
   expandDualChartRows();
   addOfficialLvDataset();
-  prefetchLinkSongIdx();
   const firstScrewBlock = d.body.querySelector(".main_wrapper.t_c .screw_block");
   if (firstScrewBlock) {
     firstScrewBlock.insertAdjacentElement("beforebegin", createSortOptions());

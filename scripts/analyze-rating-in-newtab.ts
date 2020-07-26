@@ -10,8 +10,8 @@ import {
 } from '../js/common/util';
 
 (function () {
-  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
-  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk?";
+  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
+  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk";
   const UIString = {
     zh: {pleaseLogIn: "請登入 maimai NET"},
     en: {pleaseLogIn: "Please log in to maimai DX NET."},
@@ -46,9 +46,16 @@ import {
       handleError(UIString.pleaseLogIn);
       return;
     }
+    let url = BASE_URL;
     const queryParams = new URLSearchParams();
-    queryParams.set("playerName", getPlayerName(document.body));
-    const url = BASE_URL + queryParams.toString();
+    const playerName = getPlayerName(document.body);
+    if (playerName) {
+      queryParams.set("playerName", playerName);
+    }
+    const query = queryParams.toString()
+    if (query) {
+      url += "?" + query;
+    }
     window.open(url, "selfRating");
     window.addEventListener("message", (evt) => {
       console.log(evt.origin, evt.data);
