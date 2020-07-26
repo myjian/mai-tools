@@ -19,6 +19,13 @@ const VERSION_REGEX = /\bv\s*:\s*([0-9]+)/;
 const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 
+function fixMismatchSongName(name: string) {
+  if (name === "D✪N’T  ST✪P  R✪CKIN’") {
+    return "D✪N’T ST✪P R✪CKIN’";
+  }
+  return name;
+}
+
 function parseInnerLevelLine(line: string): SongProperties {
   const dxMatch = line.match(DX_REGEX);
   const lvMatch = line.match(LV_REGEX);
@@ -30,7 +37,7 @@ function parseInnerLevelLine(line: string): SongProperties {
       dx: parseInt(dxMatch[1]),
       lv: JSON.parse(lvMatch[1]),
       debut: parseInt(debutVerMatch[1]),
-      songName: songNameMatch[1],
+      songName: fixMismatchSongName(songNameMatch[1]),
       nickname: nicknameMatch && nicknameMatch[1],
     };
   }

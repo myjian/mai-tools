@@ -184,7 +184,6 @@ type Cache = {
     if (inLvText) {
       return parseFloat(inLvText);
     }
-    console.log("inlv not in dataset", row)
     const song = getSongName(row);
     const t = getChartType(row);
     const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
@@ -427,6 +426,7 @@ type Cache = {
   async function fetchAndAddInnerLvSort() {
     const isDxPlus = parseInt(await fetchGameVersion(d.body)) >= DX_PLUS_GAME_VERSION;
     cache.songProps = buildSongPropertyMap(await iWantSomeMagic(isDxPlus));
+    console.log(cache.songProps);
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const song = getSongName(row);
