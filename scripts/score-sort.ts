@@ -187,7 +187,7 @@ type Cache = {
     const song = getSongName(row);
     const t = getChartType(row);
     const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
-    let props = getSongProperties(cache.songProps, song, "", t);
+    let props: SongProperties | undefined;
     if (song === "Link") {
       const idx = getSongIdx(row);
       if (cache.nicoLinkIdx === idx) {
@@ -196,6 +196,8 @@ type Cache = {
         props = getSongProperties(cache.songProps, song, "", t);
       }
       console.log(props);
+    } else {
+      props = getSongProperties(cache.songProps, song, "", t);
     }
     return coalesceInLv(row, lvIndex, props);
   }
@@ -212,12 +214,14 @@ type Cache = {
       const lv = getChartLv(row);
       map.get(lv).push(row);
     });
-    map.forEach((subRows) => {
-      subRows.sort(compareInLv);
-      if (reverse) {
-        subRows.reverse();
-      }
-    });
+    if (cache.songProps) {
+      map.forEach((subRows) => {
+        subRows.sort(compareInLv);
+        if (reverse) {
+          subRows.reverse();
+        }
+      });
+    }
     return createRowsWithSection(map, "LEVEL", rows.length);
   }
 
