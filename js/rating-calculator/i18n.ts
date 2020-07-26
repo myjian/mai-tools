@@ -17,7 +17,8 @@ const UIStringByLang = {
     newChartsRating: "New Charts Rating",
     oldChartsRating: "Old Charts Rating",
     grade: "Grade",
-    ratingTargetDistribution: "Levels and Difficulties of Rating Subjects",
+    ratingTargetLvDistribution: "Levels of Rating Subjects",
+    ratingTargetDiffDistribution: "Difficulties of Rating Subjects",
     column: ":",
     subtotal: "Subtotal",
     newChartsRatingTargets: "New Charts Rating Subjects (best 15):",
@@ -46,7 +47,7 @@ const UIStringByLang = {
     showLess: "Show less",
     recommendedLevels: "Recommended levels",
     tilde: "~",
-    projectedRating: "Rating",
+    projectedRating: "Potential Rating",
     levelComment: "Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+."
   },
   zh: {
@@ -65,7 +66,8 @@ const UIStringByLang = {
     newChartsRating: "新譜面 Rating",
     oldChartsRating: "舊譜面 Rating",
     grade: "段位",
-    ratingTargetDistribution: "Rating 對象曲等級與成績分布",
+    ratingTargetLvDistribution: "Rating 對象曲 等級分布",
+    ratingTargetDiffDistribution: "Rating 對象曲 難度分布",
     column: "：",
     subtotal: "小計",
     newChartsRatingTargets: "新譜面 Rating 對象曲目 (取最佳 15 首)：",

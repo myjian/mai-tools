@@ -7,12 +7,6 @@ body {
     "Microsoft Jhenghei", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
 }
 
-@media only screen and (min-width: 551px) {
-  body {
-    margin: 20px;
-  }
-}
-
 h2,
 h3 {
   /* Work around an Android Chrome bug where span in heading has smaller font size */
@@ -74,9 +68,13 @@ label {
   padding-right: 4px;
 }
 
-.flexRow {
+.subRatingColumn {
+  text-align: right;
+}
+
+.responsiveFlexBox {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .advanced {
@@ -101,6 +99,22 @@ label {
   margin-top: 35px;
 }
 
-.ratingTargetDistribution {
-  margin-bottom: 35px;
+.collapsibleContainer {
+  max-height: 9999px;
+}
+
+.collapsibleContainer.hidden {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height 0.3s;
+}
+
+
+@media only screen and (min-width: 551px) {
+  body {
+    margin: 20px;
+  }
+  .responsiveFlexBox {
+    flex-direction: row;
+  }
 }

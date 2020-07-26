@@ -62,14 +62,10 @@
 }
 
 .songRecordTableContainer {
-  max-height: 9999px;
   margin-bottom: 35px;
 }
 
 .songRecordTableContainer.hidden {
-  max-height: 0;
-  overflow-y: hidden;
-  transition: max-height 0.3s;
   margin-bottom: 0;
 }
 

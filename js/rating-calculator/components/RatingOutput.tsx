@@ -5,8 +5,6 @@ import {UIString} from '../i18n';
 import {RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
 import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
-import {DifficultyRankDistribution} from './DifficultyRankDistribution';
-import {LevelRankDistribution} from './LevelRankDistribution';
 import {RatingOverview} from './RatingOverview';
 import {RecommendedLevels} from './RecommendedLevels';
 import {TopChartRecords} from './TopChartRecords';
@@ -89,23 +87,6 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           oldChartsRating={oldChartsRating}
           oldTopChartsCount={oldTopChartsCount}
         />
-        <div className="ratingTargetDistribution">
-          <h3>{UIString.ratingTargetDistribution}</h3>
-          <div className="flexRow">
-            <LevelRankDistribution
-              newChartRecords={newChartRecords}
-              newTopChartsCount={newTopChartsCount}
-              oldChartRecords={oldChartRecords}
-              oldTopChartsCount={oldTopChartsCount}
-            />
-            <DifficultyRankDistribution
-              newChartRecords={newChartRecords}
-              newTopChartsCount={newTopChartsCount}
-              oldChartRecords={oldChartRecords}
-              oldTopChartsCount={oldTopChartsCount}
-            />
-          </div>
-        </div>
         <div className="songRecordsContainer">
           <ChartRecordSectionTitle
             title={UIString.newChartsRatingTargets}

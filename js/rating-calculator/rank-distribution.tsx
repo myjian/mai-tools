@@ -1,20 +1,6 @@
 import {getRankDefinitions, getRankTitle} from '../common/rank-functions';
 import {ChartRecord} from './types';
 
-export type RatingTargetData = {
-  newChartRecords: ReadonlyArray<ChartRecord>;
-  newTopChartsCount: number;
-  oldChartRecords: ReadonlyArray<ChartRecord>;
-  oldTopChartsCount: number;
-};
-
-export function mergeRecords(data: RatingTargetData): ChartRecord[] {
-  const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = data;
-  const newTopRecords = newChartRecords.slice(0, newTopChartsCount);
-  const oldTopRecords = oldChartRecords.slice(0, oldTopChartsCount);
-  return [].concat(newTopRecords, oldTopRecords);
-}
-
 export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<string, number> {
   const countPerRank = new Map();
   for (const rankDef of getRankDefinitions(true)) {
@@ -28,13 +14,15 @@ export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<
   return countPerRank;
 }
 
-export function getMinRank(records: ReadonlyArray<ChartRecord>) {
+export function getRankMap(records: ReadonlyArray<ChartRecord>) {
   const overallRankDistribution = getRankDistribution(records);
-  let minRank;
+  const rankMap = new Map<string, boolean>();
+  let remaining = records.length;
   for (const [rank, count] of overallRankDistribution) {
-    if (count > 0) {
-      minRank = rank;
+    if (remaining > 0) {
+      rankMap.set(rank, true);
     }
+    remaining -= count;
   }
-  return minRank;
+  return rankMap;
 }

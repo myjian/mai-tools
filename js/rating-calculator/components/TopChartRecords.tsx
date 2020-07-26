@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {UIString} from '../i18n';
 import {
   compareSongsByAchv,
   compareSongsByDifficulty,
@@ -9,6 +10,9 @@ import {
 } from '../record-comparator';
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordsTable} from './ChartRecordsTable';
+import {CollapsibleContainer} from './CollapsibleContainer';
+import {DifficultyDistribution} from './DifficultyDistribution';
+import {LevelRankDistribution} from './LevelRankDistribution';
 
 const COLUMNS: ReadonlyArray<ColumnType> = [
   ColumnType.NO,
@@ -55,13 +59,22 @@ export class TopChartRecords extends React.PureComponent<Props, State> {
       }
     }
     return (
-      <ChartRecordsTable
-        columns={COLUMNS}
-        tableClassname="topRecordTable"
-        records={records}
-        hidden={hidden}
-        sortBy={this.handleSortBy}
-      />
+      <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
+        <div className="responsiveFlexBox">
+          <LevelRankDistribution
+            topLeftCell={UIString.level}
+            chartRecords={records}
+            topChartsCount={limit}
+          />
+          <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
+        </div>
+        <ChartRecordsTable
+          columns={COLUMNS}
+          tableClassname="topRecordTable"
+          records={records}
+          sortBy={this.handleSortBy}
+        />
+      </CollapsibleContainer>
     );
   }
 

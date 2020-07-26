@@ -1,24 +1,21 @@
 import React from 'react';
 
-import {getRankDefinitions} from '../../common/rank-functions';
 import {UIString} from '../i18n';
 import {RankDistributionRow} from './RankDistributionRow';
 
 interface Props {
-  minRank: string;
+  firstCell: string;
   showTotal?: boolean;
   baseCellClassname: string | undefined;
   perColumnClassnames: ReadonlyArray<string>;
+  columns: IterableIterator<string>
 }
 export class RankDistributionHeadRow extends React.PureComponent<Props> {
   render() {
-    const {minRank, showTotal, baseCellClassname, perColumnClassnames} = this.props;
-    const values = [""];
-    for (const rankDef of getRankDefinitions(true)) {
-      values.push(rankDef.title);
-      if (rankDef.title === minRank) {
-        break;
-      }
+    const {firstCell, columns, showTotal, baseCellClassname, perColumnClassnames} = this.props;
+    const values = [firstCell];
+    for (const key of columns) {
+      values.push(key);
     }
     if (showTotal) {
       values.push(UIString.subtotal);

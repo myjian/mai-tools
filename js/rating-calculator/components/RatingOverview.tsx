@@ -28,12 +28,12 @@ export class RatingOverview extends React.PureComponent<Props> {
             <tr>
               <td>{UIString.newChartsRating}</td>
               <td className="columnColumn">{UIString.column}</td>
-              <td>{newChartsRating}</td>
+              <td className="subRatingColumn">{newChartsRating}</td>
             </tr>
             <tr>
               <td>{UIString.oldChartsRating}</td>
               <td>{UIString.column}</td>
-              <td>{oldChartsRating}</td>
+              <td className="subRatingColumn">{oldChartsRating}</td>
             </tr>
             {playerGrade && (
               <tr>
@@ -41,7 +41,7 @@ export class RatingOverview extends React.PureComponent<Props> {
                   {UIString.grade} (<span>{playerGrade.title}</span>)
                 </td>
                 <td>{UIString.column}</td>
-                <td>{playerGrade.bonus}</td>
+                <td className="subRatingColumn">{playerGrade.bonus}</td>
               </tr>
             )}
           </tbody>

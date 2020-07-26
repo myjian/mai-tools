@@ -2,12 +2,7 @@ import React from 'react';
 
 import {getOfficialLevel} from '../../common/level-helper';
 import {compareNumber} from '../../common/number-helper';
-import {
-  getMinRank,
-  getRankDistribution,
-  mergeRecords,
-  RatingTargetData,
-} from '../rank-distribution';
+import {getRankDistribution, getRankMap} from '../rank-distribution';
 import {ChartRecord} from '../types';
 import {RankDistributionDataRow} from './RankDistributionDataRow';
 import {RankDistributionHeadRow} from './RankDistributionHeadRow';
@@ -32,16 +27,24 @@ function getRecordsPerLevel(records: ReadonlyArray<ChartRecord>) {
   return recordsPerLevel;
 }
 
-export class LevelRankDistribution extends React.PureComponent<RatingTargetData> {
+interface Props {
+  topLeftCell: string;
+  chartRecords: ReadonlyArray<ChartRecord>;
+  topChartsCount: number;
+}
+
+export class LevelRankDistribution extends React.PureComponent<Props> {
   render() {
-    const combinedTopRecords = mergeRecords(this.props);
-    const minRank = getMinRank(combinedTopRecords);
-    const recordsPerLevel = getRecordsPerLevel(combinedTopRecords);
+    const {chartRecords, topLeftCell, topChartsCount} = this.props;
+    const topRecords = chartRecords.slice(0, topChartsCount);
+    const rankMap = getRankMap(topRecords);
+    const recordsPerLevel = getRecordsPerLevel(topRecords);
     return (
       <table className="rankDistributionTable">
         <thead>
           <RankDistributionHeadRow
-            minRank={minRank}
+            columns={rankMap.keys()}
+            firstCell={topLeftCell}
             baseCellClassname={LEVEL_RANK_CELL_BASE_CLASSNAME}
             perColumnClassnames={LEVEL_RANK_CELL_CLASSNAMES}
           />
@@ -51,7 +54,7 @@ export class LevelRankDistribution extends React.PureComponent<RatingTargetData>
             <RankDistributionDataRow
               key={level}
               rowHead={level}
-              minRank={minRank}
+              columns={rankMap.keys()}
               rankDist={getRankDistribution(records)}
               baseCellClassname={LEVEL_RANK_CELL_BASE_CLASSNAME}
               perColumnClassnames={LEVEL_RANK_CELL_CLASSNAMES}

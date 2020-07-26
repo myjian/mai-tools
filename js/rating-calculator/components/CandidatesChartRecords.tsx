@@ -11,6 +11,7 @@ import {
 } from '../record-comparator';
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordsTable} from './ChartRecordsTable';
+import {CollapsibleContainer} from './CollapsibleContainer';
 
 const CANDIDATE_SONGS_LIMIT = 20;
 
@@ -65,19 +66,19 @@ export class CandidateChartRecords extends React.PureComponent<Props, State> {
       }
     }
     return (
-      <ChartRecordsTable
-        tableClassname="candidateTable"
-        records={records}
-        hidden={hidden}
-        sortBy={this.handleSortBy}
-        columns={COLUMNS}
-      >
+      <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
+        <ChartRecordsTable
+          tableClassname="candidateTable"
+          records={records}
+          sortBy={this.handleSortBy}
+          columns={COLUMNS}
+        />
         {hasMore && (
           <a className="showMore" href="#" onClick={this.toggleShowMore}>
             {showAll ? UIString.showLess : UIString.showMore}
           </a>
         )}
-      </ChartRecordsTable>
+      </CollapsibleContainer>
     );
   }
 

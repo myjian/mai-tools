@@ -1,11 +1,19 @@
+.rankDistributionTable {
+  margin-bottom: 22px;
+}
+
 .rankDistributionTable:first-child {
   margin-right: 40px;
 }
 
-.levelRankCell, .diffRankCell {
+.levelRankCell {
   padding: 4px;
   width: 60px;
   box-sizing: border-box;
+}
+
+.diffRankCell {
+  padding: 4px 10px;
 }
 
 td.levelRankCell, td.diffRankCell {
@@ -16,10 +24,6 @@ td.levelRankCell, td.diffRankCell {
   width: unset;
   padding-right: 12px;
   padding-left: 12px;
-}
-
-.difficultyRankDistHead {
-  width: 110px;
 }
 
 .totalCell {
