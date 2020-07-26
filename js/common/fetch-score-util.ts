@@ -8,7 +8,7 @@ export function getChartLevel(row: HTMLElement) {
 
 export function getChartDifficulty(row: HTMLElement) {
   if (!row.classList.contains("pointer")) {
-    row = row.querySelector("pointer");
+    row = row.querySelector(".pointer");
   }
   const d = row.className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();
   return d.indexOf("RE") === 0 ? "Re:MASTER" : d;
