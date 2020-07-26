@@ -179,7 +179,7 @@ type Cache = {
     return lv || getDefaultLevel(getChartLv(row)) - LV_DELTA;
   }
 
-  function getChartInLv(row: HTMLElement) {
+  function getChartInLv(row: HTMLElement, songProps: Map<string, SongProperties[]>) {
     const inLvText = getChartLv(row, "inlv");
     if (inLvText) {
       return parseFloat(inLvText);
@@ -191,20 +191,20 @@ type Cache = {
     if (song === "Link") {
       const idx = getSongIdx(row);
       if (cache.nicoLinkIdx === idx) {
-        props = getSongProperties(cache.songProps, song, "niconico", t);
+        props = getSongProperties(songProps, song, "niconico", t);
       } else if (cache.originalLinkIdx === idx) {
-        props = getSongProperties(cache.songProps, song, "", t);
+        props = getSongProperties(songProps, song, "", t);
       }
       console.log(props);
     } else {
-      props = getSongProperties(cache.songProps, song, "", t);
+      props = getSongProperties(songProps, song, "", t);
     }
     return coalesceInLv(row, lvIndex, props);
   }
 
   function compareInLv(row1: HTMLElement, row2: HTMLElement) {
-    const lv1 = getChartInLv(row1);
-    const lv2 = getChartInLv(row2);
+    const lv1 = getChartInLv(row1, cache.songProps);
+    const lv2 = getChartInLv(row2, cache.songProps);
     return lv1 < lv2 ? -1 : lv2 < lv1 ? 1 : 0;
   }
 
@@ -298,7 +298,7 @@ type Cache = {
     const inLvSet = new Map<number, boolean>();
     const inLvs: number[] = [];
     for (const row of Array.from(rows)) {
-      const lv = getChartInLv(row);
+      const lv = getChartInLv(row, cache.songProps);
       inLvSet.set(lv, true);
       inLvs.push(lv);
     }
@@ -429,8 +429,7 @@ type Cache = {
 
   async function fetchAndAddInnerLvSort() {
     const isDxPlus = parseInt(await fetchGameVersion(d.body)) >= DX_PLUS_GAME_VERSION;
-    cache.songProps = buildSongPropertyMap(await iWantSomeMagic(isDxPlus));
-    console.log(cache.songProps);
+    const songProps = buildSongPropertyMap(await iWantSomeMagic(isDxPlus));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const song = getSongName(row);
@@ -442,22 +441,23 @@ type Cache = {
           let props: SongProperties;
           if (isNico) {
             cache.nicoLinkIdx = idx;
-            props = getSongProperties(cache.songProps, song, "niconico", "STANDARD");
+            props = getSongProperties(songProps, song, "niconico", "STANDARD");
           } else {
             cache.originalLinkIdx = idx;
-            props = getSongProperties(cache.songProps, song, "", "STANDARD");
+            props = getSongProperties(songProps, song, "", "STANDARD");
           }
           saveInLv(row, coalesceInLv(row, lvIndex, props));
         } catch(e) {
           saveInLv(row, coalesceInLv(row, lvIndex));
         }
       } else {
-        const lv = getChartInLv(row);
+        const lv = getChartInLv(row, songProps);
         saveInLv(row, lv);
       }
     }
     createOption("Internal Level (high \u2192 low)", "inlv_des", false);
     createOption("Internal Level (low \u2192 high)", "inlv_asc", false);
+    cache.songProps = songProps;
   }
 
   // main
