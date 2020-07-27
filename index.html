@@ -4,182 +4,72 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
     <title>Convert maimai DX score to FiNALE score</title>
-    <link rel="stylesheet" href="./css/styles.css">
-    <link rel="stylesheet" href="./css/achvOverview.css">
-    <link rel="stylesheet" href="./css/resultTable.css">
-    <link rel="stylesheet" href="./css/scoreDiffTable.css">
-    <link rel="stylesheet" href="./css/achvLossTable.css">
-    <link rel="stylesheet" href="./css/infoTable.css">
-    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/chart-info.css">
   </head>
   <body>
-    <div class="hidden" id="inputContainer">
+    <div id="inputContainer">
       <textarea class="input"></textarea>
       <br>
       <button id="convert">Convert</button>
     </div>
     <div class="output">
       <h3 class="songTitleHeading">
+        <span id="chartInfoHeading">Chart info</span>
+        <span>&nbsp;</span>-<span>&nbsp;</span>
         <a id="songTitle" title="開啟中文維基" target="_blank" href="https://maimai.fandom.com/zh/wiki/"></a>
       </h3>
-      <table class="playerAchievement">
-        <tbody>
-          <tr>
-            <td colspan="3">maimai DX <span class="achievement">Achievement</span>:</td>
-          </tr>
-          <tr class="scoreWrapper">
-            <td class="playerScore"><span id="dxScore"></span>%</td>
-            <td class="maxAchievement">101.0000%</td>
-            <td class="totalAchievementLoss">-<span id="totalDxAchvLoss"></span>%</td>
-          </tr>
-          <tr>
-            <td colspan="3">maimai <span class="achievement">Achievement</span>:</td>
-          </tr>
-          <tr class="scoreWrapper">
-            <td class="playerScore"><span id="finaleScore"></span>%</td>
-            <td class="maxAchievement"><span id="maxFinaleScore"></span>%</td>
-            <td class="totalAchievementLoss">-<span id="totalFinaleAchvLoss"></span>%</td>
-          </tr>
-        </tbody>
-      </table>
-      <table id="resultTable">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th class="criticalPerfect">Critical<br>Perfect</th>
-            <th class="perfect">Perfect</th>
-            <th class="great">Great</th>
-            <th class="good">Good</th>
-            <th class="miss">Miss</th>
-          </tr>
-        </thead>
-        <tbody class="textAlignRight">
-          <tr class="tap">
-            <th>Tap</th>
-            <td class="tap criticalPerfect"></td>
-            <td class="tap perfect"></td>
-            <td class="tap great"></td>
-            <td class="tap good"></td>
-            <td class="tap miss"></td>
-          </tr>
-          <tr class="hold">
-            <th>Hold</th>
-            <td class="hold criticalPerfect"></td>
-            <td class="hold perfect"></td>
-            <td class="hold great"></td>
-            <td class="hold good"></td>
-            <td class="hold miss"></td>
-          </tr>
-          <tr class="slide">
-            <th>Slide</th>
-            <td class="slide criticalPerfect"></td>
-            <td class="slide perfect"></td>
-            <td class="slide great"></td>
-            <td class="slide good"></td>
-            <td class="slide miss"></td>
-          </tr>
-          <tr class="touch">
-            <th>Touch</th>
-            <td class="touch criticalPerfect"></td>
-            <td class="touch perfect"></td>
-            <td class="touch great"></td>
-            <td class="touch good"></td>
-            <td class="touch miss"></td>
-          </tr>
-          <tr class="break">
-            <th>Break</th>
-            <td class="break criticalPerfect">
-              <span class="break2600" title="2600"></span>
-            </td>
-            <td class="break perfect">
-              <span class="break2550" title="2550"></span><span class="break2500" title="2500"></span>
-            </td>
-            <td class="break great">
-              <span class="break2000" title="2000"></span><span class="break1500" title="1500"></span><span class="break1250" title="1250"></span>
-            </td>
-            <td class="break good">
-              <span class="break1000" title="1000"></span>
-            </td>
-            <td class="break miss">
-              <span class="break0" title="0"></span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="hidden" id="scoreDiffTable">
-        <tbody>
-        </tbody>
-      </table>
-      <table id="achievementLossTable">
-        <thead>
-          <tr>
-            <th>&nbsp;</th>
-            <th class="achievementLoss dx">Achievement Loss (DX)</th>
-            <th class="achievementLoss finale">Achievement Loss (maimai)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="tap">
-            <th class="textAlignRight">Tap</th>
-            <td class="achievementLoss dx">-<span id="tapDxAchvLoss"></span>%</td>
-            <td class="achievementLoss finale">-<span id="tapFinaleAchvLoss"></span>%</td>
-          </tr>
-          <tr class="hold">
-            <th class="textAlignRight">Hold</th>
-            <td class="achievementLoss dx">-<span id="holdDxAchvLoss"></span>%</td>
-            <td class="achievementLoss finale">-<span id="holdFinaleAchvLoss"></span>%</td>
-          </tr>
-          <tr class="slide">
-            <th class="textAlignRight">Slide</th>
-            <td class="achievementLoss dx">-<span id="slideDxAchvLoss"></span>%</td>
-            <td class="achievementLoss finale">-<span id="slideFinaleAchvLoss"></span>%</td>
-          </tr>
-          <tr class="touch">
-            <th class="textAlignRight">Touch</th>
-            <td class="achievementLoss dx">-<span id="touchDxAchvLoss"></span>%</td>
-            <td class="achievementLoss finale">-<span id="touchFinaleAchvLoss"></span>%</td>
-          </tr>
-          <tr class="break">
-            <th class="textAlignRight">Break</th>
-            <td class="achievementLoss dx">-<span id="breakDxAchvLoss"></span>%</td>
-            <td class="achievementLoss finale">-<span id="breakFinaleAchvLoss"></span>%</td>
-          </tr>
-        </tbody>
-      </table>
-      <h3 id="chartInfoHeading">Chart info</h3>
       <table class="infoTable">
         <thead>
-          <tr>
+          <tr class="infoHeadRow">
             <th>&nbsp;</th>
-            <th class="tap">TAP</th>
-            <th class="hold">HOLD</th>
-            <th class="slide">SLIDE</th>
-            <th class="touch touchColumn">TOUCH</th>
-            <th class="break">BREAK</th>
-            <th class="totalNoteCount">TOTAL</th>
+            <th>#</th>
+            <th colspan="2">%</th>
           </tr>
         </thead>
         <tbody class="textAlignCenter">
-          <tr class="noteCount">
-            <th>#</th>
+          <tr>
+            <th class="tap">TAP</th>
             <td id="tapCount"></td>
-            <td id="holdCount"></td>
-            <td id="slideCount"></td>
-            <td id="touchCount" class="touchColumn"></td>
-            <td id="breakCount"></td>
-            <td id="totalNoteCount"></td>
+            <td id="pctPerTap" colspan="2"></td>
           </tr>
-          <tr class="notePercentage">
-            <th>%</th>
-            <td id="pctPerTap"></td>
-            <td id="pctPerHold"></td>
-            <td id="pctPerSlide"></td>
-            <td id="pctPerTouch" class="touchColumn"></td>
-            <td id="pctPerBreak"></td>
-            <td>&nbsp;</td>
+          <tr>
+            <th class="hold">HOLD</th>
+            <td id="holdCount"></td>
+            <td id="pctPerHold" colspan="2"></td>
+          </tr>
+          <tr>
+            <th class="slide">SLIDE</th>
+            <td id="slideCount"></td>
+            <td id="pctPerSlide" colspan="2"></td>
+          </tr>
+          <tr class="touchRow">
+            <th class="touch touchCell">TOUCH</th>
+            <td id="touchCount"></td>
+            <td id="pctPerTouch" colspan="2"></td>
+          </tr>
+          <tr>
+            <th class="break" rowspan="2">BREAK</th>
+            <td id="breakCount" rowspan="2"></td>
+            <td>maimai:</td>
+            <td>DX:</td>
+          </tr>
+          <tr>
+            <td id="finalePctPerBreak">&nbsp;</td>
+            <td id="dxPctPerBreak"></td>
+          </tr>
+          <tr class="totalRow">
+            <th class="totalNoteCount" rowspan="2">TOTAL</th>
+            <td id="totalNoteCount" rowspan="2"></td>
+            <td>maimai:</td>
+            <td>DX:</td>
+          </tr>
+          <tr class="totalRow">
+            <td id="finaleMaxAchv"></td>
+            <td>101.0000%</td>
           </tr>
         </tbody>
       </table>
+      <a href="." class="resetLink hidden">Reset</a>
     </div>
     <div class="howto">
       <hr>
@@ -191,7 +81,7 @@
       <hr>
       Made by <a href="https://github.com/myjian" target="_blank">myjian</a>.
     </div>
-    <script src="./js/old-score-converter/i18n.js"></script>
-    <script type="module" src="./js/old-score-converter/main.js"></script>
+    <script src="./js/chart-info/i18n.js"></script>
+    <script src="./js/chart-info/main.js"></script>
   </body>
 </html>
