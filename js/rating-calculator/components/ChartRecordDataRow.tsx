@@ -30,7 +30,7 @@ export const ScoreDataRow: React.FC<Props> = React.memo((props) => {
       case ColumnType.NEXT_RANK:
         return record.nextRanks.keys().next().value;
       case ColumnType.NEXT_RATING:
-        return record.nextRanks.values().next().value.minRt.toFixed(0);
+        return "+" + record.nextRanks.values().next().value.minRt.toFixed(0);
       case ColumnType.RATING:
         return Math.floor(record.rating).toString();
     }
