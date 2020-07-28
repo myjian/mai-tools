@@ -455,6 +455,7 @@ type Cache = {
         saveInLv(row, lv);
       }
     }
+    console.log("enabling internal level sort");
     createOption("Internal Level (high \u2192 low)", "inlv_des", false);
     createOption("Internal Level (low \u2192 high)", "inlv_asc", false);
     cache.songProps = songProps;

@@ -29,4 +29,5 @@ export async function isNicoNicoLink(idx: string) {
   } else {
     cachedLinkIdx.original = idx;
   }
+  return isNico;
 }
