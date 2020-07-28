@@ -16,7 +16,7 @@
   const WIKI_URL_PREFIX = "https://maimai.fandom.com/zh/wiki/";
   const WIKI_URL_SUFFIX = "?variant=zh-hant";
 
-  const JUDGEMENTS_LEN = 4;
+  const JUDGEMENTS_LEN = 5;
   const ZERO_JUDGEMENT = [0, 0, 0, 0, 0];
 
   function calculatePctPerNote(countPerType) {
