@@ -71,7 +71,7 @@ h4 {
   background-color: #ffefbf;
 }
 
-#resetLink {
+.resetLink {
   display: block;
   padding-top: 6px;
   font-size: 18px;
@@ -87,7 +87,7 @@ h4 {
 }
 
 .credit {
-  padding-bottom: 30px;
+  padding-bottom: 20px;
   color: #222;
 }
 
