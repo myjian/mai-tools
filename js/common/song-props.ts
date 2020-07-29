@@ -12,7 +12,7 @@ export interface SongProperties {
 const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
   {
     name: "コネクト",
-    lv: [-3, -6, -8.7, 11.3, 12.8],
+    lv: [-3, -6, 8.8, 11.3, 12.8],
     debut: DX_PLUS_GAME_VERSION,
     dx: 1,
   },
