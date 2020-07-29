@@ -130,7 +130,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   private selectVersion = (ver: number) => {
-    this.setState({isDxPlus: ver === DX_PLUS_GAME_VERSION});
+    this.setState({isDxPlus: ver === DX_PLUS_GAME_VERSION}, this.analyzeRating);
   };
 
   private analyzeRating = async (evt?: React.SyntheticEvent) => {

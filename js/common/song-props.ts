@@ -1,18 +1,29 @@
+import {DX_PLUS_GAME_VERSION} from './constants';
 import {getSongNickname} from './song-util';
 
 export interface SongProperties {
-  dx: number;
+  dx: 0 | 1;
   lv: ReadonlyArray<number>;
   debut: number;
   name: string;
-  nickname: string;
+  nickname?: string;
 }
 
-/*
- * Example format:
- * {dx:0, v: 2, lv:[4.0, 6.0, 8.8, 10.9, 12.3], n:"Bad Apple!! feat nomico", nn:"Bad Apple!!"},
- * {dx:1, v:13, lv:[3.0, 7.0, 9.2, 11.8, 0], n:"METEOR"},
- */
+const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
+  {
+    name: "コネクト",
+    lv: [-3, -6, -8.7, 11.3, 12.8],
+    debut: DX_PLUS_GAME_VERSION,
+    dx: 1,
+  },
+  {
+    name: "君の知らない物語",
+    lv: [-3, -6, 8.2, 12.0],
+    debut: DX_PLUS_GAME_VERSION,
+    dx: 1,
+  }
+]
+
 const DX_REGEX = /\bdx\s*:\s*([0-9]+)/;
 const LV_REGEX = /\blv\s*:\s*(\[.+?\])/;
 const VERSION_REGEX = /\bv\s*:\s*([0-9]+)/;
@@ -26,6 +37,13 @@ function fixMismatchSongName(name: string) {
   return name;
 }
 
+/**
+ * Parse song properties from text.
+ *
+ * Example text format:
+ * {dx:0, v: 2, lv:[4.0, 6.0, 8.8, 10.9, 12.3], n:"Bad Apple!! feat nomico", nn:"Bad Apple!!"},
+ * {dx:1, v:13, lv:[3.0, 7.0, 9.2, 11.8, 0], n:"METEOR"},
+ */
 function parseSongProperties(line: string): SongProperties {
   const dxMatch = line.match(DX_REGEX);
   const lvMatch = line.match(LV_REGEX);
@@ -34,7 +52,7 @@ function parseSongProperties(line: string): SongProperties {
   const nicknameMatch = line.match(SONGNICKNAME_REGEX);
   if (dxMatch && lvMatch && debutVerMatch && songNameMatch) {
     return {
-      dx: parseInt(dxMatch[1]),
+      dx: parseInt(dxMatch[1]) as (0 | 1),
       lv: JSON.parse(lvMatch[1]),
       debut: parseInt(debutVerMatch[1]),
       name: fixMismatchSongName(songNameMatch[1]),
@@ -43,22 +61,30 @@ function parseSongProperties(line: string): SongProperties {
   }
 }
 
+function insertOrUpdateSongProps(map: Map<string, SongProperties[]>, props: SongProperties) {
+  if (!map.has(props.name)) {
+    map.set(props.name, []);
+  }
+  const arr = map.get(props.name);
+  arr.push(props);
+}
+
 export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
-    const lines = text.split("\n");
-    // songPropsByName: song name -> array of song properties
-    // most arrays have only 1 entry, but some arrays have more than 1 entries
-    // because song name duplicates or it has both DX and Standard charts.
-    const songPropsByName = new Map<string, SongProperties[]>();
-    for (const line of lines) {
-      const songProps = parseSongProperties(line);
-      if (songProps) {
-        if (!songPropsByName.has(songProps.name)) {
-          songPropsByName.set(songProps.name, []);
-        }
-        songPropsByName.get(songProps.name).push(songProps);
-      }
+  const lines = text.split("\n");
+  // songPropsByName: song name -> array of song properties
+  // most arrays have only 1 entry, but some arrays have more than 1 entries
+  // because song name duplicates or it has both DX and Standard charts.
+  const songPropsByName = new Map<string, SongProperties[]>();
+  for (const line of lines) {
+    const songProps = parseSongProperties(line);
+    if (songProps) {
+      insertOrUpdateSongProps(songPropsByName, songProps);
     }
-    return songPropsByName;
+  }
+  for (const songProps of INTL_VER_SONG_PROPS) {
+    insertOrUpdateSongProps(songPropsByName, songProps);
+  }
+  return songPropsByName;
 }
 
 function isDxChart(chartType: string) {
@@ -76,11 +102,11 @@ export function getSongProperties(
     if (songPropsArray.length > 1) {
       // Song has multiple charts
       const isDX = isDxChart(chartType) ? 1 : 0;
-      songPropsArray = songPropsArray.filter(d => d.dx === isDX);
+      songPropsArray = songPropsArray.filter((d) => d.dx === isDX);
       if (songPropsArray.length > 1) {
         // Duplicate song names
         const nickname = getSongNickname(songName, genre);
-        songPropsArray = songPropsArray.filter(d => d.nickname === nickname);
+        songPropsArray = songPropsArray.filter((d) => d.nickname === nickname);
       }
     }
     if (songPropsArray.length === 1) {

@@ -6,7 +6,7 @@ const UIStringByLang = {
     internalLvHeading: "Chart Internal Level Data",
     manualLv: "Manual input",
     autoLv: "Automatic",
-    scoreInputHeading: "Player Score",
+    scoreInputHeading: "Player Scores",
     scoreInputDescPrefix: 'Please use "Analyze DX Rating" or "Download all scores" from ',
     bookmarketLinkLabel: "maimai bookmarklets",
     scoreInputDescSuffix: " to fill in this field.",
