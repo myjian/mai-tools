@@ -1,4 +1,4 @@
-import {fetchScores, FRIEND_DIFFICULTIES} from '../js/common/fetch-friend-score';
+import {fetchFriendScores, FRIEND_SCORE_URLS} from '../js/common/fetch-friend-score';
 import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
@@ -23,7 +23,7 @@ type FriendInfo = {
 
 (function (d) {
   const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
-  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/VGAWNxYXgGjr?";
+  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/ZorBazGeynzM?";
   const UIString = {
     zh: {
       pleaseLogIn: "請登入 maimai NET",
@@ -72,9 +72,9 @@ type FriendInfo = {
     }
     // Fetch all scores
     const scoreList: string[] = [];
-    for (const difficulty of FRIEND_DIFFICULTIES) {
+    for (const difficulty of FRIEND_SCORE_URLS.keys()) {
       send("appendPlayerScore", statusText(difficulty, false));
-      await fetchScores(friend.idx, difficulty, scoreList);
+      await fetchFriendScores(friend.idx, difficulty, scoreList);
       send("appendPlayerScore", statusText(difficulty, true));
     }
     send("replacePlayerScore", "");

@@ -16,7 +16,7 @@ export const RankDistributionDataRow: React.FC<Props> = React.memo((props: Props
   let totalCount = 0;
   for (const key of props.columns) {
     const count = props.rankDist.get(key);
-    values.push(count);
+    values.push(count || "-");
     totalCount += count;
   }
   if (props.showTotal) {

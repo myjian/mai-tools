@@ -30,6 +30,7 @@ async function buildSongDb() {
     }
     songs.push([n, di, lv].join("\t"));
   }
+  return songs;
 }
 
 async function main() {

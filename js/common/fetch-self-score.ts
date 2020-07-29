@@ -1,13 +1,12 @@
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
 import {fetchPage} from './util';
 
-const SCORE_URLS = new Map([
+export const SELF_SCORE_URLS = new Map([
   ["Re:MASTER", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=4"],
   ["MASTER", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=3"],
   ["EXPERT", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=2"],
   ["ADVANCED", "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"],
 ]);
-export const SELF_DIFFICULTIES = SCORE_URLS.keys();
 
 function getAchievement(row: HTMLElement) {
   const ach = row.querySelector(".music_score_block.w_120") as HTMLElement;
@@ -38,7 +37,7 @@ function processRow(row: HTMLElement, difficulty: string, state: {genre: string;
 }
 
 export async function fetchScores(difficulty: string, scoreList: string[]) {
-  const url = SCORE_URLS.get(difficulty);
+  const url = SELF_SCORE_URLS.get(difficulty);
   if (!url) {
     return;
   }

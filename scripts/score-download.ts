@@ -1,4 +1,4 @@
-import {fetchScores, SELF_DIFFICULTIES} from '../js/common/fetch-self-score';
+import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
 import {handleError} from '../js/common/util';
@@ -67,7 +67,7 @@ import {handleError} from '../js/common/util';
       return;
     }
     const scoreList: string[] = [];
-    for (const difficulty of SELF_DIFFICULTIES) {
+    for (const difficulty of SELF_SCORE_URLS.keys()) {
       onLog(statusText(difficulty, false));
       await fetchScores(difficulty, scoreList);
       onLog(statusText(difficulty, true));

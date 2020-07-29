@@ -1,7 +1,7 @@
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
 import {fetchPage} from './util';
 
-const SCORE_URLS = new Map([
+export const FRIEND_SCORE_URLS = new Map([
   [
     "Re:MASTER",
     "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=4&idx=",
@@ -10,11 +10,10 @@ const SCORE_URLS = new Map([
   ["EXPERT", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=2&idx="],
   ["ADVANCED", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=1&idx="],
 ]);
-export const FRIEND_DIFFICULTIES = SCORE_URLS.keys();
 
 function getAchievement(row: HTMLElement): string | null {
   const ach = row.querySelector("td.w_120.f_b:last-child") as HTMLElement;
-  const achText = ach && ach.innerText;
+  const achText = ach && ach.innerText.trim();
   return achText !== "0" ? achText : null;
 }
 
@@ -45,8 +44,8 @@ function processRow(
   }
 }
 
-export async function fetchScores(friendIdx: string, difficulty: string, scoreList: string[]) {
-  let url = SCORE_URLS.get(difficulty);
+export async function fetchFriendScores(friendIdx: string, difficulty: string, scoreList: string[]) {
+  let url = FRIEND_SCORE_URLS.get(difficulty);
   if (!url) {
     return;
   }

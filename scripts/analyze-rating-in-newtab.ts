@@ -1,5 +1,5 @@
 import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
-import {fetchScores, SELF_DIFFICULTIES} from '../js/common/fetch-self-score';
+import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
 import {
@@ -28,7 +28,7 @@ import {
     }
     // Fetch all scores
     const scoreList: string[] = [];
-    for (const difficulty of SELF_DIFFICULTIES) {
+    for (const difficulty of SELF_SCORE_URLS.keys()) {
       send("appendPlayerScore", statusText(difficulty, false));
       await fetchScores(difficulty, scoreList);
       send("appendPlayerScore", statusText(difficulty, true));

@@ -25,7 +25,7 @@ export class RankDistributionRow extends React.PureComponent<Props> {
         {values.map((v, index) => {
           const useTh = isHeading || index === 0;
           let className = baseCellClassname;
-          if (index < perColumnClassnames.length) {
+          if (perColumnClassnames[index]) {
             className += " " + perColumnClassnames[index];
           }
           if (showTotal && index === values.length - 1) {
