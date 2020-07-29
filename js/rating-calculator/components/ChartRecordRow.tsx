@@ -7,7 +7,7 @@ const SCORE_RECORD_CELL_CLASSNAMES = [
   "orderCell",
   "songTitleCell",
   "difficultyCell",
-  "innerLvCell",
+  "levelCell",
   ACHV_CELL_CLASSNAME,
   "rankFactorCell",
   "ratingCell",

@@ -1,5 +1,5 @@
 import {DIFFICULTIES} from '../common/constants';
-import {getSongProperties, SongProperties} from '../common/inner-lv-util';
+import {getSongProperties, SongProperties} from '../common/song-props';
 import {getSongNickname} from '../common/song-util';
 import {compareSongsByRating} from './record-comparator';
 import {ChartRecord, ChartRecordWithRating, RatingData} from './types';

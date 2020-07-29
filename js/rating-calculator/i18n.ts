@@ -3,7 +3,7 @@ import {LANG} from '../common/lang';
 const UIStringByLang = {
   en: {
     gameVer: "Game version:",
-    innerLvHeading: "Chart Inner Level Data",
+    internalLvHeading: "Chart Internal Level Data",
     manualLv: "Manual input",
     autoLv: "Automatic",
     scoreInputHeading: "Player Score",
@@ -52,7 +52,7 @@ const UIStringByLang = {
   },
   zh: {
     gameVer: "遊戲版本：",
-    innerLvHeading: "譜面定數",
+    internalLvHeading: "譜面定數",
     manualLv: "手動輸入",
     autoLv: "自動代入",
     scoreInputHeading: "玩家成績輸入",

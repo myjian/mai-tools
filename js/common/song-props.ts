@@ -4,7 +4,7 @@ export interface SongProperties {
   dx: number;
   lv: ReadonlyArray<number>;
   debut: number;
-  songName: string;
+  name: string;
   nickname: string;
 }
 
@@ -26,7 +26,7 @@ function fixMismatchSongName(name: string) {
   return name;
 }
 
-function parseInnerLevelLine(line: string): SongProperties {
+function parseSongProperties(line: string): SongProperties {
   const dxMatch = line.match(DX_REGEX);
   const lvMatch = line.match(LV_REGEX);
   const debutVerMatch = line.match(VERSION_REGEX);
@@ -37,25 +37,25 @@ function parseInnerLevelLine(line: string): SongProperties {
       dx: parseInt(dxMatch[1]),
       lv: JSON.parse(lvMatch[1]),
       debut: parseInt(debutVerMatch[1]),
-      songName: fixMismatchSongName(songNameMatch[1]),
+      name: fixMismatchSongName(songNameMatch[1]),
       nickname: nicknameMatch && nicknameMatch[1],
     };
   }
 }
 
-export function buildSongPropertyMap(text: string): Map<string, SongProperties[]> {
+export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
     const lines = text.split("\n");
     // songPropsByName: song name -> array of song properties
     // most arrays have only 1 entry, but some arrays have more than 1 entries
     // because song name duplicates or it has both DX and Standard charts.
     const songPropsByName = new Map<string, SongProperties[]>();
     for (const line of lines) {
-      const innerLvData = parseInnerLevelLine(line);
-      if (innerLvData) {
-        if (!songPropsByName.has(innerLvData.songName)) {
-          songPropsByName.set(innerLvData.songName, []);
+      const songProps = parseSongProperties(line);
+      if (songProps) {
+        if (!songPropsByName.has(songProps.name)) {
+          songPropsByName.set(songProps.name, []);
         }
-        songPropsByName.get(innerLvData.songName).push(innerLvData);
+        songPropsByName.get(songProps.name).push(songProps);
       }
     }
     return songPropsByName;

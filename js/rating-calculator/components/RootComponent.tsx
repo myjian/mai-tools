@@ -1,14 +1,14 @@
 import React from 'react';
 
 import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from '../../common/constants';
-import {buildSongPropertyMap, SongProperties} from '../../common/inner-lv-util';
 import {iWantSomeMagic} from '../../common/magic';
+import {buildSongPropsMap, SongProperties} from '../../common/song-props';
 import {readFromCache, writeToCache} from '../cache';
 import {UIString} from '../i18n';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {RatingData} from '../types';
-import {InnerLvInput} from './InnerLvInput';
+import {InternalLvInput} from './InternalLvInput';
 import {MultiplierTable} from './MultiplierTable';
 import {OtherTools} from './OtherTools';
 import {PageFooter} from './PageFooter';
@@ -19,7 +19,7 @@ import {VersionSelect} from './VersionSelect';
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
 
-function getInnerLvCacheKey(isDxPlus: boolean) {
+function getInternalLvCacheKey(isDxPlus: boolean) {
   return isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
 }
 
@@ -37,21 +37,21 @@ function readSongProperties(
   return new Promise((resolve) => {
     // Read from user input
     if (inputText.length > 0) {
-      resolve(buildSongPropertyMap(inputText));
+      resolve(buildSongPropsMap(inputText));
       return;
     }
     // Read from cache
-    const cacheKey = getInnerLvCacheKey(isDxPlus);
-    const cachedInnerLv = readFromCache(cacheKey);
-    if (cachedInnerLv) {
-      resolve(buildSongPropertyMap(cachedInnerLv));
+    const cacheKey = getInternalLvCacheKey(isDxPlus);
+    const cachedInternalLv = readFromCache(cacheKey);
+    if (cachedInternalLv) {
+      resolve(buildSongPropsMap(cachedInternalLv));
       return;
     }
     // Read from Internet
     console.log("Magic happening...");
     iWantSomeMagic(isDxPlus).then((responseText) => {
       writeToCache(cacheKey, responseText);
-      resolve(buildSongPropertyMap(responseText));
+      resolve(buildSongPropsMap(responseText));
     });
   });
 }
@@ -77,7 +77,7 @@ interface State {
 }
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
-  private lvInput = React.createRef<InnerLvInput>();
+  private lvInput = React.createRef<InternalLvInput>();
   private scoreInput = React.createRef<ScoreInput>();
   private referrer = document.referrer && new URL(document.referrer).origin;
 
@@ -106,7 +106,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     return (
       <React.Fragment>
         <VersionSelect isDxPlus={isDxPlus} handleVersionSelect={this.selectVersion} />
-        <InnerLvInput ref={this.lvInput} />
+        <InternalLvInput ref={this.lvInput} />
         <ScoreInput ref={this.scoreInput} />
         <div className="actionArea">
           <button className="analyzeRatingBtn" onClick={this.analyzeRating}>
@@ -137,11 +137,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
     if (evt) {
       evt.preventDefault();
     }
-    const innerLvText = this.lvInput.current ? this.lvInput.current.getInput() : "";
+    const songPropsText = this.lvInput.current ? this.lvInput.current.getInput() : "";
     const scoreText = this.scoreInput.current ? this.scoreInput.current.getInput() : "";
     const {isDxPlus} = this.state;
     console.log("isDxPlus", isDxPlus);
-    const songPropsByName = await readSongProperties(isDxPlus, innerLvText);
+    const songPropsByName = await readSongProperties(isDxPlus, songPropsText);
     console.log("Song properties:", songPropsByName);
     const playerScores = await readPlayerScoreFromText(scoreText, isDxPlus);
     console.log("Player scores:", playerScores);

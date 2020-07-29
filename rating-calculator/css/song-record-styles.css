@@ -97,7 +97,7 @@
   .difficultyCell {
     width: 110px;
   }
-  .innerLvCell {
+  .levelCell {
     width: 70px;
   }
   .achievementCell {
@@ -118,7 +118,7 @@ td.achievementCell,
 }
 
 td.difficultyCell,
-td.innerLvCell,
+td.levelCell,
 td.ratingCell,
 .candidateTable .rankFactorCell,
 .candidateTable .ratingCell {

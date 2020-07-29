@@ -6,7 +6,7 @@ interface State {
   showTextarea: boolean;
 }
 
-export class InnerLvInput extends React.PureComponent<{}, State> {
+export class InternalLvInput extends React.PureComponent<{}, State> {
   state: State = {showTextarea: false};
 
   private textareaRef = React.createRef<HTMLTextAreaElement>();
@@ -15,7 +15,7 @@ export class InnerLvInput extends React.PureComponent<{}, State> {
     const {showTextarea} = this.state;
     return (
       <div className="w90">
-        <h2 className="lvInputHeading">{UIString.innerLvHeading}</h2>
+        <h2 className="lvInputHeading">{UIString.internalLvHeading}</h2>
         <form>
           <label className="lvFormLabel">
             <input

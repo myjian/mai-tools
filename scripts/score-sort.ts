@@ -1,8 +1,8 @@
 import {DIFFICULTIES, DX_PLUS_GAME_VERSION} from '../js/common/constants';
 import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
-import {buildSongPropertyMap, getSongProperties, SongProperties} from '../js/common/inner-lv-util';
 import {getDefaultLevel} from '../js/common/level-helper';
 import {iWantSomeMagic} from '../js/common/magic';
+import {buildSongPropsMap, getSongProperties, SongProperties} from '../js/common/song-props';
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
 import {fetchGameVersion} from '../js/common/util';
 
@@ -427,9 +427,9 @@ type Cache = {
     return div;
   }
 
-  async function fetchAndAddInnerLvSort() {
+  async function fetchAndAddInternalLvSort() {
     const isDxPlus = parseInt(await fetchGameVersion(d.body)) >= DX_PLUS_GAME_VERSION;
-    const songProps = buildSongPropertyMap(await iWantSomeMagic(isDxPlus));
+    const songProps = buildSongPropsMap(await iWantSomeMagic(isDxPlus));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const song = getSongName(row);
@@ -467,6 +467,6 @@ type Cache = {
   const firstScrewBlock = d.body.querySelector(".main_wrapper.t_c .screw_block");
   if (firstScrewBlock) {
     firstScrewBlock.insertAdjacentElement("beforebegin", createSortOptions());
-    fetchAndAddInnerLvSort();
+    fetchAndAddInternalLvSort();
   }
 })(document);
