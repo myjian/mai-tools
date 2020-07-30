@@ -20,7 +20,7 @@ const COLUMNS: ReadonlyArray<ColumnType> = [
   ColumnType.DIFFICULTY,
   ColumnType.LEVEL,
   ColumnType.ACHIEVEMENT,
-  ColumnType.RANK_FACTOR,
+  ColumnType.RANK,
   ColumnType.RATING,
 ];
 
@@ -32,7 +32,7 @@ const COMPARATOR: Map<
   [ColumnType.DIFFICULTY, compareSongsByDifficulty],
   [ColumnType.LEVEL, compareSongsByLevel],
   [ColumnType.ACHIEVEMENT, compareSongsByAchv],
-  [ColumnType.RANK_FACTOR, compareSongsByAchv],
+  [ColumnType.RANK, compareSongsByAchv],
   [ColumnType.RATING, compareSongsByRating],
 ]);
 

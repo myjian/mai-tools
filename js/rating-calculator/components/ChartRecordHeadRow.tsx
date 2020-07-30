@@ -10,7 +10,7 @@ const COLUMN_TITLE: {[c in ColumnType]: string} = {
   [ColumnType.DIFFICULTY]: UIString.difficulty,
   [ColumnType.LEVEL]: UIString.level,
   [ColumnType.ACHIEVEMENT]: UIString.achievementAbbr,
-  [ColumnType.RANK_FACTOR]: UIString.rankFactor,
+  [ColumnType.RANK]: UIString.rank,
   [ColumnType.RATING]: UIString.rating,
   [ColumnType.NEXT_RANK]: UIString.nextGoal,
   [ColumnType.NEXT_RATING]: UIString.nextRating,

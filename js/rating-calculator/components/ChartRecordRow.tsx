@@ -9,7 +9,7 @@ const SCORE_RECORD_CELL_CLASSNAMES = [
   "difficultyCell",
   "levelCell",
   ACHV_CELL_CLASSNAME,
-  "rankFactorCell",
+  "rankCell",
   "ratingCell",
 ];
 

@@ -33,7 +33,7 @@ export const enum ColumnType {
   DIFFICULTY,
   LEVEL,
   ACHIEVEMENT,
-  RANK_FACTOR,
+  RANK,
   NEXT_RANK,
   RATING,
   NEXT_RATING,

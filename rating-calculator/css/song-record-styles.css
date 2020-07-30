@@ -103,7 +103,7 @@
   .achievementCell {
     width: 110px;
   }
-  .rankFactorCell {
+  .rankCell {
     width: 85px;
   }
   .ratingCell {
@@ -119,7 +119,7 @@ td.achievementCell {
 td.difficultyCell,
 td.levelCell,
 td.ratingCell,
-.rankFactorCell,
+.rankCell,
 .candidateTable .ratingCell {
   text-align: center;
 }

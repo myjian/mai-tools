@@ -25,7 +25,7 @@ export const ScoreDataRow: React.FC<Props> = React.memo((props) => {
         return record.levelIsEstimate ? "*" + lvText : lvText;
       case ColumnType.ACHIEVEMENT:
         return record.achievement.toFixed(4) + "%";
-      case ColumnType.RANK_FACTOR:
+      case ColumnType.RANK:
         return getRankTitle(record.achievement);
       case ColumnType.NEXT_RANK:
         return record.nextRanks.keys().next().value;
