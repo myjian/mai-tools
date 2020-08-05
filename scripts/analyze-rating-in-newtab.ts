@@ -34,9 +34,7 @@ import {
       send("appendPlayerScore", statusText(difficulty, true));
     }
     send("replacePlayerScore", "");
-    for (let i = 0; i < scoreList.length; i += 50) {
-      send("appendPlayerScore", scoreList.slice(i, i + 50).join("\n"));
-    }
+    send("appendPlayerScore", scoreList.join("\n"));
     send("calculateRating", "");
   }
 
