@@ -3,16 +3,16 @@ import React from 'react';
 import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
 import {ChartRecordWithRating, ColumnType} from '../types';
-import {ScoreRow} from './ChartRecordRow';
+import {ChartRecordRow} from './ChartRecordRow';
 
 interface Props {
   record: ChartRecordWithRating;
   columns: ReadonlyArray<ColumnType>;
   index: number;
 }
-export const ScoreDataRow: React.FC<Props> = React.memo((props) => {
+export const ChartRecordDataRow: React.FC<Props> = React.memo((props) => {
   const {record, index, columns} = props;
-  const columnValues = columns.map<string | number>(c => {
+  const columnValues = columns.map<string | number>((c) => {
     switch (c) {
       case ColumnType.NO:
         return index;
@@ -28,14 +28,21 @@ export const ScoreDataRow: React.FC<Props> = React.memo((props) => {
       case ColumnType.RANK:
         return getRankTitle(record.achievement);
       case ColumnType.NEXT_RANK:
-        return record.nextRanks.keys().next().value;
+        return Array.from(record.nextRanks.values())
+          .map((r) => r.rank.th + "%")
+          .join("\n");
       case ColumnType.NEXT_RATING:
-        return "+" + record.nextRanks.values().next().value.minRt.toFixed(0);
+        return Array.from(record.nextRanks.values())
+          .map((r) => "+" + r.minRt.toFixed(0))
+          .join("\n");
       case ColumnType.RATING:
         return Math.floor(record.rating).toString();
     }
-  })
+  });
   return (
-    <ScoreRow className={DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)} columnValues={columnValues} />
+    <ChartRecordRow
+      className={DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)}
+      columnValues={columnValues}
+    />
   );
 });

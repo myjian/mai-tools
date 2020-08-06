@@ -53,7 +53,7 @@ export class RecommendedLevels extends React.PureComponent<Props> {
               {ranks.map((r) => (
                 <th>
                   <span className="recLvRankTitle">{r.title}</span>
-                  <span className="recLvRankAchv">{r.th}</span>
+                  <span className="recLvRankAchv">{r.th}%</span>
                 </th>
               ))}
               <th>{UIString.projectedRating}</th>

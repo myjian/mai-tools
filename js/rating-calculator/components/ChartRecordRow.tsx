@@ -19,7 +19,7 @@ interface Props {
   isHeading?: boolean;
   onClickCell?: (index: number) => void;
 }
-export class ScoreRow extends React.PureComponent<Props> {
+export class ChartRecordRow extends React.PureComponent<Props> {
   render() {
     const {columnValues, isHeading, onClickCell} = this.props;
     let className = SCORE_RECORD_ROW_CLASSNAME;

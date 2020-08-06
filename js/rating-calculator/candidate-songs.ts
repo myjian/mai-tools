@@ -18,12 +18,12 @@ function getNextRating(record: ChartRecordWithRating, isDxPlus: boolean, ratingT
     if (rank.title === rankDefs[i + 1].title) {
       continue;
     }
-    const [minRt, maxRt] = calculateRatingRange(record.level, rank, isDxPlus);
-    if (maxRt > ratingThreshold) {
-      ratingByRank.set(rank.title, {
-        minRt: Math.max(ratingThreshold + 1, minRt) - ratingThreshold,
-        rank,
-      });
+    const [minRt] = calculateRatingRange(record.level, rank, isDxPlus);
+    if (minRt > ratingThreshold) {
+      ratingByRank.set(rank.title, {minRt: minRt - ratingThreshold, rank});
+      if (ratingByRank.size >= 2) {
+        break;
+      }
     }
   }
   return ratingByRank;

@@ -46,32 +46,6 @@ label {
   padding-top: 12px;
 }
 
-.totalRatingRow {
-  font-size: 20px;
-  background-color: #111;
-  display: inline-block;
-  color: #eee;
-  padding: 5px 20px;
-  margin-bottom: 6px;
-}
-
-.ratingOverview {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.ratingOverviewTable {
-  border-style: none;
-}
-
-.columnColumn {
-  padding-right: 4px;
-}
-
-.subRatingColumn {
-  text-align: right;
-}
-
 .responsiveFlexBox {
   display: flex;
   flex-direction: column;
@@ -108,7 +82,6 @@ label {
   overflow-y: hidden;
   transition: max-height 0.3s;
 }
-
 
 @media only screen and (min-width: 551px) {
   body {

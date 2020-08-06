@@ -16,5 +16,5 @@ Run
 Development
 ----
 
-    npm run-script build -- --watch
+    npm run-script watch
     npm start

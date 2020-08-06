@@ -85,7 +85,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(document.location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
-    let isDxPlus = dxVersionQueryParam === DX_PLUS_GAME_VERSION.toString();
+    let isDxPlus = dxVersionQueryParam ? dxVersionQueryParam === DX_GAME_VERSION.toString() : true;
     let showMultiplierTable = queryParams.get("quickLookup") !== "hide";
 
     const friendIdx = queryParams.get("friendIdx");

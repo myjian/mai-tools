@@ -30,7 +30,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
       heightUnit: 8,
       maxRating: DX_MAX_RATING,
       topPadding: 70,
-      isDxPlus: false,
+      isDxPlus: true,
       axisLabelStep: 5,
     };
   }

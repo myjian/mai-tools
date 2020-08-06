@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {ChartRecordWithRating, ColumnType} from '../types';
-import {ScoreDataRow} from './ChartRecordDataRow';
-import {ScoreHeadRow} from './ChartRecordHeadRow';
+import {ChartRecordDataRow} from './ChartRecordDataRow';
+import {ChartRecordHeadRow} from './ChartRecordHeadRow';
 
 interface Props {
   columns: ReadonlyArray<ColumnType>;
@@ -18,12 +18,12 @@ export class ChartRecordsTable extends React.PureComponent<Props> {
     return (
       <table className={tableClassname}>
         <thead>
-          <ScoreHeadRow sortBy={sortBy} columns={columns} />
+          <ChartRecordHeadRow sortBy={sortBy} columns={columns} />
         </thead>
         <tbody>
           {records.map((r, index) => {
             index = r.order || index + 1;
-            return <ScoreDataRow record={r} columns={columns} index={index} />;
+            return <ChartRecordDataRow record={r} columns={columns} index={index} />;
           })}
         </tbody>
       </table>

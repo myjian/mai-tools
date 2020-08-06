@@ -47,7 +47,8 @@ const UIStringByLang = {
     recommendedLevels: "Recommended levels",
     tilde: "~",
     projectedRating: "Potential Rating",
-    levelComment: "Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+."
+    levelComment: "Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+.",
+    average: "Average",
   },
   zh: {
     gameVer: "遊戲版本：",
@@ -95,7 +96,8 @@ const UIStringByLang = {
     recommendedLevels: "刷分目標",
     tilde: "～",
     projectedRating: "可獲得 R 值",
-    levelComment: "註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。"
+    levelComment: "註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。",
+    average: "平均",
   },
 };
 

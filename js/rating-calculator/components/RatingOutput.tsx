@@ -76,7 +76,9 @@ export class RatingOutput extends React.PureComponent<Props, State> {
         </h2>
         <RatingOverview
           newChartsRating={newChartsRating}
+          newTopChartsCount={newTopChartsCount}
           oldChartsRating={oldChartsRating}
+          oldTopChartsCount={oldTopChartsCount}
           isDxPlus={isDxPlus}
           playerGradeIndex={playerGradeIndex}
         />

@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "build": "webpack",
+    "watch": "webpack --watch",
     "start": "serve -l 8080"
   },
   "repository": {

@@ -41,13 +41,16 @@ interface Props {
   records: ReadonlyArray<ChartRecordWithRating>;
   hidden?: boolean;
 }
+
 interface State {
   showAll: boolean;
   sortBy?: ColumnType;
   reverse?: boolean;
 }
+
 export class CandidateChartRecords extends React.PureComponent<Props, State> {
   state: State = {showAll: false};
+
   render() {
     const {hidden, records: allRecords} = this.props;
     const {showAll, sortBy, reverse} = this.state;
