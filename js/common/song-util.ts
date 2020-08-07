@@ -8,7 +8,7 @@ export function getSongNickname(name: string, genre: string, isDxChart?: boolean
   if (name === "Link") {
     name = genre.includes("niconico") ? "Link(nico)" : "Link(org)";
   }
-  return isDxChart ? name + "[dx]" : name;
+  return isDxChart ? name + " [DX]" : name;
 }
 
 let cachedLinkIdx: {nico?: string; original?: string} = {};

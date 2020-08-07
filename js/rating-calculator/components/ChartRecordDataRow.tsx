@@ -2,22 +2,36 @@ import React from 'react';
 
 import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
+import {SongProperties} from '../../common/song-props';
+import {getSongNickname} from '../../common/song-util';
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordRow} from './ChartRecordRow';
 
+function getSongNameDisplay(
+  record: ChartRecordWithRating,
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>
+): string {
+  const songPropsArray = songPropsByName.get(record.songName);
+  if (songPropsArray.length > 1) {
+    return getSongNickname(record.songName, record.genre, record.chartType === "DX");
+  }
+  return record.songName;
+}
+
 interface Props {
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   record: ChartRecordWithRating;
   columns: ReadonlyArray<ColumnType>;
   index: number;
 }
 export const ChartRecordDataRow: React.FC<Props> = React.memo((props) => {
-  const {record, index, columns} = props;
+  const {record, index, columns, songPropsByName} = props;
   const columnValues = columns.map<string | number>((c) => {
     switch (c) {
       case ColumnType.NO:
         return index;
       case ColumnType.SONG_TITLE:
-        return record.songName;
+        return getSongNameDisplay(record, songPropsByName);
       case ColumnType.DIFFICULTY:
         return record.difficulty;
       case ColumnType.LEVEL:

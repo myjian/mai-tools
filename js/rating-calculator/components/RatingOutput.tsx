@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {SongProperties} from '../../common/song-props';
 import {getCandidateSongs} from '../candidate-songs';
 import {UIString} from '../i18n';
 import {RatingData} from '../types';
@@ -14,6 +15,7 @@ const OLD_CANDIDATE_SONGS_POOL_SIZE = 60;
 
 interface Props {
   isDxPlus: boolean;
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   playerGradeIndex: number;
   playerName: string | null;
@@ -41,7 +43,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const {isDxPlus, playerName, playerGradeIndex} = this.props;
+    const {isDxPlus, playerName, playerGradeIndex, songPropsByName} = this.props;
     const {
       newChartRecords,
       newChartsRating,
@@ -96,6 +98,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             onClick={this.toggleNewTopChartsDisplay}
           />
           <TopChartRecords
+            songPropsByName={songPropsByName}
             records={newChartRecords}
             limit={newTopChartsCount}
             hidden={hideNewTopSongs}
@@ -108,6 +111,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             onClick={this.toggleOldTopChartsDisplay}
           />
           <TopChartRecords
+            songPropsByName={songPropsByName}
             records={oldChartRecords}
             limit={oldTopChartsCount}
             hidden={hideOldTopSongs}
@@ -121,7 +125,11 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             onClick={this.toggleNewCandidateChartsDisplay}
             isCandidateList
           />
-          <CandidateChartRecords records={newChartCandidates} hidden={hideNewCandidateSongs} />
+          <CandidateChartRecords
+            songPropsByName={songPropsByName}
+            records={newChartCandidates}
+            hidden={hideNewCandidateSongs}
+          />
         </div>
         <div className="songRecordsContainer">
           <ChartRecordSectionTitle
@@ -130,7 +138,11 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             onClick={this.toggleOldCandidateChartsDisplay}
             isCandidateList
           />
-          <CandidateChartRecords records={oldChartCandidates} hidden={hideOldCandidateSongs} />
+          <CandidateChartRecords
+            songPropsByName={songPropsByName}
+            records={oldChartCandidates}
+            hidden={hideOldCandidateSongs}
+          />
         </div>
         <hr className="sectionSep" />
       </div>

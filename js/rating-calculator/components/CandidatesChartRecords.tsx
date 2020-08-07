@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {SongProperties} from '../../common/song-props';
 import {UIString} from '../i18n';
 import {
   compareSongsByAchv,
@@ -38,6 +39,7 @@ const COMPARATOR: Map<
 ]);
 
 interface Props {
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   records: ReadonlyArray<ChartRecordWithRating>;
   hidden?: boolean;
 }
@@ -52,7 +54,7 @@ export class CandidateChartRecords extends React.PureComponent<Props, State> {
   state: State = {showAll: false};
 
   render() {
-    const {hidden, records: allRecords} = this.props;
+    const {hidden, records: allRecords, songPropsByName} = this.props;
     const {showAll, sortBy, reverse} = this.state;
     const hasMore = allRecords.length > CANDIDATE_SONGS_LIMIT;
     let records: ChartRecordWithRating[];
@@ -71,6 +73,7 @@ export class CandidateChartRecords extends React.PureComponent<Props, State> {
     return (
       <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
         <ChartRecordsTable
+          songPropsByName={songPropsByName}
           tableClassname="candidateTable"
           records={records}
           sortBy={this.handleSortBy}

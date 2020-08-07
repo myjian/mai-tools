@@ -74,6 +74,7 @@ interface State {
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
+  songPropsByName?: Map<string, ReadonlyArray<SongProperties>>;
 }
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
@@ -102,7 +103,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {isDxPlus, showMultiplierTable, playerName, ratingData} = this.state;
+    const {isDxPlus, showMultiplierTable, playerName, ratingData, songPropsByName} = this.state;
     return (
       <React.Fragment>
         <VersionSelect isDxPlus={isDxPlus} handleVersionSelect={this.selectVersion} />
@@ -116,6 +117,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         <hr className="sectionSep" />
         {ratingData && (
           <RatingOutput
+            songPropsByName={songPropsByName}
             isDxPlus={isDxPlus}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
@@ -152,7 +154,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const gameVersion = isDxPlus ? DX_PLUS_GAME_VERSION : DX_GAME_VERSION;
     const ratingData = await analyzePlayerRating(songPropsByName, playerScores, gameVersion);
     console.log("Rating Data:", ratingData);
-    this.setState({ratingData, showMultiplierTable: true});
+    this.setState({ratingData, showMultiplierTable: true, songPropsByName});
   };
 
   private postMessageToOpener(data: string | {[key: string]: string}) {
