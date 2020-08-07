@@ -75,14 +75,14 @@ export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
   // most arrays have only 1 entry, but some arrays have more than 1 entries
   // because song name duplicates or it has both DX and Standard charts.
   const songPropsByName = new Map<string, SongProperties[]>();
+  for (const songProps of INTL_VER_SONG_PROPS) {
+    insertOrUpdateSongProps(songPropsByName, songProps);
+  }
   for (const line of lines) {
     const songProps = parseSongProperties(line);
     if (songProps) {
       insertOrUpdateSongProps(songPropsByName, songProps);
     }
-  }
-  for (const songProps of INTL_VER_SONG_PROPS) {
-    insertOrUpdateSongProps(songPropsByName, songProps);
   }
   return songPropsByName;
 }
