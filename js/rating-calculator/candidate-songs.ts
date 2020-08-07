@@ -31,16 +31,27 @@ function getNextRating(record: ChartRecordWithRating, isDxPlus: boolean, ratingT
 
 export function getCandidateSongs(
   records: ReadonlyArray<ChartRecordWithRating>,
-  startIndex: number,
+  topCount: number,
   isDxPlus: boolean,
   count: number
 ) {
   const candidates: ChartRecordWithRating[] = [];
-  if (startIndex <= 0) {
+  if (topCount <= 0) {
     return candidates;
   }
-  const minRating = Math.floor(records[startIndex - 1].rating);
-  for (let i = startIndex; i < records.length; i++) {
+  for (let i = 0; i < topCount; i++) {
+    const record = records[i];
+    if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
+      const ratingByRank = getNextRating(record, isDxPlus, Math.floor(record.rating));
+      if (!ratingByRank.size) {
+        continue;
+      }
+      record.nextRanks = ratingByRank;
+      candidates.push(record);
+    }
+  }
+  const minRating = Math.floor(records[topCount - 1].rating);
+  for (let i = topCount; i < records.length; i++) {
     const record = records[i];
     if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
       const ratingByRank = getNextRating(record, isDxPlus, minRating);
