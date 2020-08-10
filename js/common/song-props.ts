@@ -1,4 +1,3 @@
-import {DX_PLUS_GAME_VERSION} from './constants';
 import {getSongNickname} from './song-util';
 
 export interface SongProperties {
@@ -8,21 +7,6 @@ export interface SongProperties {
   name: string;
   nickname?: string;
 }
-
-const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
-  {
-    name: "コネクト",
-    lv: [-3, -6, 8.8, 11.3, 12.8],
-    debut: DX_PLUS_GAME_VERSION,
-    dx: 1,
-  },
-  {
-    name: "君の知らない物語",
-    lv: [-3, -6, 8.2, 12.0],
-    debut: DX_PLUS_GAME_VERSION,
-    dx: 1,
-  }
-]
 
 const DX_REGEX = /\bdx\s*:\s*([0-9]+)/;
 const LV_REGEX = /\blv\s*:\s*(\[.+?\])/;
@@ -52,7 +36,7 @@ function parseSongProperties(line: string): SongProperties {
   const nicknameMatch = line.match(SONGNICKNAME_REGEX);
   if (dxMatch && lvMatch && debutVerMatch && songNameMatch) {
     return {
-      dx: parseInt(dxMatch[1]) as (0 | 1),
+      dx: parseInt(dxMatch[1]) as 0 | 1,
       lv: JSON.parse(lvMatch[1]),
       debut: parseInt(debutVerMatch[1]),
       name: fixMismatchSongName(songNameMatch[1]),
@@ -75,9 +59,6 @@ export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
   // most arrays have only 1 entry, but some arrays have more than 1 entries
   // because song name duplicates or it has both DX and Standard charts.
   const songPropsByName = new Map<string, SongProperties[]>();
-  for (const songProps of INTL_VER_SONG_PROPS) {
-    insertOrUpdateSongProps(songPropsByName, songProps);
-  }
   for (const line of lines) {
     const songProps = parseSongProperties(line);
     if (songProps) {
@@ -109,10 +90,14 @@ export function getSongProperties(
         songPropsArray = songPropsArray.filter((d) => d.nickname === nickname);
       }
     }
-    if (songPropsArray.length === 1) {
+    if (songPropsArray.length) {
+      if (songPropsArray.length > 1) {
+        console.warn(`Found multiple song properties for ${songName} ${chartType}`);
+        console.warn(songPropsArray);
+      }
       return songPropsArray[0];
     }
   }
-  console.warn(`Could not find song properties for ${songName}`);
+  console.warn(`Could not find song properties for ${songName} ${chartType}`);
   return null;
 }

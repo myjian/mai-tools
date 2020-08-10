@@ -1,4 +1,4 @@
-const MAGIC_NUMBERS = [
+const MAGIC_SAUCE = [
   105,
   117,
   117,
@@ -69,20 +69,94 @@ const MAGIC_NUMBERS = [
   121,
   47,
   107,
-  116
+  116,
 ];
 
-const MAGIC_NUMBERS2 = [113, 109, 118, 116];
+const MAGIC_SAUCE_PLUS = [
+  105,
+  117,
+  117,
+  113,
+  116,
+  59,
+  48,
+  48,
+  104,
+  106,
+  116,
+  117,
+  47,
+  104,
+  106,
+  117,
+  105,
+  118,
+  99,
+  118,
+  116,
+  102,
+  115,
+  100,
+  112,
+  111,
+  117,
+  102,
+  111,
+  117,
+  47,
+  100,
+  112,
+  110,
+  48,
+  110,
+  122,
+  107,
+  106,
+  98,
+  111,
+  48,
+  100,
+  51,
+  52,
+  54,
+  98,
+  49,
+  50,
+  52,
+  49,
+  58,
+  57,
+  103,
+  56,
+  102,
+  101,
+  99,
+  100,
+  52,
+  98,
+  53,
+  55,
+  98,
+  54,
+  49,
+  53,
+  57,
+  98,
+  53,
+  100,
+  52,
+  58,
+  57,
+  48,
+  115,
+  98,
+  120,
+  48,
+];
 
 export async function iWantSomeMagic(isDxPlus: boolean): Promise<string> {
-  const lessMagic = MAGIC_NUMBERS.map(k => k - 1);
-  if (isDxPlus) {
-    lessMagic.splice(
-      lessMagic.length - 3,
-      0,
-      ...MAGIC_NUMBERS2.map(k => k - 1)
-    );
-  }
+  const sauce = isDxPlus ? MAGIC_SAUCE_PLUS : MAGIC_SAUCE;
+  const lessMagic = sauce.map((k) => k - 1);
   const res = await fetch(String.fromCharCode(...lessMagic));
   return await res.text();
 }

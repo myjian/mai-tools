@@ -1,6 +1,5 @@
 import {DIFFICULTIES} from '../common/constants';
 import {getSongProperties, SongProperties} from '../common/song-props';
-import {getSongNickname} from '../common/song-util';
 import {compareSongsByRating} from './record-comparator';
 import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 
@@ -11,7 +10,10 @@ const NUM_TOP_OLD_SONGS = 25;
  * Compute rating value based on the chart level and player achievement.
  * If we don't find the inner level for the chart, use its estimated level and move on.
  */
-export function analyzeSongRating(record: ChartRecord, songProps?: SongProperties): ChartRecordWithRating {
+export function analyzeSongRating(
+  record: ChartRecord,
+  songProps?: SongProperties
+): ChartRecordWithRating {
   if (songProps) {
     const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
     const lv = songProps.lv[lvIndex];
@@ -19,13 +21,6 @@ export function analyzeSongRating(record: ChartRecord, songProps?: SongPropertie
       record.levelIsEstimate = lv < 0;
       record.level = Math.abs(lv);
     }
-  }
-  if (record.levelIsEstimate) {
-    const debugName = (
-      getSongNickname(record.songName, record.genre, record.chartType === "DX")
-      + " - " + record.difficulty + " " + record.level
-    );
-    console.warn(`Missing inner lv data for ${debugName}`);
   }
   return {
     ...record,

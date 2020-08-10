@@ -14,7 +14,14 @@ interface Props {
 
 export class RatingOverview extends React.PureComponent<Props> {
   render() {
-    const {oldChartsRating, oldTopChartsCount, newChartsRating, newTopChartsCount, playerGradeIndex, isDxPlus} = this.props;
+    const {
+      oldChartsRating,
+      oldTopChartsCount,
+      newChartsRating,
+      newTopChartsCount,
+      playerGradeIndex,
+      isDxPlus,
+    } = this.props;
     let totalRating = newChartsRating + oldChartsRating;
     const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex, isDxPlus) : null;
     if (playerGrade) {
@@ -31,13 +38,19 @@ export class RatingOverview extends React.PureComponent<Props> {
               <td>{UIString.newChartsRating}</td>
               <td className="columnColumn">{UIString.column}</td>
               <td className="subRatingColumn">{newChartsRating}</td>
-              <td className="avgRatingColumn">({UIString.average}{UIString.column} {(newChartsRating/newTopChartsCount).toFixed(0)})</td>
+              <td className="avgRatingColumn">
+                ({UIString.average}
+                {UIString.column} {this.getAvg(newChartsRating, newTopChartsCount)})
+              </td>
             </tr>
             <tr>
               <td>{UIString.oldChartsRating}</td>
               <td>{UIString.column}</td>
               <td className="subRatingColumn">{oldChartsRating}</td>
-              <td className="avgRatingColumn">({UIString.average}{UIString.column} {(oldChartsRating/oldTopChartsCount).toFixed(0)})</td>
+              <td className="avgRatingColumn">
+                ({UIString.average}
+                {UIString.column} {this.getAvg(oldChartsRating, oldTopChartsCount)})
+              </td>
             </tr>
             {playerGrade && (
               <tr>
@@ -52,5 +65,9 @@ export class RatingOverview extends React.PureComponent<Props> {
         </table>
       </div>
     );
+  }
+
+  private getAvg(sum: number, count: number) {
+    return count ? (sum / count).toFixed(0) : 0;
   }
 }
