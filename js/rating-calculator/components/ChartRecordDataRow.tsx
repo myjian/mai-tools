@@ -12,7 +12,7 @@ function getSongNameDisplay(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>
 ): string {
   const songPropsArray = songPropsByName.get(record.songName);
-  if (songPropsArray.length > 1) {
+  if (songPropsArray && songPropsArray.length > 1) {
     return getSongNickname(record.songName, record.genre, record.chartType === "DX");
   }
   return record.songName;
