@@ -42,16 +42,12 @@ export async function analyzePlayerRating(
       record.genre,
       record.chartType
     );
-    let isOldChart = record.chartType === "STANDARD";
-    if (songProps) {
-      // can differentiate between DX & DX Plus
-      isOldChart = songProps.debut !== gameVersion;
-    }
+    const isNewChart = songProps ? songProps.debut === gameVersion : record.chartType === "DX";
     const recordWithRating = analyzeSongRating(record, songProps);
-    if (isOldChart) {
-      oldChartRecords.push(recordWithRating);
-    } else {
+    if (isNewChart) {
       newChartRecords.push(recordWithRating);
+    } else {
+      oldChartRecords.push(recordWithRating);
     }
   }
 
