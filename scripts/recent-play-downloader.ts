@@ -537,6 +537,11 @@ declare var domtoimage: any;
       css.addEventListener("load", () => {
         collectRecentPlays().then((plays) => {
           createOutputElement(plays, titleImg);
+        }).catch((e: Error) => {
+          const footer = document.getElementsByTagName("footer")[0];
+          const textarea = document.createElement("textarea");
+          footer.append(textarea);
+          textarea.value = e.message + "\n" + e.stack;
         });
       });
       document.head.append(css);
