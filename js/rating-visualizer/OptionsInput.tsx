@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface OptionsInputProps {
+  isDxPlus: boolean;
   onChangeDxPlus: (isPlus: boolean) => void;
   minLv: number | string;
   maxLv: number | string;
@@ -16,7 +17,7 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
   render() {
     const {
       minLv, maxLv, selectedLv, showZoomOutButton,
-      onZoomOut, onFocus, onBlur,
+      onZoomOut, onFocus, onBlur, isDxPlus,
     } = this.props;
     const lvDisplayed = selectedLv || `${minLv} - ${maxLv}`;
     return (
@@ -25,8 +26,8 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
           <label className="optionGroup">
             Game version:&nbsp;
             <select onChange={this.handleChangeVersion}>
-              <option value="dx">DX</option>
-              <option value="plus">DX+</option>
+              <option value="dx" selected={!isDxPlus}>DX</option>
+              <option value="plus" selected={isDxPlus}>DX+</option>
             </select>
           </label>
           <label className="optionGroup">

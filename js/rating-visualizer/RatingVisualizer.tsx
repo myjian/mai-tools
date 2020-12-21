@@ -52,6 +52,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     return (
       <div className="ratingVisualizer">
         <OptionsInput
+          isDxPlus={isDxPlus}
           onChangeDxPlus={this.handleDxPlusChange}
           onChangeUnit={this.handleChangeHeightUnit}
           onZoomOut={this.handleUnselectLv}

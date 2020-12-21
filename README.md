@@ -6,11 +6,11 @@ Build
 
     npm install
     npm run-script build
-    npm install -g serve
 
 Run
 ----
 
+    npm install -g serve
     npm start
 
 Development
