@@ -1,4 +1,4 @@
-import {DIFFICULTIES, DX_PLUS_GAME_VERSION} from '../js/common/constants';
+import {DIFFICULTIES} from '../js/common/constants';
 import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
 import {getDefaultLevel} from '../js/common/level-helper';
 import {iWantSomeMagic} from '../js/common/magic';
@@ -428,8 +428,8 @@ type Cache = {
   }
 
   async function fetchAndAddInternalLvSort() {
-    const isDxPlus = parseInt(await fetchGameVersion(d.body)) >= DX_PLUS_GAME_VERSION;
-    const songProps = buildSongPropsMap(await iWantSomeMagic(isDxPlus));
+    const gameVer = parseInt(await fetchGameVersion(d.body));
+    const songProps = buildSongPropsMap(await iWantSomeMagic(gameVer));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const song = getSongName(row);

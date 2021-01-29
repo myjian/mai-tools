@@ -27,21 +27,16 @@ const RankFactorRow: React.FC<RankFactorRowProps> = (props) => {
   );
 };
 
-interface Props {
-  isDxPlus: boolean;
-}
-
 interface State {
   minRankOption: string;
 }
 
-export class MultiplierTable extends React.PureComponent<Props, State> {
+export class MultiplierTable extends React.PureComponent<{}, State> {
   state: State = {minRankOption: MIN_RANK_OPTION};
 
   render() {
-    const {isDxPlus} = this.props;
     const {minRankOption} = this.state;
-    const rankDefs = getRankDefinitions(isDxPlus);
+    const rankDefs = getRankDefinitions();
     const stopIndex = rankDefs.findIndex((r) => r.title === minRankOption) + 1;
     return (
       <div className="quickLookup">

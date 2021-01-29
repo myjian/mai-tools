@@ -156,7 +156,7 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
           diff: 101 - achv,
         };
       }
-      const nextRankDef = getRankDefinitions(true)[getRankIndexByAchievement(achv, true) - 1];
+      const nextRankDef = getRankDefinitions()[getRankIndexByAchievement(achv) - 1];
       return {
         title: nextRankDef.title,
         diff: nextRankDef.th - achv,

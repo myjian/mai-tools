@@ -1,7 +1,7 @@
 import {getRankDefinitions, RankDef} from '../common/rank-functions';
 
-export function calculateRatingRange(lv: number, rank: RankDef, isDxPlus: boolean) {
-  const rankDefs = getRankDefinitions(isDxPlus);
+export function calculateRatingRange(lv: number, rank: RankDef) {
+  const rankDefs = getRankDefinitions();
   const idx = rankDefs.indexOf(rank);
   const maxAchv = idx >= 1 ? rankDefs[idx - 1].th - 0.0001: rank.th;
   const minRating = Math.floor(lv * rank.th * rank.factor / 100);

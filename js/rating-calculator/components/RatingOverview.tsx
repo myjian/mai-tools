@@ -9,7 +9,6 @@ interface Props {
   newChartsRating: number;
   newTopChartsCount: number;
   playerGradeIndex: number;
-  isDxPlus: boolean;
 }
 
 export class RatingOverview extends React.PureComponent<Props> {
@@ -20,10 +19,9 @@ export class RatingOverview extends React.PureComponent<Props> {
       newChartsRating,
       newTopChartsCount,
       playerGradeIndex,
-      isDxPlus,
     } = this.props;
     let totalRating = newChartsRating + oldChartsRating;
-    const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex, isDxPlus) : null;
+    const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex) : null;
     if (playerGrade) {
       totalRating += playerGrade.bonus;
     }

@@ -5,27 +5,23 @@ import {getRankDefinitions, RankDef} from '../../common/rank-functions';
 import {UIString} from '../i18n';
 
 const MIN_RANK = "SS";
-const DX_MAX_LV = 14;
-const DX_PLUS_MAX_LV = 15;
+const MAX_LV = 15;
 
 interface Props {
   oldChartsRating: number;
   oldTopChartsCount: number;
   newChartsRating: number;
   newTopChartsCount: number;
-  isDxPlus: boolean;
 }
 export class RecommendedLevels extends React.PureComponent<Props> {
   render() {
     const {
-      isDxPlus,
       newChartsRating,
       newTopChartsCount,
       oldChartsRating,
       oldTopChartsCount,
     } = this.props;
-    const maxLv = isDxPlus ? DX_PLUS_MAX_LV : DX_MAX_LV;
-    let ranks = getRankDefinitions(isDxPlus);
+    let ranks = getRankDefinitions();
     const minRankIdx = ranks.findIndex((r) => r.title === MIN_RANK);
     ranks = ranks
       .slice(0, minRankIdx + 1)
@@ -36,11 +32,11 @@ export class RecommendedLevels extends React.PureComponent<Props> {
       oldTopChartsCount > 0 ? Math.floor(oldChartsRating / oldTopChartsCount) : 0;
     const newLvs = ranks.map((r) => {
       const lv = this.calcRecommendedLv(avgNewChartRating, r);
-      return lv > maxLv ? "--" : lv.toFixed(1) + UIString.tilde;
+      return lv > MAX_LV ? "--" : lv.toFixed(1) + UIString.tilde;
     });
     const oldLvs = ranks.map((r) => {
       const lv = this.calcRecommendedLv(avgOldChartRating, r);
-      return lv > maxLv ? "--" : lv.toFixed(1) + UIString.tilde;
+      return lv > MAX_LV ? "--" : lv.toFixed(1) + UIString.tilde;
     });
     return (
       <div className="recLvSection">

@@ -14,18 +14,19 @@ const NEW_CANDIDATE_SONGS_POOL_SIZE = 40;
 const OLD_CANDIDATE_SONGS_POOL_SIZE = 60;
 
 interface Props {
-  isDxPlus: boolean;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   playerGradeIndex: number;
   playerName: string | null;
 }
+
 interface State {
   hideNewTopSongs: boolean;
   hideOldTopSongs: boolean;
   hideNewCandidateSongs: boolean;
   hideOldCandidateSongs: boolean;
 }
+
 export class RatingOutput extends React.PureComponent<Props, State> {
   private outputArea = React.createRef<HTMLDivElement>();
 
@@ -43,7 +44,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const {isDxPlus, playerName, playerGradeIndex, songPropsByName} = this.props;
+    const {playerName, playerGradeIndex, songPropsByName} = this.props;
     const {
       newChartRecords,
       newChartsRating,
@@ -61,13 +62,11 @@ export class RatingOutput extends React.PureComponent<Props, State> {
     const newChartCandidates = getCandidateSongs(
       newChartRecords,
       newTopChartsCount,
-      isDxPlus,
       NEW_CANDIDATE_SONGS_POOL_SIZE
     );
     const oldChartCandidates = getCandidateSongs(
       oldChartRecords,
       oldTopChartsCount,
-      isDxPlus,
       OLD_CANDIDATE_SONGS_POOL_SIZE
     );
     return (
@@ -81,11 +80,9 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           newTopChartsCount={newTopChartsCount}
           oldChartsRating={oldChartsRating}
           oldTopChartsCount={oldTopChartsCount}
-          isDxPlus={isDxPlus}
           playerGradeIndex={playerGradeIndex}
         />
         <RecommendedLevels
-          isDxPlus={isDxPlus}
           newChartsRating={newChartsRating}
           newTopChartsCount={newTopChartsCount}
           oldChartsRating={oldChartsRating}

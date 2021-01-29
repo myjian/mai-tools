@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DX_GAME_VERSION, DX_PLUS_GAME_VERSION} from '../../common/constants';
+import {DX_PLUS_GAME_VERSION, DX_SPLASH_GAME_VERSION} from '../../common/constants';
 import {iWantSomeMagic} from '../../common/magic';
 import {buildSongPropsMap, SongProperties} from '../../common/song-props';
 import {readFromCache, writeToCache} from '../cache';
@@ -18,9 +18,17 @@ import {VersionSelect} from './VersionSelect';
 
 const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
+const CACHE_KEY_DX_SPLASH_INNER_LEVEL = "dxSplashInnerLv";
 
-function getInternalLvCacheKey(isDxPlus: boolean) {
-  return isDxPlus ? CACHE_KEY_DX_PLUS_INNER_LEVEL : CACHE_KEY_DX_INNER_LEVEL;
+function getInternalLvCacheKey(gameVer: number) {
+  switch (gameVer) {
+    case DX_PLUS_GAME_VERSION:
+      return CACHE_KEY_DX_PLUS_INNER_LEVEL;
+    case DX_SPLASH_GAME_VERSION:
+      return CACHE_KEY_DX_SPLASH_INNER_LEVEL;
+    default:
+      return CACHE_KEY_DX_INNER_LEVEL;
+  }
 }
 
 function getDebugText(data: number | string) {
@@ -31,7 +39,7 @@ function getDebugText(data: number | string) {
 }
 
 function readSongProperties(
-  isDxPlus: boolean,
+  gameVer: number,
   inputText: string
 ): Promise<Map<string, SongProperties[]>> {
   return new Promise((resolve) => {
@@ -41,7 +49,7 @@ function readSongProperties(
       return;
     }
     // Read from cache
-    const cacheKey = getInternalLvCacheKey(isDxPlus);
+    const cacheKey = getInternalLvCacheKey(gameVer);
     const cachedInternalLv = readFromCache(cacheKey);
     if (cachedInternalLv) {
       resolve(buildSongPropsMap(cachedInternalLv));
@@ -49,18 +57,18 @@ function readSongProperties(
     }
     // Read from Internet
     console.log("Magic happening...");
-    iWantSomeMagic(isDxPlus).then((responseText) => {
+    iWantSomeMagic(gameVer).then((responseText) => {
       writeToCache(cacheKey, responseText);
       resolve(buildSongPropsMap(responseText));
     });
   });
 }
 
-async function readPlayerScoreFromText(text: string, isDxPlus: boolean) {
+async function readPlayerScoreFromText(text: string) {
   const lines = text.split("\n");
   const playerScores = [];
   for (const line of lines) {
-    const scoreRecord = parseScoreLine(line, isDxPlus);
+    const scoreRecord = parseScoreLine(line);
     if (scoreRecord) {
       playerScores.push(scoreRecord);
     }
@@ -69,13 +77,14 @@ async function readPlayerScoreFromText(text: string, isDxPlus: boolean) {
 }
 
 interface State {
-  isDxPlus: boolean;
+  gameVer: number;
   showMultiplierTable: boolean;
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
   songPropsByName?: Map<string, ReadonlyArray<SongProperties>>;
 }
+
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
   private lvInput = React.createRef<InternalLvInput>();
@@ -86,13 +95,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(document.location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
-    let isDxPlus = dxVersionQueryParam ? dxVersionQueryParam === DX_GAME_VERSION.toString() : true;
+    const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DX_PLUS_GAME_VERSION;
     let showMultiplierTable = queryParams.get("quickLookup") !== "hide";
 
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");
     this.state = {
-      isDxPlus,
+      gameVer,
       showMultiplierTable,
       friendIdx,
       playerName,
@@ -103,10 +112,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {isDxPlus, showMultiplierTable, playerName, ratingData, songPropsByName} = this.state;
+    const {gameVer, showMultiplierTable, playerName, ratingData, songPropsByName} = this.state;
     return (
       <React.Fragment>
-        <VersionSelect isDxPlus={isDxPlus} handleVersionSelect={this.selectVersion} />
+        <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
         <InternalLvInput ref={this.lvInput} />
         <ScoreInput ref={this.scoreInput} />
         <div className="actionArea">
@@ -118,21 +127,20 @@ export class RootComponent extends React.PureComponent<{}, State> {
         {ratingData && (
           <RatingOutput
             songPropsByName={songPropsByName}
-            isDxPlus={isDxPlus}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
             playerName={playerName}
           />
         )}
-        {showMultiplierTable && <MultiplierTable isDxPlus={isDxPlus} />}
+        {showMultiplierTable && <MultiplierTable />}
         <OtherTools />
         <PageFooter />
       </React.Fragment>
     );
   }
 
-  private selectVersion = (ver: number) => {
-    this.setState({isDxPlus: ver === DX_PLUS_GAME_VERSION}, this.analyzeRating);
+  private selectVersion = (gameVer: number) => {
+    this.setState({gameVer}, this.analyzeRating);
   };
 
   private analyzeRating = async (evt?: React.SyntheticEvent) => {
@@ -141,18 +149,17 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
     const songPropsText = this.lvInput.current ? this.lvInput.current.getInput() : "";
     const scoreText = this.scoreInput.current ? this.scoreInput.current.getInput() : "";
-    const {isDxPlus} = this.state;
-    console.log("isDxPlus", isDxPlus);
-    const songPropsByName = await readSongProperties(isDxPlus, songPropsText);
+    const {gameVer} = this.state;
+    console.log("gameVer", gameVer);
+    const songPropsByName = await readSongProperties(gameVer, songPropsText);
     console.log("Song properties:", songPropsByName);
-    const playerScores = await readPlayerScoreFromText(scoreText, isDxPlus);
+    const playerScores = await readPlayerScoreFromText(scoreText);
     console.log("Player scores:", playerScores);
     if (!playerScores.length) {
       this.setState({ratingData: undefined, showMultiplierTable: true});
       return;
     }
-    const gameVersion = isDxPlus ? DX_PLUS_GAME_VERSION : DX_GAME_VERSION;
-    const ratingData = await analyzePlayerRating(songPropsByName, playerScores, gameVersion);
+    const ratingData = await analyzePlayerRating(songPropsByName, playerScores, gameVer);
     console.log("Rating Data:", ratingData);
     this.setState({ratingData, showMultiplierTable: true, songPropsByName});
   };
@@ -176,8 +183,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
         switch (evt.data.action) {
           case "gameVersion":
             payloadAsInt = parseInt(evt.data.payload);
-            if (payloadAsInt >= DX_PLUS_GAME_VERSION) {
-              this.setState({isDxPlus: true});
+            if (payloadAsInt >= DX_PLUS_GAME_VERSION && payloadAsInt <= DX_SPLASH_GAME_VERSION) {
+              this.setState({gameVer: payloadAsInt});
             }
             break;
           case "playerGrade":

@@ -18,6 +18,12 @@ function fixMismatchSongName(name: string) {
   if (name === "D✪N’T  ST✪P  R✪CKIN’") {
     return "D✪N’T ST✪P R✪CKIN’";
   }
+  if (name === `Little " + '"' + "Sister" + '"' + " Bitch`) {
+    return `Little "Sister" Bitch`;
+  }
+  if (name === `Sqlupp (Camellia's " + '"' + "Sqleipd*Hiytex" + '"' + " Remix)`) {
+    return `Sqlupp (Camellia's "Sqleipd*Hiytex" Remix)`;
+  }
   return name;
 }
 

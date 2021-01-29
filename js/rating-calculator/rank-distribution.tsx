@@ -3,7 +3,7 @@ import {ChartRecord} from './types';
 
 export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<string, number> {
   const countPerRank = new Map();
-  for (const rankDef of getRankDefinitions(true)) {
+  for (const rankDef of getRankDefinitions()) {
     countPerRank.set(rankDef.title, 0);
   }
   scoreList.forEach((record) => {
