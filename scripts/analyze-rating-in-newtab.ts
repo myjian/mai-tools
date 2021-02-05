@@ -13,8 +13,14 @@ import {
   const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
   // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk";
   const UIString = {
-    zh: {pleaseLogIn: "請登入 maimai NET"},
-    en: {pleaseLogIn: "Please log in to maimai DX NET."},
+    zh: {
+      pleaseLogIn: "請登入 maimai NET",
+      analyze: "分析 Rating",
+    },
+    en: {
+      pleaseLogIn: "Please log in to maimai DX NET.",
+      analyze: "Analyze Rating",
+    },
   }[LANG];
 
   async function fetchSelfRecords(send: (action: string, payload: string) => void) {
@@ -38,6 +44,25 @@ import {
     send("calculateRating", "");
   }
 
+  function insertAnalyzeButton(url: string) {
+    const profileBlock = document.body.querySelector(".basic_block.p_10.f_0");
+    if (!profileBlock) {
+      return;
+    }
+    const container = profileBlock.querySelector(".basic_block > .p_l_10");
+    let analyzeLink = profileBlock.querySelector(".analyzeLink") as HTMLAnchorElement;
+    if (analyzeLink) {
+      analyzeLink.remove();
+    }
+    analyzeLink = document.createElement("a");
+    analyzeLink.className = "analyzeLink f_r f_14";
+    analyzeLink.style.color = "#1477e6";
+    analyzeLink.target = "selfRating";
+    analyzeLink.innerText = UIString.analyze;
+    analyzeLink.href = url;
+    container.append(analyzeLink);
+  }
+
   function main() {
     const host = document.location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
@@ -54,7 +79,12 @@ import {
     if (query) {
       url += "?" + query;
     }
-    window.open(url, "selfRating");
+    if (navigator.userAgent.startsWith("Mozilla/5.0 (iP")) {
+      // iOS does not allow pop-up window
+      insertAnalyzeButton(url);
+    } else {
+      window.open(url, "selfRating");
+    }
     window.addEventListener("message", (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
