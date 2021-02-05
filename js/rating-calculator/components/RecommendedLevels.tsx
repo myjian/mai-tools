@@ -3,6 +3,7 @@ import React from 'react';
 import {roundFloat} from '../../common/number-helper';
 import {getRankDefinitions, RankDef} from '../../common/rank-functions';
 import {UIString} from '../i18n';
+import {RecommendedLevelCell} from './RecommendedLevelCell';
 
 const MIN_RANK = "SS";
 const MAX_LV = 15;
@@ -32,11 +33,11 @@ export class RecommendedLevels extends React.PureComponent<Props> {
       oldTopChartsCount > 0 ? Math.floor(oldChartsRating / oldTopChartsCount) : 0;
     const newLvs = ranks.map((r) => {
       const lv = this.calcRecommendedLv(avgNewChartRating, r);
-      return lv > MAX_LV ? "--" : lv.toFixed(1) + UIString.tilde;
+      return lv > MAX_LV ? -1 : lv;
     });
     const oldLvs = ranks.map((r) => {
       const lv = this.calcRecommendedLv(avgOldChartRating, r);
-      return lv > MAX_LV ? "--" : lv.toFixed(1) + UIString.tilde;
+      return lv > MAX_LV ? -1 : lv;
     });
     return (
       <div className="recLvSection">
@@ -58,18 +59,18 @@ export class RecommendedLevels extends React.PureComponent<Props> {
           <tbody>
             {avgNewChartRating > 0 && (
               <tr>
-                <th className="recLvFirstCol">{UIString.newCharts}</th>
+                <th className="recLvFirstCol">{UIString.newChartsRecLv}</th>
                 {newLvs.map((lv) => (
-                  <td>{lv}</td>
+                  <RecommendedLevelCell lv={lv} />
                 ))}
                 <td>{Math.floor(avgNewChartRating)}↑</td>
               </tr>
             )}
             {avgOldChartRating > 0 && (
               <tr>
-                <th className="recLvFirstCol">{UIString.oldCharts}</th>
+                <th className="recLvFirstCol">{UIString.oldChartsRecLv}</th>
                 {oldLvs.map((lv) => (
-                  <td>{lv}</td>
+                  <RecommendedLevelCell lv={lv} />
                 ))}
                 <td>{Math.floor(avgOldChartRating)}↑</td>
               </tr>
