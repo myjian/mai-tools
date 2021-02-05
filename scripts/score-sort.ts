@@ -230,7 +230,7 @@ type Cache = {
     if (imgs.length < 5) {
       return null;
     }
-    const rankImgSrc = imgs[imgs.length - 1].src;
+    const rankImgSrc = imgs[imgs.length - 1].src.replace(/\?ver=.*$/, "");
     const lastUnderscoreIdx = rankImgSrc.lastIndexOf("_");
     const lastDotIdx = rankImgSrc.lastIndexOf(".");
     const lowercaseRank = rankImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
@@ -275,7 +275,7 @@ type Cache = {
     if (imgs.length < 5) {
       return null;
     }
-    const statusImgSrc = imgs[imgs.length - 2].src;
+    const statusImgSrc = imgs[imgs.length - 2].src.replace(/\?ver=.*$/, "");
     const lastUnderscoreIdx = statusImgSrc.lastIndexOf("_");
     const lastDotIdx = statusImgSrc.lastIndexOf(".");
     const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
