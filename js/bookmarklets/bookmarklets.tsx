@@ -181,7 +181,7 @@ export const scoreDownloader: Bookmarklet = {
 
 export const albumDownloadHelper: Bookmarklet = {
   itemTitle: {
-    zh: "相簿照片命名工具",
+    zh: "相簿照片命名",
     en: "Album Download Helper",
   }[LANG],
   feature: {
