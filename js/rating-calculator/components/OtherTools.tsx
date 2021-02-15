@@ -14,9 +14,6 @@ export class OtherTools extends React.PureComponent {
           <li className="toolItem">
             <a href="../bookmarklets/">{UIString.bookmarketList}</a>
           </li>
-          <li className="toolItem">
-            <a href="../">{UIString.scoreConverter}</a>
-          </li>
         </ul>
         <hr className="sectionSep" />
       </div>
