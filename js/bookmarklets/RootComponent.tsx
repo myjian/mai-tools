@@ -3,6 +3,7 @@ import React from 'react';
 import {LANG} from '../common/lang';
 import {BookmarkItem} from './BookmarkItem';
 import {
+  albumDownloadHelper,
   analyzeFriendRating,
   ratingAnalyzer,
   recentPlaySummary,
@@ -41,10 +42,11 @@ export const RootComponent: React.FC = () => (
 
     <div className="bookmarkletList">
       <BookmarkItem {...recentPlaySummary} />
-      <BookmarkItem {...scoreConverter} />
-      <BookmarkItem {...scoreSorter} />
+      <BookmarkItem {...albumDownloadHelper} />
       <BookmarkItem {...ratingAnalyzer} />
       <BookmarkItem {...analyzeFriendRating} />
+      <BookmarkItem {...scoreSorter} />
+      <BookmarkItem {...scoreConverter} />
       <BookmarkItem {...scoreDownloader} />
       <br />
 

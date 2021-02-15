@@ -82,6 +82,8 @@ declare var domtoimage: any;
   ];
 
   const ce = document.createElement.bind(document);
+  // 540 = 9 * 60 minutes = UTC+9 (Japan Time), 1 minute = 60000 milliseconds
+  const timezoneOffset = (540 - new Date().getTimezoneOffset()) * 60000;
 
   function padNumberWithZeros(n: number, len?: number) {
     len = len || 2;
@@ -98,7 +100,7 @@ declare var domtoimage: any;
       parseInt(m[4]),
       parseInt(m[5])
     );
-    return new Date(japanDt.valueOf() - 1000 * 60 * 60);
+    return new Date(japanDt.valueOf() - timezoneOffset);
   }
 
   function getSongName(row: HTMLElement) {
