@@ -143,15 +143,16 @@ declare var domtoimage: any;
   function getStamps(row: HTMLElement) {
     const rankImgSrc = (row.querySelector("img.playlog_scorerank") as HTMLImageElement).src;
     const rank = rankImgSrc
+      .replace(/\?ver=.*$/, "")
       .substring(rankImgSrc.lastIndexOf("/") + 1, rankImgSrc.lastIndexOf("."))
       .replace("plus", "+")
       .toUpperCase();
     const stampImgs = row.querySelectorAll(".playlog_result_innerblock > img") as NodeListOf<
       HTMLImageElement
     >;
-    const fcapSrc = stampImgs[0].src;
+    const fcapSrc = stampImgs[0].src.replace(/\?ver=.*$/, "");
     const fcapImgName = fcapSrc.substring(fcapSrc.lastIndexOf("/") + 1, fcapSrc.lastIndexOf("."));
-    const fullSyncSrc = stampImgs[1].src;
+    const fullSyncSrc = stampImgs[1].src.replace(/\?ver=.*$/, "");
     const fullSyncImgName = fullSyncSrc.substring(
       fullSyncSrc.lastIndexOf("/") + 1,
       fullSyncSrc.lastIndexOf(".")
