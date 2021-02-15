@@ -141,9 +141,8 @@ declare var domtoimage: any;
   }
 
   function getStamps(row: HTMLElement) {
-    const rankImgSrc = (row.querySelector("img.playlog_scorerank") as HTMLImageElement).src;
+    const rankImgSrc = (row.querySelector("img.playlog_scorerank") as HTMLImageElement).src.replace(/\?ver=.*$/, "");
     const rank = rankImgSrc
-      .replace(/\?ver=.*$/, "")
       .substring(rankImgSrc.lastIndexOf("/") + 1, rankImgSrc.lastIndexOf("."))
       .replace("plus", "+")
       .toUpperCase();
