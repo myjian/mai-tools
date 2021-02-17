@@ -1,7 +1,7 @@
 (function (d) {
   const DIFF_REGEX = /music_(\w+)_score_back/;
   // 540 = 9 * 60 minutes = UTC+9 (Japan Time), 1 minute = 60000 milliseconds
-  const timezoneOffset = (540 - new Date().getTimezoneOffset()) * 60000;
+  const timezoneOffset = (540 + new Date().getTimezoneOffset()) * 60000;
 
   function getPlayDate(row: HTMLElement) {
     const playDateText = (row.getElementsByClassName("block_info")[0] as HTMLElement).innerText;
