@@ -11,8 +11,6 @@ const UIString = {
     chrome2: "打開瀏覽器右上角的選單，按星星把此頁加入書籤",
     chrome3: "畫面下方會顯示「已加入書籤」，點右邊「編輯」",
     chrome4: "把網址完全刪除，並貼上剛才複製的連結",
-    fx1: "長按連結",
-    fx2: "選取「將鏈結加入書籤」",
   },
   en: {
     title: "How to create bookmarklet on phone?",
@@ -22,8 +20,6 @@ const UIString = {
     chrome2: "Tap the browser menu and tap the star to add current page to bookmarks.",
     chrome3: 'Screen bottom will show "Bookmarked". Tap the "Edit" link next to it.',
     chrome4: "Replace the URL with what you copied earlier.",
-    fx1: "Long press the bookmarklet.",
-    fx2: 'Select "Bookmark Link"',
   },
 }[LANG];
 
@@ -38,12 +34,6 @@ export const MobileCreateManual: React.FC = () => (
         <li>{UIString.chrome2}</li>
         <li>{UIString.chrome3}</li>
         <li>{UIString.chrome4}</li>
-      </ol>
-
-      <p>Firefox:</p>
-      <ol>
-        <li>{UIString.fx1}</li>
-        <li>{UIString.fx2}</li>
       </ol>
     </div>
   </React.Fragment>
