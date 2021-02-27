@@ -12,9 +12,8 @@ import {
 } from '../js/common/util';
 
 (function () {
-  // const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
-  const BASE_URL = "http://localhost:8080/rating-calculator/";
-  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk";
+  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
+  // const BASE_URL = "http://localhost:8080/rating-calculator/";
   const UIString = {
     zh: {
       pleaseLogIn: "請登入 maimai NET",
@@ -26,13 +25,15 @@ import {
     },
   }[LANG];
 
+  const isOnFriendPage = location.pathname.includes("friend");
+
   async function fetchSelfRecords(send: (action: string, payload: any) => void): Promise<Document> {
     let allSongsDom: Document;
     // Fetch DX version
     const gameVer = await fetchGameVersion(document.body);
     send("gameVersion", gameVer);
     // Fetch player grade
-    const playerGrade = fetchPlayerGrade(document.body);
+    const playerGrade = isOnFriendPage ? null : fetchPlayerGrade(document.body);
     if (playerGrade) {
       send("playerGrade", playerGrade);
     }
@@ -79,7 +80,7 @@ import {
     }
     let url = BASE_URL;
     const queryParams = new URLSearchParams();
-    const playerName = getPlayerName(document.body);
+    const playerName = isOnFriendPage ? null : getPlayerName(document.body);
     if (playerName) {
       queryParams.set("playerName", playerName);
     }

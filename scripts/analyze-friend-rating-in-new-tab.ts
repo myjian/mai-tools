@@ -25,9 +25,8 @@ type FriendInfo = {
 };
 
 (function (d) {
-  // const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
-  const BASE_URL = "http://localhost:8080/rating-calculator/?";
-  // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/ZorBazGeynzM?";
+  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
+  // const BASE_URL = "http://localhost:8080/rating-calculator/?";
   const UIString = {
     zh: {
       pleaseLogIn: "請登入 maimai NET",
