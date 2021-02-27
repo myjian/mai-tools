@@ -140,6 +140,7 @@
       const currentLine = lines.pop();
       const judgements = currentLine.match(/\d+/g);
       if (
+        noteDetails.length === 0 &&
         judgements &&
         judgements.length >= JUDGEMENTS_LEN - 1 &&
         judgements.length <= JUDGEMENTS_LEN
