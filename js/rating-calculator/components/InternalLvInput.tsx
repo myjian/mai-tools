@@ -17,9 +17,9 @@ export class InternalLvInput extends React.PureComponent<{}, State> {
       <div className="w90">
         <h2 className="lvInputHeading">{UIString.internalLvHeading}</h2>
         <form>
-          <label className="lvFormLabel">
+          <label className="radioLabel">
             <input
-              className="lvFormRadio"
+              className="radioInput"
               name="showLvInput"
               value="0"
               type="radio"
@@ -28,9 +28,9 @@ export class InternalLvInput extends React.PureComponent<{}, State> {
             />
             {UIString.autoLv}
           </label>
-          <label className="lvFormLabel">
+          <label className="radioLabel">
             <input
-              className="lvFormRadio"
+              className="radioInput"
               name="showLvInput"
               value="1"
               type="radio"
@@ -40,9 +40,7 @@ export class InternalLvInput extends React.PureComponent<{}, State> {
             {UIString.manualLv}
           </label>
         </form>
-        {showTextarea && (
-          <textarea className="lvInput" ref={this.textareaRef} />
-        )}
+        {showTextarea && <textarea className="lvInput" ref={this.textareaRef} />}
       </div>
     );
   }

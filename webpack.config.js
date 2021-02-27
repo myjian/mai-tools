@@ -1,20 +1,18 @@
 const path = require("path");
-const fs = require("fs")
+const fs = require("fs");
 
 const SCRIPTS_DIR = "./scripts";
 
 const scriptEntryPoints = {};
-fs.readdirSync(SCRIPTS_DIR).filter(
-  (f) => f.endsWith(".ts")
-).forEach(
-  (f) => scriptEntryPoints[f.replace(".ts", "")] = "./" + path.join(SCRIPTS_DIR, f)
-);
+fs.readdirSync(SCRIPTS_DIR)
+  .filter((f) => f.endsWith(".ts"))
+  .forEach((f) => (scriptEntryPoints[f.replace(".ts", "")] = "./" + path.join(SCRIPTS_DIR, f)));
 
 module.exports = {
-  mode: "production",
-  // mode: "development",
+  // mode: "production",
+  mode: "development",
   entry: {
-    "bookmarklets": "./js/bookmarklets/main.tsx",
+    bookmarklets: "./js/bookmarklets/main.tsx",
     "classic-layout": "./js/classic-layout/main.tsx",
     "rating-calculator": "./js/rating-calculator/main.ts",
     "rating-visualizer": "./js/rating-visualizer/main.tsx",

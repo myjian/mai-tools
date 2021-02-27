@@ -1,3 +1,4 @@
+import {ChartType} from '../rating-calculator/types';
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
 import {fetchPage} from './util';
 
@@ -33,7 +34,7 @@ function processRow(
   } else if (isScoreRow) {
     const songName = getSongName(row);
     const level = getChartLevel(row);
-    const chartType = getChartType(row);
+    const chartType = getChartType(row) === ChartType.DX ? "DX" : "STANDARD";
     const achievement = getAchievement(row);
     if (!achievement) {
       return;
@@ -44,7 +45,11 @@ function processRow(
   }
 }
 
-export async function fetchFriendScores(friendIdx: string, difficulty: string, scoreList: string[]) {
+export async function fetchFriendScores(
+  friendIdx: string,
+  difficulty: string,
+  scoreList: string[]
+) {
   let url = FRIEND_SCORE_URLS.get(difficulty);
   if (!url) {
     return;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {roundFloat} from '../../common/number-helper';
-import {getRankDefinitions, RankDef} from '../../common/rank-functions';
+import {RANK_DEFINITIONS, RankDef} from '../../common/rank-functions';
 import {UIString} from '../i18n';
 import {RecommendedLevelCell} from './RecommendedLevelCell';
 
@@ -16,13 +16,8 @@ interface Props {
 }
 export class RecommendedLevels extends React.PureComponent<Props> {
   render() {
-    const {
-      newChartsRating,
-      newTopChartsCount,
-      oldChartsRating,
-      oldTopChartsCount,
-    } = this.props;
-    let ranks = getRankDefinitions();
+    const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = this.props;
+    let ranks = RANK_DEFINITIONS;
     const minRankIdx = ranks.findIndex((r) => r.title === MIN_RANK);
     ranks = ranks
       .slice(0, minRankIdx + 1)

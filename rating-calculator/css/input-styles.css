@@ -22,7 +22,8 @@ textarea:focus {
   outline-width: 2px;
 }
 
-.lvInputHeading, .scoreInputHeading {
+.lvInputHeading,
+.scoreInputHeading {
   margin-bottom: 10px;
 }
 
@@ -30,11 +31,16 @@ textarea:focus {
   margin-top: 14px;
 }
 
-.lvFormLabel:first-child {
+.playedToggleForm {
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.radioLabel:first-child {
   margin-right: 20px;
 }
 
-.lvFormRadio {
+.radioInput {
   margin-right: 8px;
 }
 

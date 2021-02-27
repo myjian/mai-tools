@@ -11,6 +11,7 @@ import {
   compareSongsByNextRating,
 } from '../record-comparator';
 import {ChartRecordWithRating, ColumnType} from '../types';
+import {CandidatesPlayedToggle} from './CandidatesPlayedToggle';
 import {ChartRecordsTable} from './ChartRecordsTable';
 import {CollapsibleContainer} from './CollapsibleContainer';
 
@@ -39,43 +40,51 @@ const COMPARATOR: Map<
 ]);
 
 interface Props {
+  name: string;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   records: ReadonlyArray<ChartRecordWithRating>;
+  notPlayed?: ReadonlyArray<ChartRecordWithRating>;
   hidden?: boolean;
 }
 
 interface State {
+  showPlayed: boolean;
   showAll: boolean;
   sortBy?: ColumnType;
   reverse?: boolean;
 }
 
 export class CandidateChartRecords extends React.PureComponent<Props, State> {
-  state: State = {showAll: false};
+  state: State = {showAll: false, showPlayed: true};
 
   render() {
-    const {hidden, records: allRecords, songPropsByName} = this.props;
-    const {showAll, sortBy, reverse} = this.state;
-    const hasMore = allRecords.length > CANDIDATE_SONGS_LIMIT;
-    let records: ChartRecordWithRating[];
+    const {hidden, records, notPlayed, songPropsByName, name} = this.props;
+    const {showAll, showPlayed, sortBy, reverse} = this.state;
+    let recordsToShow: ChartRecordWithRating[] = showPlayed ? records.slice() : notPlayed.slice();
+    const hasMore = recordsToShow.length > CANDIDATE_SONGS_LIMIT;
     if (hasMore && !showAll) {
-      records = allRecords.slice(0, CANDIDATE_SONGS_LIMIT);
-    } else {
-      records = allRecords.slice();
+      recordsToShow = recordsToShow.slice(0, CANDIDATE_SONGS_LIMIT);
     }
-    records.forEach((r, i) => (r.order = i + 1));
+    recordsToShow.forEach((r, i) => (r.order = i + 1));
     if (sortBy) {
-      records.sort(COMPARATOR.get(sortBy));
+      recordsToShow.sort(COMPARATOR.get(sortBy));
       if (reverse) {
-        records.reverse();
+        recordsToShow.reverse();
       }
     }
     return (
       <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
+        {notPlayed && (
+          <CandidatesPlayedToggle
+            name={name}
+            showPlayed={showPlayed}
+            toggleShowPlayed={this.toggleShowNotPlayed}
+          />
+        )}
         <ChartRecordsTable
           songPropsByName={songPropsByName}
           tableClassname="candidateTable"
-          records={records}
+          records={recordsToShow}
           sortBy={this.handleSortBy}
           columns={COLUMNS}
         />
@@ -91,6 +100,10 @@ export class CandidateChartRecords extends React.PureComponent<Props, State> {
   private toggleShowMore = (evt: React.SyntheticEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
     this.setState((state) => ({showAll: !state.showAll}));
+  };
+
+  private toggleShowNotPlayed = (showPlayed: boolean) => {
+    this.setState({showPlayed});
   };
 
   private handleSortBy = (col: ColumnType) => {

@@ -60,7 +60,8 @@ export function compareSongsByLevel(
   record1: ChartRecordWithRating,
   record2: ChartRecordWithRating
 ) {
-  return compareSongsByNumAttr(record1, record2, "level");
+  // smaller first
+  return compareSongsByNumAttr(record2, record1, "level");
 }
 
 export function compareSongsByAchv(record1: ChartRecordWithRating, record2: ChartRecordWithRating) {

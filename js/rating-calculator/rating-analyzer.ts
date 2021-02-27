@@ -1,7 +1,7 @@
 import {DIFFICULTIES} from '../common/constants';
 import {getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
-import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
+import {ChartRecord, ChartRecordWithRating, ChartType, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
@@ -42,7 +42,9 @@ export async function analyzePlayerRating(
       record.genre,
       record.chartType
     );
-    const isNewChart = songProps ? songProps.debut === gameVersion : record.chartType === "DX";
+    const isNewChart = songProps
+      ? songProps.debut === gameVersion
+      : record.chartType === ChartType.DX;
     const recordWithRating = analyzeSongRating(record, songProps);
     if (isNewChart) {
       newChartRecords.push(recordWithRating);

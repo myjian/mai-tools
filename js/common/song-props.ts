@@ -1,11 +1,20 @@
+import {ChartType} from '../rating-calculator/types';
 import {getSongNickname} from './song-util';
 
-export interface SongProperties {
-  dx: 0 | 1;
-  lv: ReadonlyArray<number>;
-  debut: number;
+export interface BasicSongProps {
+  dx: ChartType;
   name: string;
   nickname?: string;
+}
+
+export interface SongProperties extends BasicSongProps {
+  debut: number;
+  lv: ReadonlyArray<number>;
+}
+
+export const enum MatchMode {
+  EQUAL,
+  OLDER,
 }
 
 const DX_REGEX = /\bdx\s*:\s*([0-9]+)/;
@@ -68,22 +77,17 @@ export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
   return songPropsByName;
 }
 
-function isDxChart(chartType: string) {
-  return chartType === "DX";
-}
-
 export function getSongProperties(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   songName: string,
   genre: string,
-  chartType: string
+  chartType: ChartType
 ) {
   let songPropsArray = songPropsByName.get(songName);
   if (songPropsArray && songPropsArray.length > 0) {
     if (songPropsArray.length > 1) {
       // Song has multiple charts
-      const isDX = isDxChart(chartType) ? 1 : 0;
-      songPropsArray = songPropsArray.filter((d) => d.dx === isDX);
+      songPropsArray = songPropsArray.filter((d) => d.dx === chartType);
       if (songPropsArray.length > 1) {
         // Duplicate song names
         const nickname = getSongNickname(songName, genre);
@@ -100,4 +104,42 @@ export function getSongProperties(
   }
   console.warn(`Could not find song properties for ${songName} ${chartType}`);
   return null;
+}
+
+export function filterSongsByVersion(
+  songs: ReadonlyArray<BasicSongProps>,
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  gameVer: number,
+  matchMode: MatchMode
+): SongProperties[] {
+  const fullProps: SongProperties[] = [];
+  for (const s of songs) {
+    const {dx, name, nickname} = s;
+    let songPropsArray = songPropsByName.get(name);
+    if (songPropsArray && songPropsArray.length > 0) {
+      if (songPropsArray.length > 1) {
+        // Song has multiple charts
+        songPropsArray = songPropsArray.filter((d) => d.dx === dx);
+        if (songPropsArray.length > 1) {
+          // Duplicate song names
+          songPropsArray = songPropsArray.filter((d) => d.nickname === nickname);
+        }
+      }
+      if (songPropsArray.length) {
+        if (songPropsArray.length > 1) {
+          console.warn(`Found multiple song properties for ${name} ${dx ? "[DX]" : ""}`);
+          console.warn(songPropsArray);
+        }
+        if (
+          (matchMode === MatchMode.EQUAL && songPropsArray[0].debut === gameVer) ||
+          (matchMode === MatchMode.OLDER && songPropsArray[0].debut < gameVer)
+        ) {
+          fullProps.push(songPropsArray[0]);
+        }
+        continue;
+      }
+    }
+    console.warn(`Could not find song properties for ${name} ${dx ? "[DX]" : ""}`);
+  }
+  return fullProps;
 }

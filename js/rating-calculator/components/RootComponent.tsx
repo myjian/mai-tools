@@ -2,7 +2,12 @@ import React from 'react';
 
 import {DX_PLUS_GAME_VERSION, DX_SPLASH_GAME_VERSION} from '../../common/constants';
 import {iWantSomeMagic} from '../../common/magic';
-import {buildSongPropsMap, SongProperties} from '../../common/song-props';
+import {
+  buildSongPropsMap,
+  filterSongsByVersion,
+  MatchMode,
+  SongProperties,
+} from '../../common/song-props';
 import {readFromCache, writeToCache} from '../cache';
 import {UIString} from '../i18n';
 import {parseScoreLine} from '../player-score-parser';
@@ -83,6 +88,8 @@ interface State {
   playerName: string | null;
   friendIdx: string | null;
   songPropsByName?: Map<string, ReadonlyArray<SongProperties>>;
+  oldSongs?: ReadonlyArray<SongProperties>;
+  newSongs?: ReadonlyArray<SongProperties>;
 }
 
 export class RootComponent extends React.PureComponent<{}, State> {
@@ -111,8 +118,25 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
   }
 
+  componentDidUpdate(_prevProps: {}, prevState: State) {
+    if (
+      this.state.songPropsByName &&
+      ((!this.state.oldSongs && !this.state.newSongs) || prevState.gameVer !== this.state.gameVer)
+    ) {
+      this.loadSongLists(this.state.gameVer);
+    }
+  }
+
   render() {
-    const {gameVer, showMultiplierTable, playerName, ratingData, songPropsByName} = this.state;
+    const {
+      gameVer,
+      showMultiplierTable,
+      playerName,
+      ratingData,
+      songPropsByName,
+      oldSongs,
+      newSongs,
+    } = this.state;
     return (
       <React.Fragment>
         <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
@@ -130,6 +154,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
             playerName={playerName}
+            oldSongs={oldSongs}
+            newSongs={newSongs}
           />
         )}
         {showMultiplierTable && <MultiplierTable />}
@@ -164,13 +190,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.setState({ratingData, showMultiplierTable: true, songPropsByName});
   };
 
-  private postMessageToOpener(data: string | {[key: string]: string}) {
+  private postMessageToOpener(data: string | {action: string; payload?: string | number}) {
     if (window.opener) {
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
       } else {
-        window.opener.postMessage("ready", "https://maimaidx-eng.com");
-        window.opener.postMessage("ready", "https://maimaidx.jp");
+        window.opener.postMessage(data, "https://maimaidx-eng.com");
+        window.opener.postMessage(data, "https://maimaidx.jp");
       }
     }
   }
@@ -202,16 +228,41 @@ export class RootComponent extends React.PureComponent<{}, State> {
           case "calculateRating":
             this.analyzeRating();
             break;
+          case "allSongs":
+            this.setState({
+              oldSongs: filterSongsByVersion(
+                evt.data.payload,
+                this.state.songPropsByName,
+                this.state.gameVer,
+                MatchMode.OLDER
+              ),
+            });
+            break;
+          case "newSongs":
+            this.setState({
+              newSongs: filterSongsByVersion(
+                evt.data.payload,
+                this.state.songPropsByName,
+                this.state.gameVer,
+                MatchMode.EQUAL
+              ),
+            });
+            break;
         }
       }
     });
     const {friendIdx} = this.state;
     if (friendIdx) {
       // Analyze friend rating
-      this.postMessageToOpener({action: "getFriendRecords", idx: friendIdx});
+      this.postMessageToOpener({action: "getFriendRecords", payload: friendIdx});
     } else {
       // Analyze self rating
       this.postMessageToOpener("ready");
     }
+  }
+
+  private loadSongLists(gameVer: number) {
+    this.postMessageToOpener({action: "fetchAllSongs"});
+    this.postMessageToOpener({action: "fetchNewSongs", payload: gameVer});
   }
 }

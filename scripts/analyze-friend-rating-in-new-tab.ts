@@ -2,9 +2,12 @@ import {fetchFriendScores, FRIEND_SCORE_URLS} from '../js/common/fetch-friend-sc
 import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
+import {BasicSongProps} from '../js/common/song-props';
 import {
   ALLOWED_ORIGINS,
+  fetchAllSongs,
   fetchGameVersion,
+  fetchNewSongs,
   getPostMessageFunc,
   handleError,
 } from '../js/common/util';
@@ -22,7 +25,8 @@ type FriendInfo = {
 };
 
 (function (d) {
-  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
+  // const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
+  const BASE_URL = "http://localhost:8080/rating-calculator/?";
   // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/ZorBazGeynzM?";
   const UIString = {
     zh: {
@@ -100,17 +104,29 @@ type FriendInfo = {
     if (self.ratingCalcMsgListener) {
       window.removeEventListener("message", self.ratingCalcMsgListener);
     }
+    let allSongs: BasicSongProps[];
     self.ratingCalcMsgListener = (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
+        const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
         if (evt.data.action === "getFriendRecords") {
-          const friend = friends_cache[evt.data.idx];
+          const friend = friends_cache[evt.data.payload];
           if (friend) {
-            fetchFriendRecords(friend, getPostMessageFunc(evt.source as WindowProxy, evt.origin));
+            fetchFriendRecords(friend, send);
           }
+        } else if (evt.data.action === "fetchNewSongs") {
+          fetchNewSongs(evt.data.payload).then((songs) => send("newSongs", songs));
+        } else if (evt.data.action === "fetchAllSongs") {
+          if (allSongs) {
+            send("allSongs", allSongs);
+          }
+          fetchAllSongs().then((songs) => {
+            allSongs = songs;
+            send("allSongs", songs);
+          });
         }
       }
-    }
+    };
     window.addEventListener("message", self.ratingCalcMsgListener);
   }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {SongProperties} from '../../common/song-props';
-import {getCandidateSongs} from '../candidate-songs';
+import {getCandidateSongs, getNotPlayedCharts} from '../candidate-songs';
 import {UIString} from '../i18n';
 import {RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
@@ -18,6 +18,8 @@ interface Props {
   ratingData: RatingData;
   playerGradeIndex: number;
   playerName: string | null;
+  oldSongs?: ReadonlyArray<SongProperties>;
+  newSongs?: ReadonlyArray<SongProperties>;
 }
 
 interface State {
@@ -43,8 +45,15 @@ export class RatingOutput extends React.PureComponent<Props, State> {
     }
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (!prevProps.newSongs && !prevProps.oldSongs && this.props.newSongs && this.props.oldSongs) {
+      console.log(this.props.newSongs);
+      console.log(this.props.oldSongs);
+    }
+  }
+
   render() {
-    const {playerName, playerGradeIndex, songPropsByName} = this.props;
+    const {newSongs, oldSongs, playerName, playerGradeIndex, songPropsByName} = this.props;
     const {
       newChartRecords,
       newChartsRating,
@@ -64,11 +73,29 @@ export class RatingOutput extends React.PureComponent<Props, State> {
       newTopChartsCount,
       NEW_CANDIDATE_SONGS_POOL_SIZE
     );
+    const notPlayedNewCharts = newSongs
+      ? getNotPlayedCharts(
+          newSongs,
+          newChartRecords,
+          newTopChartsCount,
+          NEW_CANDIDATE_SONGS_POOL_SIZE
+        )
+      : [];
+    console.log(notPlayedNewCharts);
     const oldChartCandidates = getCandidateSongs(
       oldChartRecords,
       oldTopChartsCount,
       OLD_CANDIDATE_SONGS_POOL_SIZE
     );
+    const notPlayedOldCharts = oldSongs
+      ? getNotPlayedCharts(
+          oldSongs,
+          oldChartRecords,
+          oldTopChartsCount,
+          OLD_CANDIDATE_SONGS_POOL_SIZE
+        )
+      : [];
+    console.log(notPlayedOldCharts);
     return (
       <div className="outputArea" ref={this.outputArea}>
         <h2 id="outputHeading">
@@ -123,9 +150,11 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             isCandidateList
           />
           <CandidateChartRecords
+            name="new"
             songPropsByName={songPropsByName}
             records={newChartCandidates}
             hidden={hideNewCandidateSongs}
+            notPlayed={notPlayedNewCharts}
           />
         </div>
         <div className="songRecordsContainer">
@@ -136,9 +165,11 @@ export class RatingOutput extends React.PureComponent<Props, State> {
             isCandidateList
           />
           <CandidateChartRecords
+            name="old"
             songPropsByName={songPropsByName}
             records={oldChartCandidates}
             hidden={hideOldCandidateSongs}
+            notPlayed={notPlayedOldCharts}
           />
         </div>
         <hr className="sectionSep" />

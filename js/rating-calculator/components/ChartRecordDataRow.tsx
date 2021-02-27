@@ -4,7 +4,7 @@ import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
 import {SongProperties} from '../../common/song-props';
 import {getSongNickname} from '../../common/song-util';
-import {ChartRecordWithRating, ColumnType} from '../types';
+import {ChartRecordWithRating, ChartType, ColumnType} from '../types';
 import {ChartRecordRow} from './ChartRecordRow';
 
 function getSongNameDisplay(
@@ -13,7 +13,7 @@ function getSongNameDisplay(
 ): string {
   const songPropsArray = songPropsByName.get(record.songName);
   if (songPropsArray && songPropsArray.length > 1) {
-    return getSongNickname(record.songName, record.genre, record.chartType === "DX");
+    return getSongNickname(record.songName, record.genre, record.chartType === ChartType.DX);
   }
   return record.songName;
 }

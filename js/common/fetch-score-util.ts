@@ -1,3 +1,5 @@
+import {ChartType} from '../rating-calculator/types';
+
 export function getSongName(row: HTMLElement) {
   return (row.getElementsByClassName("music_name_block")[0] as HTMLElement).innerText;
 }
@@ -14,11 +16,13 @@ export function getChartDifficulty(row: HTMLElement) {
   return d.indexOf("RE") === 0 ? "Re:MASTER" : d;
 }
 
-export function getChartType(row: HTMLElement) {
+export function getChartType(row: HTMLElement): ChartType {
   if (row.id) {
-    return row.id.includes("sta_") ? "STANDARD" : "DX";
+    return row.id.includes("sta_") ? ChartType.STANDARD : ChartType.DX;
   }
-  return (row.querySelector("img:nth-child(2)") as HTMLImageElement).src.includes("_standard") ? "STANDARD" : "DX";
+  return (row.querySelector("img:nth-child(2)") as HTMLImageElement).src.includes("_standard")
+    ? ChartType.STANDARD
+    : ChartType.DX;
 }
 
 export function getPlayerName(n: HTMLElement) {

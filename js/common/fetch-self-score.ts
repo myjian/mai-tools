@@ -1,3 +1,4 @@
+import {ChartType} from '../rating-calculator/types';
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
 import {fetchPage} from './util';
 
@@ -13,7 +14,11 @@ function getAchievement(row: HTMLElement) {
   return ach && ach.innerText;
 }
 
-function processRow(row: HTMLElement, difficulty: string, state: {genre: string; scoreList: string[]}) {
+function processRow(
+  row: HTMLElement,
+  difficulty: string,
+  state: {genre: string; scoreList: string[]}
+) {
   const isGenreRow = row.classList.contains("screw_block");
   const isScoreRow =
     row.classList.contains("w_450") &&
@@ -25,7 +30,7 @@ function processRow(row: HTMLElement, difficulty: string, state: {genre: string;
   } else if (isScoreRow) {
     const songName = getSongName(row);
     const level = getChartLevel(row);
-    const chartType = getChartType(row);
+    const chartType = getChartType(row) === ChartType.DX ? "DX" : "STANDARD";
     const achievement = getAchievement(row);
     if (!achievement) {
       return;
@@ -36,13 +41,18 @@ function processRow(row: HTMLElement, difficulty: string, state: {genre: string;
   }
 }
 
-export async function fetchScores(difficulty: string, scoreList: string[]) {
+export async function fetchScores(difficulty: string, scoreList: string[]): Promise<Document> {
   const url = SELF_SCORE_URLS.get(difficulty);
   if (!url) {
     return;
   }
-  const dom = await fetchPage(url);
-  const rows = dom.querySelectorAll(".main_wrapper.t_c .m_15") as NodeListOf<HTMLElement>;
-  const state = {genre: "", scoreList: scoreList};
-  rows.forEach((row) => processRow(row, difficulty, state));
+  return new Promise<Document>((resolve) => {
+    setTimeout(async () => {
+      const dom = await fetchPage(url);
+      const rows = dom.querySelectorAll(".main_wrapper.t_c .m_15") as NodeListOf<HTMLElement>;
+      const state = {genre: "", scoreList: scoreList};
+      rows.forEach((row) => processRow(row, difficulty, state));
+      resolve(dom);
+    }, 0);
+  });
 }

@@ -1,1 +1,101 @@
-!function(e){var n={};function i(t){if(n[t])return n[t].exports;var o=n[t]={i:t,l:!1,exports:{}};return e[t].call(o.exports,o,o.exports,i),o.l=!0,o.exports}i.m=e,i.c=n,i.d=function(e,n,t){i.o(e,n)||Object.defineProperty(e,n,{enumerable:!0,get:t})},i.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,n){if(1&n&&(e=i(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(i.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var o in e)i.d(t,o,function(n){return e[n]}.bind(null,o));return t},i.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(n,"a",n),n},i.o=function(e,n){return Object.prototype.hasOwnProperty.call(e,n)},i.p="",i(i.s=94)}({94:function(e,n,i){"use strict";!function(e){const n=new Map([["S","/maimai-mobile/maimai-img/icon_s.png"],["S+","/maimai-mobile/maimai-img/icon_s_plus.png"],["SS","/maimai-mobile/maimai-img/icon_ss.png"],["SS+","/maimai-mobile/maimai-img/icon_ss_plus.png"],["SSS","/maimai-mobile/maimai-img/icon_sss.png"],["SSS+","/maimai-mobile/maimai-img/icon_sss_plus.png"]]),i=new Map([["AAA","/maimai-mobile/img/music_icon_aaa.png"],["AA","/maimai-mobile/img/music_icon_aa.png"],["A","/maimai-mobile/img/music_icon_a.png"]]),t=new Map([["fc","/maimai-mobile/maimai-img/icon_fc_silver.png"],["fcplus","/maimai-mobile/maimai-img/icon_fc_gold.png"],["ap","/maimai-mobile/maimai-img/icon_ap.png"]]),o=new Map([["applus","/maimai-mobile/img/music_icon_app.png"]]),a=new Map([["FS","/maimai-mobile/maimai-img/icon_maxfever_silver.png"],["FS+","/maimai-mobile/maimai-img/icon_maxfever_gold.png"]]),r=new Map([["FDX","/maimai-mobile/img/music_icon_fsd.png"],["FDX+","/maimai-mobile/img/music_icon_fsdp.png"]]);function c(e){return e.trim().replace(/\s+/g,"-")}function l(e,n){return n=n||2,e.toString().padStart(n,"0")}function m(e,n){let i=e.get(n);return i instanceof Blob?Promise.resolve(i):i?fetch(i).then(e=>e.blob()).then(i=>(e.set(n,i),i)):void 0}function s(n){const i=n.querySelector("img.music_img"),t=e.createElement("canvas");t.width=i.width,t.height=i.height;return t.getContext("2d").drawImage(i,0,0,t.width,t.height),t.toDataURL()}function u(e){return m(n,e)||m(i,e)||Promise.reject('invalid title "'+e+'"')}function g(e){const n=e.querySelector(".playlog_result_innerblock > img:nth-child(3)").src;switch(n.substring(n.lastIndexOf("/")+1,n.lastIndexOf("."))){case"fs":return"FS";case"fsplus":return"FS+";case"fsd":return"FDX";case"fsdplus":return"FDX+"}return null}if(("maimaidx-eng.com"===e.location.host||"maimaidx.jp"===e.location.host)&&e.location.pathname.includes("/maimai-mobile/record/playlogDetail/")){let n="https://myjian.github.io/mai-tools/classic-layout/?st="+encodeURIComponent(e.body.querySelector(".basic_block.break").childNodes[1].nodeValue)+"&ac="+encodeURIComponent(function(e){const n=e.querySelector(".playlog_achievement_txt").innerText;return n.substring(0,n.length-1)}(e.body))+"&nd="+encodeURIComponent(function(e){return e.querySelector(".playlog_notes_detail").innerText.split("\n").slice(-5).map(c).join("_")}(e.body))+"&df="+encodeURIComponent(function(e){const n=e.querySelector(".playlog_top_container img.playlog_diff").src,i=n.substring(n.lastIndexOf("_")+1,n.lastIndexOf("."));return"remaster"===i?"Re:MASTER":i.toUpperCase()}(e.body))+"&tk="+encodeURIComponent(function(e){return e.querySelector(".playlog_top_container .sub_title .f_b").innerText.replace("0","")}(e.body))+"&dt="+encodeURIComponent(function(e){const n=e.querySelector(".playlog_top_container .sub_title span:last-child").innerText.match(/(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/),i=new Date(parseInt(n[1]),parseInt(n[2])-1,parseInt(n[3]),parseInt(n[4]),parseInt(n[5]));return(t=new Date(i.valueOf()-36e5)).getFullYear()+"-"+l(t.getMonth()+1)+"-"+l(t.getDate())+" "+l(t.getHours())+":"+l(t.getMinutes());var t}(e.body))+"&hs="+encodeURIComponent(function(e){return e.querySelector(".playlog_achievement_newrecord")?1:0}(e.body))+"&cb="+encodeURIComponent(function(e){return e.querySelector(".col2 .playlog_score_block .white").innerText}(e.body));const i=g(e.body);i&&(n+="&sc="+encodeURIComponent(i)),console.log(n),console.log("url length: "+n.length),window.open(n,"_blank"),window.addEventListener("message",n=>{if("https://myjian.github.io"===n.origin||"https://cdpn.io"===n.origin){const c=n.data,l=n.source;let p="";switch(c.action){case"ready":l.postMessage({action:"songImage",imgSrc:s(e.body)},n.origin),function(e){const n=e.querySelector(".playlog_result_innerblock > img:nth-child(2)").src,i=n.substring(n.lastIndexOf("/")+1,n.lastIndexOf("."));return"fc_dummy"===i?Promise.resolve(null):m(t,i)||m(o,i)||Promise.reject('invalid title "'+i+'"')}(e.body).then(e=>{e&&l.postMessage({action:"apFcImage",img:e},n.origin)}),(i=g(e.body),i?m(a,i)||m(r,i)||Promise.reject('invalid title "'+i+'"'):Promise.resolve(null)).then(e=>{e&&l.postMessage({action:"syncImage",img:e},n.origin)}),p=function(e){const n=e.querySelector(".playlog_scorerank").src;return n.substring(n.lastIndexOf("/")+1,n.lastIndexOf(".")).toUpperCase().replace("PLUS","+")}(e.body),u(p).then(e=>{l.postMessage({action:"rankImage",title:p,img:e},n.origin)});break;case"getRankImage":p=c.payload,u(p).then(e=>{l.postMessage({action:"rankImage",title:p,img:e},n.origin)})}}var i})}}(document)}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./scripts/score-converter.ts");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./scripts/score-converter.ts":
+/*!************************************!*\
+  !*** ./scripts/score-converter.ts ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\n(function (d) {\r\n    const BASE_NEWTAB_URL = \"https://myjian.github.io/mai-tools/classic-layout/\";\r\n    const FINALE_RANK_IMG = new Map([\r\n        [\"S\", \"/maimai-mobile/maimai-img/icon_s.png\"],\r\n        [\"S+\", \"/maimai-mobile/maimai-img/icon_s_plus.png\"],\r\n        [\"SS\", \"/maimai-mobile/maimai-img/icon_ss.png\"],\r\n        [\"SS+\", \"/maimai-mobile/maimai-img/icon_ss_plus.png\"],\r\n        [\"SSS\", \"/maimai-mobile/maimai-img/icon_sss.png\"],\r\n        [\"SSS+\", \"/maimai-mobile/maimai-img/icon_sss_plus.png\"],\r\n    ]);\r\n    const DX_RANK_IMG = new Map([\r\n        [\"AAA\", \"/maimai-mobile/img/music_icon_aaa.png\"],\r\n        [\"AA\", \"/maimai-mobile/img/music_icon_aa.png\"],\r\n        [\"A\", \"/maimai-mobile/img/music_icon_a.png\"],\r\n    ]);\r\n    const FINALE_APFC_IMG = new Map([\r\n        [\"fc\", \"/maimai-mobile/maimai-img/icon_fc_silver.png\"],\r\n        [\"fcplus\", \"/maimai-mobile/maimai-img/icon_fc_gold.png\"],\r\n        [\"ap\", \"/maimai-mobile/maimai-img/icon_ap.png\"],\r\n    ]);\r\n    const DX_APFC_IMG = new Map([[\"applus\", \"/maimai-mobile/img/music_icon_app.png\"]]);\r\n    const FINALE_SYNC_IMG = new Map([\r\n        [\"FS\", \"/maimai-mobile/maimai-img/icon_maxfever_silver.png\"],\r\n        [\"FS+\", \"/maimai-mobile/maimai-img/icon_maxfever_gold.png\"],\r\n    ]);\r\n    const DX_SYNC_IMG = new Map([\r\n        [\"FDX\", \"/maimai-mobile/img/music_icon_fsd.png\"],\r\n        [\"FDX+\", \"/maimai-mobile/img/music_icon_fsdp.png\"],\r\n    ]);\r\n    function trimSpaces(textLine) {\r\n        return textLine.trim().replace(/\\s+/g, \"-\");\r\n    }\r\n    function padNumberWithZeros(n, len) {\r\n        len = len || 2;\r\n        return n.toString().padStart(len, \"0\");\r\n    }\r\n    function formatDate(dt) {\r\n        return (dt.getFullYear() +\r\n            \"-\" +\r\n            padNumberWithZeros(dt.getMonth() + 1) +\r\n            \"-\" +\r\n            padNumberWithZeros(dt.getDate()) +\r\n            \" \" +\r\n            padNumberWithZeros(dt.getHours()) +\r\n            \":\" +\r\n            padNumberWithZeros(dt.getMinutes()));\r\n    }\r\n    function fetchAndCacheImg(map, title) {\r\n        let img = map.get(title);\r\n        if (img instanceof Blob) {\r\n            return Promise.resolve(img);\r\n        }\r\n        else if (img) {\r\n            return fetch(img)\r\n                .then((res) => res.blob())\r\n                .then((b) => {\r\n                map.set(title, b);\r\n                return b;\r\n            });\r\n        }\r\n    }\r\n    function getSongName(e) {\r\n        return e.querySelector(\".basic_block.break\").childNodes[1].nodeValue;\r\n    }\r\n    function getAchv(e) {\r\n        const achv = e.querySelector(\".playlog_achievement_txt\").innerText;\r\n        return achv.substring(0, achv.length - 1); // remove \"%\"\r\n    }\r\n    function getNoteDetails(e) {\r\n        return e.querySelector(\".playlog_notes_detail\").innerText\r\n            .split(\"\\n\")\r\n            .slice(-5)\r\n            .map(trimSpaces)\r\n            .join(\"_\");\r\n    }\r\n    function getDifficulty(e) {\r\n        const src = e.querySelector(\".playlog_top_container img.playlog_diff\")\r\n            .src;\r\n        const d = src.substring(src.lastIndexOf(\"_\") + 1, src.lastIndexOf(\".\"));\r\n        return d === \"remaster\" ? \"Re:MASTER\" : d.toUpperCase();\r\n    }\r\n    function getTrack(e) {\r\n        return e.querySelector(\".playlog_top_container .sub_title .f_b\").innerText.replace(\"0\", \"\");\r\n    }\r\n    function getPlayDate(e) {\r\n        const jpDtText = e.querySelector(\".playlog_top_container .sub_title span:last-child\").innerText;\r\n        const m = jpDtText.match(/(\\d+)\\/(\\d+)\\/(\\d+) (\\d+):(\\d+)/);\r\n        const jpDt = new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]));\r\n        return formatDate(new Date(jpDt.valueOf() - 1000 * 60 * 60));\r\n    }\r\n    function getIsHighScore(e) {\r\n        return e.querySelector(\".playlog_achievement_newrecord\") ? 1 : 0;\r\n    }\r\n    function getCombo(e) {\r\n        return e.querySelector(\".col2 .playlog_score_block .white\").innerText;\r\n        //return e.querySelector(\".col2 .playlog_score_block .white\").innerText.replace(\"/\", \" / \");\r\n    }\r\n    function getSongImage(e) {\r\n        const img = e.querySelector(\"img.music_img\");\r\n        const canvas = d.createElement(\"canvas\");\r\n        canvas.width = img.width;\r\n        canvas.height = img.height;\r\n        const context = canvas.getContext(\"2d\");\r\n        context.drawImage(img, 0, 0, canvas.width, canvas.height);\r\n        return canvas.toDataURL();\r\n    }\r\n    function getRankTitle(e) {\r\n        const src = e.querySelector(\".playlog_scorerank\").src;\r\n        const title = src.substring(src.lastIndexOf(\"/\") + 1, src.lastIndexOf(\".\"));\r\n        return title.toUpperCase().replace(\"PLUS\", \"+\");\r\n    }\r\n    function getRankImage(title) {\r\n        return (fetchAndCacheImg(FINALE_RANK_IMG, title) ||\r\n            fetchAndCacheImg(DX_RANK_IMG, title) ||\r\n            Promise.reject('invalid title \"' + title + '\"'));\r\n    }\r\n    function getApFcImage(e) {\r\n        const src = e.querySelector(\".playlog_result_innerblock > img:nth-child(2)\").src;\r\n        const title = src.substring(src.lastIndexOf(\"/\") + 1, src.lastIndexOf(\".\"));\r\n        if (title === \"fc_dummy\") {\r\n            return Promise.resolve(null);\r\n        }\r\n        return (fetchAndCacheImg(FINALE_APFC_IMG, title) ||\r\n            fetchAndCacheImg(DX_APFC_IMG, title) ||\r\n            Promise.reject('invalid title \"' + title + '\"'));\r\n    }\r\n    function getSyncResult(e) {\r\n        const src = e.querySelector(\".playlog_result_innerblock > img:nth-child(3)\").src;\r\n        const title = src.substring(src.lastIndexOf(\"/\") + 1, src.lastIndexOf(\".\"));\r\n        switch (title) {\r\n            case \"fs\":\r\n                return \"FS\";\r\n            case \"fsplus\":\r\n                return \"FS+\";\r\n            case \"fsd\":\r\n                return \"FDX\";\r\n            case \"fsdplus\":\r\n                return \"FDX+\";\r\n        }\r\n        return null;\r\n    }\r\n    function getSyncImage(syncResult) {\r\n        if (syncResult) {\r\n            return (fetchAndCacheImg(FINALE_SYNC_IMG, syncResult) ||\r\n                fetchAndCacheImg(DX_SYNC_IMG, syncResult) ||\r\n                Promise.reject('invalid title \"' + syncResult + '\"'));\r\n        }\r\n        return Promise.resolve(null);\r\n    }\r\n    if ((d.location.host === \"maimaidx-eng.com\" || d.location.host === \"maimaidx.jp\") &&\r\n        d.location.pathname.includes(\"/maimai-mobile/record/playlogDetail/\")) {\r\n        let url = BASE_NEWTAB_URL +\r\n            \"?st=\" +\r\n            encodeURIComponent(getSongName(d.body)) +\r\n            \"&ac=\" +\r\n            encodeURIComponent(getAchv(d.body)) +\r\n            \"&nd=\" +\r\n            encodeURIComponent(getNoteDetails(d.body)) +\r\n            \"&df=\" +\r\n            encodeURIComponent(getDifficulty(d.body)) +\r\n            \"&tk=\" +\r\n            encodeURIComponent(getTrack(d.body)) +\r\n            \"&dt=\" +\r\n            encodeURIComponent(getPlayDate(d.body)) +\r\n            \"&hs=\" +\r\n            encodeURIComponent(getIsHighScore(d.body)) +\r\n            \"&cb=\" +\r\n            encodeURIComponent(getCombo(d.body));\r\n        const syncStatus = getSyncResult(d.body);\r\n        if (syncStatus) {\r\n            url += \"&sc=\" + encodeURIComponent(syncStatus);\r\n        }\r\n        console.log(url);\r\n        console.log(\"url length: \" + url.length);\r\n        window.open(url, \"_blank\");\r\n        window.addEventListener(\"message\", (evt) => {\r\n            if (evt.origin === \"https://myjian.github.io\" || evt.origin === \"https://cdpn.io\") {\r\n                const data = evt.data;\r\n                const source = evt.source;\r\n                let rankTitle = \"\";\r\n                switch (data.action) {\r\n                    case \"ready\":\r\n                        source.postMessage({ action: \"songImage\", imgSrc: getSongImage(d.body) }, evt.origin);\r\n                        getApFcImage(d.body).then((img) => {\r\n                            if (img) {\r\n                                source.postMessage({ action: \"apFcImage\", img }, evt.origin);\r\n                            }\r\n                        });\r\n                        getSyncImage(getSyncResult(d.body)).then((img) => {\r\n                            if (img) {\r\n                                source.postMessage({ action: \"syncImage\", img }, evt.origin);\r\n                            }\r\n                        });\r\n                        rankTitle = getRankTitle(d.body);\r\n                        getRankImage(rankTitle).then((img) => {\r\n                            source.postMessage({ action: \"rankImage\", title: rankTitle, img }, evt.origin);\r\n                        });\r\n                        break;\r\n                    case \"getRankImage\":\r\n                        rankTitle = data.payload;\r\n                        getRankImage(rankTitle).then((img) => {\r\n                            source.postMessage({ action: \"rankImage\", title: rankTitle, img }, evt.origin);\r\n                        });\r\n                        break;\r\n                }\r\n            }\r\n        });\r\n    }\r\n})(document);\r\n\n\n//# sourceURL=webpack:///./scripts/score-converter.ts?");
+
+/***/ })
+
+/******/ });

@@ -1,7 +1,6 @@
 import React from 'react';
 
-const WIKI_URL_PREFIX = "https://maimai.fandom.com/zh/wiki/";
-const WIKI_URL_SUFFIX = "?variant=zh-hant";
+import {getZhWikiLink} from '../../common/wiki-link';
 
 const DifficultyInfo: React.FC<{difficulty?: string}> = React.memo((props) => {
   const {difficulty} = props;
@@ -24,15 +23,18 @@ interface SongInfoProps {
 export class SongInfo extends React.PureComponent<SongInfoProps> {
   render() {
     const {songTitle, track, difficulty} = this.props;
-    const href = WIKI_URL_PREFIX + encodeURIComponent(songTitle) + WIKI_URL_SUFFIX;
     return (
       <div className="songInfoContainer">
         <div>
-          <span className="track" id="track">{track}</span>
+          <span className="track" id="track">
+            {track}
+          </span>
           <DifficultyInfo difficulty={difficulty} />
         </div>
         <h2 className="songTitle" id="songTitle">
-          <a className="songWikiLink" href={href} target="_blank">{songTitle}</a>
+          <a className="songWikiLink" href={getZhWikiLink(songTitle)} target="_blank">
+            {songTitle}
+          </a>
         </h2>
       </div>
     );

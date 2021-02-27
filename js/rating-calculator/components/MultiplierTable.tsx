@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {getRankDefinitions} from '../../common/rank-functions';
+import {RANK_DEFINITIONS} from '../../common/rank-functions';
 import {UIString} from '../i18n';
 
 const MIN_RANK_OPTION = "A";
@@ -8,7 +8,7 @@ const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";
 const RANK_FACTOR_CELL_CLASSNAMES = ["qlRankTitleCell", "qlThresholdCell"];
 
 interface RankFactorRowProps {
-  values: ReadonlyArray<string|number>;
+  values: ReadonlyArray<string | number>;
   isHeading?: boolean;
 }
 const RankFactorRow: React.FC<RankFactorRowProps> = (props) => {
@@ -36,7 +36,7 @@ export class MultiplierTable extends React.PureComponent<{}, State> {
 
   render() {
     const {minRankOption} = this.state;
-    const rankDefs = getRankDefinitions();
+    const rankDefs = RANK_DEFINITIONS;
     const stopIndex = rankDefs.findIndex((r) => r.title === minRankOption) + 1;
     return (
       <div className="quickLookup">
@@ -57,11 +57,7 @@ export class MultiplierTable extends React.PureComponent<{}, State> {
               const maxMulText = maxMultiplier.toFixed(3);
               const multiplierRange =
                 minMulText !== maxMulText ? `${minMulText} - ${maxMulText}` : minMulText;
-              return (
-                <RankFactorRow
-                  values={[r.title, r.th, r.factor, multiplierRange]}
-                />
-              );
+              return <RankFactorRow values={[r.title, r.th, r.factor, multiplierRange]} />;
             })}
           </tbody>
         </table>

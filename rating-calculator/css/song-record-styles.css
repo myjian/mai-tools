@@ -124,6 +124,11 @@ td.ratingCell,
   text-align: center;
 }
 
+.songWikiLink {
+  color: inherit;
+  text-decoration: none;
+}
+
 .showMore {
   display: inline-block;
   margin-top: 10px;

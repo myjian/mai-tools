@@ -4,13 +4,16 @@ import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
 import {
   ALLOWED_ORIGINS,
+  fetchAllSongs,
   fetchGameVersion,
+  fetchNewSongs,
   getPostMessageFunc,
   handleError,
 } from '../js/common/util';
 
 (function () {
-  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
+  // const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
+  const BASE_URL = "http://localhost:8080/rating-calculator/";
   // const BASE_URL = "https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk";
   const UIString = {
     zh: {
@@ -23,7 +26,8 @@ import {
     },
   }[LANG];
 
-  async function fetchSelfRecords(send: (action: string, payload: string) => void) {
+  async function fetchSelfRecords(send: (action: string, payload: any) => void): Promise<Document> {
+    let allSongsDom: Document;
     // Fetch DX version
     const gameVer = await fetchGameVersion(document.body);
     send("gameVersion", gameVer);
@@ -36,12 +40,16 @@ import {
     const scoreList: string[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
       send("appendPlayerScore", statusText(difficulty, false));
-      await fetchScores(difficulty, scoreList);
+      const dom = await fetchScores(difficulty, scoreList);
+      if (difficulty === "MASTER") {
+        allSongsDom = dom;
+      }
       send("appendPlayerScore", statusText(difficulty, true));
     }
     send("replacePlayerScore", "");
     send("appendPlayerScore", scoreList.join("\n"));
     send("calculateRating", "");
+    return allSongsDom;
   }
 
   function insertAnalyzeButton(url: string) {
@@ -75,7 +83,7 @@ import {
     if (playerName) {
       queryParams.set("playerName", playerName);
     }
-    const query = queryParams.toString()
+    const query = queryParams.toString();
     if (query) {
       url += "?" + query;
     }
@@ -85,11 +93,17 @@ import {
     } else {
       window.open(url, "selfRating");
     }
+    let allSongsDom: Promise<Document>;
     window.addEventListener("message", (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
+        const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
         if (evt.data === "ready") {
-          fetchSelfRecords(getPostMessageFunc(evt.source as WindowProxy, evt.origin));
+          allSongsDom = fetchSelfRecords(send);
+        } else if (evt.data.action === "fetchNewSongs") {
+          fetchNewSongs(evt.data.payload).then((songs) => send("newSongs", songs));
+        } else if (evt.data.action === "fetchAllSongs") {
+          allSongsDom.then((dom) => fetchAllSongs(dom).then((songs) => send("allSongs", songs)));
         }
       }
     });

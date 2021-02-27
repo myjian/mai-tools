@@ -1,12 +1,17 @@
 import {RankDef} from '../common/rank-functions';
 
+export const enum ChartType {
+  STANDARD,
+  DX,
+}
+
 export interface ChartRecord {
   songName: string;
   genre: string;
   difficulty: string;
   level: number;
   levelIsEstimate: boolean;
-  chartType: string;
+  chartType: ChartType;
   achievement: number;
   multiplier: number;
   rankFactor: number;

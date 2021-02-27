@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {formatFloat} from '../../common/number-helper';
-import {getRankDefinitions, getRankIndexByAchievement} from '../../common/rank-functions';
+import {getRankIndexByAchievement, RANK_DEFINITIONS} from '../../common/rank-functions';
 import {DisplayMode} from '../constants';
 import {
   BreakScoreMap,
@@ -62,7 +62,10 @@ interface ScorePageProps {
   totalJudgements: JudgementMap;
   dxAchvPerType: Map<string, number>;
   apFcStatus: string | null;
-  achvLossDetail: {dx: Map<FullNoteType, FullJudgementMap>, finale: Map<FullNoteType, FullJudgementMap>};
+  achvLossDetail: {
+    dx: Map<FullNoteType, FullJudgementMap>;
+    finale: Map<FullNoteType, FullJudgementMap>;
+  };
   fetchRankImage: (title: string) => void;
 }
 interface ScorePageState {
@@ -77,11 +80,25 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
 
   render() {
     const {
-      achievement, apFcImg, rankImg, syncImg, highScore,
-      date, songTitle, track, difficulty,
-      songImgSrc, noteJudgements, combo, syncStatus,
-      apFcStatus, finaleAchievement, maxFinaleScore,
-      breakDistribution, totalJudgements, playerScorePerType,
+      achievement,
+      apFcImg,
+      rankImg,
+      syncImg,
+      highScore,
+      date,
+      songTitle,
+      track,
+      difficulty,
+      songImgSrc,
+      noteJudgements,
+      combo,
+      syncStatus,
+      apFcStatus,
+      finaleAchievement,
+      maxFinaleScore,
+      breakDistribution,
+      totalJudgements,
+      playerScorePerType,
     } = this.props;
     const {isDxMode, displayMode, displayScorePerType, displayNoteJudgements} = this.state;
     return (
@@ -89,11 +106,7 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
         <DateAndPlace date={date} isDxMode={isDxMode} toggleDxMode={this.toggleDxMode} />
         <div className="songScoreBody">
           <hr className="trackTopLine" />
-          <SongInfo
-            songTitle={songTitle}
-            track={track}
-            difficulty={difficulty}
-          />
+          <SongInfo songTitle={songTitle} track={track} difficulty={difficulty} />
           <SongImg imgSrc={songImgSrc} />
           <AchievementInfo
             apFcStatus={apFcStatus}
@@ -113,7 +126,9 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
           <JudgementContainer
             noteJudgements={displayNoteJudgements || noteJudgements}
             breakDistribution={breakDistribution}
-            totalJudgements={displayNoteJudgements ? displayNoteJudgements.get("total") : totalJudgements}
+            totalJudgements={
+              displayNoteJudgements ? displayNoteJudgements.get("total") : totalJudgements
+            }
             scorePerType={displayScorePerType || playerScorePerType}
             nextRank={this.getNextRankEntry(isDxMode)}
             combo={combo}
@@ -126,24 +141,24 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
   }
 
   private toggleDxMode = () => {
-    this.setState(state => {
+    this.setState((state) => {
       const isDxMode = !state.isDxMode;
       const {displayMode} = state;
       const displayNoteJudgements = this.getNoteJudgementLoss(isDxMode, displayMode);
       const displayScorePerType = this.getDisplayScorePerType(isDxMode, displayMode);
       return {isDxMode, displayNoteJudgements, displayScorePerType};
     });
-  }
+  };
 
   private toggleDisplayMode = () => {
-    this.setState(state => {
+    this.setState((state) => {
       const displayMode = getNextDisplayMode(state.displayMode);
       const {isDxMode} = state;
       const displayNoteJudgements = this.getNoteJudgementLoss(isDxMode, displayMode);
       const displayScorePerType = this.getDisplayScorePerType(isDxMode, displayMode);
       return {displayMode, displayNoteJudgements, displayScorePerType};
     });
-  }
+  };
 
   private getNextRankEntry(isDxMode: boolean) {
     const achv = isDxMode ? this.props.achievement : this.props.finaleAchievement;
@@ -156,13 +171,13 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
           diff: 101 - achv,
         };
       }
-      const nextRankDef = getRankDefinitions()[getRankIndexByAchievement(achv) - 1];
+      const nextRankDef = RANK_DEFINITIONS[getRankIndexByAchievement(achv) - 1];
       return {
         title: nextRankDef.title,
         diff: nextRankDef.th - achv,
       };
     }
-    let nextRank: {title: string, diff: number} | undefined;
+    let nextRank: {title: string; diff: number} | undefined;
     this.props.finaleBorder.forEach((diff, title) => {
       if (diff > 0 && !nextRank) {
         nextRank = {title, diff};
@@ -188,10 +203,7 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
     }
   }
 
-  private getDisplayScorePerType(
-    isDxMode: boolean,
-    displayMode: DisplayMode,
-  ) {
+  private getDisplayScorePerType(isDxMode: boolean, displayMode: DisplayMode) {
     const {achvLossDetail} = this.props;
     const lossDetail = isDxMode ? achvLossDetail.dx : achvLossDetail.finale;
     if (displayMode === DisplayMode.LOSS) {

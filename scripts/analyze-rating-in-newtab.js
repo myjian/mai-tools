@@ -1,1 +1,173 @@
-!function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=91)}({1:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.LANG=void 0;const r=new URLSearchParams(document.location.search);let o="en";r.get("hl")?o=r.get("hl").startsWith("zh")?"zh":"en":navigator.language.startsWith("zh")&&(o="zh"),t.LANG=o},11:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.statusText=void 0;const r={zh:{advStart:"🕓 下載黃譜成績中…",advDone:"✔ 黃譜成績下載完畢！",expStart:"🕓 下載紅譜成績中…",expDone:"✔ 紅譜成績下載完畢！",masStart:"🕓 下載紫譜成績中…",masDone:"✔ 紫譜成績下載完畢！",remStart:"🕓 下載白譜成績中…",remDone:"✔ 白譜成績下載完畢！"},en:{advStart:"🕓 Downloading Advanced scores…",advDone:"✔ Advanced scores downloaded!",expStart:"🕓 Downloading Expert scores…",expDone:"✔ Expert scores downloaded!",masStart:"🕓 Downloading Master scores…",masDone:"✔ Master scores downloaded!",remStart:"🕓 Downloading Re:Master scores…",remDone:"✔ Re:Master scores downloaded!"}}[n(1).LANG];t.statusText=function(e,t){switch(e){case"Re:MASTER":return t?r.remDone:r.remStart;case"MASTER":return t?r.masDone:r.masStart;case"EXPERT":return t?r.expDone:r.expStart;case"ADVANCED":return t?r.advDone:r.advStart}return""}},16:function(e,t,n){"use strict";var r=this&&this.__awaiter||function(e,t,n,r){return new(n||(n=Promise))((function(o,a){function i(e){try{s(r.next(e))}catch(e){a(e)}}function c(e){try{s(r.throw(e))}catch(e){a(e)}}function s(e){var t;e.done?o(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(i,c)}s((r=r.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0}),t.fetchScores=t.SELF_SCORE_URLS=void 0;const o=n(5),a=n(2);t.SELF_SCORE_URLS=new Map([["Re:MASTER","/maimai-mobile/record/musicGenre/search/?genre=99&diff=4"],["MASTER","/maimai-mobile/record/musicGenre/search/?genre=99&diff=3"],["EXPERT","/maimai-mobile/record/musicGenre/search/?genre=99&diff=2"],["ADVANCED","/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"]]),t.fetchScores=function(e,n){return r(this,void 0,void 0,(function*(){const r=t.SELF_SCORE_URLS.get(e);if(!r)return;const i=(yield a.fetchPage(r)).querySelectorAll(".main_wrapper.t_c .m_15"),c={genre:"",scoreList:n};i.forEach(t=>function(e,t,n){const r=e.classList.contains("screw_block"),a=e.classList.contains("w_450")&&e.classList.contains("m_15")&&e.classList.contains("p_r")&&e.classList.contains("f_0");if(r)n.genre=e.innerText;else if(a){const r=o.getSongName(e),a=o.getChartLevel(e),i=o.getChartType(e),c=function(e){const t=e.querySelector(".music_score_block.w_120");return t&&t.innerText}(e);if(!c)return;n.scoreList.push([r,n.genre,t,a,i,c].join("\t"))}}(t,e,c))}))}},2:function(e,t,n){"use strict";var r=this&&this.__awaiter||function(e,t,n,r){return new(n||(n=Promise))((function(o,a){function i(e){try{s(r.next(e))}catch(e){a(e)}}function c(e){try{s(r.throw(e))}catch(e){a(e)}}function s(e){var t;e.done?o(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(i,c)}s((r=r.apply(e,t||[])).next())}))};function o(e){return r(this,void 0,void 0,(function*(){const t=yield fetch(e),n=yield t.text();return(new DOMParser).parseFromString(n,"text/html")}))}Object.defineProperty(t,"__esModule",{value:!0}),t.getPostMessageFunc=t.fetchGameVersion=t.fetchPage=t.handleError=t.ALLOWED_ORIGINS=void 0,t.ALLOWED_ORIGINS=["https://cdpn.io","https://myjian.github.io"],t.handleError=function(e){alert(e)},t.fetchPage=o,t.fetchGameVersion=function e(t){return r(this,void 0,void 0,(function*(){const n=t.querySelector("select[name=version] option:last-of-type");return n?n.value:e(t=yield o("/maimai-mobile/record/musicVersion/"))}))},t.getPostMessageFunc=function(e,t){return(n,r)=>{const o={action:n,payload:r};e.postMessage(o,t)}}},5:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.fetchPlayerGrade=t.getPlayerName=t.getChartType=t.getChartDifficulty=t.getChartLevel=t.getSongName=void 0,t.getSongName=function(e){return e.getElementsByClassName("music_name_block")[0].innerText},t.getChartLevel=function(e){return e.getElementsByClassName("music_lv_block")[0].innerText},t.getChartDifficulty=function(e){e.classList.contains("pointer")||(e=e.querySelector(".pointer"));const t=e.className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();return 0===t.indexOf("RE")?"Re:MASTER":t},t.getChartType=function(e){return e.id?e.id.includes("sta_")?"STANDARD":"DX":e.querySelector("img:nth-child(2)").src.includes("_standard")?"STANDARD":"DX"},t.getPlayerName=function(e){var t;return null===(t=e.querySelector(".name_block"))||void 0===t?void 0:t.innerText},t.fetchPlayerGrade=function(e){const t=e.querySelector(".user_data_block_line ~ img.h_25");if(t){const e=t.src.lastIndexOf("grade_");return t.src.substring(e+6,e+8)}return null}},91:function(e,t,n){"use strict";var r=this&&this.__awaiter||function(e,t,n,r){return new(n||(n=Promise))((function(o,a){function i(e){try{s(r.next(e))}catch(e){a(e)}}function c(e){try{s(r.throw(e))}catch(e){a(e)}}function s(e){var t;e.done?o(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(i,c)}s((r=r.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0});const o=n(5),a=n(16),i=n(1),c=n(11),s=n(2);!function(){const e={zh:{pleaseLogIn:"請登入 maimai NET",analyze:"分析 Rating"},en:{pleaseLogIn:"Please log in to maimai DX NET.",analyze:"Analyze Rating"}}[i.LANG];!function(){const t=document.location.host;if("maimaidx-eng.com"!==t&&"maimaidx.jp"!==t)return void s.handleError(e.pleaseLogIn);let n="https://myjian.github.io/mai-tools/rating-calculator/";const i=new URLSearchParams,u=o.getPlayerName(document.body);u&&i.set("playerName",u);const l=i.toString();l&&(n+="?"+l),navigator.userAgent.startsWith("Mozilla/5.0 (iP")?function(t){const n=document.body.querySelector(".basic_block.p_10.f_0");if(!n)return;const r=n.querySelector(".basic_block > .p_l_10");let o=n.querySelector(".analyzeLink");o&&o.remove(),o=document.createElement("a"),o.className="analyzeLink f_r f_14",o.style.color="#1477e6",o.target="selfRating",o.innerText=e.analyze,o.href=t,r.append(o)}(n):window.open(n,"selfRating"),window.addEventListener("message",e=>{console.log(e.origin,e.data),s.ALLOWED_ORIGINS.includes(e.origin)&&"ready"===e.data&&function(e){r(this,void 0,void 0,(function*(){const t=yield s.fetchGameVersion(document.body);e("gameVersion",t);const n=o.fetchPlayerGrade(document.body);n&&e("playerGrade",n);const r=[];for(const t of a.SELF_SCORE_URLS.keys())e("appendPlayerScore",c.statusText(t,!1)),yield a.fetchScores(t,r),e("appendPlayerScore",c.statusText(t,!0));e("replacePlayerScore",""),e("appendPlayerScore",r.join("\n")),e("calculateRating","")}))}(s.getPostMessageFunc(e.source,e.origin))})}()}()}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./scripts/analyze-rating-in-newtab.ts");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./js/common/fetch-score-util.ts":
+/*!***************************************!*\
+  !*** ./js/common/fetch-score-util.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.fetchPlayerGrade = exports.getPlayerName = exports.getChartType = exports.getChartDifficulty = exports.getChartLevel = exports.getSongName = void 0;\r\nfunction getSongName(row) {\r\n    return row.getElementsByClassName(\"music_name_block\")[0].innerText;\r\n}\r\nexports.getSongName = getSongName;\r\nfunction getChartLevel(row) {\r\n    return row.getElementsByClassName(\"music_lv_block\")[0].innerText;\r\n}\r\nexports.getChartLevel = getChartLevel;\r\nfunction getChartDifficulty(row) {\r\n    if (!row.classList.contains(\"pointer\")) {\r\n        row = row.querySelector(\".pointer\");\r\n    }\r\n    const d = row.className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();\r\n    return d.indexOf(\"RE\") === 0 ? \"Re:MASTER\" : d;\r\n}\r\nexports.getChartDifficulty = getChartDifficulty;\r\nfunction getChartType(row) {\r\n    if (row.id) {\r\n        return row.id.includes(\"sta_\") ? 0 /* STANDARD */ : 1 /* DX */;\r\n    }\r\n    return row.querySelector(\"img:nth-child(2)\").src.includes(\"_standard\")\r\n        ? 0 /* STANDARD */\r\n        : 1 /* DX */;\r\n}\r\nexports.getChartType = getChartType;\r\nfunction getPlayerName(n) {\r\n    var _a;\r\n    return (_a = n.querySelector(\".name_block\")) === null || _a === void 0 ? void 0 : _a.innerText;\r\n}\r\nexports.getPlayerName = getPlayerName;\r\nfunction fetchPlayerGrade(n) {\r\n    const gradeImg = n.querySelector(\".user_data_block_line ~ img.h_25\");\r\n    if (gradeImg) {\r\n        const gradeIdx = gradeImg.src.lastIndexOf(\"grade_\");\r\n        return gradeImg.src.substring(gradeIdx + 6, gradeIdx + 8);\r\n    }\r\n    return null;\r\n}\r\nexports.fetchPlayerGrade = fetchPlayerGrade;\r\n\n\n//# sourceURL=webpack:///./js/common/fetch-score-util.ts?");
+
+/***/ }),
+
+/***/ "./js/common/fetch-self-score.ts":
+/*!***************************************!*\
+  !*** ./js/common/fetch-self-score.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.fetchScores = exports.SELF_SCORE_URLS = void 0;\r\nconst fetch_score_util_1 = __webpack_require__(/*! ./fetch-score-util */ \"./js/common/fetch-score-util.ts\");\r\nconst util_1 = __webpack_require__(/*! ./util */ \"./js/common/util.ts\");\r\nexports.SELF_SCORE_URLS = new Map([\r\n    [\"Re:MASTER\", \"/maimai-mobile/record/musicGenre/search/?genre=99&diff=4\"],\r\n    [\"MASTER\", \"/maimai-mobile/record/musicGenre/search/?genre=99&diff=3\"],\r\n    [\"EXPERT\", \"/maimai-mobile/record/musicGenre/search/?genre=99&diff=2\"],\r\n    [\"ADVANCED\", \"/maimai-mobile/record/musicGenre/search/?genre=99&diff=1\"],\r\n]);\r\nfunction getAchievement(row) {\r\n    const ach = row.querySelector(\".music_score_block.w_120\");\r\n    return ach && ach.innerText;\r\n}\r\nfunction processRow(row, difficulty, state) {\r\n    const isGenreRow = row.classList.contains(\"screw_block\");\r\n    const isScoreRow = row.classList.contains(\"w_450\") &&\r\n        row.classList.contains(\"m_15\") &&\r\n        row.classList.contains(\"p_r\") &&\r\n        row.classList.contains(\"f_0\");\r\n    if (isGenreRow) {\r\n        state.genre = row.innerText;\r\n    }\r\n    else if (isScoreRow) {\r\n        const songName = fetch_score_util_1.getSongName(row);\r\n        const level = fetch_score_util_1.getChartLevel(row);\r\n        const chartType = fetch_score_util_1.getChartType(row) === 1 /* DX */ ? \"DX\" : \"STANDARD\";\r\n        const achievement = getAchievement(row);\r\n        if (!achievement) {\r\n            return;\r\n        }\r\n        state.scoreList.push([songName, state.genre, difficulty, level, chartType, achievement].join(\"\\t\"));\r\n    }\r\n}\r\nfunction fetchScores(difficulty, scoreList) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        const url = exports.SELF_SCORE_URLS.get(difficulty);\r\n        if (!url) {\r\n            return;\r\n        }\r\n        return new Promise((resolve) => {\r\n            setTimeout(() => __awaiter(this, void 0, void 0, function* () {\r\n                const dom = yield util_1.fetchPage(url);\r\n                const rows = dom.querySelectorAll(\".main_wrapper.t_c .m_15\");\r\n                const state = { genre: \"\", scoreList: scoreList };\r\n                rows.forEach((row) => processRow(row, difficulty, state));\r\n                resolve(dom);\r\n            }), 0);\r\n        });\r\n    });\r\n}\r\nexports.fetchScores = fetchScores;\r\n\n\n//# sourceURL=webpack:///./js/common/fetch-self-score.ts?");
+
+/***/ }),
+
+/***/ "./js/common/lang.ts":
+/*!***************************!*\
+  !*** ./js/common/lang.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.LANG = void 0;\r\nconst queryParams = new URLSearchParams(document.location.search);\r\nlet lang = \"en\";\r\nif (queryParams.get(\"hl\")) {\r\n    lang = queryParams.get(\"hl\").startsWith(\"zh\") ? \"zh\" : \"en\";\r\n}\r\nelse if (navigator.language.startsWith(\"zh\")) {\r\n    lang = \"zh\";\r\n}\r\nexports.LANG = lang;\r\n\n\n//# sourceURL=webpack:///./js/common/lang.ts?");
+
+/***/ }),
+
+/***/ "./js/common/score-fetch-progress.ts":
+/*!*******************************************!*\
+  !*** ./js/common/score-fetch-progress.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.statusText = void 0;\r\nconst lang_1 = __webpack_require__(/*! ./lang */ \"./js/common/lang.ts\");\r\nconst UIString = {\r\n    zh: {\r\n        advStart: \"🕓 下載黃譜成績中…\",\r\n        advDone: \"✔ 黃譜成績下載完畢！\",\r\n        expStart: \"🕓 下載紅譜成績中…\",\r\n        expDone: \"✔ 紅譜成績下載完畢！\",\r\n        masStart: \"🕓 下載紫譜成績中…\",\r\n        masDone: \"✔ 紫譜成績下載完畢！\",\r\n        remStart: \"🕓 下載白譜成績中…\",\r\n        remDone: \"✔ 白譜成績下載完畢！\",\r\n    },\r\n    en: {\r\n        advStart: \"🕓 Downloading Advanced scores…\",\r\n        advDone: \"✔ Advanced scores downloaded!\",\r\n        expStart: \"🕓 Downloading Expert scores…\",\r\n        expDone: \"✔ Expert scores downloaded!\",\r\n        masStart: \"🕓 Downloading Master scores…\",\r\n        masDone: \"✔ Master scores downloaded!\",\r\n        remStart: \"🕓 Downloading Re:Master scores…\",\r\n        remDone: \"✔ Re:Master scores downloaded!\",\r\n    },\r\n}[lang_1.LANG];\r\nfunction statusText(what, end) {\r\n    switch (what) {\r\n        case \"Re:MASTER\":\r\n            return end ? UIString.remDone : UIString.remStart;\r\n        case \"MASTER\":\r\n            return end ? UIString.masDone : UIString.masStart;\r\n        case \"EXPERT\":\r\n            return end ? UIString.expDone : UIString.expStart;\r\n        case \"ADVANCED\":\r\n            return end ? UIString.advDone : UIString.advStart;\r\n    }\r\n    return \"\";\r\n}\r\nexports.statusText = statusText;\r\n\n\n//# sourceURL=webpack:///./js/common/score-fetch-progress.ts?");
+
+/***/ }),
+
+/***/ "./js/common/song-util.ts":
+/*!********************************!*\
+  !*** ./js/common/song-util.ts ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.isNicoNicoLink = exports.getSongNickname = exports.getSongIdx = void 0;\r\nconst util_1 = __webpack_require__(/*! ./util */ \"./js/common/util.ts\");\r\nfunction getSongIdx(row) {\r\n    return row.getElementsByTagName(\"form\")[0].elements.namedItem(\"idx\").value;\r\n}\r\nexports.getSongIdx = getSongIdx;\r\nfunction getSongNickname(name, genre, isDxChart) {\r\n    if (name === \"Link\") {\r\n        name = genre.includes(\"niconico\") ? \"Link(nico)\" : \"Link(org)\";\r\n    }\r\n    return isDxChart ? name + \" [DX]\" : name;\r\n}\r\nexports.getSongNickname = getSongNickname;\r\nlet cachedLinkIdx = {};\r\nfunction isNicoNicoLink(idx) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        if (cachedLinkIdx.nico === idx) {\r\n            return true;\r\n        }\r\n        if (cachedLinkIdx.original === idx) {\r\n            return false;\r\n        }\r\n        const dom = yield util_1.fetchPage(\"/maimai-mobile/record/musicDetail/?\" + new URLSearchParams([[\"idx\", idx]]).toString());\r\n        const isNico = dom.body.querySelector(\".m_10.m_t_5.t_r.f_12\").innerText.includes(\"niconico\");\r\n        console.log(\"Link (idx: \" + idx + \") \" + (isNico ? \"is niconico\" : \"is original\"));\r\n        if (isNico) {\r\n            cachedLinkIdx.nico = idx;\r\n        }\r\n        else {\r\n            cachedLinkIdx.original = idx;\r\n        }\r\n        return isNico;\r\n    });\r\n}\r\nexports.isNicoNicoLink = isNicoNicoLink;\r\n\n\n//# sourceURL=webpack:///./js/common/song-util.ts?");
+
+/***/ }),
+
+/***/ "./js/common/util.ts":
+/*!***************************!*\
+  !*** ./js/common/util.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.getPostMessageFunc = exports.fetchNewSongs = exports.fetchAllSongs = exports.fetchGameVersion = exports.fetchPage = exports.handleError = exports.ALLOWED_ORIGINS = void 0;\r\nconst fetch_score_util_1 = __webpack_require__(/*! ./fetch-score-util */ \"./js/common/fetch-score-util.ts\");\r\nconst fetch_self_score_1 = __webpack_require__(/*! ./fetch-self-score */ \"./js/common/fetch-self-score.ts\");\r\nconst song_util_1 = __webpack_require__(/*! ./song-util */ \"./js/common/song-util.ts\");\r\nexports.ALLOWED_ORIGINS = [\r\n    \"https://cdpn.io\",\r\n    \"https://myjian.github.io\",\r\n    \"http://localhost:8080\",\r\n];\r\nfunction handleError(msg) {\r\n    alert(msg);\r\n}\r\nexports.handleError = handleError;\r\nfunction fetchPage(url) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        const response = yield fetch(url);\r\n        const html = yield response.text();\r\n        const parser = new DOMParser();\r\n        return parser.parseFromString(html, \"text/html\");\r\n    });\r\n}\r\nexports.fetchPage = fetchPage;\r\n/** Returns \"13\" if version is DX, \"14\" if version is DX Plus. */\r\nfunction fetchGameVersion(dom) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        const gameVer = dom.querySelector(\"select[name=version] option:last-of-type\");\r\n        if (gameVer) {\r\n            return gameVer.value;\r\n        }\r\n        dom = yield fetchPage(\"/maimai-mobile/record/musicVersion/\");\r\n        return fetchGameVersion(dom);\r\n    });\r\n}\r\nexports.fetchGameVersion = fetchGameVersion;\r\nfunction parseSongList(dom) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        // This is simplified from scripts/build-song-db.ts\r\n        const rows = Array.from(dom.querySelectorAll(\".w_450.m_15.f_0\"));\r\n        const songs = [];\r\n        for (const d of rows) {\r\n            const idx = song_util_1.getSongIdx(d);\r\n            const name = fetch_score_util_1.getSongName(d);\r\n            const isDx = fetch_score_util_1.getChartType(d);\r\n            let nickname;\r\n            if (name === \"Link\") {\r\n                nickname = (yield song_util_1.isNicoNicoLink(idx)) ? \"Link(nico)\" : \"Link(orig)\";\r\n            }\r\n            songs.push({ dx: isDx, name, nickname });\r\n        }\r\n        return songs;\r\n    });\r\n}\r\nfunction fetchAllSongs(dom) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        if (!dom) {\r\n            const url = fetch_self_score_1.SELF_SCORE_URLS.get(\"MASTER\");\r\n            dom = yield fetchPage(url);\r\n        }\r\n        return yield parseSongList(dom);\r\n    });\r\n}\r\nexports.fetchAllSongs = fetchAllSongs;\r\nfunction fetchNewSongs(ver) {\r\n    return __awaiter(this, void 0, void 0, function* () {\r\n        // diff=0 means BASIC\r\n        const dom = yield fetchPage(`/maimai-mobile/record/musicVersion/search/?version=${ver}&diff=0`);\r\n        return yield parseSongList(dom);\r\n    });\r\n}\r\nexports.fetchNewSongs = fetchNewSongs;\r\nfunction getPostMessageFunc(w, origin) {\r\n    return (action, payload) => {\r\n        const obj = { action, payload };\r\n        console.log(action, payload);\r\n        w.postMessage(obj, origin);\r\n    };\r\n}\r\nexports.getPostMessageFunc = getPostMessageFunc;\r\n\n\n//# sourceURL=webpack:///./js/common/util.ts?");
+
+/***/ }),
+
+/***/ "./scripts/analyze-rating-in-newtab.ts":
+/*!*********************************************!*\
+  !*** ./scripts/analyze-rating-in-newtab.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nvar __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nconst fetch_score_util_1 = __webpack_require__(/*! ../js/common/fetch-score-util */ \"./js/common/fetch-score-util.ts\");\r\nconst fetch_self_score_1 = __webpack_require__(/*! ../js/common/fetch-self-score */ \"./js/common/fetch-self-score.ts\");\r\nconst lang_1 = __webpack_require__(/*! ../js/common/lang */ \"./js/common/lang.ts\");\r\nconst score_fetch_progress_1 = __webpack_require__(/*! ../js/common/score-fetch-progress */ \"./js/common/score-fetch-progress.ts\");\r\nconst util_1 = __webpack_require__(/*! ../js/common/util */ \"./js/common/util.ts\");\r\n(function () {\r\n    // const BASE_URL = \"https://myjian.github.io/mai-tools/rating-calculator/\";\r\n    const BASE_URL = \"http://localhost:8080/rating-calculator/\";\r\n    // const BASE_URL = \"https://cdpn.io/myjian/debug/BajbXQp/yoMZEOmaRZbk\";\r\n    const UIString = {\r\n        zh: {\r\n            pleaseLogIn: \"請登入 maimai NET\",\r\n            analyze: \"分析 Rating\",\r\n        },\r\n        en: {\r\n            pleaseLogIn: \"Please log in to maimai DX NET.\",\r\n            analyze: \"Analyze Rating\",\r\n        },\r\n    }[lang_1.LANG];\r\n    function fetchSelfRecords(send) {\r\n        return __awaiter(this, void 0, void 0, function* () {\r\n            let allSongsDom;\r\n            // Fetch DX version\r\n            const gameVer = yield util_1.fetchGameVersion(document.body);\r\n            send(\"gameVersion\", gameVer);\r\n            // Fetch player grade\r\n            const playerGrade = fetch_score_util_1.fetchPlayerGrade(document.body);\r\n            if (playerGrade) {\r\n                send(\"playerGrade\", playerGrade);\r\n            }\r\n            // Fetch all scores\r\n            const scoreList = [];\r\n            for (const difficulty of fetch_self_score_1.SELF_SCORE_URLS.keys()) {\r\n                send(\"appendPlayerScore\", score_fetch_progress_1.statusText(difficulty, false));\r\n                const dom = yield fetch_self_score_1.fetchScores(difficulty, scoreList);\r\n                if (difficulty === \"MASTER\") {\r\n                    allSongsDom = dom;\r\n                }\r\n                send(\"appendPlayerScore\", score_fetch_progress_1.statusText(difficulty, true));\r\n            }\r\n            send(\"replacePlayerScore\", \"\");\r\n            send(\"appendPlayerScore\", scoreList.join(\"\\n\"));\r\n            send(\"calculateRating\", \"\");\r\n            return allSongsDom;\r\n        });\r\n    }\r\n    function insertAnalyzeButton(url) {\r\n        const profileBlock = document.body.querySelector(\".basic_block.p_10.f_0\");\r\n        if (!profileBlock) {\r\n            return;\r\n        }\r\n        const container = profileBlock.querySelector(\".basic_block > .p_l_10\");\r\n        let analyzeLink = profileBlock.querySelector(\".analyzeLink\");\r\n        if (analyzeLink) {\r\n            analyzeLink.remove();\r\n        }\r\n        analyzeLink = document.createElement(\"a\");\r\n        analyzeLink.className = \"analyzeLink f_r f_14\";\r\n        analyzeLink.style.color = \"#1477e6\";\r\n        analyzeLink.target = \"selfRating\";\r\n        analyzeLink.innerText = UIString.analyze;\r\n        analyzeLink.href = url;\r\n        container.append(analyzeLink);\r\n    }\r\n    function main() {\r\n        const host = document.location.host;\r\n        if (host !== \"maimaidx-eng.com\" && host !== \"maimaidx.jp\") {\r\n            util_1.handleError(UIString.pleaseLogIn);\r\n            return;\r\n        }\r\n        let url = BASE_URL;\r\n        const queryParams = new URLSearchParams();\r\n        const playerName = fetch_score_util_1.getPlayerName(document.body);\r\n        if (playerName) {\r\n            queryParams.set(\"playerName\", playerName);\r\n        }\r\n        const query = queryParams.toString();\r\n        if (query) {\r\n            url += \"?\" + query;\r\n        }\r\n        if (navigator.userAgent.startsWith(\"Mozilla/5.0 (iP\")) {\r\n            // iOS does not allow pop-up window\r\n            insertAnalyzeButton(url);\r\n        }\r\n        else {\r\n            window.open(url, \"selfRating\");\r\n        }\r\n        let allSongsDom;\r\n        window.addEventListener(\"message\", (evt) => {\r\n            console.log(evt.origin, evt.data);\r\n            if (util_1.ALLOWED_ORIGINS.includes(evt.origin)) {\r\n                const send = util_1.getPostMessageFunc(evt.source, evt.origin);\r\n                if (evt.data === \"ready\") {\r\n                    allSongsDom = fetchSelfRecords(send);\r\n                }\r\n                else if (evt.data.action === \"fetchNewSongs\") {\r\n                    util_1.fetchNewSongs(evt.data.payload).then((songs) => send(\"newSongs\", songs));\r\n                }\r\n                else if (evt.data.action === \"fetchAllSongs\") {\r\n                    allSongsDom.then((dom) => util_1.fetchAllSongs(dom).then((songs) => send(\"allSongs\", songs)));\r\n                }\r\n            }\r\n        });\r\n    }\r\n    main();\r\n})();\r\n\n\n//# sourceURL=webpack:///./scripts/analyze-rating-in-newtab.ts?");
+
+/***/ })
+
+/******/ });

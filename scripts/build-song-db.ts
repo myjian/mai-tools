@@ -5,11 +5,10 @@ import {
   getSongName,
 } from '../js/common/fetch-score-util';
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
+import {ChartType} from '../js/rating-calculator/types';
 
 async function buildSongDb() {
-  const rows = Array.from(
-    document.querySelectorAll(".w_450.m_15.p_r.f_0") as NodeListOf<HTMLElement>
-  );
+  const rows = Array.from(document.querySelectorAll(".w_450.m_15.f_0") as NodeListOf<HTMLElement>);
   const songs = [];
   for (const d of rows) {
     const idx = getSongIdx(d);
@@ -22,7 +21,7 @@ async function buildSongDb() {
     } else if (n === "+♂" || n === "39") {
       n = "'" + n;
     }
-    if (c === "DX") {
+    if (c === ChartType.DX) {
       n += " [dx]";
     }
     if (!lv.includes("+")) {

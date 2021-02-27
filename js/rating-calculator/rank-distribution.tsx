@@ -1,9 +1,9 @@
-import {getRankDefinitions, getRankTitle} from '../common/rank-functions';
+import {getRankTitle, RANK_DEFINITIONS} from '../common/rank-functions';
 import {ChartRecord} from './types';
 
 export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<string, number> {
   const countPerRank = new Map();
-  for (const rankDef of getRankDefinitions()) {
+  for (const rankDef of RANK_DEFINITIONS) {
     countPerRank.set(rankDef.title, 0);
   }
   scoreList.forEach((record) => {

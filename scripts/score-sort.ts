@@ -5,6 +5,7 @@ import {iWantSomeMagic} from '../js/common/magic';
 import {buildSongPropsMap, getSongProperties, SongProperties} from '../js/common/song-props';
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
 import {fetchGameVersion} from '../js/common/util';
+import {ChartType} from '../js/rating-calculator/types';
 
 type SortBy =
   | "none"
@@ -79,7 +80,7 @@ type Cache = {
   function isEstimateLv(lv: number) {
     const majorLv = Math.floor(lv);
     const minorLv = lv - majorLv;
-    return (minorLv > 0.95) ? 1 : (minorLv > 0.65 && minorLv < 0.69) ? 0.7 : 0;
+    return minorLv > 0.95 ? 1 : minorLv > 0.65 && minorLv < 0.69 ? 0.7 : 0;
   }
 
   function getInLvSecTitle(lv: number) {
@@ -319,9 +320,7 @@ type Cache = {
   }
 
   function getScoreRows() {
-    return d.body.querySelectorAll(".main_wrapper.t_c .w_450.m_15.f_0") as NodeListOf<
-      HTMLElement
-    >;
+    return d.body.querySelectorAll(".main_wrapper.t_c .w_450.m_15.f_0") as NodeListOf<HTMLElement>;
   }
 
   function performSort(sortBy: SortBy) {
@@ -441,13 +440,13 @@ type Cache = {
           let props: SongProperties;
           if (isNico) {
             cache.nicoLinkIdx = idx;
-            props = getSongProperties(songProps, song, "niconico", "STANDARD");
+            props = getSongProperties(songProps, song, "niconico", ChartType.STANDARD);
           } else {
             cache.originalLinkIdx = idx;
-            props = getSongProperties(songProps, song, "", "STANDARD");
+            props = getSongProperties(songProps, song, "", ChartType.STANDARD);
           }
           saveInLv(row, coalesceInLv(row, lvIndex, props));
-        } catch(e) {
+        } catch (e) {
           saveInLv(row, coalesceInLv(row, lvIndex));
         }
       } else {

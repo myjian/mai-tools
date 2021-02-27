@@ -31,7 +31,7 @@ const UIStringByLang = {
     level: "Level",
     rating: "Rating",
     nextGoal: "Next Goal",
-    nextRating: "Next Rating",
+    nextRating: "+Rating",
     rankFactorTable: "Rank Factor Table",
     rank: "Rank",
     achievement: "Achievement",
@@ -49,6 +49,8 @@ const UIStringByLang = {
     levelComment:
       "Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+.",
     average: "Average",
+    showPlayed: "Show played charts",
+    showNotPlayed: "Show not yet played charts",
   },
   zh: {
     gameVer: "遊戲版本：",
@@ -80,7 +82,7 @@ const UIStringByLang = {
     level: "等級",
     rating: "R 值",
     nextGoal: "下個\n目標",
-    nextRating: "下個\nR 值",
+    nextRating: "R 值\n加分",
     rankFactorTable: "Rank 係數表",
     rank: "Rank",
     achievement: "達成率",
@@ -97,6 +99,8 @@ const UIStringByLang = {
     projectedRating: "可獲得 R 值",
     levelComment: "註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。",
     average: "平均",
+    showPlayed: "顯示已玩過的譜面",
+    showNotPlayed: "顯示未玩過的譜面",
   },
 };
 
