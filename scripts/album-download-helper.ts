@@ -59,6 +59,8 @@
   }
 
   function main() {
+    // Enable right click
+    document.body.oncontextmenu = null;
     const rows = Array.from(d.getElementsByClassName("black_block")).map((r) => r.parentElement);
     for (const row of rows) {
       assignFilenameToPhoto(row);
