@@ -39,11 +39,11 @@ d.body.append(s);
 
 export const scoreConverter: Bookmarklet = {
   itemTitle: {
-    zh: "新舊版分數轉換 & 分析",
+    zh: "換算成舊版達成率 & 分析",
     en: "Convert DX score to old score system",
   }[LANG],
   feature: {
-    zh: "功能：可轉換 DX 達成率為舊版計分方式，以及分析各指令扣分比例。",
+    zh: "功能：可轉換 DX 達成率為舊版 (maimai FiNALE) 計分方式，以及分析各指令扣分比例。",
     en:
       "Feature: Convert DX achievement to old achievement (maimai FiNALE & older), and analyze score penalty by note type.",
   }[LANG],

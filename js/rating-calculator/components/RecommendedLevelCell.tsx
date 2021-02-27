@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {getOfficialLevel} from '../../common/level-helper';
-import {UIString} from '../i18n';
 
 function getMaimaiSongsLink(officialLv: string) {
   officialLv = officialLv.replace("+", ".5");
@@ -24,7 +23,7 @@ export class RecommendedLevelCell extends React.PureComponent<Props> {
         <a href={getMaimaiSongsLink(officialLv)} target="_blank">
           {officialLv}
         </a>
-        <br />({lv.toFixed(1) + UIString.tilde})
+        <br />({lv.toFixed(1)}~)
       </td>
     );
   }
