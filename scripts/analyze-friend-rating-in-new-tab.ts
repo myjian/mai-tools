@@ -14,10 +14,10 @@ import {
 
 declare global {
   interface Window {
-    // add you custom properties and methods
     ratingCalcMsgListener?: (evt: MessageEvent) => void;
   }
 }
+
 type FriendInfo = {
   name: string;
   idx: string;
@@ -100,10 +100,10 @@ type FriendInfo = {
       friends_cache[idx] = info;
       insertAnalyzeButton(info);
     });
+    let allSongs: BasicSongProps[];
     if (self.ratingCalcMsgListener) {
       window.removeEventListener("message", self.ratingCalcMsgListener);
     }
-    let allSongs: BasicSongProps[];
     self.ratingCalcMsgListener = (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {

@@ -52,15 +52,13 @@ export class ChartRecordRow extends React.PureComponent<Props> {
     );
   }
 
-  private getChildren = (value: React.ReactText, colIdx: number) => {
+  private getChildren = (value: React.ReactText, colIdx: number): React.ReactNode => {
     if (colIdx === 1) {
       // song title
       return (
-        <>
-          <a className="songWikiLink" href={getZhWikiLink(value as string)} target="_blank">
-            {value}
-          </a>
-        </>
+        <a className="songWikiLink" href={getZhWikiLink(value as string)} target="_blank">
+          {value}
+        </a>
       );
     }
     if (typeof value === "string" && value.includes("\n")) {

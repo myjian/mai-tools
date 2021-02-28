@@ -11,6 +11,12 @@ import {
   handleError,
 } from '../js/common/util';
 
+declare global {
+  interface Window {
+    ratingCalcMsgListener?: (evt: MessageEvent) => void;
+  }
+}
+
 (function () {
   const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
   // const BASE_URL = "http://localhost:8080/rating-calculator/";
@@ -95,7 +101,10 @@ import {
       window.open(url, "selfRating");
     }
     let allSongsDom: Promise<Document>;
-    window.addEventListener("message", (evt) => {
+    if (self.ratingCalcMsgListener) {
+      window.removeEventListener("message", self.ratingCalcMsgListener);
+    }
+    self.ratingCalcMsgListener = (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
@@ -107,7 +116,8 @@ import {
           allSongsDom.then((dom) => fetchAllSongs(dom).then((songs) => send("allSongs", songs)));
         }
       }
-    });
+    };
+    window.addEventListener("message", self.ratingCalcMsgListener);
   }
 
   main();

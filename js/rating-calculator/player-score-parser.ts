@@ -1,7 +1,8 @@
 import {SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
 import {getDefaultLevel} from '../common/level-helper';
 import {getRankByAchievement} from '../common/rank-functions';
-import {ChartRecord, ChartType} from './types';
+import {ChartType} from '../common/song-props';
+import {ChartRecord} from './types';
 
 function getScoreMultiplier(achievement: number) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);

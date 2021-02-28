@@ -1,4 +1,4 @@
-import {ChartType} from '../rating-calculator/types';
+import {ChartType} from './song-props';
 
 export function getSongName(row: HTMLElement) {
   return (row.getElementsByClassName("music_name_block")[0] as HTMLElement).innerText;

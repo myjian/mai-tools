@@ -1,14 +1,12 @@
 import React from 'react';
 
 import {SongProperties} from '../../common/song-props';
-import {getCandidateSongs, getNotPlayedCharts} from '../candidate-songs';
+import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {UIString} from '../i18n';
-import {RatingData} from '../types';
-import {CandidateChartRecords} from './CandidatesChartRecords';
-import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
+import {ChartRecordWithRating, RatingData} from '../types';
+import {RatingDetails} from './RatingDetails';
 import {RatingOverview} from './RatingOverview';
 import {RecommendedLevels} from './RecommendedLevels';
-import {TopChartRecords} from './TopChartRecords';
 
 const NEW_CANDIDATE_SONGS_POOL_SIZE = 40;
 const OLD_CANDIDATE_SONGS_POOL_SIZE = 60;
@@ -23,52 +21,17 @@ interface Props {
 }
 
 interface State {
-  hideNewTopSongs: boolean;
-  hideOldTopSongs: boolean;
-  hideNewCandidateSongs: boolean;
-  hideOldCandidateSongs: boolean;
+  newCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
+  oldCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
+  notPlayedNewCharts?: ReadonlyArray<ChartRecordWithRating>;
+  notPlayedOldCharts?: ReadonlyArray<ChartRecordWithRating>;
 }
 
 export class RatingOutput extends React.PureComponent<Props, State> {
-  private outputArea = React.createRef<HTMLDivElement>();
-
-  state: State = {
-    hideNewTopSongs: false,
-    hideOldTopSongs: false,
-    hideNewCandidateSongs: false,
-    hideOldCandidateSongs: false,
-  };
-
-  componentDidMount() {
-    if (this.outputArea.current) {
-      this.outputArea.current.scrollIntoView({behavior: "smooth"});
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (!prevProps.newSongs && !prevProps.oldSongs && this.props.newSongs && this.props.oldSongs) {
-      console.log(this.props.newSongs);
-      console.log(this.props.oldSongs);
-    }
-  }
-
-  render() {
-    const {newSongs, oldSongs, playerName, playerGradeIndex, songPropsByName} = this.props;
-    const {
-      newChartRecords,
-      newChartsRating,
-      newTopChartsCount,
-      oldChartRecords,
-      oldChartsRating,
-      oldTopChartsCount,
-    } = this.props.ratingData;
-    const {
-      hideNewCandidateSongs,
-      hideNewTopSongs,
-      hideOldCandidateSongs,
-      hideOldTopSongs,
-    } = this.state;
-    const newChartCandidates = getCandidateSongs(
+  static getDerivedStateFromProps: React.GetDerivedStateFromProps<Props, State> = (props) => {
+    const {newSongs, oldSongs, ratingData} = props;
+    const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
+    const newCandidateCharts = getCandidateCharts(
       newChartRecords,
       newTopChartsCount,
       NEW_CANDIDATE_SONGS_POOL_SIZE
@@ -82,7 +45,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
         )
       : [];
     console.log(notPlayedNewCharts);
-    const oldChartCandidates = getCandidateSongs(
+    const oldCandidateCharts = getCandidateCharts(
       oldChartRecords,
       oldTopChartsCount,
       OLD_CANDIDATE_SONGS_POOL_SIZE
@@ -96,6 +59,31 @@ export class RatingOutput extends React.PureComponent<Props, State> {
         )
       : [];
     console.log(notPlayedOldCharts);
+    return {newCandidateCharts, oldCandidateCharts, notPlayedNewCharts, notPlayedOldCharts};
+  };
+
+  private outputArea = React.createRef<HTMLDivElement>();
+
+  componentDidMount() {
+    if (this.outputArea.current) {
+      this.outputArea.current.scrollIntoView({behavior: "smooth"});
+    }
+  }
+
+  render() {
+    const {playerName, playerGradeIndex, songPropsByName} = this.props;
+    const {
+      newChartsRating,
+      newTopChartsCount,
+      oldChartsRating,
+      oldTopChartsCount,
+    } = this.props.ratingData;
+    const {
+      newCandidateCharts,
+      oldCandidateCharts,
+      notPlayedNewCharts,
+      notPlayedOldCharts,
+    } = this.state;
     return (
       <div className="outputArea" ref={this.outputArea}>
         <h2 id="outputHeading">
@@ -115,81 +103,16 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           oldChartsRating={oldChartsRating}
           oldTopChartsCount={oldTopChartsCount}
         />
-        <div className="songRecordsContainer">
-          <ChartRecordSectionTitle
-            title={UIString.newChartsRatingTargets}
-            contentHidden={hideNewTopSongs}
-            onClick={this.toggleNewTopChartsDisplay}
-          />
-          <TopChartRecords
-            songPropsByName={songPropsByName}
-            records={newChartRecords}
-            limit={newTopChartsCount}
-            hidden={hideNewTopSongs}
-          />
-        </div>
-        <div className="songRecordsContainer">
-          <ChartRecordSectionTitle
-            title={UIString.oldChartsRatingTargets}
-            contentHidden={hideOldTopSongs}
-            onClick={this.toggleOldTopChartsDisplay}
-          />
-          <TopChartRecords
-            songPropsByName={songPropsByName}
-            records={oldChartRecords}
-            limit={oldTopChartsCount}
-            hidden={hideOldTopSongs}
-          />
-        </div>
-        {/* TODO: filter by song name from user input */}
-        <div className="songRecordsContainer">
-          <ChartRecordSectionTitle
-            title={UIString.newChartsRatingCandidates}
-            contentHidden={hideNewCandidateSongs}
-            onClick={this.toggleNewCandidateChartsDisplay}
-            isCandidateList
-          />
-          <CandidateChartRecords
-            name="new"
-            songPropsByName={songPropsByName}
-            records={newChartCandidates}
-            hidden={hideNewCandidateSongs}
-            notPlayed={notPlayedNewCharts}
-          />
-        </div>
-        <div className="songRecordsContainer">
-          <ChartRecordSectionTitle
-            title={UIString.oldChartsRatingCandidates}
-            contentHidden={hideOldCandidateSongs}
-            onClick={this.toggleOldCandidateChartsDisplay}
-            isCandidateList
-          />
-          <CandidateChartRecords
-            name="old"
-            songPropsByName={songPropsByName}
-            records={oldChartCandidates}
-            hidden={hideOldCandidateSongs}
-            notPlayed={notPlayedOldCharts}
-          />
-        </div>
+        <RatingDetails
+          songPropsByName={songPropsByName}
+          newCandidateCharts={newCandidateCharts}
+          oldCandidateCharts={oldCandidateCharts}
+          notPlayedNewCharts={notPlayedNewCharts}
+          notPlayedOldCharts={notPlayedOldCharts}
+          ratingData={this.props.ratingData}
+        />
         <hr className="sectionSep" />
       </div>
     );
   }
-
-  private toggleNewTopChartsDisplay = () => {
-    this.setState((state) => ({hideNewTopSongs: !state.hideNewTopSongs}));
-  };
-
-  private toggleNewCandidateChartsDisplay = () => {
-    this.setState((state) => ({hideNewCandidateSongs: !state.hideNewCandidateSongs}));
-  };
-
-  private toggleOldTopChartsDisplay = () => {
-    this.setState((state) => ({hideOldTopSongs: !state.hideOldTopSongs}));
-  };
-
-  private toggleOldCandidateChartsDisplay = () => {
-    this.setState((state) => ({hideOldCandidateSongs: !state.hideOldCandidateSongs}));
-  };
 }

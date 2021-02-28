@@ -1,5 +1,5 @@
-import {ChartType} from '../rating-calculator/types';
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
+import {ChartType} from './song-props';
 import {fetchPage} from './util';
 
 export const FRIEND_SCORE_URLS = new Map([

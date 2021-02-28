@@ -66,7 +66,6 @@ export async function fetchNewSongs(ver: number): Promise<BasicSongProps[]> {
 export function getPostMessageFunc(w: WindowProxy, origin: string) {
   return (action: string, payload: any) => {
     const obj = {action, payload};
-    console.log(action, payload);
     w.postMessage(obj, origin);
   };
 }

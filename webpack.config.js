@@ -9,8 +9,8 @@ fs.readdirSync(SCRIPTS_DIR)
   .forEach((f) => (scriptEntryPoints[f.replace(".ts", "")] = "./" + path.join(SCRIPTS_DIR, f)));
 
 module.exports = {
-  // mode: "production",
-  mode: "development",
+  mode: "production",
+  // mode: "development",
   entry: {
     bookmarklets: "./js/bookmarklets/main.tsx",
     "classic-layout": "./js/classic-layout/main.tsx",

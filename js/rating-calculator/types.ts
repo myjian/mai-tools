@@ -1,9 +1,5 @@
 import {RankDef} from '../common/rank-functions';
-
-export const enum ChartType {
-  STANDARD,
-  DX,
-}
+import {ChartType} from '../common/song-props';
 
 export interface ChartRecord {
   songName: string;

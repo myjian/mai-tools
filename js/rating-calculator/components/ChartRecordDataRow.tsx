@@ -2,9 +2,9 @@ import React from 'react';
 
 import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
-import {SongProperties} from '../../common/song-props';
+import {ChartType, SongProperties} from '../../common/song-props';
 import {getSongNickname} from '../../common/song-util';
-import {ChartRecordWithRating, ChartType, ColumnType} from '../types';
+import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordRow} from './ChartRecordRow';
 
 function getSongNameDisplay(

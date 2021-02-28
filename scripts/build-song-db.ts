@@ -4,8 +4,8 @@ import {
   getChartType,
   getSongName,
 } from '../js/common/fetch-score-util';
+import {ChartType} from '../js/common/song-props';
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
-import {ChartType} from '../js/rating-calculator/types';
 
 async function buildSongDb() {
   const rows = Array.from(document.querySelectorAll(".w_450.m_15.f_0") as NodeListOf<HTMLElement>);

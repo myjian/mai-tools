@@ -102,7 +102,7 @@ export const recentPlaySummary: Bookmarklet = {
 
 export const ratingAnalyzer: Bookmarklet = {
   itemTitle: {
-    zh: "分析 DX Rating",
+    zh: "分析自己 DX Rating",
     en: "Analyze DX Rating",
   }[LANG],
   feature: {
@@ -186,14 +186,16 @@ export const albumDownloadHelper: Bookmarklet = {
   }[LANG],
   feature: {
     zh: '功能：把相簿內的照片以 "日期 曲名 難度.jpg" 方式命名，並且可以直接點擊照片下載。',
-    en: 'Feature: Make photos in the album downloadable with filenames like "Date Songname Difficulty.jpg"',
+    en:
+      'Feature: Make photos in the album downloadable with filenames like "Date Songname Difficulty.jpg"',
   }[LANG],
   howTo: {
-    zh:
-      "使用方式：進入 PHOTOS 頁面後執行書籤，執行完後點擊想要下載的照片，就能存到手機或電腦上。",
+    zh: "使用方式：進入 PHOTOS 頁面後執行書籤，執行完後點擊想要下載的照片，就能存到手機或電腦上。",
     en:
-      'Usage: Open PHOTOS page and execute this bookmarklet. Photos on the page will be clickable and have proper filenames.',
+      "Usage: Open PHOTOS page and execute this bookmarklet. Photos on the page will be clickable and have proper filenames.",
   }[LANG],
-  scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/album-download-helper.js"),
+  scriptUrl: getBookmarkletLink(
+    "https://myjian.github.io/mai-tools/scripts/album-download-helper.js"
+  ),
   screenshotUrl: "./screenshots/album-download-helper-20210216.png",
 };

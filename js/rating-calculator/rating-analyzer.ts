@@ -1,7 +1,7 @@
 import {DIFFICULTIES} from '../common/constants';
-import {getSongProperties, SongProperties} from '../common/song-props';
+import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
-import {ChartRecord, ChartRecordWithRating, ChartType, RatingData} from './types';
+import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;

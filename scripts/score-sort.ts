@@ -2,10 +2,14 @@ import {DIFFICULTIES} from '../js/common/constants';
 import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
 import {getDefaultLevel} from '../js/common/level-helper';
 import {iWantSomeMagic} from '../js/common/magic';
-import {buildSongPropsMap, getSongProperties, SongProperties} from '../js/common/song-props';
+import {
+  buildSongPropsMap,
+  ChartType,
+  getSongProperties,
+  SongProperties,
+} from '../js/common/song-props';
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
 import {fetchGameVersion} from '../js/common/util';
-import {ChartType} from '../js/rating-calculator/types';
 
 type SortBy =
   | "none"

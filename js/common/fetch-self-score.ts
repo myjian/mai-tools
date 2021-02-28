@@ -1,5 +1,5 @@
-import {ChartType} from '../rating-calculator/types';
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
+import {ChartType} from './song-props';
 import {fetchPage} from './util';
 
 export const SELF_SCORE_URLS = new Map([
@@ -46,13 +46,9 @@ export async function fetchScores(difficulty: string, scoreList: string[]): Prom
   if (!url) {
     return;
   }
-  return new Promise<Document>((resolve) => {
-    setTimeout(async () => {
-      const dom = await fetchPage(url);
-      const rows = dom.querySelectorAll(".main_wrapper.t_c .m_15") as NodeListOf<HTMLElement>;
-      const state = {genre: "", scoreList: scoreList};
-      rows.forEach((row) => processRow(row, difficulty, state));
-      resolve(dom);
-    }, 0);
-  });
+  const dom = await fetchPage(url);
+  const rows = dom.querySelectorAll(".main_wrapper.t_c .m_15") as NodeListOf<HTMLElement>;
+  const state = {genre: "", scoreList: scoreList};
+  rows.forEach((row) => processRow(row, difficulty, state));
+  return dom;
 }

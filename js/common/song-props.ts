@@ -1,5 +1,9 @@
-import {ChartType} from '../rating-calculator/types';
 import {getSongNickname} from './song-util';
+
+export const enum ChartType {
+  STANDARD,
+  DX,
+}
 
 export interface BasicSongProps {
   dx: ChartType;
