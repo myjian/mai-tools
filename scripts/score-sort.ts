@@ -11,16 +11,18 @@ import {
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
 import {fetchGameVersion} from '../js/common/util';
 
-type SortBy =
-  | "none"
-  | "level_des"
-  | "level_asc"
-  | "inlv_des"
-  | "inlv_asc"
-  | "rank_des"
-  | "rank_asc"
-  | "apfc_des"
-  | "apfc_asc";
+enum SortBy {
+  None = "None",
+  RankDes = "RankDes",
+  RankAsc = "RankAsc",
+  ApFcDes = "ApFcDes",
+  ApFcAsc = "ApFcAsc",
+  LvDes = "LvDes",
+  LvAsc = "LvAsc",
+  InLvDes = "InLvDes",
+  InLvAsc = "InLvAsc",
+}
+
 type Cache = {
   songProps?: Map<string, SongProperties[]>;
   nicoLinkIdx?: string;
@@ -66,6 +68,8 @@ type Cache = {
     "BBB",
     "BB",
     "B",
+    "C",
+    "D",
     null,
   ];
   const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
@@ -334,28 +338,28 @@ type Cache = {
     );
     let sortedRows = null;
     switch (sortBy) {
-      case "level_des":
-        sortedRows = sortRowsByLevel(rows, true);
-        break;
-      case "level_asc":
-        sortedRows = sortRowsByLevel(rows, false);
-        break;
-      case "rank_des":
+      case SortBy.RankDes:
         sortedRows = sortRowsByRank(rows, false);
         break;
-      case "rank_asc":
+      case SortBy.RankAsc:
         sortedRows = sortRowsByRank(rows, true);
         break;
-      case "apfc_des":
+      case SortBy.ApFcDes:
         sortedRows = sortRowsByApFc(rows, false);
         break;
-      case "apfc_asc":
+      case SortBy.ApFcAsc:
         sortedRows = sortRowsByApFc(rows, true);
         break;
-      case "inlv_des":
+      case SortBy.LvDes:
+        sortedRows = sortRowsByLevel(rows, true);
+        break;
+      case SortBy.LvAsc:
+        sortedRows = sortRowsByLevel(rows, false);
+        break;
+      case SortBy.InLvDes:
         sortedRows = sortRowsByInLv(rows, false);
         break;
-      case "inlv_asc":
+      case SortBy.InLvAsc:
         sortedRows = sortRowsByInLv(rows, true);
         break;
       default:
@@ -417,15 +421,15 @@ type Cache = {
     select.addEventListener("change", (evt: Event) => {
       performSort((evt.target as HTMLSelectElement).value as SortBy);
     });
-    select.append(createOption("-- Choose Sort Option --", "none"));
-    select.append(createOption("Level (high \u2192 low)", "level_des"));
-    select.append(createOption("Level (low \u2192 high)", "level_asc"));
-    select.append(createOption("Internal Level (high \u2192 low)", "inlv_des", true));
-    select.append(createOption("Internal Level (low \u2192 high)", "inlv_asc", true));
-    select.append(createOption("Rank (high \u2192 low)", "rank_des"));
-    select.append(createOption("Rank (low \u2192 high)", "rank_asc"));
-    select.append(createOption("AP/FC (AP+ \u2192 FC)", "apfc_des"));
-    select.append(createOption("AP/FC (FC \u2192 AP+)", "apfc_asc"));
+    select.append(createOption("-- Choose Sort Option --", SortBy.None));
+    select.append(createOption("Rank (high \u2192 low)", SortBy.RankDes));
+    select.append(createOption("Rank (low \u2192 high)", SortBy.RankAsc));
+    select.append(createOption("AP/FC (AP+ \u2192 FC)", SortBy.ApFcDes));
+    select.append(createOption("AP/FC (FC \u2192 AP+)", SortBy.ApFcAsc));
+    select.append(createOption("Level (high \u2192 low)", SortBy.LvDes));
+    select.append(createOption("Level (low \u2192 high)", SortBy.LvAsc));
+    select.append(createOption("Internal Level (high \u2192 low)", SortBy.InLvDes, true));
+    select.append(createOption("Internal Level (low \u2192 high)", SortBy.InLvAsc, true));
     div.append(select);
     return div;
   }
@@ -459,8 +463,8 @@ type Cache = {
       }
     }
     console.log("enabling internal level sort");
-    createOption("Internal Level (high \u2192 low)", "inlv_des", false);
-    createOption("Internal Level (low \u2192 high)", "inlv_asc", false);
+    createOption("Internal Level (high \u2192 low)", SortBy.InLvDes, false);
+    createOption("Internal Level (low \u2192 high)", SortBy.InLvAsc, false);
     cache.songProps = songProps;
   }
 
