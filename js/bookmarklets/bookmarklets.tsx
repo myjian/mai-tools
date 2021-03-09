@@ -103,7 +103,7 @@ export const recentPlaySummary: Bookmarklet = {
 export const ratingAnalyzer: Bookmarklet = {
   itemTitle: {
     zh: "分析自己 DX Rating",
-    en: "Analyze DX Rating",
+    en: "Analyze Self DX Rating",
   }[LANG],
   feature: {
     zh: "功能：可分析自己的 DX Rating 組成。",

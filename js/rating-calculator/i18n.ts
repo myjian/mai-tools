@@ -7,7 +7,8 @@ const UIStringByLang = {
     manualLv: "Manual input",
     autoLv: "Automatic",
     scoreInputHeading: "Player Scores",
-    scoreInputDescPrefix: 'Please use "Analyze DX Rating" or "Download all scores" from ',
+    scoreInputDescPrefix:
+      'Please use "Analyze Self DX Rating" or "Analyze Friend\'s DX Rating" from ',
     bookmarketLinkLabel: "maimai bookmarklets",
     scoreInputDescSuffix: " to fill in this field.",
     computeRating: "Calculate Rating",
@@ -60,7 +61,7 @@ const UIStringByLang = {
     scoreInputHeading: "玩家成績輸入",
     scoreInputDescPrefix: "請用 ",
     bookmarketLinkLabel: "maimai 書籤小工具",
-    scoreInputDescSuffix: " 中的「分析 DX Rating」或「下載所有歌曲成績」填入此欄。",
+    scoreInputDescSuffix: " 中的「分析自己 DX Rating」或「分析好友 DX Rating」填入此欄。",
     computeRating: "計算 Rating 值",
     analysisResult: "分析結果",
     newChartsRecLv: "新譜面",
