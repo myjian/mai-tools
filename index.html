@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Convert maimai DX score to FiNALE score</title>
-    <link rel="stylesheet" href="./css/chart-info.css">
+    <link rel="stylesheet" href="./chart-info/styles.css" />
   </head>
   <body>
     <div id="inputContainer">
       <textarea class="input"></textarea>
-      <br>
+      <br />
       <button id="convert">Convert</button>
     </div>
     <div class="output">
       <h3 class="songTitleHeading">
         <span id="chartInfoHeading">Chart info</span>
         <span>&nbsp;</span>-<span>&nbsp;</span>
-        <a id="songTitle" title="開啟中文維基" target="_blank" href="https://maimai.fandom.com/zh/wiki/"></a>
+        <a
+          id="songTitle"
+          title="開啟中文維基"
+          target="_blank"
+          href="https://maimai.fandom.com/zh/wiki/"
+        ></a>
       </h3>
       <table class="infoTable">
         <thead>
@@ -72,13 +77,17 @@
       <a href="." class="resetLink hidden">Reset</a>
     </div>
     <div class="howto">
-      <hr>
+      <hr />
       <h3 id="howtoHeading">How to use</h3>
       <div id="description"></div>
-      <a id="bookmarklet" href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document);">Convert maimai DX score to FiNALE score</a>
+      <a
+        id="bookmarklet"
+        href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document);"
+        >Convert maimai DX score to FiNALE score</a
+      >
     </div>
     <div class="footer credit">
-      <hr>
+      <hr />
       Made by <a href="https://github.com/myjian" target="_blank">myjian</a>.
     </div>
     <script src="./js/chart-info/i18n.js"></script>
