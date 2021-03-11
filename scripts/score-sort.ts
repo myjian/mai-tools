@@ -1,5 +1,6 @@
 import {DIFFICULTIES} from '../js/common/constants';
 import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
+import {LANG} from '../js/common/lang';
 import {getDefaultLevel} from '../js/common/level-helper';
 import {iWantSomeMagic} from '../js/common/magic';
 import {
@@ -32,6 +33,34 @@ type Cache = {
 };
 
 (function (d) {
+  const SortLabels: Record<SortBy, string> = {
+    en: {
+      [SortBy.None]: "-- Choose Sort Option --",
+      [SortBy.RankAsc]: "Rank (low \u2192 high)",
+      [SortBy.RankDes]: "Rank (high \u2192 low)",
+      [SortBy.ApFcAsc]: "AP/FC (FC \u2192 AP+)",
+      [SortBy.ApFcDes]: "AP/FC (AP+ \u2192 FC)",
+      [SortBy.SyncAsc]: "Sync (FS \u2192 FDX+)",
+      [SortBy.SyncDes]: "Sync (FDX+ \u2192 FS)",
+      [SortBy.LvAsc]: "Level (low \u2192 high)",
+      [SortBy.LvDes]: "Level (high \u2192 low)",
+      [SortBy.InLvAsc]: "Internal Level (low \u2192 high)",
+      [SortBy.InLvDes]: "Internal Level (high \u2192 low)",
+    },
+    zh: {
+      [SortBy.None]: "-- 選擇排序方式 --",
+      [SortBy.RankAsc]: "達成率 (由低至高)",
+      [SortBy.RankDes]: "達成率 (由高至低)",
+      [SortBy.ApFcAsc]: "AP/FC (由 FC 到 AP+)",
+      [SortBy.ApFcDes]: "AP/FC (由 AP+ 到 FC)",
+      [SortBy.SyncAsc]: "Sync (由 FS 到 FDX+)",
+      [SortBy.SyncDes]: "Sync (由 FDX+ 到 FS)",
+      [SortBy.LvAsc]: "譜面等級 (由低至高)",
+      [SortBy.LvDes]: "譜面等級 (由高至低)",
+      [SortBy.InLvAsc]: "內部譜面等級 (由低至高)",
+      [SortBy.InLvDes]: "內部譜面等級 (由高至低)",
+    },
+  }[LANG];
   const CHART_LEVELS = [
     "1",
     "2",
@@ -318,7 +347,6 @@ type Cache = {
     if (lowercaseStatus === "back") {
       return null;
     }
-    console.log(lowercaseStatus);
     return lowercaseStatus.replace("sd", "DX").replace("p", "+").toUpperCase();
   }
 
@@ -425,13 +453,14 @@ type Cache = {
     });
   }
 
-  function createOption(label: string, value: SortBy, hidden?: boolean) {
-    let option = d.getElementsByClassName("option_" + value)[0] as HTMLOptionElement;
+  function createOption(sortBy: SortBy, hidden?: boolean) {
+    const label = SortLabels[sortBy];
+    let option = d.getElementsByClassName("option_" + sortBy)[0] as HTMLOptionElement;
     if (!option) {
       option = d.createElement("option");
-      option.className = "option_" + value;
+      option.className = "option_" + sortBy;
       option.innerText = label;
-      option.value = value;
+      option.value = sortBy;
     }
     if (hidden) {
       option.classList.add("d_n");
@@ -455,17 +484,17 @@ type Cache = {
     select.addEventListener("change", (evt: Event) => {
       performSort((evt.target as HTMLSelectElement).value as SortBy);
     });
-    select.append(createOption("-- Choose Sort Option --", SortBy.None));
-    select.append(createOption("Rank (low \u2192 high)", SortBy.RankAsc));
-    select.append(createOption("Rank (high \u2192 low)", SortBy.RankDes));
-    select.append(createOption("AP/FC (FC \u2192 AP+)", SortBy.ApFcAsc));
-    select.append(createOption("AP/FC (AP+ \u2192 FC)", SortBy.ApFcDes));
-    select.append(createOption("Sync (FS \u2192 FDX+)", SortBy.SyncAsc));
-    select.append(createOption("Sync (FDX+ \u2192 FS)", SortBy.SyncDes));
-    select.append(createOption("Level (high \u2192 low)", SortBy.LvDes));
-    select.append(createOption("Level (low \u2192 high)", SortBy.LvAsc));
-    select.append(createOption("Internal Level (high \u2192 low)", SortBy.InLvDes, true));
-    select.append(createOption("Internal Level (low \u2192 high)", SortBy.InLvAsc, true));
+    select.append(createOption(SortBy.None));
+    select.append(createOption(SortBy.RankAsc));
+    select.append(createOption(SortBy.RankDes));
+    select.append(createOption(SortBy.ApFcAsc));
+    select.append(createOption(SortBy.ApFcDes));
+    select.append(createOption(SortBy.SyncAsc));
+    select.append(createOption(SortBy.SyncDes));
+    select.append(createOption(SortBy.LvAsc));
+    select.append(createOption(SortBy.LvDes));
+    select.append(createOption(SortBy.InLvAsc, true));
+    select.append(createOption(SortBy.InLvDes, true));
     div.append(select);
     return div;
   }
@@ -499,8 +528,8 @@ type Cache = {
       }
     }
     console.log("enabling internal level sort");
-    createOption("Internal Level (high \u2192 low)", SortBy.InLvDes, false);
-    createOption("Internal Level (low \u2192 high)", SortBy.InLvAsc, false);
+    createOption(SortBy.InLvAsc, false);
+    createOption(SortBy.InLvDes, false);
     cache.songProps = songProps;
   }
 
