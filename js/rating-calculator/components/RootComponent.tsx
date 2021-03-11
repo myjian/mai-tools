@@ -12,7 +12,7 @@ import {readFromCache, writeToCache} from '../cache';
 import {UIString} from '../i18n';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
-import {RatingData} from '../types';
+import {GameRegion, RatingData} from '../types';
 import {InternalLvInput} from './InternalLvInput';
 import {MultiplierTable} from './MultiplierTable';
 import {OtherTools} from './OtherTools';
@@ -82,6 +82,7 @@ async function readPlayerScoreFromText(text: string) {
 }
 
 interface State {
+  gameRegion: GameRegion;
   gameVer: number;
   showMultiplierTable: boolean;
   ratingData?: RatingData;
@@ -108,6 +109,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");
     this.state = {
+      gameRegion: GameRegion.Jp,
       gameVer,
       showMultiplierTable,
       friendIdx,
@@ -129,6 +131,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   render() {
     const {
+      gameRegion,
       gameVer,
       showMultiplierTable,
       playerName,
@@ -150,6 +153,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
         <hr className="sectionSep" />
         {ratingData && (
           <RatingOutput
+            gameRegion={gameRegion}
+            gameVer={gameVer}
             songPropsByName={songPropsByName}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
@@ -210,7 +215,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
           case "gameVersion":
             payloadAsInt = parseInt(evt.data.payload);
             if (payloadAsInt >= DX_PLUS_GAME_VERSION && payloadAsInt <= DX_SPLASH_GAME_VERSION) {
-              this.setState({gameVer: payloadAsInt});
+              this.setState({
+                gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
+                gameVer: payloadAsInt,
+              });
             }
             break;
           case "playerGrade":

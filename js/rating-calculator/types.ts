@@ -39,3 +39,8 @@ export const enum ColumnType {
   RATING,
   NEXT_RATING,
 }
+
+export const enum GameRegion {
+  Intl,
+  Jp,
+}

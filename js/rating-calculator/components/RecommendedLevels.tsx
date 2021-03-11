@@ -3,12 +3,15 @@ import React from 'react';
 import {roundFloat} from '../../common/number-helper';
 import {RANK_DEFINITIONS, RankDef} from '../../common/rank-functions';
 import {UIString} from '../i18n';
+import {GameRegion} from '../types';
 import {RecommendedLevelCell} from './RecommendedLevelCell';
 
 const MIN_RANK = "SS";
 const MAX_LV = 15;
 
 interface Props {
+  gameRegion: GameRegion;
+  gameVer: number;
   oldChartsRating: number;
   oldTopChartsCount: number;
   newChartsRating: number;
@@ -16,7 +19,14 @@ interface Props {
 }
 export class RecommendedLevels extends React.PureComponent<Props> {
   render() {
-    const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = this.props;
+    const {
+      gameRegion,
+      gameVer,
+      newChartsRating,
+      newTopChartsCount,
+      oldChartsRating,
+      oldTopChartsCount,
+    } = this.props;
     let ranks = RANK_DEFINITIONS;
     const minRankIdx = ranks.findIndex((r) => r.title === MIN_RANK);
     ranks = ranks
@@ -56,7 +66,7 @@ export class RecommendedLevels extends React.PureComponent<Props> {
               <tr>
                 <th className="recLvFirstCol">{UIString.newChartsRecLv}</th>
                 {newLvs.map((lv) => (
-                  <RecommendedLevelCell lv={lv} />
+                  <RecommendedLevelCell gameRegion={gameRegion} gameVer={gameVer} lv={lv} />
                 ))}
                 <td>{Math.floor(avgNewChartRating)}↑</td>
               </tr>
@@ -65,7 +75,12 @@ export class RecommendedLevels extends React.PureComponent<Props> {
               <tr>
                 <th className="recLvFirstCol">{UIString.oldChartsRecLv}</th>
                 {oldLvs.map((lv) => (
-                  <RecommendedLevelCell lv={lv} />
+                  <RecommendedLevelCell
+                    gameRegion={gameRegion}
+                    gameVer={gameVer - 1}
+                    includeOldVersions
+                    lv={lv}
+                  />
                 ))}
                 <td>{Math.floor(avgOldChartRating)}↑</td>
               </tr>

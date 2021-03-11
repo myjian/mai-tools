@@ -3,7 +3,7 @@ import React from 'react';
 import {SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {UIString} from '../i18n';
-import {ChartRecordWithRating, RatingData} from '../types';
+import {ChartRecordWithRating, GameRegion, RatingData} from '../types';
 import {RatingDetails} from './RatingDetails';
 import {RatingOverview} from './RatingOverview';
 import {RecommendedLevels} from './RecommendedLevels';
@@ -12,6 +12,8 @@ const NEW_CANDIDATE_SONGS_POOL_SIZE = 40;
 const OLD_CANDIDATE_SONGS_POOL_SIZE = 60;
 
 interface Props {
+  gameRegion: GameRegion;
+  gameVer: number;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   playerGradeIndex: number;
@@ -71,7 +73,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const {playerName, playerGradeIndex, songPropsByName} = this.props;
+    const {gameRegion, gameVer, playerName, playerGradeIndex, songPropsByName} = this.props;
     const {
       newChartsRating,
       newTopChartsCount,
@@ -98,6 +100,8 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           playerGradeIndex={playerGradeIndex}
         />
         <RecommendedLevels
+          gameRegion={gameRegion}
+          gameVer={gameVer}
           newChartsRating={newChartsRating}
           newTopChartsCount={newTopChartsCount}
           oldChartsRating={oldChartsRating}
