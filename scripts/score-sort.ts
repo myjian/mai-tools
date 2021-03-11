@@ -279,7 +279,7 @@ type Cache = {
   function getRankTitle(row: HTMLElement) {
     const rankImg = isFriendScore
       ? row.querySelector("tr:last-child td:last-child img:last-child")
-      : row.children[0].querySelector("img.f_r:nth-of-type(4)");
+      : row.children[0].querySelector("img.f_r:last-of-type");
     if (!rankImg) {
       return null;
     }
@@ -330,7 +330,7 @@ type Cache = {
   function getApFcStatus(row: HTMLElement) {
     const img = isFriendScore
       ? row.querySelector("tr:last-child td:last-child img:nth-child(2)")
-      : row.children[0].querySelector("img.f_r:nth-of-type(3)");
+      : row.children[0].querySelector("img.f_r:nth-last-of-type(2)");
     if (!img) {
       return null;
     }
@@ -356,7 +356,7 @@ type Cache = {
   function getSyncStatus(row: HTMLElement) {
     const img = isFriendScore
       ? row.querySelector("tr:last-child td:last-child img:first-child")
-      : row.children[0].querySelector("img.f_r:nth-of-type(2)");
+      : row.children[0].querySelector("img.f_r:nth-last-of-type(3)");
     if (!img) {
       return null;
     }
