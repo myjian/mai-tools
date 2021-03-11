@@ -24,6 +24,26 @@ body {
   flex-direction: row;
 }
 
+.bookmarkletCopy {
+  margin-left: 6px;
+}
+
+.bookmarkletCopy::before {
+  content: "(";
+}
+
+.bookmarkletCopy::after {
+  content: ")";
+}
+
+.bookmarkletScript {
+  border-style: none;
+  background-color: transparent;
+  color: gray;
+  display: block;
+  width: 90%;
+}
+
 .bookmarkletText {
   padding-right: 12px;
   flex-basis: 380px;
@@ -60,7 +80,8 @@ body {
   .bookmarklet {
     flex-direction: column;
   }
-  .bookmarkletText, .bookmarkletImage {
+  .bookmarkletText,
+  .bookmarkletImage {
     flex-basis: auto;
   }
   .bookmarkletImage {
@@ -69,5 +90,4 @@ body {
   .screenshot {
     max-width: 300px;
   }
-
 }

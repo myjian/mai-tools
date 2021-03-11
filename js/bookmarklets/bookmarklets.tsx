@@ -34,7 +34,7 @@ ${pathCheck}
 s.src='${scriptUrl}?t='+Math.floor(Date.now()/60000);
 d.body.append(s);
 }})(document)`;
-  return js;
+  return js.replace(/\n/g, "");
 }
 
 export const scoreConverter: Bookmarklet = {
@@ -169,7 +169,7 @@ export const scoreDownloader: Bookmarklet = {
   howTo: () => (
     <React.Fragment>
       {scoreDownloaderUsageText.part1}
-      <a href="/mai-tools/rating-calculator/" target="_blank">
+      <a href="../rating-calculator/" target="_blank">
         {scoreDownloaderUsageText.ratingAnalyzer}
       </a>
       {scoreDownloaderUsageText.part2}
