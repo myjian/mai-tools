@@ -9,10 +9,14 @@ export class OtherTools extends React.PureComponent {
         <h2 className="otherToolsHeading">{UIString.otherToolsHeading}</h2>
         <ul>
           <li className="toolItem">
-            <a href="../rating-visualizer/">{UIString.ratingVisualizer}</a>
+            <a href="../rating-visualizer/" target="_blank">
+              {UIString.ratingVisualizer}
+            </a>
           </li>
           <li className="toolItem">
-            <a href="../bookmarklets/">{UIString.bookmarketList}</a>
+            <a href="../bookmarklets/" target="_blank">
+              {UIString.bookmarketList}
+            </a>
           </li>
         </ul>
         <hr className="sectionSep" />
