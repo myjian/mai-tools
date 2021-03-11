@@ -17,6 +17,8 @@ enum SortBy {
   RankAsc = "RankAsc",
   ApFcDes = "ApFcDes",
   ApFcAsc = "ApFcAsc",
+  SyncDes = "SyncDes",
+  SyncAsc = "SyncAsc",
   LvDes = "LvDes",
   LvAsc = "LvAsc",
   InLvDes = "InLvDes",
@@ -73,6 +75,7 @@ type Cache = {
     null,
   ];
   const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
+  const SYNC_TYPES = ["FDX+", "FDX", "FS+", "FS", null];
   const LV_DELTA = 0.02;
 
   const cache: Cache = {};
@@ -102,7 +105,7 @@ type Cache = {
   }
 
   function createMap(sections: string[], reverse: boolean) {
-    const map = new Map();
+    const map = new Map<string, HTMLElement[]>();
     if (reverse) {
       sections.reverse();
     }
@@ -270,9 +273,9 @@ type Cache = {
       const rank = getRankTitle(row);
       map.get(rank).push(row);
     });
-    map.forEach((subRows) => {
+    map.forEach((subRows, key) => {
       subRows.sort(compareAchievement);
-      if (reverse) {
+      if (key !== null && reverse) {
         subRows.reverse();
       }
     });
@@ -298,6 +301,31 @@ type Cache = {
     const map = createMap(AP_FC_TYPES, reverse);
     rows.forEach((row) => {
       const rank = getApFcStatus(row);
+      map.get(rank).push(row);
+    });
+    return createRowsWithSection(map, "", rows.length);
+  }
+
+  function getSyncStatus(row: HTMLElement) {
+    const imgs = row.children[0].querySelectorAll("img");
+    if (imgs.length < 5) {
+      return null;
+    }
+    const statusImgSrc = imgs[imgs.length - 3].src.replace(/\?ver=.*$/, "");
+    const lastUnderscoreIdx = statusImgSrc.lastIndexOf("_");
+    const lastDotIdx = statusImgSrc.lastIndexOf(".");
+    const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
+    if (lowercaseStatus === "back") {
+      return null;
+    }
+    console.log(lowercaseStatus);
+    return lowercaseStatus.replace("sd", "DX").replace("p", "+").toUpperCase();
+  }
+
+  function sortRowsBySync(rows: NodeListOf<HTMLElement>, reverse: boolean) {
+    const map = createMap(SYNC_TYPES, reverse);
+    rows.forEach((row) => {
+      const rank = getSyncStatus(row);
       map.get(rank).push(row);
     });
     return createRowsWithSection(map, "", rows.length);
@@ -349,6 +377,12 @@ type Cache = {
         break;
       case SortBy.ApFcAsc:
         sortedRows = sortRowsByApFc(rows, true);
+        break;
+      case SortBy.SyncDes:
+        sortedRows = sortRowsBySync(rows, false);
+        break;
+      case SortBy.SyncAsc:
+        sortedRows = sortRowsBySync(rows, true);
         break;
       case SortBy.LvDes:
         sortedRows = sortRowsByLevel(rows, true);
@@ -422,10 +456,12 @@ type Cache = {
       performSort((evt.target as HTMLSelectElement).value as SortBy);
     });
     select.append(createOption("-- Choose Sort Option --", SortBy.None));
-    select.append(createOption("Rank (high \u2192 low)", SortBy.RankDes));
     select.append(createOption("Rank (low \u2192 high)", SortBy.RankAsc));
-    select.append(createOption("AP/FC (AP+ \u2192 FC)", SortBy.ApFcDes));
+    select.append(createOption("Rank (high \u2192 low)", SortBy.RankDes));
     select.append(createOption("AP/FC (FC \u2192 AP+)", SortBy.ApFcAsc));
+    select.append(createOption("AP/FC (AP+ \u2192 FC)", SortBy.ApFcDes));
+    select.append(createOption("Sync (FS \u2192 FDX+)", SortBy.SyncAsc));
+    select.append(createOption("Sync (FDX+ \u2192 FS)", SortBy.SyncDes));
     select.append(createOption("Level (high \u2192 low)", SortBy.LvDes));
     select.append(createOption("Level (low \u2192 high)", SortBy.LvAsc));
     select.append(createOption("Internal Level (high \u2192 low)", SortBy.InLvDes, true));
