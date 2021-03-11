@@ -279,7 +279,7 @@ type Cache = {
   function getRankTitle(row: HTMLElement) {
     const rankImg = isFriendScore
       ? row.querySelector("tr:last-child td:last-child img:last-child")
-      : row.children[0].querySelector("img.f_r:last-of-type");
+      : row.children[0].querySelector("img.f_r:not(.music_kind_icon):last-of-type");
     if (!rankImg) {
       return null;
     }
