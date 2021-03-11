@@ -1,5 +1,6 @@
 import {DIFFICULTIES} from '../js/common/constants';
 import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
+import {SELF_SCORE_URLS} from '../js/common/fetch-self-score';
 import {LANG} from '../js/common/lang';
 import {getDefaultLevel} from '../js/common/level-helper';
 import {iWantSomeMagic} from '../js/common/magic';
@@ -10,7 +11,7 @@ import {
   SongProperties,
 } from '../js/common/song-props';
 import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
-import {fetchGameVersion} from '../js/common/util';
+import {fetchGameVersion, fetchPage} from '../js/common/util';
 
 enum SortBy {
   None = "None",
@@ -20,6 +21,8 @@ enum SortBy {
   ApFcAsc = "ApFcAsc",
   SyncDes = "SyncDes",
   SyncAsc = "SyncAsc",
+  VsResultAsc = "VsResultAsc",
+  VsResultDes = "VsResultDes",
   LvDes = "LvDes",
   LvAsc = "LvAsc",
   InLvDes = "InLvDes",
@@ -42,6 +45,8 @@ type Cache = {
       [SortBy.ApFcDes]: "AP/FC (AP+ \u2192 FC)",
       [SortBy.SyncAsc]: "Sync (FS \u2192 FDX+)",
       [SortBy.SyncDes]: "Sync (FDX+ \u2192 FS)",
+      [SortBy.VsResultAsc]: "VS Result (Lose \u2192 Win)",
+      [SortBy.VsResultDes]: "VS Result (Win \u2192 Lose)",
       [SortBy.LvAsc]: "Level (low \u2192 high)",
       [SortBy.LvDes]: "Level (high \u2192 low)",
       [SortBy.InLvAsc]: "Internal Level (low \u2192 high)",
@@ -55,6 +60,8 @@ type Cache = {
       [SortBy.ApFcDes]: "AP/FC (由 AP+ 到 FC)",
       [SortBy.SyncAsc]: "Sync (由 FS 到 FDX+)",
       [SortBy.SyncDes]: "Sync (由 FDX+ 到 FS)",
+      [SortBy.VsResultAsc]: "對戰結果 (由敗北到勝利)",
+      [SortBy.VsResultDes]: "對戰結果 (由勝利到敗北)",
       [SortBy.LvAsc]: "譜面等級 (由低至高)",
       [SortBy.LvDes]: "譜面等級 (由高至低)",
       [SortBy.InLvAsc]: "內部譜面等級 (由低至高)",
@@ -105,6 +112,7 @@ type Cache = {
   ];
   const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
   const SYNC_TYPES = ["FDX+", "FDX", "FS+", "FS", null];
+  const VS_RESULTS = ["WIN", "DRAW", "LOSE"];
   const LV_DELTA = 0.02;
   const isFriendScore = location.pathname.includes("battleStart");
   const isDxScoreVs = location.search.includes("scoreType=1");
@@ -365,8 +373,25 @@ type Cache = {
   function sortRowsBySync(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(SYNC_TYPES, reverse);
     rows.forEach((row) => {
-      const rank = getSyncStatus(row);
-      map.get(rank).push(row);
+      const sync = getSyncStatus(row);
+      map.get(sync).push(row);
+    });
+    return createRowsWithSection(map, "", rows.length);
+  }
+
+  function getVsResult(row: HTMLElement) {
+    const img = row.querySelector("tr:first-child td:nth-child(2) img");
+    const imgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, "");
+    const lastUnderscoreIdx = imgSrc.lastIndexOf("_");
+    const lastDotIdx = imgSrc.lastIndexOf(".");
+    return imgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx).toUpperCase();
+  }
+
+  function sortRowsByVsResult(rows: NodeListOf<HTMLElement>, reverse: boolean) {
+    const map = createMap(VS_RESULTS, reverse);
+    rows.forEach((row) => {
+      const res = getVsResult(row);
+      map.get(res).push(row);
     });
     return createRowsWithSection(map, "", rows.length);
   }
@@ -424,6 +449,12 @@ type Cache = {
       case SortBy.SyncAsc:
         sortedRows = sortRowsBySync(rows, true);
         break;
+      case SortBy.VsResultAsc:
+        sortedRows = sortRowsByVsResult(rows, true);
+        break;
+      case SortBy.VsResultDes:
+        sortedRows = sortRowsByVsResult(rows, false);
+        break;
       case SortBy.LvDes:
         sortedRows = sortRowsByLevel(rows, true);
         break;
@@ -449,8 +480,59 @@ type Cache = {
     firstScrewBlock.innerText = sortedRows[0].innerText;
   }
 
-  function addSummaryBlock() {
-    // TODO
+  async function addSummaryBlock() {
+    const scorePage = await fetchPage(SELF_SCORE_URLS.get("Re:MASTER"));
+    const summaryTable = scorePage.querySelector(".music_scorelist_table").parentElement;
+    summaryTable.querySelector("tr:last-child").remove();
+    const rows = getScoreRows();
+    const total = rows.length;
+    const apfcCount: Record<string, number> = {};
+    const syncCount: Record<string, number> = {};
+    const rankCount: Record<string, number> = {};
+    for (let i = 0; i < AP_FC_TYPES.length; i++) {
+      apfcCount[AP_FC_TYPES[i]] = 0;
+      syncCount[SYNC_TYPES[i]] = 0;
+    }
+    for (let i = 0; i < RANK_TITLES.length; i++) {
+      rankCount[RANK_TITLES[i]] = 0;
+    }
+    rows.forEach((row) => {
+      apfcCount[getApFcStatus(row)]++;
+      syncCount[getSyncStatus(row)]++;
+      rankCount[getRankTitle(row)]++;
+    });
+
+    // 9 is the index of A in RANK_TITLES
+    for (let i = 1; i < 9; i++) {
+      rankCount[RANK_TITLES[i]] += rankCount[RANK_TITLES[i - 1]];
+    }
+    // 4 is the index of null
+    for (let i = 1; i < 4; i++) {
+      apfcCount[AP_FC_TYPES[i]] += apfcCount[AP_FC_TYPES[i - 1]];
+      syncCount[SYNC_TYPES[i]] += syncCount[SYNC_TYPES[i - 1]];
+    }
+
+    // populate summaryTable with the counts we just collected
+    let columns = summaryTable.querySelectorAll("tr:first-child .f_11");
+    columns[0].innerHTML = `${rankCount["A"]}/${total}`;
+    columns[1].innerHTML = `${rankCount["S"]}/${total}`;
+    columns[2].innerHTML = `${rankCount["S+"]}/${total}`;
+    columns[3].innerHTML = `${rankCount["SS"]}/${total}`;
+    columns[4].innerHTML = `${rankCount["SS+"]}/${total}`;
+    columns[5].innerHTML = `${rankCount["SSS"]}/${total}`;
+    columns[6].innerHTML = `${rankCount["SSS+"]}/${total}`;
+    columns = summaryTable.querySelectorAll("tr:last-child .f_11");
+    columns[0].innerHTML = `${apfcCount["FC"]}/${total}`;
+    columns[1].innerHTML = `${apfcCount["FC+"]}/${total}`;
+    columns[2].innerHTML = `${apfcCount["AP"]}/${total}`;
+    columns[3].innerHTML = `${apfcCount["AP+"]}/${total}`;
+    columns[4].innerHTML = `${syncCount["FS"]}/${total}`;
+    columns[5].innerHTML = `${syncCount["FS+"]}/${total}`;
+    columns[6].innerHTML = `${syncCount["FDX"]}/${total}`;
+    columns[7].innerHTML = `${syncCount["FDX+"]}/${total}`;
+
+    const vsResultBlock = d.querySelector(".town_block + .see_through_block");
+    vsResultBlock.insertAdjacentElement("afterend", summaryTable);
   }
 
   function expandDualChartRows() {
@@ -507,6 +589,10 @@ type Cache = {
     select.append(createOption(SortBy.ApFcDes));
     select.append(createOption(SortBy.SyncAsc));
     select.append(createOption(SortBy.SyncDes));
+    if (isFriendScore) {
+      select.append(createOption(SortBy.VsResultAsc));
+      select.append(createOption(SortBy.VsResultDes));
+    }
     select.append(createOption(SortBy.LvAsc));
     select.append(createOption(SortBy.LvDes));
     select.append(createOption(SortBy.InLvAsc, true));

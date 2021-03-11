@@ -26,7 +26,7 @@ const IntroText = {
   en: {
     intro1:
       "The link for each section title is a bookmarklet. Bookmarklet works only when they are opened on maimai NET. If you never used bookmarklets before, read ",
-    faq: "instructions",
+    faq: "Instructions",
     intro2: " first.",
   },
 }[LANG];

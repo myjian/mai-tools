@@ -65,13 +65,15 @@ export const scoreSorter: Bookmarklet = {
     en: "Sort scores",
   }[LANG],
   feature: {
-    zh: "功能：可依照等級、Rank、AP/FC 狀態排序成績。",
-    en: "Feature: Sort scores by level, rank, or AP/FC status.",
+    zh: "功能：可依照達成率、AP/FC 成就、Sync 進度或譜面等級，排序自己或好友的成績。",
+    en:
+      "Feature: Sort scores by rank, AP/FC status, sync status, or level. You can sort friend's scores too.",
   }[LANG],
   howTo: {
-    zh: "使用方式：於分類查詢成績頁執行。執行完後畫面上會出現選單，可按自己喜歡的方式排序。",
+    zh:
+      "使用方式：如果要排序自己的成績，請先到於查詢成績頁，先按照自己想要的篩選方式（曲風、等級、遊戲版本等等）列出成績，再執行書籤。如果是要排序朋友的成績，請先使用對戰功能，按照自己想要的篩選方式（曲風、等級）列出對戰結果，再執行書籤。執行完後畫面上會出現選單，可按喜歡的方式排序。",
     en:
-      "Usage: Open historical scores (by genre, level, song title, version, etc.) and execute the bookmarklet.",
+      "Usage: For sorting own scores, open historical scores (by genre, level, song title, version, etc.) and execute the bookmarklet. For sorting friend's scores, use Friend VS feature to list scores (by genre or level), and then execute the bookmarklet.",
   }[LANG],
   scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-sort.js", [
     "/maimai-mobile/record/music",
