@@ -20,13 +20,13 @@ const IntroText = {
   zh: {
     intro1:
       "以下各標題的連結都是書籤小工具，必須在 maimai NET 上打開才有效果。如果沒使用過書籤小工具，請先閱讀 ",
-    faq: "常見問題",
+    faq: "使用教學",
     intro2: "。",
   },
   en: {
     intro1:
       "The link for each section title is a bookmarklet. Bookmarklet works only when they are opened on maimai NET. If you never used bookmarklets before, read ",
-    faq: "FAQ",
+    faq: "instructions",
     intro2: " first.",
   },
 }[LANG];
