@@ -75,6 +75,8 @@ export const scoreSorter: Bookmarklet = {
   }[LANG],
   scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-sort.js", [
     "/maimai-mobile/record/music",
+    "/maimai-mobile/friend/friendGenreVs/battleStart/",
+    "/maimai-mobile/friend/friendLevelVs/battleStart/",
   ]),
   screenshotUrl: "./screenshots/score-sort-20200630.png",
 };

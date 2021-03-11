@@ -106,6 +106,8 @@ type Cache = {
   const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
   const SYNC_TYPES = ["FDX+", "FDX", "FS+", "FS", null];
   const LV_DELTA = 0.02;
+  const isFriendScore = location.pathname.includes("battleStart");
+  const isDxScoreVs = location.search.includes("scoreType=1");
 
   const cache: Cache = {};
 
@@ -230,7 +232,7 @@ type Cache = {
     const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
     let props: SongProperties | undefined;
     if (song === "Link") {
-      const idx = getSongIdx(row);
+      const idx = isFriendScore ? null : getSongIdx(row);
       if (cache.nicoLinkIdx === idx) {
         props = getSongProperties(songProps, song, "niconico", t);
       } else if (cache.originalLinkIdx === idx) {
@@ -267,11 +269,13 @@ type Cache = {
   }
 
   function getRankTitle(row: HTMLElement) {
-    const imgs = row.children[0].querySelectorAll("img");
-    if (imgs.length < 5) {
+    const rankImg = isFriendScore
+      ? row.querySelector("tr:last-child td:last-child img:last-child")
+      : row.children[0].querySelector("img.f_r:nth-of-type(4)");
+    if (!rankImg) {
       return null;
     }
-    const rankImgSrc = imgs[imgs.length - 1].src.replace(/\?ver=.*$/, "");
+    const rankImgSrc = (rankImg as HTMLImageElement).src.replace(/\?ver=.*$/, "");
     const lastUnderscoreIdx = rankImgSrc.lastIndexOf("_");
     const lastDotIdx = rankImgSrc.lastIndexOf(".");
     const lowercaseRank = rankImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
@@ -279,8 +283,10 @@ type Cache = {
   }
 
   function getAchievement(row: HTMLElement) {
-    const elem = row.querySelector(".music_score_block.w_120") as HTMLElement;
-    return elem ? parseFloat(elem.innerText) : elem;
+    const elem = isFriendScore
+      ? row.querySelector("tr:first-child td:last-child")
+      : row.querySelector(".music_score_block.w_120");
+    return elem ? parseFloat((elem as HTMLElement).innerText) : elem;
   }
 
   function compareAchievement(row1: HTMLElement, row2: HTMLElement) {
@@ -302,21 +308,25 @@ type Cache = {
       const rank = getRankTitle(row);
       map.get(rank).push(row);
     });
-    map.forEach((subRows, key) => {
-      subRows.sort(compareAchievement);
-      if (key !== null && reverse) {
-        subRows.reverse();
-      }
-    });
+    if (!isDxScoreVs) {
+      map.forEach((subRows, key) => {
+        subRows.sort(compareAchievement);
+        if (key !== null && reverse) {
+          subRows.reverse();
+        }
+      });
+    }
     return createRowsWithSection(map, "RANK", rows.length);
   }
 
   function getApFcStatus(row: HTMLElement) {
-    const imgs = row.children[0].querySelectorAll("img");
-    if (imgs.length < 5) {
+    const img = isFriendScore
+      ? row.querySelector("tr:last-child td:last-child img:nth-child(2)")
+      : row.children[0].querySelector("img.f_r:nth-of-type(3)");
+    if (!img) {
       return null;
     }
-    const statusImgSrc = imgs[imgs.length - 2].src.replace(/\?ver=.*$/, "");
+    const statusImgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, "");
     const lastUnderscoreIdx = statusImgSrc.lastIndexOf("_");
     const lastDotIdx = statusImgSrc.lastIndexOf(".");
     const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
@@ -336,11 +346,13 @@ type Cache = {
   }
 
   function getSyncStatus(row: HTMLElement) {
-    const imgs = row.children[0].querySelectorAll("img");
-    if (imgs.length < 5) {
+    const img = isFriendScore
+      ? row.querySelector("tr:last-child td:last-child img:first-child")
+      : row.children[0].querySelector("img.f_r:nth-of-type(2)");
+    if (!img) {
       return null;
     }
-    const statusImgSrc = imgs[imgs.length - 3].src.replace(/\?ver=.*$/, "");
+    const statusImgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, "");
     const lastUnderscoreIdx = statusImgSrc.lastIndexOf("_");
     const lastDotIdx = statusImgSrc.lastIndexOf(".");
     const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
@@ -437,6 +449,10 @@ type Cache = {
     firstScrewBlock.innerText = sortedRows[0].innerText;
   }
 
+  function addSummaryBlock() {
+    // TODO
+  }
+
   function expandDualChartRows() {
     const songRecords = d.querySelectorAll("div.w_450.m_15.p_r.f_0[id]") as NodeListOf<HTMLElement>;
     songRecords.forEach((row) => {
@@ -506,9 +522,10 @@ type Cache = {
     for (const row of rows) {
       const song = getSongName(row);
       if (song === "Link") {
-        const idx = getSongIdx(row);
         const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
         try {
+          // idx is not available on friend score page and getSongIdx will throw.
+          const idx = getSongIdx(row);
           const isNico = await isNicoNicoLink(idx);
           let props: SongProperties;
           if (isNico) {
@@ -534,7 +551,11 @@ type Cache = {
   }
 
   // main
-  expandDualChartRows();
+  if (isFriendScore) {
+    addSummaryBlock();
+  } else {
+    expandDualChartRows();
+  }
   addOfficialLvDataset();
   const firstScrewBlock = d.body.querySelector(".main_wrapper.t_c .screw_block");
   if (firstScrewBlock) {
