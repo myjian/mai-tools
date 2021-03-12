@@ -1,13 +1,11 @@
 import React from 'react';
 
+const PRESET_OPTIONS = ["8-15", "8-11", "9-12", "10-13", "11-14", "12-15"];
+
 interface OptionsInputProps {
-  isDxPlus: boolean;
-  onChangeDxPlus: (isPlus: boolean) => void;
-  minLv: number | string;
-  maxLv: number | string;
-  showZoomOutButton: boolean;
-  selectedLv: string;
-  onZoomOut: () => void;
+  minLv: number;
+  maxLv: number;
+  onSetRange: (minLv: number, maxLv: number) => void;
   onChangeUnit: (heightUnit: number) => void;
   onFocus: () => void;
   onBlur: () => void;
@@ -15,21 +13,10 @@ interface OptionsInputProps {
 
 export class OptionsInput extends React.PureComponent<OptionsInputProps> {
   render() {
-    const {
-      minLv, maxLv, selectedLv, showZoomOutButton,
-      onZoomOut, onFocus, onBlur, isDxPlus,
-    } = this.props;
-    const lvDisplayed = selectedLv || `${minLv} - ${maxLv}`;
+    const {onFocus, onBlur} = this.props;
     return (
       <div className="optionsContainer">
         <div className="container" onFocus={onFocus} onBlur={onBlur} tabIndex={-1}>
-          <label className="optionGroup">
-            Game version:&nbsp;
-            <select onChange={this.handleChangeVersion}>
-              <option value="dx" selected={!isDxPlus}>DX</option>
-              <option value="plus" selected={isDxPlus}>DX+</option>
-            </select>
-          </label>
           <label className="optionGroup">
             Scale:&nbsp;
             <select onChange={this.handleChangeHeightUnit}>
@@ -37,27 +24,54 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
               <option value="3">3x</option>
               <option value="4">4x</option>
               <option value="5">5x</option>
-              <option value="8" selected>8x</option>
+              <option value="8" selected>
+                8x
+              </option>
               <option value="12">12x</option>
             </select>
           </label>
           <span className="lvRangeLabelContainer">
             Showing&nbsp;Level&nbsp;
-            <span className="lvRangeLabel">{lvDisplayed}</span>
-            {showZoomOutButton && (
-              <button className="resetZoomButton" onClick={onZoomOut}>Reset</button>
-            )}
+            <select onChange={this.handleChangeRange}>{this.renderOptions()}</select>
           </span>
         </div>
       </div>
     );
   }
 
-  private handleChangeVersion = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    console.log(evt.target);
-    const isPlus = evt.currentTarget.value === "plus";
-    this.props.onChangeDxPlus(isPlus);
+  private renderOptions() {
+    const {minLv, maxLv} = this.props;
+    const selectedRange =
+      maxLv - minLv > 1
+        ? minLv.toFixed(0) + "-" + maxLv.toFixed(0)
+        : minLv - Math.floor(minLv) > 0
+        ? Math.floor(minLv) + "+"
+        : minLv.toFixed(0);
+    let isPresetRange = false;
+    const options: JSX.Element[] = [];
+    PRESET_OPTIONS.forEach((range, i) => {
+      const isSelected = selectedRange === range;
+      if (isSelected) isPresetRange = true;
+      options.push(
+        <option key={i} value={range} selected={isSelected}>
+          {range.replace("-", " - ")}
+        </option>
+      );
+    });
+    if (!isPresetRange) {
+      options.push(
+        <option key={PRESET_OPTIONS.length} value={selectedRange} selected>
+          {selectedRange}
+        </option>
+      );
+    }
+    return options;
   }
+
+  private handleChangeRange = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+    const rangeText = evt.currentTarget.value.split("-");
+    this.props.onSetRange(parseInt(rangeText[0]), parseInt(rangeText[1]));
+  };
 
   private handleChangeHeightUnit = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
     console.log(evt.target);

@@ -12,7 +12,7 @@ interface LvRatingContainerProps {
   ranks: ReadonlyArray<RankRangeDef>;
   heightUnit: number;
   containerHeight: number;
-  onZoomIn: (lvTitle: string, minLv: number, maxLv: number) => void;
+  onZoomIn: (minLv: number, maxLv: number) => void;
   highlightInterval: (min: number, max: number) => void;
 }
 
@@ -25,26 +25,28 @@ export class LvRatingContainer extends React.PureComponent<LvRatingContainerProp
     return (
       <div className="lvRatingContainer" style={style}>
         <LvLabel title={lvTitle} onClick={this.handleLabelClick} canZoomIn={canZoomIn} />
-        {heightUnit ? ranks.map((rank) => (
-          <LvRankRatingSegment
-            key={rank.title}
-            minLv={minLv}
-            maxLv={maxLv}
-            minAchv={rank.minAchv}
-            maxAchv={rank.maxAchv}
-            rankFactor={rank.rankFactor}
-            maxRankFactor={rank.maxRankFactor}
-            heightUnit={heightUnit}
-            title={rank.title}
-            highlightInterval={this.props.highlightInterval}
-          />
-        )) : null}
+        {heightUnit
+          ? ranks.map((rank) => (
+              <LvRankRatingSegment
+                key={rank.title}
+                minLv={minLv}
+                maxLv={maxLv}
+                minAchv={rank.minAchv}
+                maxAchv={rank.maxAchv}
+                rankFactor={rank.rankFactor}
+                maxRankFactor={rank.maxRankFactor}
+                heightUnit={heightUnit}
+                title={rank.title}
+                highlightInterval={this.props.highlightInterval}
+              />
+            ))
+          : null}
       </div>
     );
   }
 
   private handleLabelClick = () => {
-    const {lvTitle, minLv, maxLv} = this.props;
-    this.props.onZoomIn(lvTitle, minLv, maxLv);
+    const {minLv, maxLv} = this.props;
+    this.props.onZoomIn(minLv, maxLv);
   };
 }

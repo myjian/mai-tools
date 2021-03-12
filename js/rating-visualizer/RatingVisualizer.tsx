@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DX_LEVELS, DX_MAX_RATING, DX_PLUS_LEVELS, DX_PLUS_RANKS, DX_RANKS} from './constants';
+import {DX_MAX_RATING, DX_PLUS_RANKS} from './constants';
 import {IntervalLines} from './IntervalLines';
 import {LvRatingContainer} from './LvRatingContainer';
 import {OptionsInput} from './OptionsInput';
@@ -11,10 +11,8 @@ interface RatingVisualizerState {
   width: number;
   heightUnit: number;
   maxRating: number;
-  isDxPlus: boolean;
-  selectedLvTitle?: string;
-  minLv?: number;
-  maxLv?: number;
+  minLv: number;
+  maxLv: number;
   topPadding: number;
   axisLabelStep: number;
   highlightInterval?: [number, number];
@@ -26,40 +24,29 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   constructor(props: {}) {
     super(props);
     this.state = {
+      minLv: 8,
+      maxLv: 15,
       width: 30,
       heightUnit: 8,
       maxRating: DX_MAX_RATING,
       topPadding: 70,
-      isDxPlus: true,
       axisLabelStep: 5,
     };
   }
 
   render() {
-    const {
-      isDxPlus,
-      heightUnit,
-      maxRating,
-      axisLabelStep,
-      highlightInterval,
-      minLv,
-      selectedLvTitle,
-    } = this.state;
+    const {heightUnit, maxRating, axisLabelStep, highlightInterval, minLv, maxLv} = this.state;
     const levels = this.getLevels();
-    const ranks = isDxPlus ? DX_PLUS_RANKS : DX_RANKS;
+    const ranks = DX_PLUS_RANKS;
     const containerHeight = this.getContainerHeight();
-    const canZoomIn = !minLv;
+    const canZoomIn = maxLv - minLv > 1;
     return (
       <div className="ratingVisualizer">
         <OptionsInput
-          isDxPlus={isDxPlus}
-          onChangeDxPlus={this.handleDxPlusChange}
           onChangeUnit={this.handleChangeHeightUnit}
-          onZoomOut={this.handleUnselectLv}
-          selectedLv={selectedLvTitle}
-          minLv={levels[levels.length - 1].title}
-          maxLv={levels[0].title}
-          showZoomOutButton={!canZoomIn}
+          onSetRange={this.handleSetRange}
+          minLv={minLv}
+          maxLv={maxLv}
           onBlur={this.removeHighlightInterval}
           onFocus={this.cancelRemoveHighlightInterval}
         />
@@ -79,10 +66,10 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
                 onClick={this.removeHighlightInterval}
               />
             ) : null}
-            {levels.map((lv) => {
+            {levels.map((lv, i) => {
               return (
                 <LvRatingContainer
-                  key={lv.title}
+                  key={i}
                   canZoomIn={canZoomIn}
                   lvTitle={lv.title}
                   minLv={lv.minLv}
@@ -90,7 +77,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
                   heightUnit={heightUnit}
                   containerHeight={containerHeight}
                   ranks={ranks}
-                  onZoomIn={this.handleSelectLv}
+                  onZoomIn={this.handleSetRange}
                   highlightInterval={this.highlightInterval}
                 />
               );
@@ -119,35 +106,55 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     );
   }
 
-  private getLevels() {
-    const {minLv, isDxPlus} = this.state;
-    let {maxLv} = this.state;
-    if (minLv && maxLv) {
-      const lvs = [];
-      while (minLv <= maxLv) {
-        lvs.push({
-          title: maxLv.toFixed(1),
-          minLv: maxLv,
-          maxLv: maxLv,
-        });
-        maxLv -= 0.1;
-      }
-      return lvs;
+  private getDetailLevels(minLv: number, maxLv: number) {
+    const lvs = [];
+    let currentLv = maxLv;
+    while (currentLv >= minLv) {
+      lvs.push({
+        title: currentLv.toFixed(1),
+        minLv: currentLv,
+        maxLv: currentLv,
+      });
+      currentLv -= 0.1;
     }
-    return isDxPlus ? DX_PLUS_LEVELS : DX_LEVELS;
+    console.log(lvs);
+    return lvs;
+  }
+
+  private getLevels() {
+    const {minLv, maxLv} = this.state;
+    if (maxLv - minLv < 1) {
+      return this.getDetailLevels(minLv, maxLv);
+    }
+    const lvs = [];
+    let currentLv = maxLv;
+    if (maxLv === 15) {
+      lvs.push({title: "15", minLv: 15, maxLv: 15});
+    } else {
+      lvs.push({title: currentLv.toFixed(0), minLv: currentLv, maxLv: currentLv + 0.6});
+    }
+    currentLv--;
+    while (currentLv >= minLv) {
+      lvs.push({
+        title: Math.round(currentLv).toFixed(0) + "+",
+        minLv: currentLv + 0.7,
+        maxLv: currentLv + 0.9,
+      });
+      lvs.push({
+        title: Math.round(currentLv).toFixed(0),
+        minLv: currentLv,
+        maxLv: currentLv + 0.6,
+      });
+      currentLv--;
+    }
+    console.log(lvs);
+    return lvs;
   }
 
   private getContainerHeight() {
     const {axisLabelStep, maxRating, heightUnit, topPadding} = this.state;
     return (maxRating + axisLabelStep) * heightUnit + topPadding;
   }
-
-  private handleDxPlusChange = (isPlus: boolean) => {
-    this.setState({isDxPlus: isPlus});
-    if (!isPlus && this.state.maxLv > 14) {
-      this.handleUnselectLv();
-    }
-  };
 
   private handleChangeHeightUnit = (unit: number) => {
     this.setState({heightUnit: unit});
@@ -156,12 +163,8 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     }
   };
 
-  private handleSelectLv = (lvTitle: string, minLv: number, maxLv: number) => {
-    this.setState({selectedLvTitle: lvTitle, minLv, maxLv});
-  };
-
-  private handleUnselectLv = () => {
-    this.setState({minLv: undefined, maxLv: undefined, selectedLvTitle: undefined});
+  private handleSetRange = (minLv: number, maxLv: number) => {
+    this.setState({minLv, maxLv});
   };
 
   private highlightInterval = (minRt: number, maxRt: number) => {
@@ -174,8 +177,6 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   };
 
   private removeHighlightInterval = () => {
-    console.log("removeInterval");
-    console.log(document.activeElement);
     this.removeIntervalTimeout = setTimeout(() => {
       this.setState({highlightInterval: undefined});
       this.removeIntervalTimeout = 0;
@@ -183,8 +184,6 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   };
 
   private cancelRemoveHighlightInterval = () => {
-    console.log("cancelRemove");
-    console.log(document.activeElement);
     if (this.removeIntervalTimeout) {
       clearTimeout(this.removeIntervalTimeout);
       this.removeIntervalTimeout = 0;

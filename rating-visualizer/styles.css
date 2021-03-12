@@ -30,11 +30,6 @@ body {
   margin-right: 10px;
 }
 
-.lvRangeLabel {
-  text-decoration: underline;
-  margin-right: 5px;
-}
-
 .resetZoomButton {
   display: inline-block;
 }
@@ -95,17 +90,22 @@ body {
   background-color: #7d7d7d;
   position: absolute;
   width: calc(100% - 5px);
-  opacity: 0.7;
+  opacity: 0.9;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: crosshair;
+  mask-image: linear-gradient(rgba(0, 0, 0, 0.3), white);
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0.3), white);
 }
 
-.ratingSegment:hover, .ratingSegment:focus {
+.ratingSegment:hover,
+.ratingSegment:focus {
   opacity: 1;
   z-index: 10;
   box-shadow: 0 0 2px #333;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .ratingSegmentLabel {
@@ -209,7 +209,6 @@ body {
   right: 4px;
 }
 
-
 @media only screen and (max-width: 500px) {
   .optionsContainer {
     height: 70px;
@@ -273,6 +272,7 @@ body {
   margin-bottom: 10px;
 }
 
-.authorLink, .authorLink:visited {
+.authorLink,
+.authorLink:visited {
   color: inherit;
 }
