@@ -74,7 +74,7 @@ label {
 }
 
 .collapsibleContainer {
-  max-height: 9999px;
+  max-height: 15000px;
 }
 
 .collapsibleContainer.hidden {
