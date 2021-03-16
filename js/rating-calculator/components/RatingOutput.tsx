@@ -8,8 +8,8 @@ import {RatingDetails} from './RatingDetails';
 import {RatingOverview} from './RatingOverview';
 import {RecommendedLevels} from './RecommendedLevels';
 
-const NEW_CANDIDATE_SONGS_POOL_SIZE = 40;
-const OLD_CANDIDATE_SONGS_POOL_SIZE = 60;
+const NEW_CANDIDATE_SONGS_POOL_SIZE = 100;
+const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
 
 interface Props {
   gameRegion: GameRegion;
