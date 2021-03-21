@@ -24,18 +24,6 @@ body {
   flex-direction: row;
 }
 
-.bookmarkletCopy {
-  margin-left: 6px;
-}
-
-.bookmarkletCopy::before {
-  content: "(";
-}
-
-.bookmarkletCopy::after {
-  content: ")";
-}
-
 .bookmarkletScript {
   border-style: none;
   background-color: transparent;

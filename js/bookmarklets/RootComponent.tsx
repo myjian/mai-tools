@@ -18,16 +18,16 @@ import {PCManual} from './PCManual';
 
 const IntroText = {
   zh: {
-    intro1:
-      "以下各標題的連結都是書籤小工具，必須在 maimai NET 上打開才有效果。如果沒使用過書籤小工具，請先閱讀 ",
-    faq: "使用教學",
-    intro2: "。",
+    intro1: "如果想在 maimai DX NET 使用以下功能，請參照 ",
+    howto: "使用教學",
+    intro2: " 設定書籤小工具。",
+    features: "功能介紹",
   },
   en: {
-    intro1:
-      "The link for each section title is a bookmarklet. Bookmarklet works only when they are opened on maimai NET. If you never used bookmarklets before, read ",
-    faq: "Instructions",
-    intro2: " first.",
+    intro1: "If you want to use the following features, follow ",
+    howto: "Instructions",
+    intro2: " to set up the bookmarklet.",
+    features: "Features",
   },
 }[LANG];
 
@@ -36,7 +36,7 @@ export const RootComponent: React.FC = () => (
     <h2>{PAGE_TITLE}</h2>
     <p>
       {IntroText.intro1}
-      <a href="#faq">{IntroText.faq}</a>
+      <a href="#howto">{IntroText.howto}</a>
       {IntroText.intro2}
     </p>
 
@@ -49,9 +49,8 @@ export const RootComponent: React.FC = () => (
       <BookmarkItem {...scoreConverter} />
       <BookmarkItem {...scoreDownloader} />
       <br />
-
       <div>
-        <h2 id="faq">{IntroText.faq}</h2>
+        <h2 id="howto">{IntroText.howto}</h2>
         <PCManual />
         <MobileCreateManual />
         <MobileUseManual />

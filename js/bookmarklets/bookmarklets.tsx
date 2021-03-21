@@ -2,39 +2,31 @@ import React from 'react';
 
 import {LANG} from '../common/lang';
 
+const ALL_IN_ONE_SCRIPT = "https://myjian.github.io/mai-tools/scripts/all-in-one.js";
+// const ALL_IN_ONE_SCRIPT = "http://localhost:8080/scripts/all-in-one.js";
+
+export const BOOKMARKLET_LINK = `javascript:void (
+  function(d) {
+    if (['maimaidx-eng.com','maimaidx.jp'].indexOf(d.location.host) >= 0) {
+      vars = d.createElement('script');
+      s.src='${ALL_IN_ONE_SCRIPT}?t=' + Math.floor(Date.now() / 60000);
+      d.body.append(s);
+    }
+  }
+)(document)`
+  .replace(/[\n ]/g, "")
+  .replace("vars", "var s");
+
+export const LINK_NAME = {
+  zh: "maimai 書籤小工具合集 (MMBL)",
+  en: "maimai bookmarklets (MMBL)",
+}[LANG];
+
 export interface Bookmarklet {
   itemTitle: string;
   feature: string;
   howTo: string | (() => JSX.Element);
   screenshotUrl: string;
-  scriptUrl: string;
-}
-
-function getBookmarkletLink(scriptUrl: string, paths: string[] = [], strictPathMatch?: boolean) {
-  const pathCheck = paths.reduce((code, path, index, array) => {
-    if (index === 0) {
-      code += " && (";
-    } else if (index > 0) {
-      code += " || ";
-    }
-    if (strictPathMatch) {
-      code += "d.location.pathname==='" + path + "'";
-    } else {
-      code += "d.location.pathname.indexOf('" + path + "')>=0";
-    }
-    if (index === array.length - 1) {
-      code += ")";
-    }
-    return code;
-  }, "");
-  let js = `javascript:void (function(d){if (
-['maimaidx-eng.com','maimaidx.jp'].indexOf(d.location.host)>=0
-${pathCheck}
-){var s=d.createElement('script');
-s.src='${scriptUrl}?t='+Math.floor(Date.now()/60000);
-d.body.append(s);
-}})(document)`;
-  return js.replace(/\n/g, "");
 }
 
 export const scoreConverter: Bookmarklet = {
@@ -53,9 +45,6 @@ export const scoreConverter: Bookmarklet = {
     en:
       'Usage: Log in to maimai NET. Open a recent song record and execute the bookmarklet. New tab will open and display score in old achievement system. You can click on "Cafe MiLK" to switch to DX achievement, and click on the achievement % to see how much percentage was lost per note type.',
   }[LANG],
-  scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-converter.js", [
-    "/maimai-mobile/record/playlogDetail/",
-  ]),
   screenshotUrl: "./screenshots/convert-to-finale-score-20200718.jpg",
 };
 
@@ -75,11 +64,6 @@ export const scoreSorter: Bookmarklet = {
     en:
       "Usage: For sorting own scores, open historical scores (by genre, level, song title, version, etc.) and execute the bookmarklet. For sorting friend's scores, use Friend VS feature to list scores (by genre or level), and then execute the bookmarklet.",
   }[LANG],
-  scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-sort.js", [
-    "/maimai-mobile/record/music",
-    "/maimai-mobile/friend/friendGenreVs/battleStart/",
-    "/maimai-mobile/friend/friendLevelVs/battleStart/",
-  ]),
   screenshotUrl: "./screenshots/score-sort-20200630.png",
 };
 
@@ -96,11 +80,6 @@ export const recentPlaySummary: Bookmarklet = {
     zh: "使用方式：於最近成績列表執行。執行後會在頁面中產生表格，可以選取日期和排序。",
     en: "Usage: Open the recent game records list and execute the bookmarklet.",
   }[LANG],
-  scriptUrl: getBookmarkletLink(
-    "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.js",
-    ["/maimai-mobile/record/"],
-    true
-  ),
   screenshotUrl: "./screenshots/recent-play-summary-20200704.png",
 };
 
@@ -117,9 +96,6 @@ export const ratingAnalyzer: Bookmarklet = {
     zh: "使用方式：於 maimai NET 首頁或個人檔案頁面執行。執行時會開新分頁，載入成績並進行分析。",
     en: "Usage: Execute the bookmarklet on maimai NET home page or player data page.",
   }[LANG],
-  scriptUrl: getBookmarkletLink(
-    "https://myjian.github.io/mai-tools/scripts/analyze-rating-in-newtab.js"
-  ),
   screenshotUrl: "./screenshots/rating-analyzer-20200702.png",
 };
 
@@ -138,11 +114,6 @@ export const analyzeFriendRating: Bookmarklet = {
     en:
       'Usage: Open friend list. Add the friend you want to analyze to FAVORITE. Execute the bookmarklet. There will have an "Analyze Rating" link for each favorite friend. Click on one of the links to analyze rating for that player.',
   }[LANG],
-  scriptUrl: getBookmarkletLink(
-    "https://myjian.github.io/mai-tools/scripts/analyze-friend-rating-in-new-tab.js",
-    ["/maimai-mobile/friend/", "/maimai-mobile/friend/favoriteOn/", "/maimai-mobile/friend/pages/"],
-    true
-  ),
   screenshotUrl: "./screenshots/analyze-friend-rating-20200725.png",
 };
 
@@ -179,7 +150,6 @@ export const scoreDownloader: Bookmarklet = {
       {scoreDownloaderUsageText.part2}
     </React.Fragment>
   ),
-  scriptUrl: getBookmarkletLink("https://myjian.github.io/mai-tools/scripts/score-download.js"),
   screenshotUrl: "./screenshots/score-download-20200630.png",
 };
 
@@ -198,8 +168,5 @@ export const albumDownloadHelper: Bookmarklet = {
     en:
       "Usage: Open PHOTOS page and execute this bookmarklet. Photos on the page will be clickable and have proper filenames.",
   }[LANG],
-  scriptUrl: getBookmarkletLink(
-    "https://myjian.github.io/mai-tools/scripts/album-download-helper.js"
-  ),
   screenshotUrl: "./screenshots/album-download-helper-20210216.png",
 };
