@@ -3,7 +3,8 @@
 }
 
 .playRecordContainer {
-  background-color: #7ed3ff;
+  background-color: #51bcf3;
+  color: white;
   padding: 2px;
 }
 
@@ -54,7 +55,8 @@ td.songTitleCell {
   padding: 4px;
 }
 
-.copyBtn, .downloadImgBtn {
+.copyBtn,
+.downloadImgBtn {
   background-color: #9f51dc;
   border: 2px solid black;
   border-radius: 5px;
@@ -76,12 +78,14 @@ td.songTitleCell {
   padding: 4px;
 }
 
-.newRecordLabel, .sortByLabel {
+.newRecordLabel,
+.sortByLabel {
   display: inline-block;
   margin-right: 10px;
 }
 
-.newRecordRadio, .sortByRadio {
+.newRecordRadio,
+.sortByRadio {
   margin-right: 4px;
   vertical-align: middle;
 }
@@ -108,7 +112,8 @@ td.songTitleCell {
 
 .remaster .difficultyCell {
   color: white;
-  text-shadow: -1px -1px 2px #9e45e2, -1px 1px 2px #9e45e2, 1px -1px 2px #9e45e2, 1px 1px 2px #9e45e2;
+  text-shadow: -1px -1px 2px #9e45e2, -1px 1px 2px #9e45e2, 1px -1px 2px #9e45e2,
+    1px 1px 2px #9e45e2;
 }
 
 .snackbarContainer {
