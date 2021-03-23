@@ -14,7 +14,6 @@ import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {GameRegion, RatingData} from '../types';
 import {InternalLvInput} from './InternalLvInput';
-import {MultiplierTable} from './MultiplierTable';
 import {OtherTools} from './OtherTools';
 import {PageFooter} from './PageFooter';
 import {RatingOutput} from './RatingOutput';
@@ -84,7 +83,6 @@ async function readPlayerScoreFromText(text: string) {
 interface State {
   gameRegion: GameRegion;
   gameVer: number;
-  showMultiplierTable: boolean;
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
@@ -104,14 +102,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const queryParams = new URLSearchParams(document.location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
     const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DX_PLUS_GAME_VERSION;
-    let showMultiplierTable = queryParams.get("quickLookup") !== "hide";
 
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");
     this.state = {
       gameRegion: GameRegion.Jp,
       gameVer,
-      showMultiplierTable,
       friendIdx,
       playerName,
     };
@@ -133,7 +129,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const {
       gameRegion,
       gameVer,
-      showMultiplierTable,
       playerName,
       ratingData,
       songPropsByName,
@@ -163,7 +158,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
             newSongs={newSongs}
           />
         )}
-        {showMultiplierTable && <MultiplierTable />}
         <OtherTools />
         <PageFooter />
       </React.Fragment>
@@ -187,12 +181,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const playerScores = await readPlayerScoreFromText(scoreText);
     console.log("Player scores:", playerScores);
     if (!playerScores.length) {
-      this.setState({ratingData: undefined, showMultiplierTable: true});
+      this.setState({ratingData: undefined});
       return;
     }
     const ratingData = await analyzePlayerRating(songPropsByName, playerScores, gameVer);
     console.log("Rating Data:", ratingData);
-    this.setState({ratingData, showMultiplierTable: true, songPropsByName});
+    this.setState({ratingData, songPropsByName});
   };
 
   private postMessageToOpener(data: string | {action: string; payload?: string | number}) {

@@ -3,6 +3,7 @@ import React from 'react';
 import {DX_MAX_RATING, DX_PLUS_RANKS} from './constants';
 import {IntervalLines} from './IntervalLines';
 import {LvRatingContainer} from './LvRatingContainer';
+import {MultiplierTable} from './MultiplierTable';
 import {OptionsInput} from './OptionsInput';
 import {RatingAxis} from './RatingAxis';
 import {RatingTable} from './RatingTable';
@@ -93,8 +94,10 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
         </div>
         <div className="container">
           <RatingTable ranks={ranks} levels={levels} />
+          <hr className="sectionSep" />
+          <MultiplierTable />
           <footer className="footer">
-            <hr className="footerSep" />
+            <hr className="sectionSep" />
             <span>Made by </span>
             <a className="authorLink" href="https://github.com/myjian" target="_blank">
               myjian

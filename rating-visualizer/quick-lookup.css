@@ -1,3 +1,7 @@
+.quickLookup .lookupTable {
+  table-layout: auto;
+}
+
 .qlRankFactorCell {
   min-width: 76px;
   padding: 4px;
@@ -11,5 +15,5 @@ th.qlRankFactorCell {
 }
 
 td.qlThresholdCell::after {
-  content: "%"
+  content: "%";
 }

@@ -1,11 +1,28 @@
 import React from 'react';
 
-import {RANK_DEFINITIONS} from '../../common/rank-functions';
-import {UIString} from '../i18n';
+import {LANG} from '../common/lang';
+import {RANK_DEFINITIONS} from '../common/rank-functions';
 
 const MIN_RANK_OPTION = "A";
 const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";
 const RANK_FACTOR_CELL_CLASSNAMES = ["qlRankTitleCell", "qlThresholdCell"];
+
+const UIString = {
+  en: {
+    rankFactorTable: "Rank Factor Table",
+    rank: "Rank",
+    achievement: "Achievement",
+    factor: "Factor",
+    multiplier: "Multiplier (Factor × Achievement)",
+  },
+  zh: {
+    rankFactorTable: "Rank 係數表",
+    rank: "Rank",
+    achievement: "達成率",
+    factor: "係數",
+    multiplier: "倍率 (係數 × 達成率)",
+  },
+}[LANG];
 
 interface RankFactorRowProps {
   values: ReadonlyArray<string | number>;
@@ -41,8 +58,8 @@ export class MultiplierTable extends React.PureComponent<{}, State> {
     return (
       <div className="quickLookup">
         <h2 className="quickLookupHeading">{UIString.rankFactorTable}</h2>
-        <table className="quickLookupTable">
-          <thead>
+        <table className="lookupTable">
+          <thead className="lookupTableHead">
             <RankFactorRow
               values={[UIString.rank, UIString.achievement, UIString.factor, UIString.multiplier]}
               isHeading
@@ -61,7 +78,6 @@ export class MultiplierTable extends React.PureComponent<{}, State> {
             })}
           </tbody>
         </table>
-        <hr className="sectionSep" />
       </div>
     );
   }
