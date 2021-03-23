@@ -180,7 +180,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   };
 
   private removeHighlightInterval = () => {
-    this.removeIntervalTimeout = setTimeout(() => {
+    this.removeIntervalTimeout = window.setTimeout(() => {
       this.setState({highlightInterval: undefined});
       this.removeIntervalTimeout = 0;
     }, 0);
