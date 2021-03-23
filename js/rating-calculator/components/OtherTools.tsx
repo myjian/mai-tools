@@ -19,8 +19,8 @@ export class OtherTools extends React.PureComponent {
             </a>
           </li>
           <li className="toolItem">
-            <a href="https://mai-songs.herokuapp.com" target="_blank">
-              mai-songs
+            <a href="https://maimai-songs.zetaraku.dev/" target="_blank">
+              maimai-songs
             </a>
           </li>
           <li className="toolItem">
