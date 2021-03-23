@@ -18,6 +18,16 @@ export class OtherTools extends React.PureComponent {
               {UIString.bookmarketList}
             </a>
           </li>
+          <li className="toolItem">
+            <a href="https://mai-songs.herokuapp.com" target="_blank">
+              mai-songs
+            </a>
+          </li>
+          <li className="toolItem">
+            <a href="https://otohi.me/" target="_blank">
+              {UIString.otohime}
+            </a>
+          </li>
         </ul>
         <hr className="sectionSep" />
       </div>
