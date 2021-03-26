@@ -1,10 +1,6 @@
 import React from 'react';
 
-import {
-  DX_PLUS_GAME_VERSION,
-  DX_SPLASH_GAME_VERSION,
-  DX_SPLASH_PLUS_GAME_VERSION,
-} from '../../common/constants';
+import {DxVersion} from '../../common/constants';
 import {iWantSomeMagic} from '../../common/magic';
 import {
   buildSongPropsMap,
@@ -28,13 +24,13 @@ const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
 const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
 const CACHE_KEY_DX_SPLASH_INNER_LEVEL = "dxSplashInnerLv";
 
-function getInternalLvCacheKey(gameVer: number) {
+function getInternalLvCacheKey(gameVer: DxVersion) {
   switch (gameVer) {
-    case DX_PLUS_GAME_VERSION:
+    case DxVersion.PLUS:
       return CACHE_KEY_DX_PLUS_INNER_LEVEL;
-    case DX_SPLASH_GAME_VERSION:
+    case DxVersion.SPLASH:
       return CACHE_KEY_DX_SPLASH_INNER_LEVEL;
-    case DX_SPLASH_PLUS_GAME_VERSION:
+    case DxVersion.SPLASH_PLUS:
       return CACHE_KEY_DX_INNER_LEVEL;
     default:
       return CACHE_KEY_DX_INNER_LEVEL;
@@ -49,7 +45,7 @@ function getDebugText({action, payload}: {action: string; payload: number | stri
 }
 
 function readSongProperties(
-  gameVer: number,
+  gameVer: DxVersion,
   inputText: string
 ): Promise<Map<string, SongProperties[]>> {
   return new Promise((resolve) => {
@@ -88,7 +84,7 @@ async function readPlayerScoreFromText(text: string) {
 
 interface State {
   gameRegion: GameRegion;
-  gameVer: number;
+  gameVer: DxVersion;
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
@@ -107,7 +103,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(document.location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
-    const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DX_PLUS_GAME_VERSION;
+    const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DxVersion.SPLASH;
 
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");
@@ -170,7 +166,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     );
   }
 
-  private selectVersion = (gameVer: number) => {
+  private selectVersion = (gameVer: DxVersion) => {
     this.setState({gameVer}, this.analyzeRating);
   };
 
@@ -214,10 +210,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         switch (evt.data.action) {
           case "gameVersion":
             payloadAsInt = parseInt(evt.data.payload);
-            if (
-              payloadAsInt >= DX_PLUS_GAME_VERSION &&
-              payloadAsInt <= DX_SPLASH_PLUS_GAME_VERSION
-            ) {
+            if (payloadAsInt >= DxVersion.PLUS && payloadAsInt <= DxVersion.SPLASH_PLUS) {
               this.setState({
                 gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
                 gameVer: payloadAsInt,
@@ -272,7 +265,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
   }
 
-  private loadSongLists(gameVer: number) {
+  private loadSongLists(gameVer: DxVersion) {
     this.postMessageToOpener({action: "fetchAllSongs"});
     this.postMessageToOpener({action: "fetchNewSongs", payload: gameVer});
   }

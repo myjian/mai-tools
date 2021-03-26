@@ -1,3 +1,4 @@
+import {DxVersion} from './constants';
 import {getChartType, getSongName} from './fetch-score-util';
 import {SELF_SCORE_URLS} from './fetch-self-score';
 import {BasicSongProps} from './song-props';
@@ -57,7 +58,7 @@ export async function fetchAllSongs(dom?: Document) {
   return await parseSongList(dom);
 }
 
-export async function fetchNewSongs(ver: number): Promise<BasicSongProps[]> {
+export async function fetchNewSongs(ver: DxVersion): Promise<BasicSongProps[]> {
   // diff=0 means BASIC
   const dom = await fetchPage(`/maimai-mobile/record/musicVersion/search/?version=${ver}&diff=0`);
   return await parseSongList(dom);

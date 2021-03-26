@@ -1,4 +1,4 @@
-import {DX_SPLASH_GAME_VERSION, DX_SPLASH_PLUS_GAME_VERSION} from './constants';
+import {DxVersion} from './constants';
 
 const MAGIC_SAUCE_PLUS = [
   105,
@@ -254,13 +254,13 @@ const MAGIC_SAUCE_SPLASH_PLUS = [
   116,
 ];
 
-export async function iWantSomeMagic(gameVersion: number): Promise<string> {
+export async function iWantSomeMagic(gameVer: DxVersion): Promise<string> {
   let sauce = MAGIC_SAUCE_PLUS;
-  switch (gameVersion) {
-    case DX_SPLASH_GAME_VERSION:
+  switch (gameVer) {
+    case DxVersion.SPLASH:
       sauce = MAGIC_SAUCE_SPLASH;
       break;
-    case DX_SPLASH_PLUS_GAME_VERSION:
+    case DxVersion.SPLASH_PLUS:
       sauce = MAGIC_SAUCE_SPLASH_PLUS;
       break;
   }

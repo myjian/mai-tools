@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {DxVersion} from '../../common/constants';
 import {SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {UIString} from '../i18n';
@@ -13,7 +14,7 @@ const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
 
 interface Props {
   gameRegion: GameRegion;
-  gameVer: number;
+  gameVer: DxVersion;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   playerGradeIndex: number;

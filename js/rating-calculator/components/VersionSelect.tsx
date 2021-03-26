@@ -1,11 +1,13 @@
 import React from 'react';
 
+import {DxVersion} from '../../common/constants';
 import {UIString} from '../i18n';
 
 interface Props {
-  handleVersionSelect: (ver: number) => void;
-  gameVer: number;
+  handleVersionSelect: (ver: DxVersion) => void;
+  gameVer: DxVersion;
 }
+
 export class VersionSelect extends React.PureComponent<Props> {
   render() {
     const {gameVer} = this.props;

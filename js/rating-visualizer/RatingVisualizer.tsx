@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DX_SPLASH_GAME_VERSION} from '../common/constants';
+import {DxVersion} from '../common/constants';
 import {getRankDefinitions} from '../common/rank-functions';
 import {IntervalLines} from './IntervalLines';
 import {DX_LEVELS, getLvIndex} from './levels';
@@ -11,7 +11,7 @@ import {RatingAxis} from './RatingAxis';
 import {RatingTable} from './RatingTable';
 
 interface RatingVisualizerState {
-  gameVer: number;
+  gameVer: DxVersion;
   width: number;
   heightUnit: number;
   maxRating: number;
@@ -27,7 +27,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   constructor(props: {}) {
     super(props);
-    const gameVer = DX_SPLASH_GAME_VERSION;
+    const gameVer = DxVersion.SPLASH;
     const heightUnit = 8;
     const maxLv = 15;
     this.state = {
@@ -166,7 +166,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     }
   };
 
-  private handleSetGameVer = (gameVer: number) => {
+  private handleSetGameVer = (gameVer: DxVersion) => {
     this.setState(({maxLv}) => {
       const lvDef = DX_LEVELS.find((lv) => lv.title === maxLv);
       return {gameVer, maxRating: calculateMaxRating(lvDef.maxLv, gameVer)};
@@ -206,7 +206,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   };
 }
 
-function calculateMaxRating(maxLv: number, gameVer: number) {
+function calculateMaxRating(maxLv: number, gameVer: DxVersion) {
   const maxRank = getRankDefinitions(gameVer)[0];
   return Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100);
 }

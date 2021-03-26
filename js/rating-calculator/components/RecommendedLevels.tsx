@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {DxVersion} from '../../common/constants';
 import {roundFloat} from '../../common/number-helper';
 import {getRankDefinitions, RankDef} from '../../common/rank-functions';
 import {UIString} from '../i18n';
@@ -11,7 +12,7 @@ const MAX_LV = 15;
 
 interface Props {
   gameRegion: GameRegion;
-  gameVer: number;
+  gameVer: DxVersion;
   oldChartsRating: number;
   oldTopChartsCount: number;
   newChartsRating: number;

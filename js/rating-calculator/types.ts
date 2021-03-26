@@ -9,8 +9,6 @@ export interface ChartRecord {
   levelIsEstimate: boolean;
   chartType: ChartType;
   achievement: number;
-  // multiplier: number;
-  // rankFactor: number;
 }
 
 export interface ChartRecordWithRating extends ChartRecord {

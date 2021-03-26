@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {DxVersion} from '../../common/constants';
 import {SongProperties} from '../../common/song-props';
 import {UIString} from '../i18n';
 import {getNumOfTopOldCharts} from '../rating-analyzer';
@@ -9,7 +10,7 @@ import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
 import {TopChartRecords} from './TopChartRecords';
 
 interface Props {
-  gameVer: number;
+  gameVer: DxVersion;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   newCandidateCharts: ReadonlyArray<ChartRecordWithRating>;

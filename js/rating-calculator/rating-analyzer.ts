@@ -1,4 +1,4 @@
-import {DIFFICULTIES, DX_SPLASH_GAME_VERSION, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DIFFICULTIES, DxVersion, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
 import {getRankByAchievement} from '../common/rank-functions';
 import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
@@ -8,7 +8,7 @@ const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
 const NUM_TOP_OLD_SONGS_SPLASH_PLUS = 35;
 
-function getScoreMultiplier(gameVer: number, achievement: number) {
+function getScoreMultiplier(achievement: number, gameVer: DxVersion) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
   const rank = getRankByAchievement(achievement, gameVer);
   if (!rank) {
@@ -18,8 +18,8 @@ function getScoreMultiplier(gameVer: number, achievement: number) {
   return (factor * achievement) / 100;
 }
 
-export function getNumOfTopOldCharts(gameVer: number) {
-  return gameVer > DX_SPLASH_GAME_VERSION ? NUM_TOP_OLD_SONGS_SPLASH_PLUS : NUM_TOP_OLD_SONGS;
+export function getNumOfTopOldCharts(gameVer: DxVersion) {
+  return gameVer > DxVersion.SPLASH ? NUM_TOP_OLD_SONGS_SPLASH_PLUS : NUM_TOP_OLD_SONGS;
 }
 
 /**
@@ -27,7 +27,7 @@ export function getNumOfTopOldCharts(gameVer: number) {
  * If we don't find the inner level for the chart, use its estimated level and move on.
  */
 export function analyzeSongRating(
-  gameVer: number,
+  gameVer: DxVersion,
   record: ChartRecord,
   songProps?: SongProperties
 ): ChartRecordWithRating {
@@ -41,14 +41,14 @@ export function analyzeSongRating(
   }
   return {
     ...record,
-    rating: record.level * getScoreMultiplier(gameVer, record.achievement),
+    rating: record.level * getScoreMultiplier(record.achievement, gameVer),
   };
 }
 
 export async function analyzePlayerRating(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   playerScores: ReadonlyArray<ChartRecord>,
-  gameVer: number
+  gameVer: DxVersion
 ): Promise<RatingData> {
   const newChartRecords = [];
   const oldChartRecords = [];

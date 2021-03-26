@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {DxVersion} from '../../common/constants';
 import {getOfficialLevel} from '../../common/level-helper';
 import {GameRegion} from '../types';
 
@@ -26,8 +27,8 @@ const VERSION_NAMES = [
 function getMaimaiSongsLink(
   officialLv: string,
   gameRegion: GameRegion,
-  minGameVer: number,
-  maxGameVer: number
+  minGameVer: DxVersion,
+  maxGameVer: DxVersion
 ) {
   officialLv = officialLv.replace("+", ".5");
   const q = new URLSearchParams();
@@ -47,7 +48,7 @@ function getMaimaiSongsLink(
 
 interface Props {
   gameRegion: GameRegion;
-  gameVer: number;
+  gameVer: DxVersion;
   lv: number;
   includeOldVersions?: boolean;
 }

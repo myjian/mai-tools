@@ -1,3 +1,4 @@
+import {DxVersion} from './constants';
 import {getSongNickname} from './song-util';
 
 export const enum ChartType {
@@ -12,7 +13,7 @@ export interface BasicSongProps {
 }
 
 export interface SongProperties extends BasicSongProps {
-  debut: number;
+  debut: DxVersion;
   lv: ReadonlyArray<number>;
 }
 
@@ -113,7 +114,7 @@ export function getSongProperties(
 export function filterSongsByVersion(
   songs: ReadonlyArray<BasicSongProps>,
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
-  gameVer: number,
+  gameVer: DxVersion,
   matchMode: MatchMode
 ): SongProperties[] {
   const fullProps: SongProperties[] = [];

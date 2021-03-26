@@ -1,12 +1,12 @@
 import React from 'react';
 
-import {DX_SPLASH_GAME_VERSION, DX_SPLASH_PLUS_GAME_VERSION} from '../common/constants';
+import {DxVersion} from '../common/constants';
 import {DX_LEVELS, getLvIndex} from './levels';
 
 interface OptionsInputProps {
   minLv: string;
   maxLv: string;
-  onSetGameVer: (gameVer: number) => void;
+  onSetGameVer: (gameVer: DxVersion) => void;
   onSetRange: (minLv: string, maxLv: string) => void;
   onChangeUnit: (heightUnit: number) => void;
   onFocus: () => void;
@@ -22,10 +22,10 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
           <label className="optionGroup">
             Ver:&nbsp;
             <select onChange={this.handleSetGameVer}>
-              <option value={DX_SPLASH_GAME_VERSION} selected>
+              <option value={DxVersion.SPLASH} selected>
                 Splash
               </option>
-              <option value={DX_SPLASH_PLUS_GAME_VERSION}>Splash PLUS</option>
+              <option value={DxVersion.SPLASH_PLUS}>Splash PLUS</option>
             </select>
           </label>
           <label className="optionGroup">

@@ -1,4 +1,4 @@
-import {DX_SPLASH_GAME_VERSION} from './constants';
+import {DxVersion} from './constants';
 
 export interface RankDef {
   minAchv: number;
@@ -38,8 +38,8 @@ export const RANK_DEFINITIONS_SPLASH_PLUS: ReadonlyArray<RankDef> = [
   {minAchv: 50.0, factor: 8, title: "C"},
 ];
 
-export function getRankDefinitions(gameVer: number) {
-  return gameVer > DX_SPLASH_GAME_VERSION ? RANK_DEFINITIONS_SPLASH_PLUS : RANK_DEFINITIONS;
+export function getRankDefinitions(gameVer: DxVersion) {
+  return gameVer > DxVersion.SPLASH ? RANK_DEFINITIONS_SPLASH_PLUS : RANK_DEFINITIONS;
 }
 
 export function getRankIndexByAchievement(achievement: number) {
@@ -48,7 +48,7 @@ export function getRankIndexByAchievement(achievement: number) {
   });
 }
 
-export function getRankByAchievement(achievement: number, gameVer: number) {
+export function getRankByAchievement(achievement: number, gameVer: DxVersion) {
   const idx = getRankIndexByAchievement(achievement);
   return idx < 0 ? null : getRankDefinitions(gameVer)[idx];
 }

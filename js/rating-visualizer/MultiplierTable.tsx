@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {DxVersion} from '../common/constants';
 import {LANG} from '../common/lang';
 import {getRankDefinitions} from '../common/rank-functions';
 
@@ -45,7 +46,7 @@ const RankFactorRow: React.FC<RankFactorRowProps> = (props) => {
 };
 
 interface Props {
-  gameVer: number;
+  gameVer: DxVersion;
 }
 
 interface State {

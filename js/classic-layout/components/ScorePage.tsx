@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DX_SPLASH_GAME_VERSION} from '../../common/constants';
+import {DxVersion} from '../../common/constants';
 import {formatFloat} from '../../common/number-helper';
 import {getRankDefinitions, getRankIndexByAchievement} from '../../common/rank-functions';
 import {DisplayMode} from '../constants';
@@ -173,9 +173,7 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
         };
       }
       // Game version does not matter as we don't use factor here.
-      const nextRankDef = getRankDefinitions(DX_SPLASH_GAME_VERSION)[
-        getRankIndexByAchievement(achv) - 1
-      ];
+      const nextRankDef = getRankDefinitions(DxVersion.SPLASH)[getRankIndexByAchievement(achv) - 1];
       return {
         title: nextRankDef.title,
         diff: nextRankDef.minAchv - achv,

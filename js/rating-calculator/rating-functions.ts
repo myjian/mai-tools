@@ -1,6 +1,7 @@
+import {DxVersion} from '../common/constants';
 import {getRankDefinitions, RankDef} from '../common/rank-functions';
 
-export function calculateRatingRange(gameVer: number, lv: number, rank: RankDef) {
+export function calculateRatingRange(gameVer: DxVersion, lv: number, rank: RankDef) {
   const rankDefs = getRankDefinitions(gameVer);
   const idx = rankDefs.indexOf(rank);
   const maxAchv = idx >= 1 ? rankDefs[idx - 1].minAchv - 0.0001 : rank.minAchv;

@@ -1,5 +1,5 @@
 import {shuffleArray} from '../common/array-util';
-import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DIFFICULTIES, DxVersion, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
 import {
   getRankByAchievement,
   getRankDefinitions,
@@ -16,7 +16,7 @@ import {ChartRecordWithRating} from './types';
 type NextRatingCandidate = Pick<ChartRecordWithRating, "achievement" | "level">;
 
 function getNextRating(
-  gameVer: number,
+  gameVer: DxVersion,
   record: NextRatingCandidate,
   ratingRangeMin: number,
   numOfRanks: number
@@ -44,7 +44,7 @@ function getNextRating(
 }
 
 export function getCandidateCharts(
-  gameVer: number,
+  gameVer: DxVersion,
   records: ReadonlyArray<ChartRecordWithRating>,
   topCount: number,
   count: number
@@ -84,7 +84,7 @@ export function getCandidateCharts(
 }
 
 export function getNotPlayedCharts(
-  gameVer: number,
+  gameVer: DxVersion,
   songList: ReadonlyArray<SongProperties>,
   records: ReadonlyArray<ChartRecordWithRating>,
   topCount: number,
