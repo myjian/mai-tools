@@ -82,14 +82,12 @@ interface RootComponentState {
   syncImg?: string;
   showError?: boolean;
 }
+
 export class RootComponent extends React.PureComponent<{}, RootComponentState> {
-  private openerOrigin: string | undefined;
+  private referrer = document.referrer && new URL(document.referrer).origin;
+
   constructor(props: {}) {
     super(props);
-    if (window.opener && document.referrer) {
-      this.openerOrigin = new URL(document.referrer).origin;
-    }
-
     const qp = new URLSearchParams(document.location.search);
     const defaultState = {
       date: formatDate(new Date()),
@@ -177,9 +175,14 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
   }
 
   private sendMessageToOpener(data: MessageType) {
-    if (this.openerOrigin) {
+    if (window.opener) {
       console.log("sending message to opener", data);
-      window.opener.postMessage(data, this.openerOrigin);
+      if (this.referrer) {
+        window.opener.postMessage(data, this.referrer);
+      } else {
+        window.opener.postMessage(data, "https://maimaidx-eng.com");
+        window.opener.postMessage(data, "https://maimaidx.jp");
+      }
     }
   }
 

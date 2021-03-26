@@ -1,5 +1,6 @@
 import {DIFFICULTY_CLASSNAME_MAP} from '../js/common/constants';
 import {LANG} from '../js/common/lang';
+import {getScriptHost} from '../js/common/script-host';
 
 type ScoreRecord = {
   date: Date;
@@ -80,6 +81,7 @@ declare var domtoimage: any;
     "achievementCell",
     "stampsCell",
   ];
+  const SCRIPT_HOST = getScriptHost("recent-play-downloader");
 
   const ce = document.createElement.bind(document);
   // 540 = 9 * 60 minutes = UTC+9 (Japan Time), 1 minute = 60000 milliseconds
@@ -143,14 +145,17 @@ declare var domtoimage: any;
   }
 
   function getStamps(row: HTMLElement) {
-    const rankImgSrc = (row.querySelector("img.playlog_scorerank") as HTMLImageElement).src.replace(/\?ver=.*$/, "");
+    const rankImgSrc = (row.querySelector("img.playlog_scorerank") as HTMLImageElement).src.replace(
+      /\?ver=.*$/,
+      ""
+    );
     const rank = rankImgSrc
       .substring(rankImgSrc.lastIndexOf("/") + 1, rankImgSrc.lastIndexOf("."))
       .replace("plus", "+")
       .toUpperCase();
-    const stampImgs = row.querySelectorAll(".playlog_result_innerblock > img") as NodeListOf<
-      HTMLImageElement
-    >;
+    const stampImgs = row.querySelectorAll(
+      ".playlog_result_innerblock > img"
+    ) as NodeListOf<HTMLImageElement>;
     const fcapSrc = stampImgs[0].src.replace(/\?ver=.*$/, "");
     const fcapImgName = fcapSrc.substring(fcapSrc.lastIndexOf("/") + 1, fcapSrc.lastIndexOf("."));
     const fullSyncSrc = stampImgs[1].src.replace(/\?ver=.*$/, "");
@@ -282,9 +287,9 @@ declare var domtoimage: any;
   }
 
   function getFilterAndOptions(): Options {
-    const dateOptions = document.querySelectorAll("input." + DATE_CHECKBOX_CLASSNAME) as NodeListOf<
-      HTMLInputElement
-    >;
+    const dateOptions = document.querySelectorAll(
+      "input." + DATE_CHECKBOX_CLASSNAME
+    ) as NodeListOf<HTMLInputElement>;
     const selectedDates = new Set<string>();
     dateOptions.forEach((op) => {
       if (op.checked) {
@@ -292,18 +297,18 @@ declare var domtoimage: any;
       }
     });
     let showAllRecords = false;
-    const newRecordRadios = document.getElementsByName(NEW_RECORD_RADIO_NAME) as NodeListOf<
-      HTMLInputElement
-    >;
+    const newRecordRadios = document.getElementsByName(
+      NEW_RECORD_RADIO_NAME
+    ) as NodeListOf<HTMLInputElement>;
     newRecordRadios.forEach((r) => {
       if (r.checked) {
         showAllRecords = r.value === "allRecords";
       }
     });
     let olderFirst = true;
-    const sortByRadios = document.getElementsByName(SORT_BY_RADIO_NAME) as NodeListOf<
-      HTMLInputElement
-    >;
+    const sortByRadios = document.getElementsByName(
+      SORT_BY_RADIO_NAME
+    ) as NodeListOf<HTMLInputElement>;
     sortByRadios.forEach((r) => {
       if (r.checked) {
         olderFirst = r.value === "olderFirst";
@@ -535,16 +540,18 @@ declare var domtoimage: any;
       const css = ce("link");
       css.id = cssId;
       css.rel = "stylesheet";
-      css.href = "https://myjian.github.io/mai-tools/scripts/recent-play-downloader.css";
+      css.href = SCRIPT_HOST + "/scripts/recent-play-downloader.css";
       css.addEventListener("load", () => {
-        collectRecentPlays().then((plays) => {
-          createOutputElement(plays, titleImg);
-        }).catch((e: Error) => {
-          const footer = document.getElementsByTagName("footer")[0];
-          const textarea = document.createElement("textarea");
-          footer.append(textarea);
-          textarea.value = e.message + "\n" + e.stack;
-        });
+        collectRecentPlays()
+          .then((plays) => {
+            createOutputElement(plays, titleImg);
+          })
+          .catch((e: Error) => {
+            const footer = document.getElementsByTagName("footer")[0];
+            const textarea = document.createElement("textarea");
+            footer.append(textarea);
+            textarea.value = e.message + "\n" + e.stack;
+          });
       });
       document.head.append(css);
     }

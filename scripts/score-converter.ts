@@ -1,6 +1,8 @@
-"use strict";
+import {getScriptHost} from '../js/common/script-host';
+import {ALLOWED_ORIGINS} from '../js/common/util';
+
 (function (d) {
-  const BASE_NEWTAB_URL = "https://myjian.github.io/mai-tools/classic-layout/";
+  const BASE_NEWTAB_URL = getScriptHost("score-converter") + "/classic-layout/";
   const FINALE_RANK_IMG = new Map([
     ["S", "/maimai-mobile/maimai-img/icon_s.png"],
     ["S+", "/maimai-mobile/maimai-img/icon_s_plus.png"],
@@ -131,7 +133,10 @@
   }
 
   function getRankTitle(e: HTMLElement) {
-    const src = (e.querySelector(".playlog_scorerank") as HTMLImageElement).src;
+    const src = (e.querySelector(".playlog_scorerank") as HTMLImageElement).src.replace(
+      /\?ver=.*$/,
+      ""
+    );
     const title = src.substring(src.lastIndexOf("/") + 1, src.lastIndexOf("."));
     return title.toUpperCase().replace("PLUS", "+");
   }
@@ -147,7 +152,7 @@
   function getApFcImage(e: HTMLElement) {
     const src = (e.querySelector(
       ".playlog_result_innerblock > img:nth-child(2)"
-    ) as HTMLImageElement).src;
+    ) as HTMLImageElement).src.replace(/\?ver=.*$/, "");
     const title = src.substring(src.lastIndexOf("/") + 1, src.lastIndexOf("."));
     if (title === "fc_dummy") {
       return Promise.resolve(null);
@@ -218,7 +223,7 @@
     console.log("url length: " + url.length);
     window.open(url, "_blank");
     window.addEventListener("message", (evt) => {
-      if (evt.origin === "https://myjian.github.io" || evt.origin === "https://cdpn.io") {
+      if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const data = evt.data;
         const source = evt.source as WindowProxy;
         let rankTitle: string = "";

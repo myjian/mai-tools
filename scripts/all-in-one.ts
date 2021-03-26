@@ -1,6 +1,7 @@
+import {getScriptHost} from '../js/common/script-host';
+
 (function (d) {
-  const SCRIPT_HOST = "https://myjian.github.io/mai-tools/scripts/";
-  // const SCRIPT_HOST = "http://localhost:8080/scripts/";
+  const SCRIPT_HOST = getScriptHost("all-in-one") + "/scripts/";
   if (["maimaidx-eng.com", "maimaidx.jp"].indexOf(d.location.host) < 0) {
     // TODO: tell user to open maimai net
     return;

@@ -15,7 +15,7 @@ export const FRIEND_SCORE_URLS = new Map([
 function getAchievement(row: HTMLElement): string | null {
   const ach = row.querySelector("td.w_120.f_b:last-child") as HTMLElement;
   const achText = ach && ach.innerText.trim();
-  return achText !== "0" ? achText : null;
+  return achText !== "0" && achText !== "― %" ? achText : null;
 }
 
 function processRow(

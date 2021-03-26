@@ -2,6 +2,7 @@ import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
+import {getScriptHost} from '../js/common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -18,8 +19,7 @@ declare global {
 }
 
 (function () {
-  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/";
-  // const BASE_URL = "http://localhost:8080/rating-calculator/";
+  const BASE_URL = getScriptHost("analyze-rating-in-new-tab") + "/rating-calculator/?";
   const UIString = {
     zh: {
       pleaseLogIn: "請登入 maimai NET",

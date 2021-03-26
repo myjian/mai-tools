@@ -2,6 +2,7 @@ import {fetchFriendScores, FRIEND_SCORE_URLS} from '../js/common/fetch-friend-sc
 import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
+import {getScriptHost} from '../js/common/script-host';
 import {BasicSongProps} from '../js/common/song-props';
 import {
   ALLOWED_ORIGINS,
@@ -25,8 +26,7 @@ type FriendInfo = {
 };
 
 (function (d) {
-  const BASE_URL = "https://myjian.github.io/mai-tools/rating-calculator/?";
-  // const BASE_URL = "http://localhost:8080/rating-calculator/?";
+  const BASE_URL = getScriptHost("analyze-friend-rating-in-new-tab") + "/rating-calculator/?";
   const UIString = {
     zh: {
       pleaseLogIn: "請登入 maimai NET",
@@ -44,13 +44,13 @@ type FriendInfo = {
   }
 
   function insertAnalyzeButton(friend: FriendInfo) {
-    const container = friend.elem.querySelector(".basic_block > .p_l_10");
+    const container = friend.elem.querySelector(".friend_comment_block");
     let analyzeLink = friend.elem.querySelector(".analyzeLink") as HTMLAnchorElement;
     if (analyzeLink) {
       analyzeLink.remove();
     }
     analyzeLink = d.createElement("a");
-    analyzeLink.className = "analyzeLink f_r f_14";
+    analyzeLink.className = "analyzeLink d_b f_14";
     analyzeLink.style.color = "#1477e6";
     analyzeLink.target = "friendRating";
     analyzeLink.innerText = UIString.analyze;
@@ -58,7 +58,7 @@ type FriendInfo = {
     queryParams.set("friendIdx", friend.idx);
     queryParams.set("playerName", friend.name);
     analyzeLink.href = BASE_URL + queryParams.toString();
-    container.append(analyzeLink);
+    container.insertAdjacentElement("afterbegin", analyzeLink);
   }
 
   async function fetchFriendRecords(

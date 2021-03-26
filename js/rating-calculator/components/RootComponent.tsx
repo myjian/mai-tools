@@ -41,11 +41,11 @@ function getInternalLvCacheKey(gameVer: number) {
   }
 }
 
-function getDebugText(data: number | string) {
-  if (typeof data === "string") {
-    return "string of length " + data.length;
+function getDebugText({action, payload}: {action: string; payload: number | string}) {
+  if (action === "appendPlayerScore") {
+    return "string of length " + (payload as string).length;
   }
-  return data;
+  return payload;
 }
 
 function readSongProperties(
@@ -208,13 +208,16 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   private initWindowCommunication() {
     window.addEventListener("message", (evt) => {
-      console.log(evt.origin, evt.data.action, getDebugText(evt.data.payload));
+      console.log(evt.origin, evt.data.action, getDebugText(evt.data));
       if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
         let payloadAsInt;
         switch (evt.data.action) {
           case "gameVersion":
             payloadAsInt = parseInt(evt.data.payload);
-            if (payloadAsInt >= DX_PLUS_GAME_VERSION && payloadAsInt <= DX_SPLASH_GAME_VERSION) {
+            if (
+              payloadAsInt >= DX_PLUS_GAME_VERSION &&
+              payloadAsInt <= DX_SPLASH_PLUS_GAME_VERSION
+            ) {
               this.setState({
                 gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
                 gameVer: payloadAsInt,

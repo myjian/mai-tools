@@ -25,9 +25,9 @@ const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
 export const RANK_DEFINITIONS_SPLASH_PLUS: ReadonlyArray<RankDef> = [
   {minAchv: 100.5, factor: 22.4, title: "SSS+"},
   {minAchv: 100.0, factor: 21.6, title: "SSS"},
-  {minAchv: 99.5, factor: 21.1, title: "SS+"},
+  {minAchv: 99.5, factor: 21.2, title: "SS+"},
   {minAchv: 99.0, factor: 20.8, title: "SS"},
-  {minAchv: 98.0, factor: 20.3, title: "S+"},
+  {minAchv: 98.0, factor: 20.4, title: "S+"},
   {minAchv: 97.0, factor: 20, title: "S"},
   {minAchv: 94.0, factor: 16.8, title: "AAA"},
   {minAchv: 90.0, factor: 15.2, title: "AA"},
