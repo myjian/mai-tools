@@ -1,14 +1,13 @@
 import React from 'react';
 
 import {DX_SPLASH_GAME_VERSION, DX_SPLASH_PLUS_GAME_VERSION} from '../common/constants';
-
-const PRESET_OPTIONS = ["8-15", "8-11", "9-12", "10-13", "11-14", "12-15"];
+import {DX_LEVELS, getLvIndex} from './levels';
 
 interface OptionsInputProps {
-  minLv: number;
-  maxLv: number;
+  minLv: string;
+  maxLv: string;
   onSetGameVer: (gameVer: number) => void;
-  onSetRange: (minLv: number, maxLv: number) => void;
+  onSetRange: (minLv: string, maxLv: string) => void;
   onChangeUnit: (heightUnit: number) => void;
   onFocus: () => void;
   onBlur: () => void;
@@ -16,12 +15,12 @@ interface OptionsInputProps {
 
 export class OptionsInput extends React.PureComponent<OptionsInputProps> {
   render() {
-    const {onFocus, onBlur} = this.props;
+    const {minLv, maxLv, onFocus, onBlur} = this.props;
     return (
       <div className="optionsContainer">
         <div className="container" onFocus={onFocus} onBlur={onBlur} tabIndex={-1}>
           <label className="optionGroup">
-            Game ver:&nbsp;
+            Ver:&nbsp;
             <select onChange={this.handleSetGameVer}>
               <option value={DX_SPLASH_GAME_VERSION} selected>
                 Splash
@@ -43,37 +42,28 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
             </select>
           </label>
           <span className="lvRangeLabelContainer">
-            Showing&nbsp;Level&nbsp;
-            <select onChange={this.handleChangeRange}>{this.renderOptions()}</select>
+            <label className="optionGroup">
+              Max&nbsp;Level:&nbsp;
+              <select onChange={this.handleChangeMaxLv}>{this.renderLvOptions(maxLv)}</select>
+            </label>
+            <label className="optionGroup">
+              Min&nbsp;Level:&nbsp;
+              <select onChange={this.handleChangeMinLv}>{this.renderLvOptions(minLv)}</select>
+            </label>
           </span>
         </div>
       </div>
     );
   }
 
-  private renderOptions() {
-    const {minLv, maxLv} = this.props;
-    const selectedRange =
-      maxLv - minLv > 1
-        ? minLv.toFixed(0) + "-" + maxLv.toFixed(0)
-        : minLv - Math.floor(minLv) > 0
-        ? Math.floor(minLv) + "+"
-        : minLv.toFixed(0);
-    let isPresetRange = false;
+  private renderLvOptions(selectedLv: string) {
     const options: JSX.Element[] = [];
-    PRESET_OPTIONS.forEach((range, i) => {
-      const isSelected = selectedRange === range;
-      if (isSelected) isPresetRange = true;
+    for (let i = 0; i < DX_LEVELS.length; i++) {
+      const lv = DX_LEVELS[i];
+      const isSelected = selectedLv === lv.title;
       options.push(
-        <option key={i} value={range} selected={isSelected}>
-          {range.replace("-", " - ")}
-        </option>
-      );
-    });
-    if (!isPresetRange) {
-      options.push(
-        <option key={PRESET_OPTIONS.length} value={selectedRange} selected>
-          {selectedRange}
+        <option key={i} value={lv.title} selected={isSelected}>
+          {lv.title}
         </option>
       );
     }
@@ -85,9 +75,18 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
     this.props.onSetGameVer(parseInt(gameVerText));
   };
 
-  private handleChangeRange = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    const rangeText = evt.currentTarget.value.split("-");
-    this.props.onSetRange(parseInt(rangeText[0]), parseInt(rangeText[1]));
+  private handleChangeMinLv = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+    const minLv = evt.currentTarget.value;
+    const minLvIdx = getLvIndex(minLv);
+    const maxLvIdx = getLvIndex(this.props.maxLv);
+    this.props.onSetRange(minLv, DX_LEVELS[Math.min(minLvIdx, maxLvIdx)].title);
+  };
+
+  private handleChangeMaxLv = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+    const maxLv = evt.currentTarget.value;
+    const minLvIdx = getLvIndex(this.props.minLv);
+    const maxLvIdx = getLvIndex(maxLv);
+    this.props.onSetRange(DX_LEVELS[Math.max(minLvIdx, maxLvIdx)].title, maxLv);
   };
 
   private handleChangeHeightUnit = (evt: React.SyntheticEvent<HTMLSelectElement>) => {

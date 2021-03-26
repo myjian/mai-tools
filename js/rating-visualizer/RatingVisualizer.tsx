@@ -2,8 +2,8 @@ import React from 'react';
 
 import {DX_SPLASH_GAME_VERSION} from '../common/constants';
 import {getRankDefinitions} from '../common/rank-functions';
-import {DX_PLUS_RANKS} from './constants';
 import {IntervalLines} from './IntervalLines';
+import {DX_LEVELS, getLvIndex} from './levels';
 import {LvRatingContainer} from './LvRatingContainer';
 import {MultiplierTable} from './MultiplierTable';
 import {OptionsInput} from './OptionsInput';
@@ -15,8 +15,8 @@ interface RatingVisualizerState {
   width: number;
   heightUnit: number;
   maxRating: number;
-  minLv: number;
-  maxLv: number;
+  minLv: string;
+  maxLv: string;
   topPadding: number;
   axisLabelStep: number;
   highlightInterval?: [number, number];
@@ -30,14 +30,13 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     const gameVer = DX_SPLASH_GAME_VERSION;
     const heightUnit = 8;
     const maxLv = 15;
-    const maxRank = getRankDefinitions(gameVer)[0];
     this.state = {
       gameVer,
-      minLv: 8,
-      maxLv,
+      minLv: "10",
+      maxLv: "14",
       width: 30,
       heightUnit,
-      maxRating: Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100),
+      maxRating: calculateMaxRating(maxLv, gameVer),
       topPadding: heightUnit * 2 + 50,
       axisLabelStep: 5,
     };
@@ -54,9 +53,10 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
       maxLv,
     } = this.state;
     const levels = this.getLevels();
-    const ranks = DX_PLUS_RANKS;
+    // Only include SSS+ - A
+    const ranks = getRankDefinitions(gameVer).slice(0, 9);
     const containerHeight = this.getContainerHeight();
-    const canZoomIn = maxLv - minLv > 1;
+    const canZoomIn = maxLv !== minLv;
     return (
       <div className="ratingVisualizer">
         <OptionsInput
@@ -126,9 +126,11 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     );
   }
 
-  private getDetailLevels(minLv: number, maxLv: number) {
+  private getDetailLevels(startIdx: number, endIdx: number) {
     const lvs = [];
-    let currentLv = maxLv;
+    let currentLv = DX_LEVELS[startIdx].maxLv;
+    const minLv = DX_LEVELS[endIdx].minLv;
+    console.log(currentLv, minLv);
     while (currentLv >= minLv) {
       lvs.push({
         title: currentLv.toFixed(1),
@@ -143,32 +145,13 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   private getLevels() {
     const {minLv, maxLv} = this.state;
-    if (maxLv - minLv < 1) {
-      return this.getDetailLevels(minLv, maxLv);
+    const startIdx = getLvIndex(maxLv);
+    const endIdx = getLvIndex(minLv);
+    console.log(startIdx, endIdx);
+    if (endIdx - startIdx < 2) {
+      return this.getDetailLevels(startIdx, endIdx);
     }
-    const lvs = [];
-    let currentLv = maxLv;
-    if (maxLv === 15) {
-      lvs.push({title: "15", minLv: 15, maxLv: 15});
-    } else {
-      lvs.push({title: currentLv.toFixed(0), minLv: currentLv, maxLv: currentLv + 0.6});
-    }
-    currentLv--;
-    while (currentLv >= minLv) {
-      lvs.push({
-        title: Math.round(currentLv).toFixed(0) + "+",
-        minLv: currentLv + 0.7,
-        maxLv: currentLv + 0.9,
-      });
-      lvs.push({
-        title: Math.round(currentLv).toFixed(0),
-        minLv: currentLv,
-        maxLv: currentLv + 0.6,
-      });
-      currentLv--;
-    }
-    console.log(lvs);
-    return lvs;
+    return DX_LEVELS.slice(startIdx, endIdx + 1);
   }
 
   private getContainerHeight() {
@@ -184,18 +167,19 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   };
 
   private handleSetGameVer = (gameVer: number) => {
-    this.setState({gameVer});
-    this.handleSetRange(this.state.minLv, this.state.maxLv);
+    this.setState(({maxLv}) => {
+      const lvDef = DX_LEVELS.find((lv) => lv.title === maxLv);
+      return {gameVer, maxRating: calculateMaxRating(lvDef.maxLv, gameVer)};
+    });
   };
 
-  private handleSetRange = (minLv: number, maxLv: number) => {
-    const maxRank = getRankDefinitions(this.state.gameVer)[0];
-    const actualMaxLv = maxLv - minLv > 1 ? Math.min(15, maxLv + 0.6) : maxLv;
-    this.setState({
+  private handleSetRange = (minLv: string, maxLv: string) => {
+    const maxLvDef = DX_LEVELS.find((lv) => lv.title === maxLv);
+    this.setState(({gameVer}) => ({
       minLv,
       maxLv,
-      maxRating: Math.floor((actualMaxLv * maxRank.factor * maxRank.minAchv) / 100),
-    });
+      maxRating: calculateMaxRating(maxLvDef.maxLv, gameVer),
+    }));
   };
 
   private highlightInterval = (minRt: number, maxRt: number) => {
@@ -220,4 +204,9 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
       this.removeIntervalTimeout = 0;
     }
   };
+}
+
+function calculateMaxRating(maxLv: number, gameVer: number) {
+  const maxRank = getRankDefinitions(gameVer)[0];
+  return Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100);
 }

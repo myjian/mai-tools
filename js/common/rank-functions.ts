@@ -22,11 +22,21 @@ const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
   {minAchv: 50.0, factor: 5, title: "C"},
 ];
 
-export const RANK_DEFINITIONS_SPLASH_PLUS: ReadonlyArray<RankDef> = RANK_DEFINITIONS.map((r) => ({
-  minAchv: r.minAchv,
-  factor: r.factor * 1.6,
-  title: r.title,
-}));
+export const RANK_DEFINITIONS_SPLASH_PLUS: ReadonlyArray<RankDef> = [
+  {minAchv: 100.5, factor: 22.4, title: "SSS+"},
+  {minAchv: 100.0, factor: 21.6, title: "SSS"},
+  {minAchv: 99.5, factor: 21.1, title: "SS+"},
+  {minAchv: 99.0, factor: 20.8, title: "SS"},
+  {minAchv: 98.0, factor: 20.3, title: "S+"},
+  {minAchv: 97.0, factor: 20, title: "S"},
+  {minAchv: 94.0, factor: 16.8, title: "AAA"},
+  {minAchv: 90.0, factor: 15.2, title: "AA"},
+  {minAchv: 80.0, factor: 13.6, title: "A"},
+  {minAchv: 75.0, factor: 12, title: "BBB"},
+  {minAchv: 70.0, factor: 11.2, title: "BB"},
+  {minAchv: 60.0, factor: 9.6, title: "B"},
+  {minAchv: 50.0, factor: 8, title: "C"},
+];
 
 export function getRankDefinitions(gameVer: number) {
   return gameVer > DX_SPLASH_GAME_VERSION ? RANK_DEFINITIONS_SPLASH_PLUS : RANK_DEFINITIONS;

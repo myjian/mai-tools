@@ -1,12 +1,13 @@
 import React from 'react';
 
-import {LevelDef, RankRangeDef} from './types';
+import {RankDef} from '../common/rank-functions';
+import {LevelDef} from './levels';
 
 const MIN_RANK_TITLE = "AAA";
 
 interface Props {
   levels: ReadonlyArray<LevelDef>;
-  ranks: ReadonlyArray<RankRangeDef>;
+  ranks: ReadonlyArray<RankDef>;
 }
 
 export class RatingTable extends React.PureComponent<Props> {
@@ -30,10 +31,11 @@ export class RatingTable extends React.PureComponent<Props> {
             return (
               <tr>
                 <th>{lv.title}</th>
-                {ranks.map((r) => {
-                  const minRating = Math.floor(lv.minLv * r.minAchv * r.rankFactor * 0.01);
-                  const maxRating = Math.floor(lv.maxLv * r.maxAchv * r.rankFactor * 0.01);
-                  const text = minRating === maxRating ? minRating : `${minRating} - ${maxRating}`;
+                {ranks.map((r, idx) => {
+                  const maxAchv = idx === 0 ? r.minAchv : ranks[idx - 1].minAchv - 0.0001;
+                  const minRating = Math.floor(lv.minLv * r.minAchv * r.factor * 0.01);
+                  const maxRating = Math.floor(lv.maxLv * maxAchv * r.factor * 0.01);
+                  const text = minRating === maxRating ? minRating : `${maxRating} - ${minRating}`;
                   return <td>{text}</td>;
                 })}
               </tr>
