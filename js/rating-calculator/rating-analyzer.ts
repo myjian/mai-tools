@@ -1,4 +1,4 @@
-import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DIFFICULTIES, DX_SPLASH_GAME_VERSION, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
 import {getRankByAchievement} from '../common/rank-functions';
 import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
@@ -6,6 +6,7 @@ import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
+const NUM_TOP_OLD_SONGS_SPLASH_PLUS = 35;
 
 function getScoreMultiplier(gameVer: number, achievement: number) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
@@ -15,6 +16,10 @@ function getScoreMultiplier(gameVer: number, achievement: number) {
   }
   const factor = rank ? rank.factor : 5;
   return (factor * achievement) / 100;
+}
+
+export function getNumOfTopOldCharts(gameVer: number) {
+  return gameVer > DX_SPLASH_GAME_VERSION ? NUM_TOP_OLD_SONGS_SPLASH_PLUS : NUM_TOP_OLD_SONGS;
 }
 
 /**
@@ -73,7 +78,7 @@ export async function analyzePlayerRating(
   }
 
   let oldChartsRating = 0;
-  const oldTopChartsCount = Math.min(NUM_TOP_OLD_SONGS, oldChartRecords.length);
+  const oldTopChartsCount = Math.min(getNumOfTopOldCharts(gameVer), oldChartRecords.length);
   for (let i = 0; i < oldTopChartsCount; i++) {
     oldChartsRating += Math.floor(oldChartRecords[i].rating);
   }

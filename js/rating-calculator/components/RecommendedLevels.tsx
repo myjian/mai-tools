@@ -48,7 +48,6 @@ export class RecommendedLevels extends React.PureComponent<Props> {
     return (
       <div className="recLvSection">
         <h3 className="recLvTitle">{UIString.recommendedLevels}</h3>
-        <p className="recLvDesc">{UIString.levelComment}</p>
         <table className="recLvTable">
           <thead>
             <tr>
@@ -88,6 +87,7 @@ export class RecommendedLevels extends React.PureComponent<Props> {
             )}
           </tbody>
         </table>
+        <p className="recLvDesc">{UIString.levelComment}</p>
       </div>
     );
   }

@@ -1,6 +1,10 @@
 import React from 'react';
 
-import {DX_PLUS_GAME_VERSION, DX_SPLASH_GAME_VERSION} from '../../common/constants';
+import {
+  DX_PLUS_GAME_VERSION,
+  DX_SPLASH_GAME_VERSION,
+  DX_SPLASH_PLUS_GAME_VERSION,
+} from '../../common/constants';
 import {iWantSomeMagic} from '../../common/magic';
 import {
   buildSongPropsMap,
@@ -30,6 +34,8 @@ function getInternalLvCacheKey(gameVer: number) {
       return CACHE_KEY_DX_PLUS_INNER_LEVEL;
     case DX_SPLASH_GAME_VERSION:
       return CACHE_KEY_DX_SPLASH_INNER_LEVEL;
+    case DX_SPLASH_PLUS_GAME_VERSION:
+      return CACHE_KEY_DX_INNER_LEVEL;
     default:
       return CACHE_KEY_DX_INNER_LEVEL;
   }

@@ -2,12 +2,14 @@ import React from 'react';
 
 import {SongProperties} from '../../common/song-props';
 import {UIString} from '../i18n';
+import {getNumOfTopOldCharts} from '../rating-analyzer';
 import {ChartRecordWithRating, RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
 import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
 import {TopChartRecords} from './TopChartRecords';
 
 interface Props {
+  gameVer: number;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   newCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
@@ -41,6 +43,7 @@ export class RatingDetails extends React.PureComponent<Props, State> {
 
   render() {
     const {
+      gameVer,
       newCandidateCharts,
       notPlayedNewCharts,
       oldCandidateCharts,
@@ -71,7 +74,10 @@ export class RatingDetails extends React.PureComponent<Props, State> {
         </div>
         <div className="songRecordsContainer">
           <ChartRecordSectionTitle
-            title={UIString.oldChartsRatingTargets}
+            title={UIString.oldChartsRatingTargets.replace(
+              "{count}",
+              getNumOfTopOldCharts(gameVer).toFixed(0)
+            )}
             contentHidden={hideOldTopSongs}
             onClick={this.toggleOldTopChartsDisplay}
           />

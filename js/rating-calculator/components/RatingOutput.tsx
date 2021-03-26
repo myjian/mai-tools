@@ -112,6 +112,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           oldTopChartsCount={oldTopChartsCount}
         />
         <RatingDetails
+          gameVer={gameVer}
           songPropsByName={songPropsByName}
           newCandidateCharts={newCandidateCharts}
           oldCandidateCharts={oldCandidateCharts}

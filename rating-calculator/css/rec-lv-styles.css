@@ -3,11 +3,12 @@
 }
 
 .recLvTitle {
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 
 .recLvDesc {
-  margin: 0 0 14px;
+  margin: 10px 0 0 4px;
+  max-height: 999px;
 }
 
 .recLvTable {
