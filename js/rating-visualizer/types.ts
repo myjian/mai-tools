@@ -3,7 +3,6 @@ export type RankRangeDef = {
   minAchv: number;
   maxAchv: number;
   rankFactor: number;
-  maxRankFactor?: number;
 };
 
 export type LevelDef = {

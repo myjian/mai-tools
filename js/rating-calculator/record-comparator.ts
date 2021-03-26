@@ -78,7 +78,7 @@ export function compareSongsByNextRank(
 ) {
   const nextRank1: RankDef = record1.nextRanks.values().next().value.rank;
   const nextRank2: RankDef = record2.nextRanks.values().next().value.rank;
-  return compareNumbers(nextRank1.th, nextRank2.th);
+  return compareNumbers(nextRank1.minAchv, nextRank2.minAchv);
 }
 
 export function compareSongsByDifficulty(

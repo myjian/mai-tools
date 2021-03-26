@@ -91,8 +91,8 @@ export function getNotPlayedCharts(
   const minRating = records.length ? Math.floor(records[topCount - 1].rating) : 0;
   const maxRank = getRankByAchievement(100.5);
   const minRank = getRankByAchievement(97);
-  const hardestLv = maxRating ? (maxRating * 100) / (minRank.factor * minRank.th) : 15;
-  const easiestLv = (minRating * 100) / (maxRank.factor * maxRank.th);
+  const hardestLv = maxRating ? (maxRating * 100) / (minRank.factor * minRank.minAchv) : 15;
+  const easiestLv = (minRating * 100) / (maxRank.factor * maxRank.minAchv);
   const candidates: ChartRecordWithRating[] = [];
   const shuffledSongList = shuffleArray(songList);
   console.log(`rating range is ${minRating} - ${maxRating}`);

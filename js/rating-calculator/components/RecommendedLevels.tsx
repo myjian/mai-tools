@@ -17,6 +17,7 @@ interface Props {
   newChartsRating: number;
   newTopChartsCount: number;
 }
+
 export class RecommendedLevels extends React.PureComponent<Props> {
   render() {
     const {
@@ -55,7 +56,7 @@ export class RecommendedLevels extends React.PureComponent<Props> {
               {ranks.map((r) => (
                 <th>
                   <span className="recLvRankTitle">{r.title}</span>
-                  <span className="recLvRankAchv">{r.th}%</span>
+                  <span className="recLvRankAchv">{r.minAchv}%</span>
                 </th>
               ))}
               <th>{UIString.projectedRating}</th>
@@ -92,6 +93,6 @@ export class RecommendedLevels extends React.PureComponent<Props> {
   }
 
   private calcRecommendedLv(rating: number, r: RankDef): number {
-    return roundFloat((rating / r.factor / r.th) * 100, "ceil", 0.1);
+    return roundFloat((rating / r.factor / r.minAchv) * 100, "ceil", 0.1);
   }
 }

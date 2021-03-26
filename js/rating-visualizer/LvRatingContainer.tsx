@@ -34,7 +34,6 @@ export class LvRatingContainer extends React.PureComponent<LvRatingContainerProp
                 minAchv={rank.minAchv}
                 maxAchv={rank.maxAchv}
                 rankFactor={rank.rankFactor}
-                maxRankFactor={rank.maxRankFactor}
                 heightUnit={heightUnit}
                 title={rank.title}
                 highlightInterval={this.props.highlightInterval}

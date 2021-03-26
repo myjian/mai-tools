@@ -1,28 +1,28 @@
 export interface RankDef {
-  th: number;
+  minAchv: number;
   factor: number;
   title: string;
 }
 
 export const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
-  {th: 100.5, factor: 14, title: "SSS+"},
-  {th: 100.0, factor: 13.5, title: "SSS"},
-  {th: 99.5, factor: 13.2, title: "SS+"},
-  {th: 99.0, factor: 13, title: "SS"},
-  {th: 98.0, factor: 12.7, title: "S+"},
-  {th: 97.0, factor: 12.5, title: "S"},
-  {th: 94.0, factor: 10.5, title: "AAA"},
-  {th: 90.0, factor: 9.5, title: "AA"},
-  {th: 80.0, factor: 8.5, title: "A"},
-  {th: 75.0, factor: 7.5, title: "BBB"},
-  {th: 70.0, factor: 7, title: "BB"},
-  {th: 60.0, factor: 6, title: "B"},
-  {th: 50.0, factor: 5, title: "C"},
+  {minAchv: 100.5, factor: 14, title: "SSS+"},
+  {minAchv: 100.0, factor: 13.5, title: "SSS"},
+  {minAchv: 99.5, factor: 13.2, title: "SS+"},
+  {minAchv: 99.0, factor: 13, title: "SS"},
+  {minAchv: 98.0, factor: 12.7, title: "S+"},
+  {minAchv: 97.0, factor: 12.5, title: "S"},
+  {minAchv: 94.0, factor: 10.5, title: "AAA"},
+  {minAchv: 90.0, factor: 9.5, title: "AA"},
+  {minAchv: 80.0, factor: 8.5, title: "A"},
+  {minAchv: 75.0, factor: 7.5, title: "BBB"},
+  {minAchv: 70.0, factor: 7, title: "BB"},
+  {minAchv: 60.0, factor: 6, title: "B"},
+  {minAchv: 50.0, factor: 5, title: "C"},
 ];
 
 export function getRankIndexByAchievement(achievement: number) {
   return RANK_DEFINITIONS.findIndex((rank) => {
-    return achievement >= rank.th;
+    return achievement >= rank.minAchv;
   });
 }
 

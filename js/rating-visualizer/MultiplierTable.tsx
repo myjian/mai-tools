@@ -67,14 +67,14 @@ export class MultiplierTable extends React.PureComponent<{}, State> {
           </thead>
           <tbody>
             {rankDefs.slice(0, stopIndex).map((r, idx, arr) => {
-              const minMultiplier = (r.th * r.factor) / 100;
+              const minMultiplier = (r.minAchv * r.factor) / 100;
               const maxMultiplier =
-                idx > 0 ? ((arr[idx - 1].th - 0.0001) * r.factor) / 100 : minMultiplier;
+                idx > 0 ? ((arr[idx - 1].minAchv - 0.0001) * r.factor) / 100 : minMultiplier;
               const minMulText = minMultiplier.toFixed(3);
               const maxMulText = maxMultiplier.toFixed(3);
               const multiplierRange =
                 minMulText !== maxMulText ? `${minMulText} - ${maxMulText}` : minMulText;
-              return <RankFactorRow values={[r.title, r.th, r.factor, multiplierRange]} />;
+              return <RankFactorRow values={[r.title, r.minAchv, r.factor, multiplierRange]} />;
             })}
           </tbody>
         </table>

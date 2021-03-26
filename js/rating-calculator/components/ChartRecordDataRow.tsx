@@ -43,7 +43,7 @@ export const ChartRecordDataRow: React.FC<Props> = React.memo((props) => {
         return getRankTitle(record.achievement);
       case ColumnType.NEXT_RANK:
         return Array.from(record.nextRanks.values())
-          .map((r) => r.rank.th + "%")
+          .map((r) => r.rank.minAchv + "%")
           .join("\n");
       case ColumnType.NEXT_RATING:
         return Array.from(record.nextRanks.values())

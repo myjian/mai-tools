@@ -6,7 +6,6 @@ interface LvRankRatingSegmentProps {
   rankFactor: number;
   maxAchv: number;
   maxLv: number;
-  maxRankFactor?: number;
   heightUnit: number;
   title: string;
   highlightInterval: (min: number, max: number) => void;
@@ -17,18 +16,9 @@ export class LvRankRatingSegment extends React.PureComponent<LvRankRatingSegment
   private maxRt = 0;
 
   render() {
-    const {
-      minLv,
-      minAchv,
-      rankFactor,
-      maxLv,
-      maxAchv,
-      maxRankFactor,
-      heightUnit,
-      title,
-    } = this.props;
+    const {minLv, minAchv, rankFactor, maxLv, maxAchv, heightUnit, title} = this.props;
     this.minRt = Math.floor((minLv * minAchv * rankFactor) / 100);
-    this.maxRt = Math.floor((maxLv * maxAchv * (maxRankFactor || rankFactor)) / 100);
+    this.maxRt = Math.floor((maxLv * maxAchv * rankFactor) / 100);
     const style = {
       bottom: (this.minRt - 0.5) * heightUnit + "px",
       height: (this.maxRt - this.minRt + 1) * heightUnit + "px",
