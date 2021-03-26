@@ -31,15 +31,17 @@ interface State {
 
 export class RatingOutput extends React.PureComponent<Props, State> {
   static getDerivedStateFromProps: React.GetDerivedStateFromProps<Props, State> = (props) => {
-    const {newSongs, oldSongs, ratingData} = props;
+    const {gameVer, newSongs, oldSongs, ratingData} = props;
     const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
     const newCandidateCharts = getCandidateCharts(
+      gameVer,
       newChartRecords,
       newTopChartsCount,
       NEW_CANDIDATE_SONGS_POOL_SIZE
     );
     const notPlayedNewCharts = newSongs
       ? getNotPlayedCharts(
+          gameVer,
           newSongs,
           newChartRecords,
           newTopChartsCount,
@@ -48,12 +50,14 @@ export class RatingOutput extends React.PureComponent<Props, State> {
       : [];
     console.log(notPlayedNewCharts);
     const oldCandidateCharts = getCandidateCharts(
+      gameVer,
       oldChartRecords,
       oldTopChartsCount,
       OLD_CANDIDATE_SONGS_POOL_SIZE
     );
     const notPlayedOldCharts = oldSongs
       ? getNotPlayedCharts(
+          gameVer,
           oldSongs,
           oldChartRecords,
           oldTopChartsCount,

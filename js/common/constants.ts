@@ -12,3 +12,4 @@ export const SSSPLUS_MIN_ACHIEVEMENT = 100.5;
 export const DX_GAME_VERSION = 13;
 export const DX_PLUS_GAME_VERSION = 14;
 export const DX_SPLASH_GAME_VERSION = 15;
+export const DX_SPLASH_PLUS_GAME_VERSION = 16;

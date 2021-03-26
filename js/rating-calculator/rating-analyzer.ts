@@ -1,4 +1,5 @@
-import {DIFFICULTIES} from '../common/constants';
+import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {getRankByAchievement} from '../common/rank-functions';
 import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
 import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
@@ -6,11 +7,22 @@ import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
 
+function getScoreMultiplier(gameVer: number, achievement: number) {
+  achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
+  const rank = getRankByAchievement(achievement, gameVer);
+  if (!rank) {
+    console.warn(`Could not find rank for achievement ${achievement.toFixed(4)}%`);
+  }
+  const factor = rank ? rank.factor : 5;
+  return (factor * achievement) / 100;
+}
+
 /**
  * Compute rating value based on the chart level and player achievement.
  * If we don't find the inner level for the chart, use its estimated level and move on.
  */
 export function analyzeSongRating(
+  gameVer: number,
   record: ChartRecord,
   songProps?: SongProperties
 ): ChartRecordWithRating {
@@ -24,14 +36,14 @@ export function analyzeSongRating(
   }
   return {
     ...record,
-    rating: record.level * record.multiplier,
+    rating: record.level * getScoreMultiplier(gameVer, record.achievement),
   };
 }
 
 export async function analyzePlayerRating(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   playerScores: ReadonlyArray<ChartRecord>,
-  gameVersion: number
+  gameVer: number
 ): Promise<RatingData> {
   const newChartRecords = [];
   const oldChartRecords = [];
@@ -42,10 +54,8 @@ export async function analyzePlayerRating(
       record.genre,
       record.chartType
     );
-    const isNewChart = songProps
-      ? songProps.debut === gameVersion
-      : record.chartType === ChartType.DX;
-    const recordWithRating = analyzeSongRating(record, songProps);
+    const isNewChart = songProps ? songProps.debut === gameVer : record.chartType === ChartType.DX;
+    const recordWithRating = analyzeSongRating(gameVer, record, songProps);
     if (isNewChart) {
       newChartRecords.push(recordWithRating);
     } else {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {LANG} from '../common/lang';
-import {RANK_DEFINITIONS} from '../common/rank-functions';
+import {getRankDefinitions} from '../common/rank-functions';
 
 const MIN_RANK_OPTION = "A";
 const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";
@@ -44,16 +44,21 @@ const RankFactorRow: React.FC<RankFactorRowProps> = (props) => {
   );
 };
 
+interface Props {
+  gameVer: number;
+}
+
 interface State {
   minRankOption: string;
 }
 
-export class MultiplierTable extends React.PureComponent<{}, State> {
+export class MultiplierTable extends React.PureComponent<Props, State> {
   state: State = {minRankOption: MIN_RANK_OPTION};
 
   render() {
+    const {gameVer} = this.props;
     const {minRankOption} = this.state;
-    const rankDefs = RANK_DEFINITIONS;
+    const rankDefs = getRankDefinitions(gameVer);
     const stopIndex = rankDefs.findIndex((r) => r.title === minRankOption) + 1;
     return (
       <div className="quickLookup">

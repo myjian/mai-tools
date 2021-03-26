@@ -1,10 +1,12 @@
+import {DX_SPLASH_GAME_VERSION} from './constants';
+
 export interface RankDef {
   minAchv: number;
   factor: number;
   title: string;
 }
 
-export const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
+const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
   {minAchv: 100.5, factor: 14, title: "SSS+"},
   {minAchv: 100.0, factor: 13.5, title: "SSS"},
   {minAchv: 99.5, factor: 13.2, title: "SS+"},
@@ -20,20 +22,30 @@ export const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
   {minAchv: 50.0, factor: 5, title: "C"},
 ];
 
+export const RANK_DEFINITIONS_SPLASH_PLUS: ReadonlyArray<RankDef> = RANK_DEFINITIONS.map((r) => ({
+  minAchv: r.minAchv,
+  factor: r.factor * 1.6,
+  title: r.title,
+}));
+
+export function getRankDefinitions(gameVer: number) {
+  return gameVer > DX_SPLASH_GAME_VERSION ? RANK_DEFINITIONS_SPLASH_PLUS : RANK_DEFINITIONS;
+}
+
 export function getRankIndexByAchievement(achievement: number) {
   return RANK_DEFINITIONS.findIndex((rank) => {
     return achievement >= rank.minAchv;
   });
 }
 
-export function getRankByAchievement(achievement: number) {
+export function getRankByAchievement(achievement: number, gameVer: number) {
   const idx = getRankIndexByAchievement(achievement);
-  return idx < 0 ? null : RANK_DEFINITIONS[idx];
+  return idx < 0 ? null : getRankDefinitions(gameVer)[idx];
 }
 
 export function getRankTitle(achievement: number) {
-  const rankDef = getRankByAchievement(achievement);
-  return rankDef ? rankDef.title : "C";
+  const idx = getRankIndexByAchievement(achievement);
+  return idx < 0 ? "D" : RANK_DEFINITIONS[idx].title;
 }
 
 export function getFinaleRankTitle(achievement: number) {

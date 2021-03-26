@@ -1,3 +1,7 @@
+.quickLookupHeading {
+  padding-left: 4px;
+}
+
 .quickLookup .lookupTable {
   table-layout: auto;
 }

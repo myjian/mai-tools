@@ -1,7 +1,5 @@
 import {LevelDef, RankRangeDef} from './types';
 
-export const DX_MAX_RATING = 211; // 15.0 * 14 * 1.005
-
 export const DX_PLUS_RANKS: ReadonlyArray<RankRangeDef> = [
   {
     title: "SSS+",
@@ -59,7 +57,7 @@ export const DX_PLUS_RANKS: ReadonlyArray<RankRangeDef> = [
   },
 ];
 
-const dxPlusLevels = [
+export const DX_LEVELS: ReadonlyArray<LevelDef> = [
   {title: "15", minLv: 15.0, maxLv: 15.0},
   {title: "14+", minLv: 14.7, maxLv: 14.9},
   {title: "14", minLv: 14.0, maxLv: 14.6},
@@ -76,5 +74,3 @@ const dxPlusLevels = [
   {title: "8+", minLv: 8.7, maxLv: 8.9},
   {title: "8", minLv: 8.0, maxLv: 8.6},
 ];
-
-export const DX_PLUS_LEVELS: ReadonlyArray<LevelDef> = dxPlusLevels;

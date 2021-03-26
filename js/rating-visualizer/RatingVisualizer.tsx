@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {DX_MAX_RATING, DX_PLUS_RANKS} from './constants';
+import {DX_SPLASH_GAME_VERSION} from '../common/constants';
+import {getRankDefinitions} from '../common/rank-functions';
+import {DX_PLUS_RANKS} from './constants';
 import {IntervalLines} from './IntervalLines';
 import {LvRatingContainer} from './LvRatingContainer';
 import {MultiplierTable} from './MultiplierTable';
@@ -9,6 +11,7 @@ import {RatingAxis} from './RatingAxis';
 import {RatingTable} from './RatingTable';
 
 interface RatingVisualizerState {
+  gameVer: number;
   width: number;
   heightUnit: number;
   maxRating: number;
@@ -24,19 +27,32 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   constructor(props: {}) {
     super(props);
+    const gameVer = DX_SPLASH_GAME_VERSION;
+    const heightUnit = 8;
+    const maxLv = 15;
+    const maxRank = getRankDefinitions(gameVer)[0];
     this.state = {
+      gameVer,
       minLv: 8,
-      maxLv: 15,
+      maxLv,
       width: 30,
-      heightUnit: 8,
-      maxRating: DX_MAX_RATING,
-      topPadding: 70,
+      heightUnit,
+      maxRating: Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100),
+      topPadding: heightUnit * 2 + 50,
       axisLabelStep: 5,
     };
   }
 
   render() {
-    const {heightUnit, maxRating, axisLabelStep, highlightInterval, minLv, maxLv} = this.state;
+    const {
+      gameVer,
+      heightUnit,
+      maxRating,
+      axisLabelStep,
+      highlightInterval,
+      minLv,
+      maxLv,
+    } = this.state;
     const levels = this.getLevels();
     const ranks = DX_PLUS_RANKS;
     const containerHeight = this.getContainerHeight();
@@ -45,6 +61,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
       <div className="ratingVisualizer">
         <OptionsInput
           onChangeUnit={this.handleChangeHeightUnit}
+          onSetGameVer={this.handleSetGameVer}
           onSetRange={this.handleSetRange}
           minLv={minLv}
           maxLv={maxLv}
@@ -95,7 +112,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
         <div className="container">
           <RatingTable ranks={ranks} levels={levels} />
           <hr className="sectionSep" />
-          <MultiplierTable />
+          <MultiplierTable gameVer={gameVer} />
           <footer className="footer">
             <hr className="sectionSep" />
             <span>Made by </span>
@@ -166,8 +183,19 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     }
   };
 
+  private handleSetGameVer = (gameVer: number) => {
+    this.setState({gameVer});
+    this.handleSetRange(this.state.minLv, this.state.maxLv);
+  };
+
   private handleSetRange = (minLv: number, maxLv: number) => {
-    this.setState({minLv, maxLv});
+    const maxRank = getRankDefinitions(this.state.gameVer)[0];
+    const actualMaxLv = maxLv - minLv > 1 ? Math.min(15, maxLv + 0.6) : maxLv;
+    this.setState({
+      minLv,
+      maxLv,
+      maxRating: Math.floor((actualMaxLv * maxRank.factor * maxRank.minAchv) / 100),
+    });
   };
 
   private highlightInterval = (minRt: number, maxRt: number) => {

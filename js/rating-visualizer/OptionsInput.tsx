@@ -1,10 +1,13 @@
 import React from 'react';
 
+import {DX_SPLASH_GAME_VERSION, DX_SPLASH_PLUS_GAME_VERSION} from '../common/constants';
+
 const PRESET_OPTIONS = ["8-15", "8-11", "9-12", "10-13", "11-14", "12-15"];
 
 interface OptionsInputProps {
   minLv: number;
   maxLv: number;
+  onSetGameVer: (gameVer: number) => void;
   onSetRange: (minLv: number, maxLv: number) => void;
   onChangeUnit: (heightUnit: number) => void;
   onFocus: () => void;
@@ -17,6 +20,15 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
     return (
       <div className="optionsContainer">
         <div className="container" onFocus={onFocus} onBlur={onBlur} tabIndex={-1}>
+          <label className="optionGroup">
+            Game ver:&nbsp;
+            <select onChange={this.handleSetGameVer}>
+              <option value={DX_SPLASH_GAME_VERSION} selected>
+                Splash
+              </option>
+              <option value={DX_SPLASH_PLUS_GAME_VERSION}>Splash PLUS</option>
+            </select>
+          </label>
           <label className="optionGroup">
             Scale:&nbsp;
             <select onChange={this.handleChangeHeightUnit}>
@@ -67,6 +79,11 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
     }
     return options;
   }
+
+  private handleSetGameVer = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+    const gameVerText = evt.currentTarget.value;
+    this.props.onSetGameVer(parseInt(gameVerText));
+  };
 
   private handleChangeRange = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
     const rangeText = evt.currentTarget.value.split("-");

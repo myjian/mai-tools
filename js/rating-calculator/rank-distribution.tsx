@@ -1,10 +1,13 @@
-import {getRankTitle, RANK_DEFINITIONS} from '../common/rank-functions';
+import {DX_SPLASH_GAME_VERSION} from '../common/constants';
+import {getRankDefinitions, getRankTitle} from '../common/rank-functions';
 import {ChartRecord} from './types';
 
 export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<string, number> {
+  // Game version does not matter here
+  const rankDefs = getRankDefinitions(DX_SPLASH_GAME_VERSION);
   const countPerRank = new Map();
-  for (const rankDef of RANK_DEFINITIONS) {
-    countPerRank.set(rankDef.title, 0);
+  for (const r of rankDefs) {
+    countPerRank.set(r.title, 0);
   }
   scoreList.forEach((record) => {
     const rankTitle = getRankTitle(record.achievement);

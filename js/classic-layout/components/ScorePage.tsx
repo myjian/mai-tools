@@ -1,7 +1,8 @@
 import React from 'react';
 
+import {DX_SPLASH_GAME_VERSION} from '../../common/constants';
 import {formatFloat} from '../../common/number-helper';
-import {getRankIndexByAchievement, RANK_DEFINITIONS} from '../../common/rank-functions';
+import {getRankDefinitions, getRankIndexByAchievement} from '../../common/rank-functions';
 import {DisplayMode} from '../constants';
 import {
   BreakScoreMap,
@@ -171,7 +172,10 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
           diff: 101 - achv,
         };
       }
-      const nextRankDef = RANK_DEFINITIONS[getRankIndexByAchievement(achv) - 1];
+      // Game version does not matter as we don't use factor here.
+      const nextRankDef = getRankDefinitions(DX_SPLASH_GAME_VERSION)[
+        getRankIndexByAchievement(achv) - 1
+      ];
       return {
         title: nextRankDef.title,
         diff: nextRankDef.minAchv - achv,
