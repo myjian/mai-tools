@@ -34,9 +34,9 @@ export function compareSongsByRating(
 
 export function compareCandidate(record1: ChartRecordWithRating, record2: ChartRecordWithRating) {
   const nextRating1 = record1.nextRanks.values().next().value;
-  const costPerformance1 = nextRating1.minRt / (nextRating1.rank.th - record1.achievement);
+  const costPerformance1 = nextRating1.minRt / (nextRating1.rank.minAchv - record1.achievement);
   const nextRating2 = record2.nextRanks.values().next().value;
-  const costPerformance2 = nextRating2.minRt / (nextRating2.rank.th - record2.achievement);
+  const costPerformance2 = nextRating2.minRt / (nextRating2.rank.minAchv - record2.achievement);
   return (
     compareNumbers(costPerformance1, costPerformance2) ||
     compareNumbers(nextRating1.minRt, nextRating2.minRt) ||

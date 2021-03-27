@@ -1,3 +1,4 @@
+import {removeScrollControl} from '../js/common/net-helpers';
 import {getScriptHost} from '../js/common/script-host';
 
 (function (d) {
@@ -18,6 +19,8 @@ import {getScriptHost} from '../js/common/script-host';
     appendScript("recent-play-downloader.js");
   } else if (path.indexOf("/maimai-mobile/record/playlogDetail/") >= 0) {
     appendScript("score-converter.js");
+  } else if (path.indexOf("/maimai-mobile/record/musicDetail/") >= 0) {
+    removeScrollControl(d);
   } else if (
     path.indexOf("/maimai-mobile/record/music") >= 0 ||
     path.indexOf("/maimai-mobile/friend/friendGenreVs/battleStart/") >= 0 ||
@@ -30,6 +33,7 @@ import {getScriptHost} from '../js/common/script-host';
     path.indexOf("/maimai-mobile/home/") >= 0 ||
     path.indexOf("/maimai-mobile/playerData/") >= 0
   ) {
+    removeScrollControl(d);
     appendScript("analyze-rating-in-newtab.js");
   } else if (path.indexOf("/maimai-mobile/photo/") >= 0) {
     appendScript("album-download-helper.js");

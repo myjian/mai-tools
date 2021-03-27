@@ -1,3 +1,4 @@
+import {removeScrollControl} from '../js/common/net-helpers';
 import {getScriptHost} from '../js/common/script-host';
 import {ALLOWED_ORIGINS} from '../js/common/util';
 
@@ -197,6 +198,7 @@ import {ALLOWED_ORIGINS} from '../js/common/util';
     (d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") &&
     d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")
   ) {
+    removeScrollControl(d);
     let url =
       BASE_NEWTAB_URL +
       "?st=" +

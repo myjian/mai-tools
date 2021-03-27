@@ -204,8 +204,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   private initWindowCommunication() {
     window.addEventListener("message", (evt) => {
-      console.log(evt.origin, evt.data.action, getDebugText(evt.data));
       if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+        console.log(evt.origin, evt.data.action, getDebugText(evt.data));
         let payloadAsInt;
         switch (evt.data.action) {
           case "gameVersion":

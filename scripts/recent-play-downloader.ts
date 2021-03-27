@@ -1,5 +1,6 @@
 import {DIFFICULTY_CLASSNAME_MAP} from '../js/common/constants';
 import {LANG} from '../js/common/lang';
+import {removeScrollControl} from '../js/common/net-helpers';
 import {getScriptHost} from '../js/common/script-host';
 
 type ScoreRecord = {
@@ -17,7 +18,7 @@ type Options = {
   olderFirst?: boolean;
 };
 declare var domtoimage: any;
-(function () {
+(function (d) {
   const UIString = {
     zh: {
       date: "日期",
@@ -83,7 +84,7 @@ declare var domtoimage: any;
   ];
   const SCRIPT_HOST = getScriptHost("recent-play-downloader");
 
-  const ce = document.createElement.bind(document);
+  const ce = d.createElement.bind(d);
   // 540 = 9 * 60 minutes = UTC+9 (Japan Time), 1 minute = 60000 milliseconds
   const timezoneOffset = (540 + new Date().getTimezoneOffset()) * 60000;
 
@@ -181,10 +182,10 @@ declare var domtoimage: any;
 
   async function collectRecentPlays(): Promise<ScoreRecord[]> {
     const scoreList = Array.from(
-      document.querySelectorAll(".main_wrapper .p_10.t_l.f_0.v_b")
+      d.querySelectorAll(".main_wrapper .p_10.t_l.f_0.v_b")
     ) as HTMLElement[];
     const results: ScoreRecord[] = [];
-    const canvas = document.createElement("canvas");
+    const canvas = ce("canvas");
     canvas.width = IMG_HW;
     canvas.height = IMG_HW;
     const context = canvas.getContext("2d");
@@ -287,7 +288,7 @@ declare var domtoimage: any;
   }
 
   function getFilterAndOptions(): Options {
-    const dateOptions = document.querySelectorAll(
+    const dateOptions = d.querySelectorAll(
       "input." + DATE_CHECKBOX_CLASSNAME
     ) as NodeListOf<HTMLInputElement>;
     const selectedDates = new Set<string>();
@@ -297,7 +298,7 @@ declare var domtoimage: any;
       }
     });
     let showAllRecords = false;
-    const newRecordRadios = document.getElementsByName(
+    const newRecordRadios = d.getElementsByName(
       NEW_RECORD_RADIO_NAME
     ) as NodeListOf<HTMLInputElement>;
     newRecordRadios.forEach((r) => {
@@ -306,9 +307,7 @@ declare var domtoimage: any;
       }
     });
     let olderFirst = true;
-    const sortByRadios = document.getElementsByName(
-      SORT_BY_RADIO_NAME
-    ) as NodeListOf<HTMLInputElement>;
+    const sortByRadios = d.getElementsByName(SORT_BY_RADIO_NAME) as NodeListOf<HTMLInputElement>;
     sortByRadios.forEach((r) => {
       if (r.checked) {
         olderFirst = r.value === "olderFirst";
@@ -422,13 +421,13 @@ declare var domtoimage: any;
     copyTextBtn.append(UIString.copy);
     div.append(copyTextBtn);
 
-    let snackbarContainer = document.querySelector(".snackbarContainer") as HTMLDivElement;
-    let snackbar = document.querySelector(".snackbar") as HTMLDivElement;
+    let snackbarContainer = d.querySelector(".snackbarContainer") as HTMLDivElement;
+    let snackbar = d.querySelector(".snackbar") as HTMLDivElement;
     if (!snackbarContainer) {
       snackbarContainer = ce("div");
       snackbarContainer.className = "snackbarContainer";
       snackbarContainer.style.display = "none";
-      document.body.append(snackbarContainer);
+      d.body.append(snackbarContainer);
     }
     if (!snackbar) {
       snackbar = ce("div");
@@ -439,7 +438,7 @@ declare var domtoimage: any;
 
     copyTextBtn.addEventListener("click", (evt) => {
       onClick(evt);
-      document.execCommand("copy");
+      d.execCommand("copy");
       snackbarContainer.style.display = "block";
       snackbar.style.opacity = "1";
       setTimeout(() => {
@@ -458,11 +457,11 @@ declare var domtoimage: any;
         console.warn("domtoimage not available");
         return;
       }
-      const elem = document.querySelector(".playRecordContainer");
+      const elem = d.querySelector(".playRecordContainer");
       domtoimage.toPng(elem).then((dataUrl: string) => {
         const dtStr = formatDate(new Date()).replace(" ", "_").replace(":", "-");
         const filename = "record_" + dtStr + ".png";
-        const a = document.createElement("a");
+        const a = ce("a");
         a.href = dataUrl;
         a.download = filename;
         //console.log(a);
@@ -472,7 +471,7 @@ declare var domtoimage: any;
         //a.style.fontSize = "16px";
         //a.style.color = "blue";
         //a.style.display = "block";
-        //document.querySelector(".title.m_10").insertAdjacentElement("beforebegin", a);
+        //d.querySelector(".title.m_10").insertAdjacentElement("beforebegin", a);
       });
     });
     div.append(downloadBtn);
@@ -485,7 +484,7 @@ declare var domtoimage: any;
       return s;
     }, new Set<string>());
 
-    let dv = document.getElementById("recordSummary");
+    let dv = d.getElementById("recordSummary");
     if (dv) {
       dv.innerHTML = "";
     } else {
@@ -516,7 +515,7 @@ declare var domtoimage: any;
 
     const btn = createCopyButton(() => {
       const selection = window.getSelection();
-      const range = document.createRange();
+      const range = d.createRange();
       range.selectNodeContents(tbody);
       selection.removeAllRanges();
       selection.addRange(range);
@@ -533,35 +532,36 @@ declare var domtoimage: any;
     insertBefore.insertAdjacentElement("beforebegin", dv);
   }
 
-  const titleImg = document.querySelector(".main_wrapper > img.title") as HTMLImageElement;
+  const titleImg = d.querySelector(".main_wrapper > img.title") as HTMLImageElement;
   if (titleImg) {
     const cssId = "recentPlayStyles";
-    if (!document.getElementById(cssId)) {
+    if (!d.getElementById(cssId)) {
       const css = ce("link");
       css.id = cssId;
       css.rel = "stylesheet";
       css.href = SCRIPT_HOST + "/scripts/recent-play-downloader.css";
       css.addEventListener("load", () => {
+        removeScrollControl(d);
         collectRecentPlays()
           .then((plays) => {
             createOutputElement(plays, titleImg);
           })
           .catch((e: Error) => {
-            const footer = document.getElementsByTagName("footer")[0];
-            const textarea = document.createElement("textarea");
+            const footer = d.getElementsByTagName("footer")[0];
+            const textarea = ce("textarea");
             footer.append(textarea);
             textarea.value = e.message + "\n" + e.stack;
           });
       });
-      document.head.append(css);
+      d.head.append(css);
     }
     const d2iId = "d2i";
-    if (!document.getElementById(d2iId)) {
-      const d2i = document.createElement("script");
+    if (!d.getElementById(d2iId)) {
+      const d2i = ce("script");
       d2i.id = d2iId;
       d2i.type = "text/javascript";
       d2i.src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js";
-      document.body.append(d2i);
+      d.body.append(d2i);
     }
   }
-})();
+})(document);
