@@ -87,6 +87,7 @@ export class CandidateChartRecords extends React.PureComponent<Props, State> {
           records={recordsToShow}
           sortBy={this.handleSortBy}
           columns={COLUMNS}
+          isCandidate
         />
         {hasMore && (
           <a className="showMore" href="#" onClick={this.toggleShowMore}>

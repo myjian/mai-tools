@@ -74,13 +74,17 @@ export async function analyzePlayerRating(
   let newChartsRating = 0;
   const newTopChartsCount = Math.min(NUM_TOP_NEW_SONGS, newChartRecords.length);
   for (let i = 0; i < newTopChartsCount; i++) {
-    newChartsRating += Math.floor(newChartRecords[i].rating);
+    const rec = newChartRecords[i];
+    rec.isTarget = true;
+    newChartsRating += Math.floor(rec.rating);
   }
 
   let oldChartsRating = 0;
   const oldTopChartsCount = Math.min(getNumOfTopOldCharts(gameVer), oldChartRecords.length);
   for (let i = 0; i < oldTopChartsCount; i++) {
-    oldChartsRating += Math.floor(oldChartRecords[i].rating);
+    const rec = oldChartRecords[i];
+    rec.isTarget = true;
+    oldChartsRating += Math.floor(rec.rating);
   }
 
   return {

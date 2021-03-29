@@ -1,5 +1,8 @@
 import {fetchPage} from './util';
 
+export const DX_SONG_NAME_SUFFIX = " [DX]";
+export const RATING_TARGET_SONG_NAME_PREFIX = "▶ ";
+
 export function getSongIdx(row: HTMLElement) {
   return (row.getElementsByTagName("form")[0].elements.namedItem("idx") as HTMLInputElement).value;
 }
@@ -8,7 +11,7 @@ export function getSongNickname(name: string, genre: string, isDxChart?: boolean
   if (name === "Link") {
     name = genre.includes("niconico") ? "Link(nico)" : "Link(org)";
   }
-  return isDxChart ? name + " [DX]" : name;
+  return isDxChart ? name + DX_SONG_NAME_SUFFIX : name;
 }
 
 let cachedLinkIdx: {nico?: string; original?: string} = {};

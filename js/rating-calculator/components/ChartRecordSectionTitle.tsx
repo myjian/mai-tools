@@ -22,7 +22,7 @@ export class ChartRecordSectionTitle extends React.PureComponent<Props, State> {
   render() {
     const {isCandidateList, contentHidden, title} = this.props;
     let {symbolClassName} = this.state;
-    const symbol = isCandidateList ? "▶" : "▷";
+    const symbol = isCandidateList ? "▷" : "▶";
     symbolClassName += " crSecTitleSymbol";
     if (contentHidden) {
       symbolClassName += " crSecHidden";

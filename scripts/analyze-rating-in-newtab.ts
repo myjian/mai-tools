@@ -19,7 +19,7 @@ declare global {
 }
 
 (function () {
-  const BASE_URL = getScriptHost("analyze-rating-in-new-tab") + "/rating-calculator/";
+  const BASE_URL = getScriptHost("analyze-rating-in-newtab") + "/rating-calculator/";
   const UIString = {
     zh: {
       pleaseLogIn: "請登入 maimai NET",

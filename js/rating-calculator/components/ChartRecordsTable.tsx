@@ -11,10 +11,11 @@ interface Props {
   records: ReadonlyArray<ChartRecordWithRating>;
   tableClassname: string;
   sortBy?: (col: ColumnType) => void;
+  isCandidate?: boolean;
 }
 export class ChartRecordsTable extends React.PureComponent<Props> {
   render() {
-    const {columns, sortBy, records, songPropsByName} = this.props;
+    const {columns, sortBy, records, songPropsByName, isCandidate} = this.props;
     let {tableClassname} = this.props;
     tableClassname += " songRecordTable";
     return (
@@ -31,6 +32,7 @@ export class ChartRecordsTable extends React.PureComponent<Props> {
                 record={r}
                 columns={columns}
                 index={index}
+                isCandidate={isCandidate}
               />
             );
           })}

@@ -15,6 +15,7 @@ export interface ChartRecordWithRating extends ChartRecord {
   rating: number;
   nextRanks?: Map<string, {minRt: number; rank: RankDef}>;
   order?: number;
+  isTarget?: boolean;
 }
 
 export interface RatingData {

@@ -3,19 +3,21 @@ import React from 'react';
 import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
 import {ChartType, SongProperties} from '../../common/song-props';
-import {getSongNickname} from '../../common/song-util';
+import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-util';
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordRow} from './ChartRecordRow';
 
 function getSongNameDisplay(
   record: ChartRecordWithRating,
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  isCandidate?: boolean
 ): string {
+  const prefix = isCandidate && record.isTarget ? RATING_TARGET_SONG_NAME_PREFIX : "";
   const songPropsArray = songPropsByName.get(record.songName);
   if (songPropsArray && songPropsArray.length > 1) {
-    return getSongNickname(record.songName, record.genre, record.chartType === ChartType.DX);
+    return prefix + getSongNickname(record.songName, record.genre, record.chartType === ChartType.DX);
   }
-  return record.songName;
+  return prefix + record.songName;
 }
 
 interface Props {
@@ -23,15 +25,17 @@ interface Props {
   record: ChartRecordWithRating;
   columns: ReadonlyArray<ColumnType>;
   index: number;
+  isCandidate?: boolean;
 }
+
 export const ChartRecordDataRow: React.FC<Props> = React.memo((props) => {
-  const {record, index, columns, songPropsByName} = props;
+  const {record, index, columns, songPropsByName, isCandidate} = props;
   const columnValues = columns.map<string | number>((c) => {
     switch (c) {
       case ColumnType.NO:
         return index;
       case ColumnType.SONG_TITLE:
-        return getSongNameDisplay(record, songPropsByName);
+        return getSongNameDisplay(record, songPropsByName, isCandidate);
       case ColumnType.DIFFICULTY:
         return record.difficulty;
       case ColumnType.LEVEL:
