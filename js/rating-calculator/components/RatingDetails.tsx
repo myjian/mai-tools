@@ -89,7 +89,6 @@ export class RatingDetails extends React.PureComponent<Props, State> {
             hidden={hideOldTopSongs}
           />
         </div>
-        {/* TODO: filter by song name from user input */}
         <div className="songRecordsContainer">
           <ChartRecordSectionTitle
             title={UIString.newChartsRatingCandidates}

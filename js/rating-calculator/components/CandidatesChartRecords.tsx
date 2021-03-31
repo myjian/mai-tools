@@ -81,6 +81,7 @@ export class CandidateChartRecords extends React.PureComponent<Props, State> {
             toggleShowPlayed={this.toggleShowNotPlayed}
           />
         )}
+        {/* TODO: filter by level or game version */}
         <ChartRecordsTable
           songPropsByName={songPropsByName}
           tableClassname="candidateTable"

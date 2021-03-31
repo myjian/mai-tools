@@ -102,7 +102,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           newTopChartsCount={newTopChartsCount}
           oldChartsRating={oldChartsRating}
           oldTopChartsCount={oldTopChartsCount}
-          playerGradeIndex={playerGradeIndex}
+          playerGradeIndex={gameVer <= DxVersion.SPLASH ? playerGradeIndex : 0}
         />
         <RecommendedLevels
           gameRegion={gameRegion}
