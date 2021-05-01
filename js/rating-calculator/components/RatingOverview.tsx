@@ -1,22 +1,35 @@
 import React from 'react';
 
-import {getGradeByIndex} from '../grade';
+import {DxVersion} from '../../common/constants';
+import {getGradeByIndex, getTopGradeBonus} from '../grade';
 import {UIString} from '../i18n';
 
 interface Props {
+  gameVer: DxVersion;
   oldChartsRating: number;
+  oldChartsMaxRating?: number;
   oldTopChartsCount: number;
   newChartsRating: number;
+  newChartsMaxRating?: number;
   newTopChartsCount: number;
   playerGradeIndex: number;
 }
 
-export class RatingOverview extends React.PureComponent<Props> {
+interface State {
+  forceDisplayRatingRatio?: boolean;
+}
+
+export class RatingOverview extends React.PureComponent<Props, State> {
+  state: State = {};
+
   render() {
     const {
+      gameVer,
       oldChartsRating,
+      oldChartsMaxRating,
       oldTopChartsCount,
       newChartsRating,
+      newChartsMaxRating,
       newTopChartsCount,
       playerGradeIndex,
     } = this.props;
@@ -25,17 +38,46 @@ export class RatingOverview extends React.PureComponent<Props> {
     if (playerGrade) {
       totalRating += playerGrade.bonus;
     }
+    const topGradeBonus = getTopGradeBonus(gameVer);
+
+    const {forceDisplayRatingRatio} = this.state;
+    let displayRatingRatio = forceDisplayRatingRatio;
+    if (forceDisplayRatingRatio !== false && oldChartsMaxRating && newChartsMaxRating) {
+      displayRatingRatio =
+        forceDisplayRatingRatio ||
+        oldChartsMaxRating - oldChartsRating < 100 ||
+        newChartsMaxRating - newChartsRating < 100;
+    } else {
+      displayRatingRatio = false;
+    }
+
+    if (displayRatingRatio && forceDisplayRatingRatio === undefined) {
+      // Making the first click disable rating ratio rather than enable it.
+      window.setTimeout(() => {
+        this.setState({forceDisplayRatingRatio: true});
+      }, 0);
+    }
+
     return (
       <div className="ratingOverview">
-        <div className="totalRatingRow">
-          Rating： <span>{totalRating}</span>
+        <div className="totalRatingRow" tabIndex={0} onClick={this.handleForceShowRatio}>
+          Rating：{" "}
+          <span>
+            {displayRatingRatio
+              ? `${totalRating} / ${newChartsMaxRating + oldChartsMaxRating + topGradeBonus}`
+              : totalRating}
+          </span>
         </div>
         <table className="ratingOverviewTable">
           <tbody>
             <tr>
               <td>{UIString.newChartsRating}</td>
               <td className="columnColumn">{UIString.column}</td>
-              <td className="subRatingColumn">{newChartsRating}</td>
+              <td className="subRatingColumn">
+                {displayRatingRatio
+                  ? `${newChartsRating} / ${newChartsMaxRating}`
+                  : newChartsRating}
+              </td>
               <td className="avgRatingColumn">
                 ({UIString.average}
                 {UIString.column} {this.getAvg(newChartsRating, newTopChartsCount)})
@@ -44,7 +86,11 @@ export class RatingOverview extends React.PureComponent<Props> {
             <tr>
               <td>{UIString.oldChartsRating}</td>
               <td>{UIString.column}</td>
-              <td className="subRatingColumn">{oldChartsRating}</td>
+              <td className="subRatingColumn">
+                {displayRatingRatio
+                  ? `${oldChartsRating} / ${oldChartsMaxRating}`
+                  : oldChartsRating}
+              </td>
               <td className="avgRatingColumn">
                 ({UIString.average}
                 {UIString.column} {this.getAvg(oldChartsRating, oldTopChartsCount)})
@@ -56,7 +102,11 @@ export class RatingOverview extends React.PureComponent<Props> {
                   {UIString.grade} (<span>{playerGrade.title}</span>)
                 </td>
                 <td>{UIString.column}</td>
-                <td className="subRatingColumn">{playerGrade.bonus}</td>
+                <td className="subRatingColumn">
+                  {displayRatingRatio
+                    ? `${playerGrade.bonus} / ${topGradeBonus}`
+                    : playerGrade.bonus}
+                </td>
               </tr>
             )}
           </tbody>
@@ -64,6 +114,12 @@ export class RatingOverview extends React.PureComponent<Props> {
       </div>
     );
   }
+
+  private handleForceShowRatio = () => {
+    this.setState(({forceDisplayRatingRatio}) => ({
+      forceDisplayRatingRatio: !forceDisplayRatingRatio,
+    }));
+  };
 
   private getAvg(sum: number, count: number) {
     return count ? (sum / count).toFixed(0) : 0;

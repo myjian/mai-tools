@@ -18,6 +18,10 @@ function getScoreMultiplier(achievement: number, gameVer: DxVersion) {
   return (factor * achievement) / 100;
 }
 
+export function getNumOfTopNewCharts() {
+  return NUM_TOP_NEW_SONGS;
+}
+
 export function getNumOfTopOldCharts(gameVer: DxVersion) {
   return gameVer > DxVersion.SPLASH ? NUM_TOP_OLD_SONGS_SPLASH_PLUS : NUM_TOP_OLD_SONGS;
 }

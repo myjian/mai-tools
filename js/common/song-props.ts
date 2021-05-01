@@ -28,6 +28,15 @@ const VERSION_REGEX = /\bv\s*:\s*([0-9]+)/;
 const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 
+const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
+  {
+    name: "BREaK! BREaK! BREaK!",
+    lv: [-6, -8, 12.8, 14.7, 0],
+    debut: DxVersion.SPLASH,
+    dx: 1,
+  },
+];
+
 function fixMismatchSongName(name: string) {
   if (name === "D✪N’T  ST✪P  R✪CKIN’") {
     return "D✪N’T ST✪P R✪CKIN’";
@@ -78,6 +87,9 @@ export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
     if (songProps) {
       insertOrUpdateSongProps(songPropsByName, songProps);
     }
+  }
+  for (const songProps of INTL_VER_SONG_PROPS) {
+    insertOrUpdateSongProps(songPropsByName, songProps);
   }
   return songPropsByName;
 }

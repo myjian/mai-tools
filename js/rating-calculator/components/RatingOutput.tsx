@@ -4,6 +4,8 @@ import {DxVersion} from '../../common/constants';
 import {SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {UIString} from '../i18n';
+import {getNumOfTopNewCharts, getNumOfTopOldCharts} from '../rating-analyzer';
+import {calculateMaxRating} from '../rating-functions';
 import {ChartRecordWithRating, GameRegion, RatingData} from '../types';
 import {RatingDetails} from './RatingDetails';
 import {RatingOverview} from './RatingOverview';
@@ -28,12 +30,15 @@ interface State {
   oldCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
   notPlayedNewCharts?: ReadonlyArray<ChartRecordWithRating>;
   notPlayedOldCharts?: ReadonlyArray<ChartRecordWithRating>;
+  maxNewChartsRating?: number;
+  maxOldChartsRating?: number;
 }
 
 export class RatingOutput extends React.PureComponent<Props, State> {
   static getDerivedStateFromProps: React.GetDerivedStateFromProps<Props, State> = (props) => {
     const {gameVer, newSongs, oldSongs, ratingData} = props;
     const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
+
     const newCandidateCharts = getCandidateCharts(
       gameVer,
       newChartRecords,
@@ -49,7 +54,6 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           NEW_CANDIDATE_SONGS_POOL_SIZE
         )
       : [];
-    console.log(notPlayedNewCharts);
     const oldCandidateCharts = getCandidateCharts(
       gameVer,
       oldChartRecords,
@@ -65,8 +69,21 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           OLD_CANDIDATE_SONGS_POOL_SIZE
         )
       : [];
-    console.log(notPlayedOldCharts);
-    return {newCandidateCharts, oldCandidateCharts, notPlayedNewCharts, notPlayedOldCharts};
+
+    const maxNewChartsRating = newSongs
+      ? calculateMaxRating(gameVer, newSongs, getNumOfTopNewCharts())
+      : 0;
+    const maxOldChartsRating = oldSongs
+      ? calculateMaxRating(gameVer, oldSongs, getNumOfTopOldCharts(gameVer))
+      : 0;
+    return {
+      newCandidateCharts,
+      oldCandidateCharts,
+      notPlayedNewCharts,
+      notPlayedOldCharts,
+      maxNewChartsRating,
+      maxOldChartsRating,
+    };
   };
 
   private outputArea = React.createRef<HTMLDivElement>();
@@ -90,6 +107,8 @@ export class RatingOutput extends React.PureComponent<Props, State> {
       oldCandidateCharts,
       notPlayedNewCharts,
       notPlayedOldCharts,
+      maxNewChartsRating,
+      maxOldChartsRating,
     } = this.state;
     return (
       <div className="outputArea" ref={this.outputArea}>
@@ -98,9 +117,12 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           {playerName ? ` - ${playerName}` : null}
         </h2>
         <RatingOverview
+          gameVer={gameVer}
           newChartsRating={newChartsRating}
+          newChartsMaxRating={maxNewChartsRating}
           newTopChartsCount={newTopChartsCount}
           oldChartsRating={oldChartsRating}
+          oldChartsMaxRating={maxOldChartsRating}
           oldTopChartsCount={oldTopChartsCount}
           playerGradeIndex={gameVer <= DxVersion.SPLASH ? playerGradeIndex : 0}
         />

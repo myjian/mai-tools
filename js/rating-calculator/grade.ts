@@ -1,3 +1,5 @@
+import {DxVersion} from '../common/constants';
+
 const GRADES_DX = [
   {title: "", bonus: 0},
   {title: "初心者", bonus: 0},
@@ -29,4 +31,11 @@ const GRADES_DX = [
 
 export function getGradeByIndex(index: number) {
   return GRADES_DX[index];
+}
+
+export function getTopGradeBonus(gameVer: DxVersion) {
+  if (gameVer > DxVersion.SPLASH) {
+    return 0;
+  }
+  return GRADES_DX[GRADES_DX.length - 1].bonus;
 }
