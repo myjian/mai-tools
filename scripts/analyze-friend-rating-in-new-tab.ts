@@ -1,9 +1,9 @@
-import {fetchFriendScores, FRIEND_SCORE_URLS} from '../js/common/fetch-friend-score';
-import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
-import {LANG} from '../js/common/lang';
-import {statusText} from '../js/common/score-fetch-progress';
-import {getScriptHost} from '../js/common/script-host';
-import {BasicSongProps} from '../js/common/song-props';
+import {fetchFriendScores, FRIEND_SCORE_URLS} from "../js/common/fetch-friend-score";
+import {fetchPlayerGrade, getPlayerName} from "../js/common/fetch-score-util";
+import {LANG} from "../js/common/lang";
+import {statusText} from "../js/common/score-fetch-progress";
+import {getScriptHost} from "../js/common/script-host";
+import {BasicSongProps} from "../js/common/song-props";
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -11,7 +11,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from '../js/common/util';
+} from "../js/common/util";
 
 declare global {
   interface Window {
@@ -50,13 +50,11 @@ type FriendInfo = {
       analyzeLink.remove();
     }
     analyzeLink = d.createElement("a");
-    analyzeLink.className = "analyzeLink d_b f_14";
+    analyzeLink.className = "analyzeLink f_14 d_b";
     analyzeLink.style.color = "#1477e6";
     analyzeLink.target = "friendRating";
     analyzeLink.innerText = UIString.analyze;
-    const queryParams = new URLSearchParams();
-    queryParams.set("friendIdx", friend.idx);
-    queryParams.set("playerName", friend.name);
+    const queryParams = new URLSearchParams({friendIdx: friend.idx, playerName: friend.name});
     analyzeLink.href = BASE_URL + queryParams.toString();
     container.insertAdjacentElement("afterbegin", analyzeLink);
   }
@@ -101,10 +99,10 @@ type FriendInfo = {
       insertAnalyzeButton(info);
     });
     let allSongs: BasicSongProps[];
-    if (self.ratingCalcMsgListener) {
-      window.removeEventListener("message", self.ratingCalcMsgListener);
+    if (window.ratingCalcMsgListener) {
+      window.removeEventListener("message", window.ratingCalcMsgListener);
     }
-    self.ratingCalcMsgListener = (evt) => {
+    window.ratingCalcMsgListener = (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
@@ -126,7 +124,7 @@ type FriendInfo = {
         }
       }
     };
-    window.addEventListener("message", self.ratingCalcMsgListener);
+    window.addEventListener("message", window.ratingCalcMsgListener);
   }
 
   main();

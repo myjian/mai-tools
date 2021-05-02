@@ -1,8 +1,8 @@
-import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
-import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
-import {LANG} from '../js/common/lang';
-import {statusText} from '../js/common/score-fetch-progress';
-import {getScriptHost} from '../js/common/script-host';
+import {fetchPlayerGrade, getPlayerName} from "../js/common/fetch-score-util";
+import {fetchScores, SELF_SCORE_URLS} from "../js/common/fetch-self-score";
+import {LANG} from "../js/common/lang";
+import {statusText} from "../js/common/score-fetch-progress";
+import {getScriptHost} from "../js/common/script-host";
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -10,7 +10,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from '../js/common/util';
+} from "../js/common/util";
 
 declare global {
   interface Window {
@@ -64,18 +64,29 @@ declare global {
     if (!profileBlock) {
       return;
     }
-    const container = profileBlock.querySelector(".basic_block > .p_l_10");
-    let analyzeLink = profileBlock.querySelector(".analyzeLink") as HTMLAnchorElement;
+    let analyzeLink = document.querySelector(".analyzeLink") as HTMLAnchorElement;
     if (analyzeLink) {
       analyzeLink.remove();
     }
     analyzeLink = document.createElement("a");
-    analyzeLink.className = "analyzeLink f_r f_14";
+    analyzeLink.className = "analyzeLink f_14";
     analyzeLink.style.color = "#1477e6";
     analyzeLink.target = "selfRating";
-    analyzeLink.innerText = UIString.analyze;
+    analyzeLink.append(UIString.analyze, document.createElement("br"));
     analyzeLink.href = url;
-    container.append(analyzeLink);
+    if (location.pathname.indexOf("/maimai-mobile/playerData/") >= 0) {
+      analyzeLink.className += " f_l";
+      document
+        .querySelector(".m_5.m_t_10.t_r.f_12")
+        .insertAdjacentElement("afterbegin", analyzeLink);
+    } else if (location.pathname.indexOf("/maimai-mobile/home/") >= 0) {
+      analyzeLink.className += " d_b";
+      document
+        .querySelector(".comment_block.f_l.f_12")
+        .insertAdjacentElement("afterbegin", analyzeLink);
+    } else {
+      profileBlock.querySelector(".name_block").parentElement.append(analyzeLink);
+    }
   }
 
   function main() {
@@ -84,16 +95,10 @@ declare global {
       handleError(UIString.pleaseLogIn);
       return;
     }
-    let url = BASE_URL;
-    const queryParams = new URLSearchParams();
     const playerName = isOnFriendPage ? null : getPlayerName(document.body);
-    if (playerName) {
-      queryParams.set("playerName", playerName);
-    }
-    const query = queryParams.toString();
-    if (query) {
-      url += "?" + query;
-    }
+    const url = playerName
+      ? BASE_URL + "?" + new URLSearchParams({playerName: playerName})
+      : BASE_URL;
     if (navigator.userAgent.startsWith("Mozilla/5.0 (iP")) {
       // iOS does not allow pop-up window
       insertAnalyzeButton(url);
@@ -101,10 +106,10 @@ declare global {
       window.open(url, "selfRating");
     }
     let allSongsDom: Promise<Document>;
-    if (self.ratingCalcMsgListener) {
-      window.removeEventListener("message", self.ratingCalcMsgListener);
+    if (window.ratingCalcMsgListener) {
+      window.removeEventListener("message", window.ratingCalcMsgListener);
     }
-    self.ratingCalcMsgListener = (evt) => {
+    window.ratingCalcMsgListener = (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
@@ -117,7 +122,7 @@ declare global {
         }
       }
     };
-    window.addEventListener("message", self.ratingCalcMsgListener);
+    window.addEventListener("message", window.ratingCalcMsgListener);
   }
 
   main();
