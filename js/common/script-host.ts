@@ -1,6 +1,7 @@
 export function getScriptHost(scriptName: string) {
   const scripts = Array.from(document.querySelectorAll("script"));
-  for (const script of scripts) {
+  while (scripts.length) {
+    const script = scripts.pop();
     if (script.src.includes(scriptName)) {
       const url = new URL(script.src);
       const path = url.pathname;
