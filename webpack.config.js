@@ -8,9 +8,8 @@ fs.readdirSync(SCRIPTS_DIR)
   .filter((f) => f.endsWith(".ts"))
   .forEach((f) => (scriptEntryPoints[f.replace(".ts", "")] = "./" + path.join(SCRIPTS_DIR, f)));
 
-module.exports = {
-  mode: "production",
-  // mode: "development",
+module.exports = (env) => ({
+  mode: env.development ? "development" : "production",
   entry: {
     bookmarklets: "./js/bookmarklets/main.tsx",
     "classic-layout": "./js/classic-layout/main.tsx",
@@ -44,4 +43,4 @@ module.exports = {
     react: "React",
     "react-dom": "ReactDOM",
   },
-};
+});
