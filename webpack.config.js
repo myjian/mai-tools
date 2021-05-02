@@ -13,6 +13,7 @@ module.exports = (env) => ({
   entry: {
     bookmarklets: "./js/bookmarklets/main.tsx",
     "classic-layout": "./js/classic-layout/main.tsx",
+    "dx-achievement": "./js/dx-achievement/main.tsx",
     "rating-calculator": "./js/rating-calculator/main.ts",
     "rating-visualizer": "./js/rating-visualizer/main.tsx",
     ...scriptEntryPoints,

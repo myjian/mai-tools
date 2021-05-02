@@ -1,0 +1,107 @@
+html {
+  background-color: #e1f1f9;
+  font-family: sans-serif;
+}
+
+.noteCount {
+  width: 60px;
+}
+
+form div {
+  margin-bottom: 10px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: start;
+  padding: 4px;
+}
+
+input {
+  font-size: 1.3rem;
+  text-align: right;
+  padding: 3px 4px;
+  color: inherit;
+}
+
+button {
+  font-size: 1.3rem;
+  padding: 4px 16px;
+  margin-bottom: 10px;
+}
+
+button:nth-child(2) {
+  margin-left: 6px;
+}
+
+.judgementInputRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.judgementInputCol {
+  padding: 2px;
+}
+
+.judgementInputCol:first-child {
+  padding-left: 0;
+}
+
+.resultHeading {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.resultHeading h3 {
+  margin-bottom: 5px;
+}
+
+.dxAchvDetails {
+  margin-bottom: 20px;
+}
+
+.dxAchvDetails td,
+.dxAchvDetails th {
+  min-width: 40px;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid grey;
+}
+
+@media only screen and (max-width: 361px) {
+  .dxAchvDetails td,
+  .dxAchvDetails th {
+    min-width: 30px;
+    font-size: 0.8rem;
+    padding: 3px;
+  }
+}
+
+.dxAchvDetails .dxAchv {
+  font-size: 1.3rem;
+  text-align: start;
+  font-weight: normal;
+  border: none;
+  padding-left: 0;
+  padding-bottom: 5px;
+}
+
+.perfectJudgement {
+  color: #ff9d03;
+}
+
+.greatJudgement {
+  color: #f75ea3;
+}
+
+.goodJudgement {
+  color: #2fca4c;
+}
+
+.missJudgement {
+  color: #868686;
+}
