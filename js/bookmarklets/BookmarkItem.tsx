@@ -4,9 +4,9 @@ import {Bookmarklet} from './bookmarklets';
 
 export class BookmarkItem extends React.PureComponent<Bookmarklet> {
   render() {
-    const {itemTitle, feature, howTo, screenshotUrl} = this.props;
+    const {id, itemTitle, feature, howTo, screenshotUrl} = this.props;
     return (
-      <div className="bookmarklet">
+      <div className="bookmarklet" id={id}>
         <div className="bookmarkletText">
           <h3 className="bookmarkletTitle">{itemTitle}</h3>
           <ul>

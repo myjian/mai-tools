@@ -23,6 +23,7 @@ export const LINK_NAME = {
 }[LANG];
 
 export interface Bookmarklet {
+  id: string;
   itemTitle: string;
   feature: string;
   howTo: string | (() => JSX.Element);
@@ -30,6 +31,7 @@ export interface Bookmarklet {
 }
 
 export const scoreConverter: Bookmarklet = {
+  id: "convertDxToFinale",
   itemTitle: {
     zh: "換算成舊版達成率 & 分析",
     en: "Convert DX score to old score system",
@@ -49,6 +51,7 @@ export const scoreConverter: Bookmarklet = {
 };
 
 export const scoreSorter: Bookmarklet = {
+  id: "scoreSorter",
   itemTitle: {
     zh: "排序成績",
     en: "Sort scores",
@@ -68,6 +71,7 @@ export const scoreSorter: Bookmarklet = {
 };
 
 export const recentPlaySummary: Bookmarklet = {
+  id: "recentPlaySummary",
   itemTitle: {
     zh: "整理最近遊玩紀錄",
     en: "Recent play summary",
@@ -84,6 +88,7 @@ export const recentPlaySummary: Bookmarklet = {
 };
 
 export const ratingAnalyzer: Bookmarklet = {
+  id: "analyzeSelfRating",
   itemTitle: {
     zh: "分析自己 DX Rating",
     en: "Analyze Self DX Rating",
@@ -100,6 +105,7 @@ export const ratingAnalyzer: Bookmarklet = {
 };
 
 export const analyzeFriendRating: Bookmarklet = {
+  id: "analyzeFriendRating",
   itemTitle: {
     zh: "分析好友 DX Rating",
     en: "Analyze Friend's DX Rating",
@@ -133,6 +139,7 @@ const scoreDownloaderUsageText = {
 }[LANG];
 
 export const scoreDownloader: Bookmarklet = {
+  id: "scoreDownloader",
   itemTitle: {
     zh: "下載所有歌曲成績",
     en: "Download all scores",
@@ -154,6 +161,7 @@ export const scoreDownloader: Bookmarklet = {
 };
 
 export const albumDownloadHelper: Bookmarklet = {
+  id: "albumDownloadHelper",
   itemTitle: {
     zh: "相簿照片命名",
     en: "Album Download Helper",
