@@ -112,6 +112,9 @@ export function getNotPlayedCharts(
       const levelIsEstimate = lv < 0;
       lv = Math.abs(lv);
       const key = s.name === "Link" ? s.nickname : getSongNickname(s.name, "", s.dx);
+      // Math.min is hack for newly added Re:MASTER charts.
+      // I think the hack is no longer needed as I made parseSongProperties check lv array length,
+      // but just want to stay safe.
       const diff = DIFFICULTIES[Math.min(index, DIFFICULTIES.length - 1)];
       if (playedCharts.has(key + diff) || lv < easiestLv || lv > hardestLv) {
         continue; // skip played, too easy, or too hard charts

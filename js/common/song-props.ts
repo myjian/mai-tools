@@ -1,4 +1,4 @@
-import {DxVersion} from './constants';
+import {DIFFICULTIES, DxVersion} from './constants';
 import {getSongNickname, normalizeSongName} from './song-name-helper';
 
 export const enum ChartType {
@@ -51,9 +51,14 @@ function parseSongProperties(line: string): SongProperties {
   const songNameMatch = line.match(SONGNAME_REGEX);
   const nicknameMatch = line.match(SONGNICKNAME_REGEX);
   if (dxMatch && lvMatch && debutVerMatch && songNameMatch) {
+    let lvList = JSON.parse(lvMatch[1]) as number[];
+    if (lvList.length > DIFFICULTIES.length) {
+      const newReMasterLv = lvList.pop();
+      lvList[DIFFICULTIES.length - 1] = newReMasterLv;
+    }
     return {
       dx: parseInt(dxMatch[1]) as 0 | 1,
-      lv: JSON.parse(lvMatch[1]),
+      lv: lvList,
       debut: Math.abs(parseInt(debutVerMatch[1])),
       name: normalizeSongName(songNameMatch[1]),
       nickname: nicknameMatch && nicknameMatch[1],
