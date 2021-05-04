@@ -43,7 +43,7 @@ async function parseSongList(dom: Document) {
     const isDx = getChartType(d);
     let nickname: string | undefined;
     if (name === "Link") {
-      nickname = (await isNicoNicoLink(idx)) ? "Link(nico)" : "Link(orig)";
+      nickname = (await isNicoNicoLink(idx)) ? "Link(nico)" : "Link(org)";
     }
     songs.push({dx: isDx, name, nickname});
   }
