@@ -100,7 +100,7 @@ export function getSongProperties(
       songPropsArray = songPropsArray.filter((d) => d.dx === chartType);
       if (songPropsArray.length > 1) {
         // Duplicate song names
-        const nickname = getSongNickname(songName, genre);
+        const nickname = getSongNickname(songName, genre, chartType);
         songPropsArray = songPropsArray.filter((d) => d.nickname === nickname);
       }
     }

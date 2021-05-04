@@ -1,3 +1,4 @@
+import {ChartType} from './song-props';
 import {fetchPage} from './util';
 
 export const DX_SONG_NAME_SUFFIX = " [DX]";
@@ -14,11 +15,11 @@ export function getSongIdx(row: HTMLElement) {
   return (row.getElementsByTagName("form")[0].elements.namedItem("idx") as HTMLInputElement).value;
 }
 
-export function getSongNickname(name: string, genre: string, isDxChart?: boolean) {
+export function getSongNickname(name: string, genre: string, chartType: ChartType) {
   if (name === "Link") {
     name = genre.includes("niconico") ? "Link(nico)" : "Link(org)";
   }
-  return isDxChart ? name + DX_SONG_NAME_SUFFIX : name;
+  return chartType === ChartType.DX ? name + DX_SONG_NAME_SUFFIX : name;
 }
 
 let cachedLinkIdx: {nico?: string; original?: string} = {};

@@ -6,7 +6,7 @@ import {
   getRankIndexByAchievement,
 } from '../common/rank-functions';
 import {getSongNickname} from '../common/song-name-helper';
-import {ChartType, SongProperties} from '../common/song-props';
+import {SongProperties} from '../common/song-props';
 import {calculateRatingRange} from './rating-functions';
 import {compareCandidate, compareSongsByLevel} from './record-comparator';
 import {ChartRecordWithRating} from './types';
@@ -92,7 +92,7 @@ export function getNotPlayedCharts(
 ) {
   const playedCharts = new Set<string>();
   for (const r of records) {
-    const key = getSongNickname(r.songName, r.genre, r.chartType === ChartType.DX);
+    const key = getSongNickname(r.songName, r.genre, r.chartType);
     playedCharts.add(key + r.difficulty);
   }
   const maxRating = records.length ? Math.ceil(records[0].rating) : 0;
@@ -111,8 +111,7 @@ export function getNotPlayedCharts(
       let lv = s.lv[index];
       const levelIsEstimate = lv < 0;
       lv = Math.abs(lv);
-      const key =
-        s.name === "Link" ? s.nickname : getSongNickname(s.name, "", s.dx === ChartType.DX);
+      const key = s.name === "Link" ? s.nickname : getSongNickname(s.name, "", s.dx);
       const diff = DIFFICULTIES[Math.min(index, DIFFICULTIES.length - 1)];
       if (playedCharts.has(key + diff) || lv < easiestLv || lv > hardestLv) {
         continue; // skip played, too easy, or too hard charts
