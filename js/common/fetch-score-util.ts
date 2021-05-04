@@ -1,7 +1,10 @@
+import {normalizeSongName} from './song-name-helper';
 import {ChartType} from './song-props';
 
 export function getSongName(row: HTMLElement) {
-  return (row.getElementsByClassName("music_name_block")[0] as HTMLElement).innerText;
+  return normalizeSongName(
+    (row.getElementsByClassName("music_name_block")[0] as HTMLElement).innerText
+  );
 }
 
 export function getChartLevel(row: HTMLElement) {

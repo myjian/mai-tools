@@ -5,8 +5,8 @@ import {
   getRankDefinitions,
   getRankIndexByAchievement,
 } from '../common/rank-functions';
+import {getSongNickname} from '../common/song-name-helper';
 import {ChartType, SongProperties} from '../common/song-props';
-import {getSongNickname} from '../common/song-util';
 import {calculateRatingRange} from './rating-functions';
 import {compareCandidate, compareSongsByLevel} from './record-comparator';
 import {ChartRecordWithRating} from './types';

@@ -1,5 +1,5 @@
 import {DxVersion} from './constants';
-import {getSongNickname} from './song-util';
+import {getSongNickname, normalizeSongName} from './song-name-helper';
 
 export const enum ChartType {
   STANDARD,
@@ -37,13 +37,6 @@ const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
   },
 ];
 
-function fixMismatchSongName(name: string) {
-  if (name === "D✪N’T  ST✪P  R✪CKIN’") {
-    return "D✪N’T ST✪P R✪CKIN’";
-  }
-  return name.replace(/" \+ '/g, "").replace(/' \+ "/g, "");
-}
-
 /**
  * Parse song properties from text.
  *
@@ -62,7 +55,7 @@ function parseSongProperties(line: string): SongProperties {
       dx: parseInt(dxMatch[1]) as 0 | 1,
       lv: JSON.parse(lvMatch[1]),
       debut: Math.abs(parseInt(debutVerMatch[1])),
-      name: fixMismatchSongName(songNameMatch[1]),
+      name: normalizeSongName(songNameMatch[1]),
       nickname: nicknameMatch && nicknameMatch[1],
     };
   }

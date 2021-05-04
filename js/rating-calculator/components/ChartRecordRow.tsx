@@ -1,7 +1,7 @@
 import React from 'react';
-import { DX_SONG_NAME_SUFFIX, RATING_TARGET_SONG_NAME_PREFIX } from '../../common/song-util';
 
-import { getZhWikiLink } from '../../common/wiki-link';
+import {DX_SONG_NAME_SUFFIX, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
+import {getZhWikiLink} from '../../common/wiki-link';
 
 const SCORE_RECORD_ROW_CLASSNAME = "scoreRecordRow";
 const SCORE_RECORD_CELL_BASE_CLASSNAME = "scoreRecordCell";
@@ -24,7 +24,7 @@ interface Props {
 }
 export class ChartRecordRow extends React.PureComponent<Props> {
   render() {
-    const { columnValues, isHeading, onClickCell } = this.props;
+    const {columnValues, isHeading, onClickCell} = this.props;
     let className = SCORE_RECORD_ROW_CLASSNAME;
     if (this.props.className) {
       className += " " + this.props.className;
@@ -35,7 +35,7 @@ export class ChartRecordRow extends React.PureComponent<Props> {
           const columnClassName = SCORE_RECORD_CELL_CLASSNAMES[index];
           let className = SCORE_RECORD_CELL_BASE_CLASSNAME + " " + columnClassName;
           const children = this.getChildren(v, index, isHeading);
-          const clickProps = onClickCell ? { tabIndex: 0, onClick: () => onClickCell(index) } : {};
+          const clickProps = onClickCell ? {tabIndex: 0, onClick: () => onClickCell(index)} : {};
           if (isHeading) {
             return (
               <th className={className} {...clickProps}>
@@ -53,11 +53,19 @@ export class ChartRecordRow extends React.PureComponent<Props> {
     );
   }
 
-  private getChildren = (value: React.ReactText, colIdx: number, isHeading: boolean): React.ReactNode => {
+  private getChildren = (
+    value: React.ReactText,
+    colIdx: number,
+    isHeading: boolean
+  ): React.ReactNode => {
     if (!isHeading && colIdx === 1) {
       let songName = value as string;
-      const startIndex = songName.startsWith(RATING_TARGET_SONG_NAME_PREFIX) ? RATING_TARGET_SONG_NAME_PREFIX.length : 0;
-      const endIndex = songName.endsWith(DX_SONG_NAME_SUFFIX) ? songName.length - DX_SONG_NAME_SUFFIX.length : songName.length;
+      const startIndex = songName.startsWith(RATING_TARGET_SONG_NAME_PREFIX)
+        ? RATING_TARGET_SONG_NAME_PREFIX.length
+        : 0;
+      const endIndex = songName.endsWith(DX_SONG_NAME_SUFFIX)
+        ? songName.length - DX_SONG_NAME_SUFFIX.length
+        : songName.length;
       songName = songName.substring(startIndex, endIndex);
       return (
         <a className="songWikiLink" href={getZhWikiLink(songName)} target="_blank">

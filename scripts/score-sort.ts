@@ -4,13 +4,13 @@ import {SELF_SCORE_URLS} from '../js/common/fetch-self-score';
 import {LANG} from '../js/common/lang';
 import {getDefaultLevel} from '../js/common/level-helper';
 import {iWantSomeMagic} from '../js/common/magic';
+import {getSongIdx, isNicoNicoLink} from '../js/common/song-name-helper';
 import {
   buildSongPropsMap,
   ChartType,
   getSongProperties,
   SongProperties,
 } from '../js/common/song-props';
-import {getSongIdx, isNicoNicoLink} from '../js/common/song-util';
 import {fetchGameVersion, fetchPage} from '../js/common/util';
 
 enum SortBy {

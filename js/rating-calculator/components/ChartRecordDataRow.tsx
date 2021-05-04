@@ -2,8 +2,8 @@ import React from 'react';
 
 import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
 import {getRankTitle} from '../../common/rank-functions';
+import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
 import {ChartType, SongProperties} from '../../common/song-props';
-import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-util';
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordRow} from './ChartRecordRow';
 
@@ -15,7 +15,9 @@ function getSongNameDisplay(
   const prefix = isCandidate && record.isTarget ? RATING_TARGET_SONG_NAME_PREFIX : "";
   const songPropsArray = songPropsByName.get(record.songName);
   if (songPropsArray && songPropsArray.length > 1) {
-    return prefix + getSongNickname(record.songName, record.genre, record.chartType === ChartType.DX);
+    return (
+      prefix + getSongNickname(record.songName, record.genre, record.chartType === ChartType.DX)
+    );
   }
   return prefix + record.songName;
 }

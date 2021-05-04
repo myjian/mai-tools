@@ -3,6 +3,13 @@ import {fetchPage} from './util';
 export const DX_SONG_NAME_SUFFIX = " [DX]";
 export const RATING_TARGET_SONG_NAME_PREFIX = "▶ ";
 
+export function normalizeSongName(name: string) {
+  if (name === "D✪N’T  ST✪P  R✪CKIN’") {
+    return "D✪N’T ST✪P R✪CKIN’";
+  }
+  return name.replace(/" \+ '/g, "").replace(/' \+ "/g, "");
+}
+
 export function getSongIdx(row: HTMLElement) {
   return (row.getElementsByTagName("form")[0].elements.namedItem("idx") as HTMLInputElement).value;
 }
