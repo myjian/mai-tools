@@ -1,4 +1,4 @@
-import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
+import {getPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
 import {LANG} from '../js/common/lang';
 import {statusText} from '../js/common/score-fetch-progress';
@@ -39,7 +39,7 @@ declare global {
     const gameVer = await fetchGameVersion(document.body);
     send("gameVersion", gameVer);
     // Fetch player grade
-    const playerGrade = isOnFriendPage ? null : fetchPlayerGrade(document.body);
+    const playerGrade = isOnFriendPage ? null : getPlayerGrade(document.body);
     if (playerGrade) {
       send("playerGrade", playerGrade);
     }

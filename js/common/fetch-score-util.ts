@@ -36,7 +36,7 @@ export function getPlayerName(n: HTMLElement) {
   return (n.querySelector(".name_block") as HTMLElement)?.innerText;
 }
 
-export function fetchPlayerGrade(n: Document | HTMLElement) {
+export function getPlayerGrade(n: Document | HTMLElement) {
   const gradeImg = n.querySelector(".user_data_block_line ~ img.h_25") as HTMLImageElement;
   if (gradeImg) {
     const gradeIdx = gradeImg.src.lastIndexOf("grade_");
