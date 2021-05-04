@@ -1,9 +1,9 @@
-import {fetchFriendScores, FRIEND_SCORE_URLS} from "../js/common/fetch-friend-score";
-import {fetchPlayerGrade, getPlayerName} from "../js/common/fetch-score-util";
-import {LANG} from "../js/common/lang";
-import {statusText} from "../js/common/score-fetch-progress";
-import {getScriptHost} from "../js/common/script-host";
-import {BasicSongProps} from "../js/common/song-props";
+import {fetchFriendScores, FRIEND_SCORE_URLS} from '../js/common/fetch-friend-score';
+import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
+import {LANG} from '../js/common/lang';
+import {statusText} from '../js/common/score-fetch-progress';
+import {getScriptHost} from '../js/common/script-host';
+import {BasicSongProps} from '../js/common/song-props';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -11,7 +11,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from "../js/common/util";
+} from '../js/common/util';
 
 declare global {
   interface Window {
@@ -23,6 +23,7 @@ type FriendInfo = {
   name: string;
   idx: string;
   elem: HTMLElement;
+  isInVsMode?: boolean;
 };
 
 (function (d) {
@@ -44,19 +45,34 @@ type FriendInfo = {
   }
 
   function insertAnalyzeButton(friend: FriendInfo) {
-    const container = friend.elem.querySelector(".friend_comment_block");
-    let analyzeLink = friend.elem.querySelector(".analyzeLink") as HTMLAnchorElement;
+    let analyzeLink = (friend.isInVsMode ? document : friend.elem).querySelector(
+      ".analyzeLink"
+    ) as HTMLAnchorElement;
     if (analyzeLink) {
-      analyzeLink.remove();
+      (friend.isInVsMode ? analyzeLink.parentElement : analyzeLink).remove();
     }
     analyzeLink = d.createElement("a");
-    analyzeLink.className = "analyzeLink f_14 d_b";
+    analyzeLink.className = "analyzeLink f_14";
     analyzeLink.style.color = "#1477e6";
     analyzeLink.target = "friendRating";
     analyzeLink.innerText = UIString.analyze;
     const queryParams = new URLSearchParams({friendIdx: friend.idx, playerName: friend.name});
     analyzeLink.href = BASE_URL + queryParams.toString();
-    container.insertAdjacentElement("afterbegin", analyzeLink);
+    if (friend.isInVsMode) {
+      analyzeLink.className += " d_ib friend_comment_block t_c";
+      analyzeLink.style.borderRadius = "5px";
+      analyzeLink.style.width = "184px";
+      analyzeLink.style.marginRight = "15px";
+      const div = document.createElement("div");
+      div.className = "m_l_10 m_r_10 t_r";
+      div.append(analyzeLink);
+      friend.elem.parentElement.insertAdjacentElement("afterend", div);
+    } else {
+      analyzeLink.className += " d_b";
+      friend.elem
+        .querySelector(".friend_comment_block")
+        .insertAdjacentElement("afterbegin", analyzeLink);
+    }
   }
 
   async function fetchFriendRecords(
@@ -89,15 +105,26 @@ type FriendInfo = {
       handleError(UIString.pleaseLogIn);
       return;
     }
-    const list = Array.from(
-      d.querySelectorAll("img.friend_favorite_icon") as NodeListOf<HTMLImageElement>
-    ).map((n) => n.parentElement);
-    list.forEach((elem) => {
-      const idx = getFriendIdx(elem);
-      const info = {idx, name: getPlayerName(elem), elem};
+    if (
+      location.pathname.includes("/friendLevelVs/") ||
+      location.pathname.includes("/friendGenreVs/")
+    ) {
+      const elem = document.querySelector(".friend_vs_friend_block") as HTMLElement;
+      const idx = new URLSearchParams(location.search).get("idx");
+      const info = {idx, name: getPlayerName(elem), elem, isInVsMode: true};
       friends_cache[idx] = info;
       insertAnalyzeButton(info);
-    });
+    } else {
+      const list = Array.from(
+        d.querySelectorAll("img.friend_favorite_icon") as NodeListOf<HTMLImageElement>
+      ).map((n) => n.parentElement);
+      list.forEach((elem) => {
+        const idx = getFriendIdx(elem);
+        const info = {idx, name: getPlayerName(elem), elem};
+        friends_cache[idx] = info;
+        insertAnalyzeButton(info);
+      });
+    }
     let allSongs: BasicSongProps[];
     if (window.ratingCalcMsgListener) {
       window.removeEventListener("message", window.ratingCalcMsgListener);

@@ -27,6 +27,9 @@ export function getChartType(row: HTMLElement): ChartType {
 }
 
 export function getPlayerName(n: HTMLElement) {
+  if (n.className.includes("friend_vs_friend_block")) {
+    return (n.querySelector(".t_l") as HTMLElement)?.innerText;
+  }
   return (n.querySelector(".name_block") as HTMLElement)?.innerText;
 }
 

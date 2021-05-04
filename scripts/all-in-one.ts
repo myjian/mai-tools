@@ -21,14 +21,16 @@ import {getScriptHost} from '../js/common/script-host';
     appendScript("score-converter.js");
   } else if (path.indexOf("/maimai-mobile/record/musicDetail/") >= 0) {
     removeScrollControl(d);
-  } else if (
-    path.indexOf("/maimai-mobile/record/music") >= 0 ||
-    path.indexOf("/maimai-mobile/friend/friendGenreVs/battleStart/") >= 0 ||
-    path.indexOf("/maimai-mobile/friend/friendLevelVs/battleStart/") >= 0
-  ) {
+  } else if (path.indexOf("/maimai-mobile/record/music") >= 0) {
     appendScript("score-sort.js");
   } else if (path.indexOf("/maimai-mobile/friend/") >= 0) {
     appendScript("analyze-friend-rating-in-new-tab.js");
+    if (
+      path.indexOf("/maimai-mobile/friend/friendGenreVs/battleStart/") >= 0 ||
+      path.indexOf("/maimai-mobile/friend/friendLevelVs/battleStart/") >= 0
+    ) {
+      appendScript("score-sort.js");
+    }
   } else if (
     path.indexOf("/maimai-mobile/home/") >= 0 ||
     path.indexOf("/maimai-mobile/playerData/") >= 0
