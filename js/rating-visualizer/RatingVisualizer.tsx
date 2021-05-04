@@ -27,7 +27,9 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   constructor(props: {}) {
     super(props);
-    const gameVer = DxVersion.SPLASH;
+    const params = new URLSearchParams(location.search);
+    const gameVer =
+      parseInt(params.get("gameVer")) > DxVersion.SPLASH ? DxVersion.SPLASH_PLUS : DxVersion.SPLASH;
     const heightUnit = 8;
     const maxLv = 15;
     this.state = {
@@ -60,6 +62,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     return (
       <div className="ratingVisualizer">
         <OptionsInput
+          gameVer={gameVer}
           onChangeUnit={this.handleChangeHeightUnit}
           onSetGameVer={this.handleSetGameVer}
           onSetRange={this.handleSetRange}
@@ -128,16 +131,16 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   private getDetailLevels(startIdx: number, endIdx: number) {
     const lvs = [];
-    let currentLv = DX_LEVELS[startIdx].maxLv;
-    const minLv = DX_LEVELS[endIdx].minLv;
-    console.log(currentLv, minLv);
-    while (currentLv >= minLv) {
+    const maxLv = DX_LEVELS[endIdx].maxLv;
+    let currentLv = DX_LEVELS[startIdx].minLv;
+    console.log(currentLv, maxLv);
+    while (currentLv <= maxLv) {
       lvs.push({
         title: currentLv.toFixed(1),
         minLv: currentLv,
         maxLv: currentLv,
       });
-      currentLv -= 0.1;
+      currentLv += 0.1;
     }
     console.log(lvs);
     return lvs;
@@ -145,8 +148,8 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 
   private getLevels() {
     const {minLv, maxLv} = this.state;
-    const startIdx = getLvIndex(maxLv);
-    const endIdx = getLvIndex(minLv);
+    const startIdx = getLvIndex(minLv);
+    const endIdx = getLvIndex(maxLv);
     console.log(startIdx, endIdx);
     if (endIdx - startIdx < 2) {
       return this.getDetailLevels(startIdx, endIdx);

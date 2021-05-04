@@ -160,7 +160,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
             newSongs={newSongs}
           />
         )}
-        <OtherTools />
+        <OtherTools gameVer={gameVer} />
         <PageFooter />
       </React.Fragment>
     );
