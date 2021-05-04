@@ -101,7 +101,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   constructor(props: {}) {
     super(props);
-    const queryParams = new URLSearchParams(document.location.search);
+    const queryParams = new URLSearchParams(location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
     const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DxVersion.SPLASH;
 

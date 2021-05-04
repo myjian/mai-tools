@@ -1,8 +1,8 @@
-import {fetchPlayerGrade, getPlayerName} from "../js/common/fetch-score-util";
-import {fetchScores, SELF_SCORE_URLS} from "../js/common/fetch-self-score";
-import {LANG} from "../js/common/lang";
-import {statusText} from "../js/common/score-fetch-progress";
-import {getScriptHost} from "../js/common/script-host";
+import {fetchPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
+import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
+import {LANG} from '../js/common/lang';
+import {statusText} from '../js/common/score-fetch-progress';
+import {getScriptHost} from '../js/common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -10,7 +10,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from "../js/common/util";
+} from '../js/common/util';
 
 declare global {
   interface Window {
@@ -90,7 +90,7 @@ declare global {
   }
 
   function main() {
-    const host = document.location.host;
+    const host = location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
       handleError(UIString.pleaseLogIn);
       return;

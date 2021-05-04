@@ -61,7 +61,7 @@ import {handleError} from '../js/common/util';
   }
 
   async function fetchAllScores(onError: (msg: string) => void, onLog: (msg: string) => void) {
-    const host = document.location.host;
+    const host = location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
       onError(UIString.pleaseLogIn);
       return;

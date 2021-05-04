@@ -88,7 +88,7 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
 
   constructor(props: {}) {
     super(props);
-    const qp = new URLSearchParams(document.location.search);
+    const qp = new URLSearchParams(location.search);
     const defaultState = {
       date: formatDate(new Date()),
       track: "TRACK " + (Math.floor(Math.random() * 3) + 1),

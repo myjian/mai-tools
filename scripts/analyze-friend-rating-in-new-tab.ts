@@ -84,7 +84,7 @@ type FriendInfo = {
   }
 
   function main() {
-    const host = document.location.host;
+    const host = location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
       handleError(UIString.pleaseLogIn);
       return;
