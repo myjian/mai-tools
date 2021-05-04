@@ -24,7 +24,7 @@ export const enum MatchMode {
 
 const DX_REGEX = /\bdx\s*:\s*([0-9]+)/;
 const LV_REGEX = /\blv\s*:\s*(\[.+?\])/;
-const VERSION_REGEX = /\bv\s*:\s*([0-9]+)/;
+const VERSION_REGEX = /\bv\s*:\s*(-?[0-9]+)/;
 const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 
@@ -61,7 +61,7 @@ function parseSongProperties(line: string): SongProperties {
     return {
       dx: parseInt(dxMatch[1]) as 0 | 1,
       lv: JSON.parse(lvMatch[1]),
-      debut: parseInt(debutVerMatch[1]),
+      debut: Math.abs(parseInt(debutVerMatch[1])),
       name: fixMismatchSongName(songNameMatch[1]),
       nickname: nicknameMatch && nicknameMatch[1],
     };
