@@ -2,8 +2,8 @@ import {DIFFICULTIES, DxVersion} from './constants';
 import {getSongNickname, normalizeSongName} from './song-name-helper';
 
 export const enum ChartType {
-  STANDARD,
-  DX,
+  STANDARD = 0,
+  DX = 1,
 }
 
 export interface BasicSongProps {
@@ -29,12 +29,40 @@ const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 
 const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
+  {dx: 1, debut: 16, lv: [-2, -6, 8.7, 11.0, 12.7], name: "秒針を噛む"},
+  {dx: 1, debut: 16, lv: [-3, -6, 8.8, 12.8, 0], name: "おジャ魔女カーニバル!!"},
+  {dx: 1, debut: 15, lv: [-2, -6, 8.8, 11.8, 0], name: "町かどタンジェント"},
+  {dx: 1, debut: 16, lv: [-3, -6, 9.0, 12.9, 0], name: "KING"},
+  {dx: 1, debut: 16, lv: [-4, -7, 9.0, 12.2, 0], name: "雨とペトラ"},
+  {dx: 1, debut: 16, lv: [-3, -6, 8.8, 12.5, 0], name: "ネガティブ進化論"},
   {
-    name: "BREaK! BREaK! BREaK!",
-    lv: [-6, -8, 12.8, 14.7, 0],
-    debut: DxVersion.SPLASH,
     dx: 1,
+    debut: 16,
+    lv: [-4, -6, 9.2, 12.8, 0],
+    name: "永遠にゲームで対戦したいキリタン",
+    nickname: "キリタン",
   },
+  {dx: 1, debut: 16, lv: [-4, -7, 10.0, 13.2, 0], name: "ロストワードクロニカル"},
+  {
+    dx: 1,
+    debut: 16,
+    lv: [-3, -6, 8.8, 12.4, 0],
+    name: "今、誰が為のかがり火へ",
+    nickname: "誰が為のかがり火へ",
+  },
+  {dx: 1, debut: 16, lv: [-3, -7, 10.7, 13.1, 0], name: "Paradisoda"},
+  {dx: 1, debut: 16, lv: [-4, 7.8, 10.8, 13.8, 0], name: "Never Give Up!"},
+  {dx: 1, debut: 16, lv: [-4, 7.8, 11.0, 14.0, 0], name: "Starry Colors"},
+  {dx: 1, debut: 16, lv: [-5, -7.7, 10.0, 13.0, 0], name: "時計の国のジェミニ"},
+  {dx: 1, debut: 15, lv: [-6, -8, 12.8, 14.7, 0], name: "BREaK! BREaK! BREaK!"},
+  {
+    dx: 1,
+    debut: 15,
+    lv: [-5, -7.7, 10.7, 14.1, 0],
+    name: "ワンダーシャッフェンの法則",
+    nickname: "ワンダーシャッフェン",
+  },
+  {dx: 1, debut: 16, lv: [5, 8.2, 12.2, 14.4, 0], name: "宿星審判"},
 ];
 
 /**
@@ -71,7 +99,13 @@ function insertOrUpdateSongProps(map: Map<string, SongProperties[]>, props: Song
     map.set(props.name, []);
   }
   const arr = map.get(props.name);
-  arr.push(props);
+  const match = arr.findIndex((p) => props.dx === p.dx);
+  if (match >= 0) {
+    // replace same chart type
+    arr[match] = props;
+  } else {
+    arr.push(props);
+  }
 }
 
 export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
