@@ -10,7 +10,6 @@ export const DIFFICULTY_CLASSNAME_MAP = new Map([
 export const SSSPLUS_MIN_ACHIEVEMENT = 100.5;
 
 export enum DxVersion {
-  PLUS = 14,
   SPLASH = 15,
   SPLASH_PLUS = 16,
 }

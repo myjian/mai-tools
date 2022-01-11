@@ -29,8 +29,10 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     super(props);
     const params = new URLSearchParams(location.search);
     const gameVer =
-      parseInt(params.get("gameVer")) > DxVersion.SPLASH ? DxVersion.SPLASH_PLUS : DxVersion.SPLASH;
-    const heightUnit = 8;
+      parseInt(params.get("gameVer")) === DxVersion.SPLASH
+        ? DxVersion.SPLASH
+        : DxVersion.SPLASH_PLUS;
+    const heightUnit = 5;
     const maxLv = 15;
     this.state = {
       gameVer,
@@ -45,15 +47,8 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
   }
 
   render() {
-    const {
-      gameVer,
-      heightUnit,
-      maxRating,
-      axisLabelStep,
-      highlightInterval,
-      minLv,
-      maxLv,
-    } = this.state;
+    const {gameVer, heightUnit, maxRating, axisLabelStep, highlightInterval, minLv, maxLv} =
+      this.state;
     const levels = this.getLevels();
     // Only include SSS+ - A
     const ranks = getRankDefinitions(gameVer).slice(0, 9);
@@ -62,6 +57,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     return (
       <div className="ratingVisualizer">
         <OptionsInput
+          heightUnit={heightUnit}
           gameVer={gameVer}
           onChangeUnit={this.handleChangeHeightUnit}
           onSetGameVer={this.handleSetGameVer}

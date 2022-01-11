@@ -3,10 +3,8 @@ import React from 'react';
 import {DxVersion} from '../../common/constants';
 import {UIString} from '../i18n';
 
-function getMapDistanceCalcLink(gameVer: DxVersion) {
-  return gameVer > DxVersion.PLUS
-    ? "https://renawevin.weebly.com/rw-maimaidxsplash-chiho-calculate.html"
-    : "https://renawevin.weebly.com/rw-maimaidx-chiho-calculate.html";
+function getMapDistanceCalcLink() {
+  return "https://renawevin.weebly.com/rw-maimaidxsplash-chiho-calculate.html";
 }
 
 interface Props {
@@ -19,6 +17,7 @@ export class OtherTools extends React.PureComponent<Props> {
     const visualizerLink = `../rating-visualizer/?gameVer=${gameVer}`;
     return (
       <div className="otherToolsContainer">
+        <hr className="sectionSep" />
         <h2 className="otherToolsHeading">{UIString.otherToolsHeading}</h2>
         <ul>
           <li className="toolItem">
@@ -42,12 +41,11 @@ export class OtherTools extends React.PureComponent<Props> {
             </a>
           </li>
           <li className="toolItem">
-            <a href={getMapDistanceCalcLink(gameVer)} target="_blank">
+            <a href={getMapDistanceCalcLink()} target="_blank">
               {UIString.mapDistanceCalc}
             </a>
           </li>
         </ul>
-        <hr className="sectionSep" />
       </div>
     );
   }

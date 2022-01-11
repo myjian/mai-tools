@@ -8,7 +8,7 @@ import {
   MatchMode,
   SongProperties,
 } from '../../common/song-props';
-import {readFromCache, writeToCache} from '../cache';
+import {deleteFromCache, readFromCache, writeToCache} from '../cache';
 import {UIString} from '../i18n';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
@@ -26,8 +26,6 @@ const CACHE_KEY_DX_SPLASH_INNER_LEVEL = "dxSplashInnerLv";
 
 function getInternalLvCacheKey(gameVer: DxVersion) {
   switch (gameVer) {
-    case DxVersion.PLUS:
-      return CACHE_KEY_DX_PLUS_INNER_LEVEL;
     case DxVersion.SPLASH:
       return CACHE_KEY_DX_SPLASH_INNER_LEVEL;
     case DxVersion.SPLASH_PLUS:
@@ -54,6 +52,8 @@ function readSongProperties(
       resolve(buildSongPropsMap(inputText));
       return;
     }
+    // Cleanup old data
+    deleteFromCache(CACHE_KEY_DX_PLUS_INNER_LEVEL);
     // Read from cache
     const cacheKey = getInternalLvCacheKey(gameVer);
     const cachedInternalLv = readFromCache(cacheKey);
@@ -103,7 +103,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
-    const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DxVersion.SPLASH;
+    const gameVer = dxVersionQueryParam ? parseInt(dxVersionQueryParam) : DxVersion.SPLASH_PLUS;
 
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");
@@ -128,15 +128,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {
-      gameRegion,
-      gameVer,
-      playerName,
-      ratingData,
-      songPropsByName,
-      oldSongs,
-      newSongs,
-    } = this.state;
+    const {gameRegion, gameVer, playerName, ratingData, songPropsByName, oldSongs, newSongs} =
+      this.state;
     return (
       <React.Fragment>
         <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
@@ -160,8 +153,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
             newSongs={newSongs}
           />
         )}
-        <OtherTools gameVer={gameVer} />
         <PageFooter />
+        <OtherTools gameVer={gameVer} />
       </React.Fragment>
     );
   }
@@ -210,7 +203,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         switch (evt.data.action) {
           case "gameVersion":
             payloadAsInt = parseInt(evt.data.payload);
-            if (payloadAsInt >= DxVersion.PLUS && payloadAsInt <= DxVersion.SPLASH_PLUS) {
+            if (payloadAsInt >= DxVersion.SPLASH && payloadAsInt <= DxVersion.SPLASH_PLUS) {
               this.setState({
                 gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
                 gameVer: payloadAsInt,

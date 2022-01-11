@@ -16,9 +16,6 @@ export class VersionSelect extends React.PureComponent<Props> {
       <label>
         {UIString.gameVer}
         <select className="gameVersion" onChange={this.handleChange}>
-          <option value="14" selected={ver === "14"}>
-            DX Plus
-          </option>
           <option value="15" selected={ver === "15"}>
             DX Splash
           </option>
