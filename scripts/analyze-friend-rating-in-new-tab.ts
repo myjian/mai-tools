@@ -1,9 +1,9 @@
-import {fetchFriendScores, FRIEND_SCORE_URLS} from '../js/common/fetch-friend-score';
-import {getPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
-import {LANG} from '../js/common/lang';
-import {statusText} from '../js/common/score-fetch-progress';
-import {getScriptHost} from '../js/common/script-host';
-import {BasicSongProps} from '../js/common/song-props';
+import {fetchFriendScores, FRIEND_SCORE_URLS} from '../src/common/fetch-friend-score';
+import {getPlayerGrade, getPlayerName} from '../src/common/fetch-score-util';
+import {LANG} from '../src/common/lang';
+import {statusText} from '../src/common/score-fetch-progress';
+import {getScriptHost} from '../src/common/script-host';
+import {BasicSongProps} from '../src/common/song-props';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -11,7 +11,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from '../js/common/util';
+} from '../src/common/util';
 
 declare global {
   interface Window {

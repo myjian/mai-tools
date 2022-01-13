@@ -1,7 +1,7 @@
-import {DIFFICULTY_CLASSNAME_MAP} from '../js/common/constants';
-import {LANG} from '../js/common/lang';
-import {removeScrollControl} from '../js/common/net-helpers';
-import {getScriptHost} from '../js/common/script-host';
+import {DIFFICULTY_CLASSNAME_MAP} from '../src/common/constants';
+import {LANG} from '../src/common/lang';
+import {removeScrollControl} from '../src/common/net-helpers';
+import {getScriptHost} from '../src/common/script-host';
 
 type ScoreRecord = {
   date: Date;
@@ -135,9 +135,9 @@ declare var domtoimage: any;
     const cn = recordBody.className;
     let diff = cn.substring(cn.indexOf("_") + 1, cn.lastIndexOf("_"));
     diff = diff === "remaster" ? "Re:MASTER" : diff.toUpperCase();
-    const isDxChart = (row.querySelector(
-      ".playlog_music_kind_icon"
-    ) as HTMLImageElement).src.endsWith("music_dx.png");
+    const isDxChart = (
+      row.querySelector(".playlog_music_kind_icon") as HTMLImageElement
+    ).src.endsWith("music_dx.png");
     return isDxChart ? "DX " + diff : diff;
   }
 

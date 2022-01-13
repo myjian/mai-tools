@@ -1,8 +1,8 @@
-import {getPlayerGrade, getPlayerName} from '../js/common/fetch-score-util';
-import {fetchScores, SELF_SCORE_URLS} from '../js/common/fetch-self-score';
-import {LANG} from '../js/common/lang';
-import {statusText} from '../js/common/score-fetch-progress';
-import {getScriptHost} from '../js/common/script-host';
+import {getPlayerGrade, getPlayerName} from '../src/common/fetch-score-util';
+import {fetchScores, SELF_SCORE_URLS} from '../src/common/fetch-self-score';
+import {LANG} from '../src/common/lang';
+import {statusText} from '../src/common/score-fetch-progress';
+import {getScriptHost} from '../src/common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -10,7 +10,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from '../js/common/util';
+} from '../src/common/util';
 
 declare global {
   interface Window {

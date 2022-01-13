@@ -1,6 +1,6 @@
-import {removeScrollControl} from '../js/common/net-helpers';
-import {getScriptHost} from '../js/common/script-host';
-import {ALLOWED_ORIGINS} from '../js/common/util';
+import {removeScrollControl} from '../src/common/net-helpers';
+import {getScriptHost} from '../src/common/script-host';
+import {ALLOWED_ORIGINS} from '../src/common/util';
 
 (function (d) {
   const BASE_NEWTAB_URL = getScriptHost("score-converter") + "/classic-layout/";
@@ -94,15 +94,15 @@ import {ALLOWED_ORIGINS} from '../js/common/util';
   }
 
   function getTrack(e: HTMLElement) {
-    return (e.querySelector(
-      ".playlog_top_container .sub_title .f_b"
-    ) as HTMLElement).innerText.replace("0", "");
+    return (
+      e.querySelector(".playlog_top_container .sub_title .f_b") as HTMLElement
+    ).innerText.replace("0", "");
   }
 
   function getPlayDate(e: HTMLElement) {
-    const jpDtText = (e.querySelector(
-      ".playlog_top_container .sub_title span:last-child"
-    ) as HTMLElement).innerText;
+    const jpDtText = (
+      e.querySelector(".playlog_top_container .sub_title span:last-child") as HTMLElement
+    ).innerText;
     const m = jpDtText.match(/(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/);
     const jpDt = new Date(
       parseInt(m[1]),
@@ -151,9 +151,9 @@ import {ALLOWED_ORIGINS} from '../js/common/util';
   }
 
   function getApFcImage(e: HTMLElement) {
-    const src = (e.querySelector(
-      ".playlog_result_innerblock > img:nth-child(2)"
-    ) as HTMLImageElement).src.replace(/\?ver=.*$/, "");
+    const src = (
+      e.querySelector(".playlog_result_innerblock > img:nth-child(2)") as HTMLImageElement
+    ).src.replace(/\?ver=.*$/, "");
     const title = src.substring(src.lastIndexOf("/") + 1, src.lastIndexOf("."));
     if (title === "fc_dummy") {
       return Promise.resolve(null);
@@ -166,9 +166,9 @@ import {ALLOWED_ORIGINS} from '../js/common/util';
   }
 
   function getSyncResult(e: HTMLElement) {
-    const src = (e.querySelector(
-      ".playlog_result_innerblock > img:nth-child(3)"
-    ) as HTMLImageElement).src;
+    const src = (
+      e.querySelector(".playlog_result_innerblock > img:nth-child(3)") as HTMLImageElement
+    ).src;
     const title = src.substring(src.lastIndexOf("/") + 1, src.lastIndexOf("."));
     switch (title) {
       case "fs":

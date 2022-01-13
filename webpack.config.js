@@ -11,11 +11,11 @@ fs.readdirSync(SCRIPTS_DIR)
 module.exports = (env) => ({
   mode: env.development ? "development" : "production",
   entry: {
-    bookmarklets: "./js/bookmarklets/main.tsx",
-    "classic-layout": "./js/classic-layout/main.tsx",
-    "dx-achievement": "./js/dx-achievement/main.tsx",
-    "rating-calculator": "./js/rating-calculator/main.ts",
-    "rating-visualizer": "./js/rating-visualizer/main.tsx",
+    bookmarklets: "./src/bookmarklets/main.tsx",
+    "classic-layout": "./src/classic-layout/main.tsx",
+    "dx-achievement": "./src/dx-achievement/main.tsx",
+    "rating-calculator": "./src/rating-calculator/main.ts",
+    "rating-visualizer": "./src/rating-visualizer/main.tsx",
     ...scriptEntryPoints,
   },
   output: {

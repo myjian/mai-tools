@@ -1,17 +1,17 @@
-import {DIFFICULTIES} from '../js/common/constants';
-import {getChartDifficulty, getChartType, getSongName} from '../js/common/fetch-score-util';
-import {SELF_SCORE_URLS} from '../js/common/fetch-self-score';
-import {LANG} from '../js/common/lang';
-import {getDefaultLevel} from '../js/common/level-helper';
-import {iWantSomeMagic} from '../js/common/magic';
-import {getSongIdx, isNicoNicoLink} from '../js/common/song-name-helper';
+import {DIFFICULTIES} from '../src/common/constants';
+import {getChartDifficulty, getChartType, getSongName} from '../src/common/fetch-score-util';
+import {SELF_SCORE_URLS} from '../src/common/fetch-self-score';
+import {LANG} from '../src/common/lang';
+import {getDefaultLevel} from '../src/common/level-helper';
+import {iWantSomeMagic} from '../src/common/magic';
+import {getSongIdx, isNicoNicoLink} from '../src/common/song-name-helper';
 import {
   buildSongPropsMap,
   ChartType,
   getSongProperties,
   SongProperties,
-} from '../js/common/song-props';
-import {fetchGameVersion, fetchPage} from '../js/common/util';
+} from '../src/common/song-props';
+import {fetchGameVersion, fetchPage} from '../src/common/util';
 
 enum SortBy {
   None = "None",
