@@ -1,12 +1,15 @@
 const path = require("path");
 const fs = require("fs");
 
-const SCRIPTS_DIR = "./scripts";
+const SCRIPTS_INPUT_DIR = "./src/scripts";
+const SCRIPTS_OUTPUT_DIR = "./scripts";
 
 const scriptEntryPoints = {};
-fs.readdirSync(SCRIPTS_DIR)
+fs.readdirSync(SCRIPTS_INPUT_DIR)
   .filter((f) => f.endsWith(".ts"))
-  .forEach((f) => (scriptEntryPoints[f.replace(".ts", "")] = "./" + path.join(SCRIPTS_DIR, f)));
+  .forEach(
+    (f) => (scriptEntryPoints[path.basename(f, ".ts")] = "./" + path.join(SCRIPTS_INPUT_DIR, f))
+  );
 
 module.exports = (env) => ({
   mode: env.development ? "development" : "production",
@@ -23,7 +26,7 @@ module.exports = (env) => ({
     filename: (pathData) => {
       const chunkName = pathData.chunk.name;
       if (scriptEntryPoints[chunkName]) {
-        return path.join(SCRIPTS_DIR, chunkName + ".js");
+        return path.join(SCRIPTS_OUTPUT_DIR, chunkName + ".js");
       }
       return chunkName + "/main.bundle.js";
     },

@@ -1,7 +1,7 @@
-import {fetchScores, SELF_SCORE_URLS} from '../src/common/fetch-self-score';
-import {LANG} from '../src/common/lang';
-import {statusText} from '../src/common/score-fetch-progress';
-import {handleError} from '../src/common/util';
+import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {LANG} from '../common/lang';
+import {statusText} from '../common/score-fetch-progress';
+import {handleError} from '../common/util';
 
 (function () {
   const UIString = {

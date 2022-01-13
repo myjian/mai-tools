@@ -1,6 +1,6 @@
-import {removeScrollControl} from '../src/common/net-helpers';
-import {getScriptHost} from '../src/common/script-host';
-import {ALLOWED_ORIGINS} from '../src/common/util';
+import {removeScrollControl} from '../common/net-helpers';
+import {getScriptHost} from '../common/script-host';
+import {ALLOWED_ORIGINS} from '../common/util';
 
 (function (d) {
   const BASE_NEWTAB_URL = getScriptHost("score-converter") + "/classic-layout/";

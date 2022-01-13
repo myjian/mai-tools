@@ -1,5 +1,5 @@
-import {removeScrollControl} from '../src/common/net-helpers';
-import {getScriptHost} from '../src/common/script-host';
+import {removeScrollControl} from '../common/net-helpers';
+import {getScriptHost} from '../common/script-host';
 
 (function (d) {
   const SCRIPT_HOST = getScriptHost("all-in-one") + "/scripts/";

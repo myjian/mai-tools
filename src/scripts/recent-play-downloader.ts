@@ -1,7 +1,7 @@
-import {DIFFICULTY_CLASSNAME_MAP} from '../src/common/constants';
-import {LANG} from '../src/common/lang';
-import {removeScrollControl} from '../src/common/net-helpers';
-import {getScriptHost} from '../src/common/script-host';
+import {DIFFICULTY_CLASSNAME_MAP} from '../common/constants';
+import {LANG} from '../common/lang';
+import {removeScrollControl} from '../common/net-helpers';
+import {getScriptHost} from '../common/script-host';
 
 type ScoreRecord = {
   date: Date;

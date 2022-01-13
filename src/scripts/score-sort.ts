@@ -1,17 +1,17 @@
-import {DIFFICULTIES} from '../src/common/constants';
-import {getChartDifficulty, getChartType, getSongName} from '../src/common/fetch-score-util';
-import {SELF_SCORE_URLS} from '../src/common/fetch-self-score';
-import {LANG} from '../src/common/lang';
-import {getDefaultLevel} from '../src/common/level-helper';
-import {iWantSomeMagic} from '../src/common/magic';
-import {getSongIdx, isNicoNicoLink} from '../src/common/song-name-helper';
+import {DIFFICULTIES} from '../common/constants';
+import {getChartDifficulty, getChartType, getSongName} from '../common/fetch-score-util';
+import {SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {LANG} from '../common/lang';
+import {getDefaultLevel} from '../common/level-helper';
+import {iWantSomeMagic} from '../common/magic';
+import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
 import {
   buildSongPropsMap,
   ChartType,
   getSongProperties,
   SongProperties,
-} from '../src/common/song-props';
-import {fetchGameVersion, fetchPage} from '../src/common/util';
+} from '../common/song-props';
+import {fetchGameVersion, fetchPage} from '../common/util';
 
 enum SortBy {
   None = "None",

@@ -3,9 +3,9 @@ import {
   getChartLevel,
   getChartType,
   getSongName,
-} from '../src/common/fetch-score-util';
-import {getSongIdx, isNicoNicoLink} from '../src/common/song-name-helper';
-import {ChartType} from '../src/common/song-props';
+} from '../common/fetch-score-util';
+import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
+import {ChartType} from '../common/song-props';
 
 async function buildSongDb() {
   const rows = Array.from(document.querySelectorAll(".w_450.m_15.f_0") as NodeListOf<HTMLElement>);
