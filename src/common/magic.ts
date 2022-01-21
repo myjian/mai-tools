@@ -15,9 +15,20 @@ const MAGIC_SAUCE_SPLASH_PLUS = [
   47, 107, 116,
 ];
 
+const MAGIC_SAUCE_UNIVERSE = [
+  105, 117, 117, 113, 116, 59, 48, 48, 116, 104, 106, 110, 102, 115, 98, 47, 104, 106, 117, 105,
+  118, 99, 47, 106, 112, 48, 110, 98, 106, 96, 83, 98, 117, 106, 111, 104, 66, 111, 98, 109, 122,
+  123, 102, 115, 48, 116, 100, 115, 106, 113, 117, 116, 96, 110, 98, 106, 110, 98, 106, 48, 110, 98,
+  106, 101, 121, 96, 106, 111, 96, 109, 119, 96, 118, 111, 106, 119, 102, 115, 116, 102, 47, 107,
+  116,
+];
+
 export async function iWantSomeMagic(gameVer: DxVersion): Promise<string> {
-  let sauce = MAGIC_SAUCE_SPLASH;
+  let sauce = MAGIC_SAUCE_UNIVERSE;
   switch (gameVer) {
+    case DxVersion.SPLASH:
+      sauce = MAGIC_SAUCE_SPLASH;
+      break;
     case DxVersion.SPLASH_PLUS:
       sauce = MAGIC_SAUCE_SPLASH_PLUS;
       break;

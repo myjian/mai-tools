@@ -1,3 +1,4 @@
+import {DxVersion} from '../common/constants';
 import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {LANG} from '../common/lang';
@@ -87,9 +88,6 @@ type FriendInfo = {
     friend: FriendInfo,
     send: (action: string, payload: string) => void
   ) {
-    // Fetch DX version
-    const gameVer = await fetchGameVersion(document.body);
-    send("gameVersion", gameVer);
     // Send player grade
     if (friend.grade) {
       send("playerGrade", friend.grade);
@@ -149,20 +147,31 @@ type FriendInfo = {
       });
     }
     let allSongs: BasicSongProps[];
+    // Fetch DX version
+    const gameVerPromise = fetchGameVersion(document.body);
     if (window.ratingCalcMsgListener) {
       window.removeEventListener("message", window.ratingCalcMsgListener);
     }
-    window.ratingCalcMsgListener = (evt) => {
+    window.ratingCalcMsgListener = async (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
+
         if (evt.data.action === "getFriendRecords") {
+          send("gameVersion", await gameVerPromise);
           const friend = friends_cache[evt.data.payload];
           if (friend) {
             fetchFriendRecords(friend, send);
           }
         } else if (evt.data.action === "fetchNewSongs") {
-          fetchNewSongs(evt.data.payload).then((songs) => send("newSongs", songs));
+          const gameVer = await gameVerPromise;
+          const ver = evt.data.payload as DxVersion;
+          if (gameVer < ver) {
+            // Current gameVer is older than the requested version.
+            send("newSongs", []);
+          } else {
+            fetchNewSongs(ver).then((songs) => send("newSongs", songs));
+          }
         } else if (evt.data.action === "fetchAllSongs") {
           if (allSongs) {
             send("allSongs", allSongs);

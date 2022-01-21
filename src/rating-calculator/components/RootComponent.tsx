@@ -5,10 +5,11 @@ import {iWantSomeMagic} from '../../common/magic';
 import {
   buildSongPropsMap,
   filterSongsByVersion,
+  getSongsByVersion,
   MatchMode,
   SongProperties,
 } from '../../common/song-props';
-import {deleteFromCache, readFromCache, writeToCache} from '../cache';
+import {readFromCache, writeToCache} from '../cache';
 import {UIString} from '../i18n';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
@@ -19,21 +20,6 @@ import {PageFooter} from './PageFooter';
 import {RatingOutput} from './RatingOutput';
 import {ScoreInput} from './ScoreInput';
 import {VersionSelect} from './VersionSelect';
-
-const CACHE_KEY_DX_INNER_LEVEL = "dxInnerLv";
-const CACHE_KEY_DX_PLUS_INNER_LEVEL = "dxPlusInnerLv";
-const CACHE_KEY_DX_SPLASH_INNER_LEVEL = "dxSplashInnerLv";
-
-function getInternalLvCacheKey(gameVer: DxVersion) {
-  switch (gameVer) {
-    case DxVersion.SPLASH:
-      return CACHE_KEY_DX_SPLASH_INNER_LEVEL;
-    case DxVersion.SPLASH_PLUS:
-      return CACHE_KEY_DX_INNER_LEVEL;
-    default:
-      return CACHE_KEY_DX_INNER_LEVEL;
-  }
-}
 
 function getDebugText({action, payload}: {action: string; payload: number | string}) {
   if (action === "appendPlayerScore") {
@@ -52,19 +38,16 @@ function readSongProperties(
       resolve(buildSongPropsMap(inputText));
       return;
     }
-    // Cleanup old data
-    deleteFromCache(CACHE_KEY_DX_PLUS_INNER_LEVEL);
     // Read from cache
-    const cacheKey = getInternalLvCacheKey(gameVer);
-    const cachedInternalLv = readFromCache(cacheKey);
-    if (cachedInternalLv) {
-      resolve(buildSongPropsMap(cachedInternalLv));
+    const cachedGameData = readFromCache(gameVer);
+    if (cachedGameData) {
+      resolve(buildSongPropsMap(cachedGameData));
       return;
     }
     // Read from Internet
     console.log("Magic happening...");
     iWantSomeMagic(gameVer).then((responseText) => {
-      writeToCache(cacheKey, responseText);
+      writeToCache(gameVer, responseText);
       resolve(buildSongPropsMap(responseText));
     });
   });
@@ -203,7 +186,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         switch (evt.data.action) {
           case "gameVersion":
             payloadAsInt = parseInt(evt.data.payload);
-            if (payloadAsInt >= DxVersion.SPLASH && payloadAsInt <= DxVersion.SPLASH_PLUS) {
+            if (payloadAsInt >= DxVersion.SPLASH && payloadAsInt <= DxVersion.UNIVERSE) {
               this.setState({
                 gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
                 gameVer: payloadAsInt,
@@ -236,14 +219,20 @@ export class RootComponent extends React.PureComponent<{}, State> {
             });
             break;
           case "newSongs":
-            this.setState({
-              newSongs: filterSongsByVersion(
-                evt.data.payload,
-                this.state.songPropsByName,
-                this.state.gameVer,
-                MatchMode.EQUAL
-              ),
-            });
+            if (evt.data.payload.length) {
+              this.setState({
+                newSongs: filterSongsByVersion(
+                  evt.data.payload,
+                  this.state.songPropsByName,
+                  this.state.gameVer,
+                  MatchMode.EQUAL
+                ),
+              });
+            } else {
+              this.setState({
+                newSongs: getSongsByVersion(this.state.songPropsByName, this.state.gameVer),
+              });
+            }
             break;
         }
       }

@@ -21,13 +21,12 @@ export async function fetchPage(url: string) {
   return parser.parseFromString(html, "text/html");
 }
 
-/** Returns "13" if version is DX, "14" if version is DX Plus. */
-export async function fetchGameVersion(dom: Document | HTMLElement): Promise<string> {
+export async function fetchGameVersion(dom: Document | HTMLElement): Promise<DxVersion> {
   const gameVer = dom.querySelector(
     "select[name=version] option:last-of-type"
   ) as HTMLOptionElement;
   if (gameVer) {
-    return gameVer.value;
+    return parseInt(gameVer.value) as DxVersion;
   }
   dom = await fetchPage("/maimai-mobile/record/musicVersion/");
   return fetchGameVersion(dom);

@@ -602,7 +602,7 @@ type Cache = {
   }
 
   async function fetchAndAddInternalLvSort() {
-    const gameVer = parseInt(await fetchGameVersion(d.body));
+    const gameVer = await fetchGameVersion(d.body);
     const songProps = buildSongPropsMap(await iWantSomeMagic(gameVer));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {

@@ -22,6 +22,9 @@ export class VersionSelect extends React.PureComponent<Props> {
           <option value="16" selected={ver === "16"}>
             DX Splash PLUS
           </option>
+          <option value="17" selected={ver === "17"}>
+            DX UNiVERSE
+          </option>
         </select>
       </label>
     );

@@ -192,3 +192,18 @@ export function filterSongsByVersion(
   }
   return fullProps;
 }
+
+export function getSongsByVersion(
+  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  gameVer: DxVersion
+): SongProperties[] {
+  const fullProps: SongProperties[] = [];
+  songPropsByName.forEach((props) =>
+    props.forEach((p) => {
+      if (p.debut === gameVer) {
+        fullProps.push(p);
+      }
+    })
+  );
+  return fullProps;
+}

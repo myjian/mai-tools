@@ -1,3 +1,4 @@
+import {DxVersion} from '../common/constants';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {LANG} from '../common/lang';
@@ -35,9 +36,6 @@ declare global {
 
   async function fetchSelfRecords(send: (action: string, payload: any) => void): Promise<Document> {
     let allSongsDom: Document;
-    // Fetch DX version
-    const gameVer = await fetchGameVersion(document.body);
-    send("gameVersion", gameVer);
     // Fetch player grade
     const playerGrade = isOnFriendPage ? null : getPlayerGrade(document.body);
     if (playerGrade) {
@@ -105,18 +103,28 @@ declare global {
     } else {
       window.open(url, "selfRating");
     }
+    const gameVerPromise = fetchGameVersion(document.body);
     let allSongsDom: Promise<Document>;
     if (window.ratingCalcMsgListener) {
       window.removeEventListener("message", window.ratingCalcMsgListener);
     }
-    window.ratingCalcMsgListener = (evt) => {
+    window.ratingCalcMsgListener = async (evt) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
         if (evt.data === "ready") {
+          // Fetch DX version
+          send("gameVersion", await gameVerPromise);
           allSongsDom = fetchSelfRecords(send);
         } else if (evt.data.action === "fetchNewSongs") {
-          fetchNewSongs(evt.data.payload).then((songs) => send("newSongs", songs));
+          const gameVer = await gameVerPromise;
+          const ver = evt.data.payload as DxVersion;
+          if (gameVer < ver) {
+            // Current gameVer is older than the requested version.
+            send("newSongs", []);
+          } else {
+            fetchNewSongs(ver).then((songs) => send("newSongs", songs));
+          }
         } else if (evt.data.action === "fetchAllSongs") {
           allSongsDom.then((dom) => fetchAllSongs(dom).then((songs) => send("allSongs", songs)));
         }
