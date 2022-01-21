@@ -32,7 +32,7 @@ export class OtherTools extends React.PureComponent<Props> {
           </li>
           <li className="toolItem">
             <a href="https://maimai-songs.zetaraku.dev/" target="_blank">
-              maimai-songs
+              maimai-songs by Raku Zeta
             </a>
           </li>
           <li className="toolItem">
