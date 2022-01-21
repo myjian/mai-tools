@@ -11,12 +11,14 @@ export class ScoreInput extends React.PureComponent {
         <h2 className="scoreInputHeading">{UIString.scoreInputHeading}</h2>
         <div>
           {UIString.scoreInputDescPrefix}
-          <a href="/mai-tools/bookmarklets/" target="_blank">{UIString.bookmarketLinkLabel}</a>
+          <a href="/mai-tools/bookmarklets/" target="_blank">
+            {UIString.bookmarketLinkLabel}
+          </a>
           {UIString.scoreInputDescSuffix}
         </div>
         <textarea className="scoreInputArea" ref={this.textareaRef}></textarea>
       </div>
-    )
+    );
   }
 
   getInput(): string {
@@ -34,7 +36,7 @@ export class ScoreInput extends React.PureComponent {
 
   appendText(text: string): void {
     if (this.textareaRef.current) {
-      this.textareaRef.current.value += text + "\n";
+      this.textareaRef.current.value += text;
     }
   }
 }
