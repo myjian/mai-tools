@@ -152,7 +152,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
     const songPropsText = this.lvInput.current ? this.lvInput.current.getInput() : "";
     const scoreText = this.scoreInput.current ? this.scoreInput.current.getInput() : "";
-    const {gameVer} = this.state;
+    const {gameVer, gameRegion} = this.state;
     console.log("gameVer", gameVer);
     const songPropsByName = await readSongProperties(gameVer, songPropsText);
     console.log("Song properties:", songPropsByName);
@@ -162,7 +162,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
       this.setState({ratingData: undefined});
       return;
     }
-    const ratingData = await analyzePlayerRating(songPropsByName, playerScores, gameVer);
+    const ratingData = await analyzePlayerRating(
+      songPropsByName,
+      playerScores,
+      gameVer,
+      gameRegion
+    );
     console.log("Rating Data:", ratingData);
     this.setState({ratingData, songPropsByName});
   };

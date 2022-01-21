@@ -2,7 +2,8 @@ import {DIFFICULTIES, DxVersion, SSSPLUS_MIN_ACHIEVEMENT} from '../common/consta
 import {getRankByAchievement} from '../common/rank-functions';
 import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
-import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
+import {getRemovedSongsByVersion} from './removed-songs';
+import {ChartRecord, ChartRecordWithRating, GameRegion, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 25;
@@ -52,11 +53,16 @@ export function analyzeSongRating(
 export async function analyzePlayerRating(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   playerScores: ReadonlyArray<ChartRecord>,
-  gameVer: DxVersion
+  gameVer: DxVersion,
+  gameRegion: GameRegion
 ): Promise<RatingData> {
   const newChartRecords = [];
   const oldChartRecords = [];
+  const removedSongs = getRemovedSongsByVersion(gameVer, gameRegion);
   for (const record of playerScores) {
+    if (removedSongs.includes(record.songName)) {
+      continue;
+    }
     const songProps = getSongProperties(
       songPropsByName,
       record.songName,

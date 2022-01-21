@@ -103,8 +103,6 @@ export function getNotPlayedCharts(
   const easiestLv = (minRating * 100) / (maxRank.factor * maxRank.minAchv);
   const candidates: ChartRecordWithRating[] = [];
   const shuffledSongList = shuffleArray(songList);
-  console.log(`rating range is ${minRating} - ${maxRating}`);
-  console.log(`lv limited to ${easiestLv} - ${hardestLv}`);
   for (const s of shuffledSongList) {
     // index 1 means ADVANCED (skip BASIC)
     for (let index = 1; index < s.lv.length; index++) {
