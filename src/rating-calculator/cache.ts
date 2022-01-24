@@ -1,4 +1,4 @@
-import {DxVersion} from '../common/constants';
+import {DxVersion} from "../common/game-version";
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 1 day
 

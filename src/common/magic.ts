@@ -1,4 +1,4 @@
-import {DxVersion} from './constants';
+import {DxVersion} from "./game-version";
 
 const MAGIC_SAUCE_SPLASH = [
   105, 117, 117, 113, 116, 59, 48, 48, 116, 104, 106, 110, 102, 115, 98, 47, 104, 106, 117, 105,

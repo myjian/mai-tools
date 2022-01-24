@@ -1,8 +1,8 @@
-import {DxVersion} from './constants';
-import {getChartType, getSongName} from './fetch-score-util';
-import {SELF_SCORE_URLS} from './fetch-self-score';
-import {getSongIdx, isNicoNicoLink} from './song-name-helper';
-import {BasicSongProps} from './song-props';
+import {getChartType, getSongName} from "./fetch-score-util";
+import {SELF_SCORE_URLS} from "./fetch-self-score";
+import {DxVersion} from "./game-version";
+import {getSongIdx, isNicoNicoLink} from "./song-name-helper";
+import {BasicSongProps} from "./song-props";
 
 export const ALLOWED_ORIGINS = [
   "https://cdpn.io",

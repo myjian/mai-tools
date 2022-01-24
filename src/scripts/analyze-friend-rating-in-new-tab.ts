@@ -1,10 +1,10 @@
-import {DxVersion} from '../common/constants';
-import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
-import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
-import {LANG} from '../common/lang';
-import {statusText} from '../common/score-fetch-progress';
-import {getScriptHost} from '../common/script-host';
-import {BasicSongProps} from '../common/song-props';
+import {fetchFriendScores, FRIEND_SCORE_URLS} from "../common/fetch-friend-score";
+import {getPlayerGrade, getPlayerName} from "../common/fetch-score-util";
+import {DxVersion} from "../common/game-version";
+import {LANG} from "../common/lang";
+import {statusText} from "../common/score-fetch-progress";
+import {getScriptHost} from "../common/script-host";
+import {BasicSongProps} from "../common/song-props";
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -12,7 +12,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from '../common/util';
+} from "../common/util";
 
 declare global {
   interface Window {

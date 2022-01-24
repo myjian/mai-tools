@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {roundFloat} from '../../common/number-helper';
-import {getRankDefinitions, RankDef} from '../../common/rank-functions';
-import {UIString} from '../i18n';
-import {GameRegion} from '../types';
-import {RecommendedLevelCell} from './RecommendedLevelCell';
+import {DxVersion} from "../../common/game-version";
+import {roundFloat} from "../../common/number-helper";
+import {getRankDefinitions, RankDef} from "../../common/rank-functions";
+import {UIString} from "../i18n";
+import {GameRegion} from "../types";
+import {RecommendedLevelCell} from "./RecommendedLevelCell";
 
 const MIN_RANK = "SS";
 const MAX_LV = 15;

@@ -1,5 +1,5 @@
-import {DxVersion} from '../common/constants';
-import {GameRegion} from './types';
+import {DxVersion} from "../common/game-version";
+import {GameRegion} from "./types";
 
 export function getRemovedSongsByVersion(gameVer: DxVersion, gameRegion: GameRegion): string[] {
   if (gameRegion === GameRegion.Intl && gameVer === DxVersion.UNIVERSE) {

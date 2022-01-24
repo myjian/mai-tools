@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {UIString} from '../i18n';
+import {DxVersion} from "../../common/game-version";
+import {UIString} from "../i18n";
 
 interface Props {
   handleVersionSelect: (ver: DxVersion) => void;

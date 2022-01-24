@@ -1,4 +1,4 @@
-import {DxVersion} from '../common/constants';
+import {DxVersion} from "../common/game-version";
 
 const GRADES_DX = [
   {title: "", bonus: 0},

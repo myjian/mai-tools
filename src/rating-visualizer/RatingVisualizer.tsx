@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../common/constants';
-import {getRankDefinitions} from '../common/rank-functions';
-import {IntervalLines} from './IntervalLines';
-import {DX_LEVELS, getLvIndex} from './levels';
-import {LvRatingContainer} from './LvRatingContainer';
-import {MultiplierTable} from './MultiplierTable';
-import {OptionsInput} from './OptionsInput';
-import {RatingAxis} from './RatingAxis';
-import {RatingTable} from './RatingTable';
+import {DxVersion} from "../common/game-version";
+import {getRankDefinitions} from "../common/rank-functions";
+import {IntervalLines} from "./IntervalLines";
+import {DX_LEVELS, getLvIndex} from "./levels";
+import {LvRatingContainer} from "./LvRatingContainer";
+import {MultiplierTable} from "./MultiplierTable";
+import {OptionsInput} from "./OptionsInput";
+import {RatingAxis} from "./RatingAxis";
+import {RatingTable} from "./RatingTable";
 
 interface RatingVisualizerState {
   gameVer: DxVersion;

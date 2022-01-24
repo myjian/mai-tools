@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../common/constants';
-import {LANG} from '../common/lang';
-import {getRankDefinitions} from '../common/rank-functions';
+import {DxVersion} from "../common/game-version";
+import {LANG} from "../common/lang";
+import {getRankDefinitions} from "../common/rank-functions";
 
 const MIN_RANK_OPTION = "A";
 const RANK_FACTOR_CELL_BASE_CLASSNAME = "qlRankFactorCell";

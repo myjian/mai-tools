@@ -1,7 +1,7 @@
-import {DxVersion} from '../common/constants';
-import {compareNumber} from '../common/number-helper';
-import {getRankDefinitions, RankDef} from '../common/rank-functions';
-import {SongProperties} from '../common/song-props';
+import {DxVersion} from "../common/game-version";
+import {compareNumber} from "../common/number-helper";
+import {getRankDefinitions, RankDef} from "../common/rank-functions";
+import {SongProperties} from "../common/song-props";
 
 export function calculateRatingRange(gameVer: DxVersion, lv: number, rank: RankDef) {
   const rankDefs = getRankDefinitions(gameVer);

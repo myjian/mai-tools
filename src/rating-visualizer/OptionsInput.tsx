@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../common/constants';
-import {DX_LEVELS, getLvIndex} from './levels';
+import {DxVersion} from "../common/game-version";
+import {DX_LEVELS, getLvIndex} from "./levels";
 
 interface OptionsInputProps {
   heightUnit: number;

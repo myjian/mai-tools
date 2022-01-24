@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {SongProperties} from '../../common/song-props';
-import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
-import {UIString} from '../i18n';
-import {getNumOfTopNewCharts, getNumOfTopOldCharts} from '../rating-analyzer';
-import {calculateMaxRating} from '../rating-functions';
-import {ChartRecordWithRating, GameRegion, RatingData} from '../types';
-import {RatingDetails} from './RatingDetails';
-import {RatingOverview} from './RatingOverview';
-import {RecommendedLevels} from './RecommendedLevels';
+import {DxVersion} from "../../common/game-version";
+import {SongProperties} from "../../common/song-props";
+import {getCandidateCharts, getNotPlayedCharts} from "../candidate-songs";
+import {UIString} from "../i18n";
+import {getNumOfTopNewCharts, getNumOfTopOldCharts} from "../rating-analyzer";
+import {calculateMaxRating} from "../rating-functions";
+import {ChartRecordWithRating, GameRegion, RatingData} from "../types";
+import {RatingDetails} from "./RatingDetails";
+import {RatingOverview} from "./RatingOverview";
+import {RecommendedLevels} from "./RecommendedLevels";
 
 const NEW_CANDIDATE_SONGS_POOL_SIZE = 100;
 const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
@@ -96,12 +96,8 @@ export class RatingOutput extends React.PureComponent<Props, State> {
 
   render() {
     const {gameRegion, gameVer, playerName, playerGradeIndex, songPropsByName} = this.props;
-    const {
-      newChartsRating,
-      newTopChartsCount,
-      oldChartsRating,
-      oldTopChartsCount,
-    } = this.props.ratingData;
+    const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} =
+      this.props.ratingData;
     const {
       newCandidateCharts,
       oldCandidateCharts,
@@ -124,7 +120,7 @@ export class RatingOutput extends React.PureComponent<Props, State> {
           oldChartsRating={oldChartsRating}
           oldChartsMaxRating={maxOldChartsRating}
           oldTopChartsCount={oldTopChartsCount}
-          playerGradeIndex={gameVer <= DxVersion.SPLASH ? playerGradeIndex : 0}
+          playerGradeIndex={gameVer > DxVersion.SPLASH ? 0 : playerGradeIndex}
         />
         <RecommendedLevels
           gameRegion={gameRegion}

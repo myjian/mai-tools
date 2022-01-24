@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {formatFloat} from '../../common/number-helper';
-import {getRankDefinitions, getRankIndexByAchievement} from '../../common/rank-functions';
-import {DisplayMode} from '../constants';
+import {DxVersion} from "../../common/game-version";
+import {formatFloat} from "../../common/number-helper";
+import {getRankDefinitions, getRankIndexByAchievement} from "../../common/rank-functions";
+import {DisplayMode} from "../constants";
 import {
   BreakScoreMap,
   FullJudgementMap,
@@ -13,12 +13,12 @@ import {
   NoteType,
   ScorePerType,
   StrictJudgementMap,
-} from '../types';
-import {AchievementInfo} from './AchievementInfo';
-import {DateAndPlace} from './DateAndPlace';
-import {JudgementContainer} from './JudgementContainer';
-import {SongImg} from './SongImg';
-import {SongInfo} from './SongInfo';
+} from "../types";
+import {AchievementInfo} from "./AchievementInfo";
+import {DateAndPlace} from "./DateAndPlace";
+import {JudgementContainer} from "./JudgementContainer";
+import {SongImg} from "./SongImg";
+import {SongInfo} from "./SongInfo";
 
 const LOSS_PREFIX = "-";
 

@@ -1,4 +1,4 @@
-import {DxVersion} from './constants';
+import {DxVersion} from "./game-version";
 
 export interface RankDef {
   minAchv: number;

@@ -1,6 +1,6 @@
 (function (d) {
   const DIFF_REGEX = /music_(\w+)_score_back/;
-  const DOWNLOAD_ICON = "⭳";
+  const DOWNLOAD_ICON = "💾";
   // 540 = 9 * 60 minutes = UTC+9 (Japan Time), 1 minute = 60000 milliseconds
   const timezoneOffset = (540 + new Date().getTimezoneOffset()) * 60000;
 

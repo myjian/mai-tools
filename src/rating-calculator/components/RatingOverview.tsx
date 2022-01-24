@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {getGradeByIndex, getTopGradeBonus} from '../grade';
-import {UIString} from '../i18n';
+import {DxVersion} from "../../common/game-version";
+import {getGradeByIndex, getTopGradeBonus} from "../grade";
+import {UIString} from "../i18n";
 
 interface Props {
   gameVer: DxVersion;

@@ -1,6 +1,6 @@
-import {DxVersion} from '../common/constants';
-import {getRankDefinitions, getRankTitle} from '../common/rank-functions';
-import {ChartRecord} from './types';
+import {DxVersion} from "../common/game-version";
+import {getRankDefinitions, getRankTitle} from "../common/rank-functions";
+import {ChartRecord} from "./types";
 
 export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<string, number> {
   // Game version does not matter here

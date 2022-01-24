@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {SongProperties} from '../../common/song-props';
-import {UIString} from '../i18n';
-import {getNumOfTopOldCharts} from '../rating-analyzer';
-import {ChartRecordWithRating, RatingData} from '../types';
-import {CandidateChartRecords} from './CandidatesChartRecords';
-import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
-import {TopChartRecords} from './TopChartRecords';
+import {DxVersion} from "../../common/game-version";
+import {SongProperties} from "../../common/song-props";
+import {UIString} from "../i18n";
+import {getNumOfTopOldCharts} from "../rating-analyzer";
+import {ChartRecordWithRating, RatingData} from "../types";
+import {CandidateChartRecords} from "./CandidatesChartRecords";
+import {ChartRecordSectionTitle} from "./ChartRecordSectionTitle";
+import {TopChartRecords} from "./TopChartRecords";
 
 interface Props {
   gameVer: DxVersion;
@@ -51,12 +51,8 @@ export class RatingDetails extends React.PureComponent<Props, State> {
       notPlayedOldCharts,
       songPropsByName,
     } = this.props;
-    const {
-      newChartRecords,
-      newTopChartsCount,
-      oldChartRecords,
-      oldTopChartsCount,
-    } = this.props.ratingData;
+    const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} =
+      this.props.ratingData;
     const {hideNewCandidates, hideNewTopSongs, hideOldCandidates, hideOldTopSongs} = this.state;
     return (
       <>

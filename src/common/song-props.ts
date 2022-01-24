@@ -1,5 +1,6 @@
-import {DIFFICULTIES, DxVersion} from './constants';
-import {getSongNickname, normalizeSongName} from './song-name-helper';
+import {DIFFICULTIES} from "./constants";
+import {DxVersion} from "./game-version";
+import {getSongNickname, normalizeSongName} from "./song-name-helper";
 
 export const enum ChartType {
   STANDARD = 0,

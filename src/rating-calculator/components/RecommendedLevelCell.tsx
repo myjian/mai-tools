@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import {DxVersion} from '../../common/constants';
-import {getOfficialLevel} from '../../common/level-helper';
-import {GameRegion} from '../types';
+import {DxVersion} from "../../common/game-version";
+import {getOfficialLevel} from "../../common/level-helper";
+import {GameRegion} from "../types";
 
 const VERSION_NAMES = [
   "maimai",
