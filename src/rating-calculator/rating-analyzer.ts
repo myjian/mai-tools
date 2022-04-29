@@ -1,14 +1,14 @@
-import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from "../common/constants";
-import {DxVersion} from "../common/game-version";
-import {getRankByAchievement} from "../common/rank-functions";
-import {ChartType, getSongProperties, SongProperties} from "../common/song-props";
-import {compareSongsByRating} from "./record-comparator";
-import {getRemovedSongsByVersion} from "./removed-songs";
-import {ChartRecord, ChartRecordWithRating, GameRegion, RatingData} from "./types";
+import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DxVersion} from '../common/game-version';
+import {getRankByAchievement} from '../common/rank-functions';
+import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
+import {compareSongsByRating} from './record-comparator';
+import {getRemovedSongsByVersion} from './removed-songs';
+import {ChartRecord, ChartRecordWithRating, GameRegion, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
-const NUM_TOP_OLD_SONGS = 25;
-const NUM_TOP_OLD_SONGS_SPLASH_PLUS = 35;
+const NUM_TOP_OLD_SONGS_SPLASH = 25;
+const NUM_TOP_OLD_SONGS = 35;
 
 function getScoreMultiplier(achievement: number, gameVer: DxVersion) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
@@ -25,7 +25,7 @@ export function getNumOfTopNewCharts() {
 }
 
 export function getNumOfTopOldCharts(gameVer: DxVersion) {
-  return gameVer > DxVersion.SPLASH ? NUM_TOP_OLD_SONGS_SPLASH_PLUS : NUM_TOP_OLD_SONGS;
+  return gameVer > DxVersion.SPLASH ? NUM_TOP_OLD_SONGS : NUM_TOP_OLD_SONGS_SPLASH;
 }
 
 /**

@@ -1,25 +1,25 @@
-import React from "react";
+import React from 'react';
 
-import {DxVersion, validateGameVersion} from "../../common/game-version";
-import {iWantSomeMagic} from "../../common/magic";
+import {DxVersion, validateGameVersion} from '../../common/game-version';
+import {iWantSomeMagic} from '../../common/magic';
 import {
   buildSongPropsMap,
   filterSongsByVersion,
   getSongsByVersion,
   MatchMode,
   SongProperties,
-} from "../../common/song-props";
-import {readFromCache, writeToCache} from "../cache";
-import {UIString} from "../i18n";
-import {parseScoreLine} from "../player-score-parser";
-import {analyzePlayerRating} from "../rating-analyzer";
-import {GameRegion, RatingData} from "../types";
-import {InternalLvInput} from "./InternalLvInput";
-import {OtherTools} from "./OtherTools";
-import {PageFooter} from "./PageFooter";
-import {RatingOutput} from "./RatingOutput";
-import {ScoreInput} from "./ScoreInput";
-import {VersionSelect} from "./VersionSelect";
+} from '../../common/song-props';
+import {readFromCache, writeToCache} from '../cache';
+import {UIString} from '../i18n';
+import {parseScoreLine} from '../player-score-parser';
+import {analyzePlayerRating} from '../rating-analyzer';
+import {GameRegion, RatingData} from '../types';
+import {InternalLvInput} from './InternalLvInput';
+import {OtherTools} from './OtherTools';
+import {PageFooter} from './PageFooter';
+import {RatingOutput} from './RatingOutput';
+import {ScoreInput} from './ScoreInput';
+import {VersionSelect} from './VersionSelect';
 
 function getDebugText({action, payload}: {action: string; payload: number | string}) {
   if (action === "appendPlayerScore") {
@@ -86,7 +86,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(location.search);
     const dxVersionQueryParam = queryParams.get("gameVersion");
-    const gameVer = validateGameVersion(dxVersionQueryParam, DxVersion.SPLASH_PLUS);
+    const gameVer = validateGameVersion(dxVersionQueryParam);
 
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");

@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react';
 
-import {DxVersion} from "../common/game-version";
-import {getRankDefinitions} from "../common/rank-functions";
-import {IntervalLines} from "./IntervalLines";
-import {DX_LEVELS, getLvIndex} from "./levels";
-import {LvRatingContainer} from "./LvRatingContainer";
-import {MultiplierTable} from "./MultiplierTable";
-import {OptionsInput} from "./OptionsInput";
-import {RatingAxis} from "./RatingAxis";
-import {RatingTable} from "./RatingTable";
+import {DxVersion, validateGameVersion} from '../common/game-version';
+import {getRankDefinitions} from '../common/rank-functions';
+import {IntervalLines} from './IntervalLines';
+import {DX_LEVELS, getLvIndex} from './levels';
+import {LvRatingContainer} from './LvRatingContainer';
+import {MultiplierTable} from './MultiplierTable';
+import {OptionsInput} from './OptionsInput';
+import {RatingAxis} from './RatingAxis';
+import {RatingTable} from './RatingTable';
 
 interface RatingVisualizerState {
   gameVer: DxVersion;
@@ -29,7 +29,7 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     super(props);
     const params = new URLSearchParams(location.search);
     const gameVer =
-      parseInt(params.get("gameVer")) === DxVersion.SPLASH
+      validateGameVersion(params.get("gameVer")) === DxVersion.SPLASH
         ? DxVersion.SPLASH
         : DxVersion.SPLASH_PLUS;
     const heightUnit = 5;

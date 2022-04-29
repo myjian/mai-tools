@@ -1,7 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import {DxVersion} from "../../common/game-version";
-import {UIString} from "../i18n";
+import {
+  DxVersion,
+  getVersionName,
+  RATING_CALCULATOR_SUPPORTED_VERSIONS,
+} from '../../common/game-version';
+import {UIString} from '../i18n';
 
 interface Props {
   handleVersionSelect: (ver: DxVersion) => void;
@@ -11,20 +15,18 @@ interface Props {
 export class VersionSelect extends React.PureComponent<Props> {
   render() {
     const {gameVer} = this.props;
-    const ver = gameVer.toFixed(0);
     return (
       <label>
         {UIString.gameVer}
         <select className="gameVersion" onChange={this.handleChange}>
-          <option value="15" selected={ver === "15"}>
-            DX Splash
-          </option>
-          <option value="16" selected={ver === "16"}>
-            DX Splash PLUS
-          </option>
-          <option value="17" selected={ver === "17"}>
-            DX UNiVERSE
-          </option>
+          {RATING_CALCULATOR_SUPPORTED_VERSIONS.map((ver) => {
+            const verStr = ver.toFixed(0);
+            return (
+              <option key={verStr} value={verStr} selected={ver === gameVer}>
+                {getVersionName(ver)}
+              </option>
+            );
+          })}
         </select>
       </label>
     );
