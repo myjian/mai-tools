@@ -594,53 +594,105 @@ type Cache = {
   async function addSummaryBlock() {
     const scorePage = await fetchPage(SELF_SCORE_URLS.get("Re:MASTER"));
     const summaryTable = scorePage.querySelector(".music_scorelist_table").parentElement;
-    summaryTable.querySelector("tr:last-child").remove();
+    if (!isDxScoreVs) {
+      summaryTable.querySelector("tr:last-child").remove();
+    }
     const rows = getScoreRows();
     const total = rows.length;
-    const apfcCount: Record<string, number> = {};
-    const syncCount: Record<string, number> = {};
-    const rankCount: Record<string, number> = {};
-    for (let i = 0; i < AP_FC_TYPES.length; i++) {
-      apfcCount[AP_FC_TYPES[i]] = 0;
-      syncCount[SYNC_TYPES[i]] = 0;
-    }
-    for (let i = 0; i < RANK_TITLES.length; i++) {
-      rankCount[RANK_TITLES[i]] = 0;
-    }
-    rows.forEach((row) => {
-      apfcCount[getApFcStatus(row)]++;
-      syncCount[getSyncStatus(row)]++;
-      rankCount[getRankTitle(row)]++;
-    });
 
-    // 9 is the index of A in RANK_TITLES
-    for (let i = 1; i < 9; i++) {
-      rankCount[RANK_TITLES[i]] += rankCount[RANK_TITLES[i - 1]];
-    }
-    // 4 is the index of null
-    for (let i = 1; i < 4; i++) {
-      apfcCount[AP_FC_TYPES[i]] += apfcCount[AP_FC_TYPES[i - 1]];
-      syncCount[SYNC_TYPES[i]] += syncCount[SYNC_TYPES[i - 1]];
+    function updateRankSummary() {
+      const rankCount: Record<string, number> = {};
+      for (const x of RANK_TITLES) {
+        rankCount[x] = 0;
+      }
+      rows.forEach((row) => {
+        rankCount[getRankTitle(row)]++;
+      });
+
+      // 9 is the index of A in RANK_TITLES
+      for (let i = 1; i < 9; i++) {
+        rankCount[RANK_TITLES[i]] += rankCount[RANK_TITLES[i - 1]];
+      }
+
+      const columns = summaryTable.querySelectorAll("tr:first-child .f_11");
+      columns[0].innerHTML = `${rankCount["A"]}/${total}`;
+      columns[1].innerHTML = `${rankCount["S"]}/${total}`;
+      columns[2].innerHTML = `${rankCount["S+"]}/${total}`;
+      columns[3].innerHTML = `${rankCount["SS"]}/${total}`;
+      columns[4].innerHTML = `${rankCount["SS+"]}/${total}`;
+      columns[5].innerHTML = `${rankCount["SSS"]}/${total}`;
+      columns[6].innerHTML = `${rankCount["SSS+"]}/${total}`;
     }
 
-    // populate summaryTable with the counts we just collected
-    let columns = summaryTable.querySelectorAll("tr:first-child .f_11");
-    columns[0].innerHTML = `${rankCount["A"]}/${total}`;
-    columns[1].innerHTML = `${rankCount["S"]}/${total}`;
-    columns[2].innerHTML = `${rankCount["S+"]}/${total}`;
-    columns[3].innerHTML = `${rankCount["SS"]}/${total}`;
-    columns[4].innerHTML = `${rankCount["SS+"]}/${total}`;
-    columns[5].innerHTML = `${rankCount["SSS"]}/${total}`;
-    columns[6].innerHTML = `${rankCount["SSS+"]}/${total}`;
-    columns = summaryTable.querySelectorAll("tr:last-child .f_11");
-    columns[0].innerHTML = `${apfcCount["FC"]}/${total}`;
-    columns[1].innerHTML = `${apfcCount["FC+"]}/${total}`;
-    columns[2].innerHTML = `${apfcCount["AP"]}/${total}`;
-    columns[3].innerHTML = `${apfcCount["AP+"]}/${total}`;
-    columns[4].innerHTML = `${syncCount["FS"]}/${total}`;
-    columns[5].innerHTML = `${syncCount["FS+"]}/${total}`;
-    columns[6].innerHTML = `${syncCount["FDX"]}/${total}`;
-    columns[7].innerHTML = `${syncCount["FDX+"]}/${total}`;
+    function updateApFcSummary() {
+      const apfcCount: Record<string, number> = {};
+      for (const x of AP_FC_TYPES) {
+        apfcCount[x] = 0;
+      }
+      rows.forEach((row) => {
+        apfcCount[getApFcStatus(row)]++;
+      });
+
+      // 4 is the index of null
+      for (let i = 1; i < 4; i++) {
+        apfcCount[AP_FC_TYPES[i]] += apfcCount[AP_FC_TYPES[i - 1]];
+      }
+
+      const columns = summaryTable.querySelectorAll("tr:nth-child(2) .f_11");
+      columns[0].innerHTML = `${apfcCount["FC"]}/${total}`;
+      columns[1].innerHTML = `${apfcCount["FC+"]}/${total}`;
+      columns[2].innerHTML = `${apfcCount["AP"]}/${total}`;
+      columns[3].innerHTML = `${apfcCount["AP+"]}/${total}`;
+    }
+
+    function updateSyncSummary() {
+      const syncCount: Record<string, number> = {};
+      for (const x of SYNC_TYPES) {
+        syncCount[x] = 0;
+      }
+      rows.forEach((row) => {
+        syncCount[getSyncStatus(row)]++;
+      });
+
+      // 4 is the index of null
+      for (let i = 1; i < 4; i++) {
+        syncCount[SYNC_TYPES[i]] += syncCount[SYNC_TYPES[i - 1]];
+      }
+
+      const columns = summaryTable.querySelectorAll("tr:nth-child(2) .f_11");
+      columns[4].innerHTML = `${syncCount["FS"]}/${total}`;
+      columns[5].innerHTML = `${syncCount["FS+"]}/${total}`;
+      columns[6].innerHTML = `${syncCount["FDX"]}/${total}`;
+      columns[7].innerHTML = `${syncCount["FDX+"]}/${total}`;
+    }
+
+    function updateDxStarSummary() {
+      const dxStarCount: Record<string, number> = {};
+      for (const x of DX_STARS) {
+        dxStarCount[x] = 0;
+      }
+      rows.forEach((row) => {
+        dxStarCount[getDxStar(row)]++;
+      });
+
+      for (let i = 4; i >= 1; i--) {
+        dxStarCount[DX_STARS[i]] += dxStarCount[DX_STARS[i + 1]];
+      }
+
+      const columns = summaryTable.querySelectorAll("tr:last-child .f_11");
+      columns[0].innerHTML = `${dxStarCount[DX_STARS[1]]}/${total}`;
+      columns[1].innerHTML = `${dxStarCount[DX_STARS[2]]}/${total}`;
+      columns[2].innerHTML = `${dxStarCount[DX_STARS[3]]}/${total}`;
+      columns[3].innerHTML = `${dxStarCount[DX_STARS[4]]}/${total}`;
+      columns[4].innerHTML = `${dxStarCount[DX_STARS[5]]}/${total}`;
+    }
+
+    setTimeout(updateRankSummary, 0);
+    setTimeout(updateApFcSummary, 0);
+    setTimeout(updateSyncSummary, 0);
+    if (isDxScoreVs) {
+      setTimeout(updateDxStarSummary, 0);
+    }
 
     const vsResultBlock = d.querySelector(".town_block + .see_through_block");
     vsResultBlock.insertAdjacentElement("afterend", summaryTable);
