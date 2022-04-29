@@ -283,10 +283,14 @@ type Cache = {
     if (!rankImg) {
       return null;
     }
-    const rankImgSrc = (rankImg as HTMLImageElement).src.replace(/\?ver=.*$/, "");
-    const lastUnderscoreIdx = rankImgSrc.lastIndexOf("_");
-    const lastDotIdx = rankImgSrc.lastIndexOf(".");
-    const lowercaseRank = rankImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
+    const rankImgPath = new URL((rankImg as HTMLImageElement).src).pathname;
+    const lowercaseRank = rankImgPath.substring(
+      rankImgPath.lastIndexOf("_") + 1,
+      rankImgPath.lastIndexOf(".")
+    );
+    if (lowercaseRank === "back") {
+      return null;
+    }
     return lowercaseRank.replace("p", "+").toUpperCase();
   }
 
@@ -314,7 +318,12 @@ type Cache = {
     const map = createMap(RANK_TITLES, reverse);
     rows.forEach((row) => {
       const rank = getRankTitle(row);
-      map.get(rank).push(row);
+      try {
+        map.get(rank).push(row);
+      } catch (e) {
+        console.warn(rank);
+        map.get(null).push(row);
+      }
     });
     if (!isDxScoreVs) {
       map.forEach((subRows, key) => {
@@ -347,8 +356,8 @@ type Cache = {
   function sortRowsByApFc(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(AP_FC_TYPES, reverse);
     rows.forEach((row) => {
-      const rank = getApFcStatus(row);
-      map.get(rank).push(row);
+      const status = getApFcStatus(row);
+      map.get(status).push(row);
     });
     return createRowsWithSection(map, "", rows.length);
   }
