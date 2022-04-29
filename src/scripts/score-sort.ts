@@ -13,7 +13,7 @@ import {
 } from '../common/song-props';
 import {fetchGameVersion, fetchPage} from '../common/util';
 
-enum SortBy {
+const enum SortBy {
   None = "None",
   RankDes = "RankDes",
   RankAsc = "RankAsc",
@@ -27,6 +27,15 @@ enum SortBy {
   LvAsc = "LvAsc",
   InLvDes = "InLvDes",
   InLvAsc = "InLvAsc",
+  DxStarDes = "DxStarDes",
+  DxStarAsc = "DxStarAsc",
+}
+
+const enum SectionHeadStyle {
+  Default,
+  Level,
+  Rank,
+  DxStar,
 }
 
 type Cache = {
@@ -51,6 +60,8 @@ type Cache = {
       [SortBy.LvDes]: "Level (high \u2192 low)",
       [SortBy.InLvAsc]: "Internal Level (low \u2192 high)",
       [SortBy.InLvDes]: "Internal Level (high \u2192 low)",
+      [SortBy.DxStarDes]: "DX-Star (5 \u2192 none)",
+      [SortBy.DxStarAsc]: "DX-Star (none \u2192 5)",
     },
     zh: {
       [SortBy.None]: "-- 選擇排序方式 --",
@@ -66,6 +77,8 @@ type Cache = {
       [SortBy.LvDes]: "譜面等級 (由高至低)",
       [SortBy.InLvAsc]: "內部譜面等級 (由低至高)",
       [SortBy.InLvDes]: "內部譜面等級 (由高至低)",
+      [SortBy.DxStarDes]: "DX-Star (5 星至無星)",
+      [SortBy.DxStarAsc]: "DX-Star (無星至 5 星)",
     },
   }[LANG];
   const CHART_LEVELS = [
@@ -113,6 +126,7 @@ type Cache = {
   const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
   const SYNC_TYPES = ["FDX+", "FDX", "FS+", "FS", null];
   const VS_RESULTS = ["WIN", "DRAW", "LOSE"];
+  const DX_STARS = [null, "✦", "✦✦", "✦✦✦", "✦✦✦✦", "✦✦✦✦✦"];
   const LV_DELTA = 0.02;
   const isFriendScore = location.pathname.includes("battleStart");
   const isDxScoreVs = location.search.includes("scoreType=1");
@@ -157,23 +171,33 @@ type Cache = {
     return map;
   }
 
-  function getSectionTitle(prefix: string, section: string, size: number, totalSize: number) {
-    let title = "\u25D6";
-    if (prefix && section) {
-      title += prefix + " " + section;
-    } else if (prefix) {
-      title += "NO " + prefix;
-    } else if (section) {
-      title += section;
-    } else {
-      title += " --- ";
+  function getSectionTitle(
+    style: SectionHeadStyle,
+    section: string,
+    size: number,
+    totalSize: number
+  ) {
+    let title = style === SectionHeadStyle.DxStar ? "" : "\u25D6";
+    switch (style) {
+      case SectionHeadStyle.Level:
+        title += "LEVEL " + section;
+        break;
+      case SectionHeadStyle.Rank:
+        title += section ? "RANK " + section : "NO RANK";
+        break;
+      default:
+        title += section || " ― ";
+        break;
     }
-    return title + "\u25D7\u3000\u3000\u3000" + size + "/" + totalSize;
+    if (style !== SectionHeadStyle.DxStar) {
+      title += "\u25D7";
+    }
+    return title + "\u3000\u3000\u3000" + size + "/" + totalSize;
   }
 
   function createRowsWithSection(
     map: Map<string, HTMLElement[]>,
-    headingPrefix: string,
+    headingStyle: SectionHeadStyle,
     totalSize: number
   ) {
     let rows: HTMLElement[] = [];
@@ -182,7 +206,7 @@ type Cache = {
         const sectionHeading = d.createElement("div");
         sectionHeading.className = "screw_block m_15 f_15";
         sectionHeading.innerText = getSectionTitle(
-          headingPrefix,
+          headingStyle,
           section,
           subRows.length,
           totalSize
@@ -273,7 +297,7 @@ type Cache = {
         }
       });
     }
-    return createRowsWithSection(map, "LEVEL", rows.length);
+    return createRowsWithSection(map, SectionHeadStyle.Level, rows.length);
   }
 
   function getRankTitle(row: HTMLElement) {
@@ -333,7 +357,7 @@ type Cache = {
         }
       });
     }
-    return createRowsWithSection(map, "RANK", rows.length);
+    return createRowsWithSection(map, SectionHeadStyle.Rank, rows.length);
   }
 
   function getApFcStatus(row: HTMLElement) {
@@ -359,7 +383,7 @@ type Cache = {
       const status = getApFcStatus(row);
       map.get(status).push(row);
     });
-    return createRowsWithSection(map, "", rows.length);
+    return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
   }
 
   function getSyncStatus(row: HTMLElement) {
@@ -385,7 +409,7 @@ type Cache = {
       const sync = getSyncStatus(row);
       map.get(sync).push(row);
     });
-    return createRowsWithSection(map, "", rows.length);
+    return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
   }
 
   function getVsResult(row: HTMLElement) {
@@ -402,7 +426,79 @@ type Cache = {
       const res = getVsResult(row);
       map.get(res).push(row);
     });
-    return createRowsWithSection(map, "", rows.length);
+    return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
+  }
+
+  function getMyDxStar(row: HTMLElement) {
+    const scoreBlocks = row.querySelectorAll(".music_score_block");
+    if (scoreBlocks.length !== 2) {
+      return null;
+    }
+    const dxScoreNodes = scoreBlocks[1].childNodes;
+    const textNode = dxScoreNodes[dxScoreNodes.length - 1] as Text;
+    if (!textNode.wholeText) {
+      return null;
+    }
+    const scoreSegments = textNode.wholeText.split("/");
+    if (scoreSegments.length !== 2) {
+      return null;
+    }
+    try {
+      const playerScore = parseInt(scoreSegments[0].replace(",", "").trim());
+      const maxScore = parseInt(scoreSegments[1].replace(",", "").trim());
+      const dxScoreRatio = playerScore / maxScore;
+      if (dxScoreRatio >= 0.97) {
+        return DX_STARS[5];
+      } else if (dxScoreRatio >= 0.95) {
+        return DX_STARS[4];
+      } else if (dxScoreRatio >= 0.93) {
+        return DX_STARS[3];
+      } else if (dxScoreRatio >= 0.9) {
+        return DX_STARS[2];
+      } else if (dxScoreRatio >= 0.85) {
+        return DX_STARS[1];
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+    return null;
+  }
+
+  function getDxStar(row: HTMLElement) {
+    if (isFriendScore) {
+      const img = row.querySelector("tr:first-child td:last-child img");
+      if (!img) {
+        return null;
+      }
+      const imgPath = new URL((img as HTMLImageElement).src).pathname;
+      const dxStar = imgPath.substring(imgPath.lastIndexOf("_") + 1, imgPath.lastIndexOf("."));
+      try {
+        const dxStarInt = parseInt(dxStar);
+        if (dxStarInt < 0 || dxStarInt >= DX_STARS.length) {
+          console.warn("invalid dx star " + dxStar);
+        }
+        return DX_STARS[dxStarInt];
+      } catch (err) {
+        console.warn("invalid dx star " + dxStar);
+      }
+      return null;
+    }
+    // my score
+    if (row.dataset.dxStar) {
+      return row.dataset.dxStar === "null" ? null : row.dataset.dxStar;
+    }
+    const dxStar = getMyDxStar(row);
+    row.dataset.dxStar = dxStar;
+    return dxStar;
+  }
+
+  function sortRowsByDxStar(rows: NodeListOf<HTMLElement>, reverse: boolean) {
+    const map = createMap(DX_STARS, reverse);
+    rows.forEach((row) => {
+      const dxStar = getDxStar(row);
+      map.get(dxStar).push(row);
+    });
+    return createRowsWithSection(map, SectionHeadStyle.DxStar, rows.length);
   }
 
   function sortRowsByInLv(rows: NodeListOf<HTMLElement>, reverse: boolean) {
@@ -426,7 +522,7 @@ type Cache = {
     Array.from(rows).forEach((row, index) => {
       map.get(getInLvSecTitle(inLvs[index])).push(row);
     });
-    return createRowsWithSection(map, "", rows.length);
+    return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
   }
 
   function getScoreRows() {
@@ -475,6 +571,12 @@ type Cache = {
         break;
       case SortBy.InLvAsc:
         sortedRows = sortRowsByInLv(rows, true);
+        break;
+      case SortBy.DxStarAsc:
+        sortedRows = sortRowsByDxStar(rows, false);
+        break;
+      case SortBy.DxStarDes:
+        sortedRows = sortRowsByDxStar(rows, true);
         break;
       default:
         return;
@@ -599,8 +701,15 @@ type Cache = {
     select.append(createOption(SortBy.SyncAsc));
     select.append(createOption(SortBy.SyncDes));
     if (isFriendScore) {
+      if (isDxScoreVs) {
+        select.append(createOption(SortBy.DxStarDes));
+        select.append(createOption(SortBy.DxStarAsc));
+      }
       select.append(createOption(SortBy.VsResultAsc));
       select.append(createOption(SortBy.VsResultDes));
+    } else {
+      select.append(createOption(SortBy.DxStarDes));
+      select.append(createOption(SortBy.DxStarAsc));
     }
     select.append(createOption(SortBy.LvAsc));
     select.append(createOption(SortBy.LvDes));
