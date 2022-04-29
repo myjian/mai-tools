@@ -1,3 +1,25 @@
+const VERSION_NAMES = [
+  "maimai",
+  "maimai PLUS",
+  "GreeN",
+  "GreeN PLUS",
+  "ORANGE",
+  "ORANGE PLUS",
+  "PiNK",
+  "PiNK PLUS",
+  "MURASAKi",
+  "MURASAKi PLUS",
+  "MiLK",
+  "MiLK PLUS",
+  "FiNALE",
+  "maimaiでらっくす",
+  "maimaiでらっくす PLUS",
+  "Splash",
+  "Splash PLUS",
+  "UNiVERSE",
+  "UNiVERSE PLUS",
+];
+
 export enum DxVersion {
   SPLASH = 15,
   SPLASH_PLUS = 16,
@@ -16,4 +38,8 @@ export function validateGameVersion(
     return numVer;
   }
   return fallback;
+}
+
+export function getVersionName(ver: DxVersion) {
+  return VERSION_NAMES[ver];
 }

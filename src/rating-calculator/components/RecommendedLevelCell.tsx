@@ -1,28 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import {DxVersion} from "../../common/game-version";
-import {getOfficialLevel} from "../../common/level-helper";
-import {GameRegion} from "../types";
-
-const VERSION_NAMES = [
-  "maimai",
-  "maimai PLUS",
-  "GreeN",
-  "GreeN PLUS",
-  "ORANGE",
-  "ORANGE PLUS",
-  "PiNK",
-  "PiNK PLUS",
-  "MURASAKi",
-  "MURASAKi PLUS",
-  "MiLK",
-  "MiLK PLUS",
-  "FiNALE",
-  "でらっくす",
-  "でらっくす PLUS",
-  "Splash",
-  "Splash PLUS",
-];
+import {DxVersion, getVersionName} from '../../common/game-version';
+import {getOfficialLevel} from '../../common/level-helper';
+import {GameRegion} from '../types';
 
 function getMaimaiSongsLink(
   officialLv: string,
@@ -39,7 +19,7 @@ function getMaimaiSongsLink(
   }
   const versions: string[] = [];
   while (minGameVer <= maxGameVer) {
-    versions.push(VERSION_NAMES[minGameVer]);
+    versions.push(getVersionName(minGameVer));
     minGameVer++;
   }
   q.set("versions", versions.join("|"));
