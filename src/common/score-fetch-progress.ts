@@ -12,13 +12,13 @@ const MessagesByLang = {
     remDone: "✔",
   },
   [Language.en_US]: {
-    advStart: "Importing Advanced scores…",
+    advStart: "Loading Advanced scores…",
     advDone: "✔",
-    expStart: "Importing Expert scores…",
+    expStart: "Loading Expert scores…",
     expDone: "✔",
-    masStart: "Importing Master scores…",
+    masStart: "Loading Master scores…",
     masDone: "✔",
-    remStart: "Importing Re:Master scores…",
+    remStart: "Loading Re:Master scores…",
     remDone: "✔",
   },
 };

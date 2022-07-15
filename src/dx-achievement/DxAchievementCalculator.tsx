@@ -1,6 +1,7 @@
-import React from "react";
-import {DxAchvDetails} from "./DxAchvDetails";
-import {calculateDxAchvFromFinaleResult} from "./finaleBacktracing";
+import React from 'react';
+
+import {DxAchvDetails} from './DxAchvDetails';
+import {calculateDxAchvFromFinaleResult} from './finaleBacktracing';
 
 enum QueryParam {
   TotalScore = "ts",
@@ -172,6 +173,9 @@ export class DxAchievementCalculator extends React.PureComponent<{}, State> {
         {Array.from(distByAchv.entries()).map(([dxAchv, dist], index) => (
           <DxAchvDetails key={index} dxAchv={dxAchv} breakDist={dist} />
         ))}
+        <button className="copyLink" type="button" onClick={this.handleCopyLink}>
+          📎
+        </button>
       </>
     );
   }
@@ -227,6 +231,10 @@ export class DxAchievementCalculator extends React.PureComponent<{}, State> {
         breakJudgements: breakJudgements.map((v, idx) => (idx === index ? count : v)),
       }));
     }
+  };
+
+  private handleCopyLink = () => {
+    window.location.assign(this.getUrlForCurrentInput());
   };
 
   private handleFillExample = (evt: React.FormEvent) => {

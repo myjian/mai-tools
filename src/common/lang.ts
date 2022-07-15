@@ -3,6 +3,8 @@ export const enum Language {
   zh_TW = "zh_TW",
 }
 
+export const SUPPORTED_LANGUAGES = [Language.en_US, Language.zh_TW];
+
 const LANG_STORAGE_NAME = "MaiToolsLang";
 
 function loadLanguage(): Language {

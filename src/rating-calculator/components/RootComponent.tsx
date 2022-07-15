@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {DxVersion, validateGameVersion} from '../../common/game-version';
-import {getInitialLanguage, Language} from '../../common/lang';
+import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
 import {iWantSomeMagic} from '../../common/magic';
 import {
@@ -16,6 +16,7 @@ import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {GameRegion, RatingData} from '../types';
 import {InternalLvInput} from './InternalLvInput';
+import {LanguageChooser} from './LanguageChooser';
 import {OtherTools} from './OtherTools';
 import {PageFooter} from './PageFooter';
 import {RatingOutput} from './RatingOutput';
@@ -134,6 +135,9 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const messages = MessagesByLang[lang];
     return (
       <LangContext.Provider value={lang}>
+        <LanguageChooser activeLanguage={lang} changeLanguage={this.changeLanguage} />
+        <br></br>
+        <br></br>
         <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
         <InternalLvInput ref={this.internalLvTextarea} />
         <ScoreInput ref={this.scoreTextarea} />
@@ -160,6 +164,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
       </LangContext.Provider>
     );
   }
+
+  private changeLanguage = (lang: Language) => {
+    this.setState({lang});
+    saveLanguage(lang);
+    this.postMessageToOpener({action: "saveLanguage", payload: lang});
+  };
 
   private selectVersion = (gameVer: DxVersion) => {
     this.setState({gameVer}, this.analyzeRating);
@@ -191,7 +201,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.setState({ratingData, songPropsByName});
   };
 
-  private postMessageToOpener(data: string | {action: string; payload?: string | number}) {
+  private postMessageToOpener(data: {action: string; payload?: string | number}) {
     if (window.opener) {
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
@@ -258,13 +268,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
         }
       }
     });
-    const {friendIdx} = this.state;
+    const {friendIdx, lang} = this.state;
     if (friendIdx) {
       // Analyze friend rating
       this.postMessageToOpener({action: "getFriendRecords", payload: friendIdx});
     } else {
       // Analyze self rating
-      this.postMessageToOpener("ready");
+      this.postMessageToOpener({action: "ready", payload: lang});
     }
   }
 

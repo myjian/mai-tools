@@ -2,7 +2,7 @@ import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {DxVersion} from '../common/game-version';
-import {getInitialLanguage, Language} from '../common/lang';
+import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {
@@ -22,7 +22,7 @@ declare global {
 
 (function () {
   const BASE_URL = getScriptHost("analyze-rating-in-newtab") + "/rating-calculator/";
-  const LANG = getInitialLanguage();
+  let LANG = getInitialLanguage();
   const UIString = {
     [Language.zh_TW]: {
       pleaseLogIn: "請登入 maimai NET",
@@ -32,7 +32,7 @@ declare global {
       pleaseLogIn: "Please log in to maimai DX NET.",
       analyze: "Analyze Rating",
     },
-  }[LANG];
+  };
 
   const isOnFriendPage = location.pathname.includes("friend");
 
@@ -72,7 +72,7 @@ declare global {
     analyzeLink.className = "analyzeLink f_14";
     analyzeLink.style.color = "#1477e6";
     analyzeLink.target = "selfRating";
-    analyzeLink.append(UIString.analyze, document.createElement("br"));
+    analyzeLink.append(UIString[LANG].analyze, document.createElement("br"));
     analyzeLink.href = url;
     if (location.pathname.indexOf("/maimai-mobile/playerData/") >= 0) {
       analyzeLink.className += " f_l";
@@ -92,7 +92,7 @@ declare global {
   function main() {
     const host = location.host;
     if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
-      handleError(UIString.pleaseLogIn);
+      handleError(UIString[LANG].pleaseLogIn);
       return;
     }
     const playerName = isOnFriendPage ? null : getPlayerName(document.body);
@@ -110,25 +110,42 @@ declare global {
     if (window.ratingCalcMsgListener) {
       window.removeEventListener("message", window.ratingCalcMsgListener);
     }
-    window.ratingCalcMsgListener = async (evt) => {
+    window.ratingCalcMsgListener = async (
+      evt: MessageEvent<string | {action: string; payload?: string | number}>
+    ) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
-        if (evt.data === "ready") {
-          // Fetch DX version
-          send("gameVersion", await gameVerPromise);
-          allSongsDom = fetchSelfRecords(send);
-        } else if (evt.data.action === "fetchNewSongs") {
-          const gameVer = await gameVerPromise;
-          const ver = evt.data.payload as DxVersion;
-          if (gameVer < ver) {
-            // Current gameVer is older than the requested version.
-            send("newSongs", []);
-          } else {
-            fetchNewSongs(ver).then((songs) => send("newSongs", songs));
+        if (typeof evt.data === "string") {
+          // this branch is deprecated!
+          if (evt.data === "ready") {
+            // Fetch DX version
+            send("gameVersion", await gameVerPromise);
+            allSongsDom = fetchSelfRecords(send);
           }
-        } else if (evt.data.action === "fetchAllSongs") {
-          allSongsDom.then((dom) => fetchAllSongs(dom).then((songs) => send("allSongs", songs)));
+        } else if (typeof evt.data === "object") {
+          if (evt.data.action === "ready") {
+            // Fetch DX version
+            send("gameVersion", await gameVerPromise);
+            if (typeof evt.data.payload === "string") {
+              LANG = evt.data.payload as Language;
+            }
+            allSongsDom = fetchSelfRecords(send);
+          } else if (evt.data.action === "fetchNewSongs") {
+            const gameVer = await gameVerPromise;
+            const ver = evt.data.payload as DxVersion;
+            if (gameVer < ver) {
+              // Current gameVer is older than the requested version.
+              send("newSongs", []);
+            } else {
+              fetchNewSongs(ver).then((songs) => send("newSongs", songs));
+            }
+          } else if (evt.data.action === "fetchAllSongs") {
+            allSongsDom.then((dom) => fetchAllSongs(dom).then((songs) => send("allSongs", songs)));
+          } else if (evt.data.action === "saveLanguage") {
+            LANG = evt.data.payload as Language;
+            saveLanguage(LANG);
+          }
         }
       }
     };

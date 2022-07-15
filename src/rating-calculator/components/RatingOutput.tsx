@@ -110,7 +110,7 @@ export const RatingOutput = ({
     if (outputArea.current) {
       outputArea.current.scrollIntoView({behavior: "smooth"});
     }
-  });
+  }, []);
 
   const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
   const {

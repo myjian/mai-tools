@@ -1,7 +1,7 @@
 import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {DxVersion} from '../common/game-version';
-import {getInitialLanguage, Language} from '../common/lang';
+import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {BasicSongProps} from '../common/song-props';
@@ -35,7 +35,7 @@ type FriendInfo = {
 
 (function (d) {
   const BASE_URL = getScriptHost("analyze-friend-rating-in-new-tab") + "/rating-calculator/?";
-  const LANG = getInitialLanguage();
+  let LANG = getInitialLanguage();
   const UIString = {
     [Language.zh_TW]: {
       pleaseLogIn: "請登入 maimai NET",
@@ -153,10 +153,15 @@ type FriendInfo = {
     if (window.ratingCalcMsgListener) {
       window.removeEventListener("message", window.ratingCalcMsgListener);
     }
-    window.ratingCalcMsgListener = async (evt) => {
+    window.ratingCalcMsgListener = async (
+      evt: MessageEvent<{action: string; payload?: string | number}>
+    ) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
+        if (typeof evt.data !== "object") {
+          return;
+        }
 
         if (evt.data.action === "getFriendRecords") {
           send("gameVersion", await gameVerPromise);
@@ -181,6 +186,9 @@ type FriendInfo = {
             allSongs = songs;
             send("allSongs", songs);
           });
+        } else if (evt.data.action === "saveLanguage") {
+          LANG = evt.data.payload as Language;
+          saveLanguage(LANG);
         }
       }
     };
