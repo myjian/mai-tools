@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {DxVersion, validateGameVersion} from '../common/game-version';
+import {getInitialLanguage, Language} from '../common/lang';
+import {LangContext} from '../common/lang-react';
 import {getRankDefinitions} from '../common/rank-functions';
 import {IntervalLines} from './IntervalLines';
 import {DX_LEVELS, getLvIndex} from './levels';
@@ -11,6 +13,7 @@ import {RatingAxis} from './RatingAxis';
 import {RatingTable} from './RatingTable';
 
 interface RatingVisualizerState {
+  lang: Language;
   gameVer: DxVersion;
   width: number;
   heightUnit: number;
@@ -34,7 +37,10 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
         : DxVersion.SPLASH_PLUS;
     const heightUnit = 5;
     const maxLv = 15;
+    const lang = getInitialLanguage();
+    updateDocumentTitle(lang);
     this.state = {
+      lang,
       gameVer,
       minLv: "10",
       maxLv: "14",
@@ -46,8 +52,14 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     };
   }
 
+  componentDidUpdate(_: Readonly<{}>, prevState: Readonly<RatingVisualizerState>): void {
+    if (this.state.lang !== prevState.lang) {
+      updateDocumentTitle(this.state.lang);
+    }
+  }
+
   render() {
-    const {gameVer, heightUnit, maxRating, axisLabelStep, highlightInterval, minLv, maxLv} =
+    const {lang, gameVer, heightUnit, maxRating, axisLabelStep, highlightInterval, minLv, maxLv} =
       this.state;
     const levels = this.getLevels();
     // Only include SSS+ - A
@@ -55,73 +67,75 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     const containerHeight = this.getContainerHeight();
     const canZoomIn = maxLv !== minLv;
     return (
-      <div className="ratingVisualizer">
-        <OptionsInput
-          heightUnit={heightUnit}
-          gameVer={gameVer}
-          onChangeUnit={this.handleChangeHeightUnit}
-          onSetGameVer={this.handleSetGameVer}
-          onSetRange={this.handleSetRange}
-          minLv={minLv}
-          maxLv={maxLv}
-          onBlur={this.removeHighlightInterval}
-          onFocus={this.cancelRemoveHighlightInterval}
-        />
-        <div
-          className="container"
-          onBlur={this.removeHighlightInterval}
-          onFocus={this.cancelRemoveHighlightInterval}
-          tabIndex={-1}
-        >
-          <div className="ratingContainer">
-            {heightUnit ? (
-              <RatingAxis
-                maxRating={maxRating}
-                heightUnit={heightUnit}
-                containerHeight={containerHeight}
-                step={axisLabelStep}
-                onClick={this.removeHighlightInterval}
-              />
-            ) : null}
-            {levels.map((lv, i) => {
-              return (
-                <LvRatingContainer
-                  key={i}
-                  canZoomIn={canZoomIn}
-                  lvTitle={lv.title}
-                  minLv={lv.minLv}
-                  maxLv={lv.maxLv}
+      <LangContext.Provider value={lang}>
+        <div className="ratingVisualizer">
+          <OptionsInput
+            heightUnit={heightUnit}
+            gameVer={gameVer}
+            onChangeUnit={this.handleChangeHeightUnit}
+            onSetGameVer={this.handleSetGameVer}
+            onSetRange={this.handleSetRange}
+            minLv={minLv}
+            maxLv={maxLv}
+            onBlur={this.removeHighlightInterval}
+            onFocus={this.cancelRemoveHighlightInterval}
+          />
+          <div
+            className="container"
+            onBlur={this.removeHighlightInterval}
+            onFocus={this.cancelRemoveHighlightInterval}
+            tabIndex={-1}
+          >
+            <div className="ratingContainer">
+              {heightUnit ? (
+                <RatingAxis
+                  maxRating={maxRating}
                   heightUnit={heightUnit}
                   containerHeight={containerHeight}
-                  ranks={ranks}
-                  onZoomIn={this.handleSetRange}
-                  highlightInterval={this.highlightInterval}
+                  step={axisLabelStep}
+                  onClick={this.removeHighlightInterval}
                 />
-              );
-            })}
-            {highlightInterval && (
-              <IntervalLines
-                interval={highlightInterval}
-                heightUnit={heightUnit}
-                onClick={this.removeHighlightInterval}
-              />
-            )}
+              ) : null}
+              {levels.map((lv, i) => {
+                return (
+                  <LvRatingContainer
+                    key={i}
+                    canZoomIn={canZoomIn}
+                    lvTitle={lv.title}
+                    minLv={lv.minLv}
+                    maxLv={lv.maxLv}
+                    heightUnit={heightUnit}
+                    containerHeight={containerHeight}
+                    ranks={ranks}
+                    onZoomIn={this.handleSetRange}
+                    highlightInterval={this.highlightInterval}
+                  />
+                );
+              })}
+              {highlightInterval && (
+                <IntervalLines
+                  interval={highlightInterval}
+                  heightUnit={heightUnit}
+                  onClick={this.removeHighlightInterval}
+                />
+              )}
+            </div>
+          </div>
+          <div className="container">
+            <RatingTable ranks={ranks} levels={levels} />
+            <hr className="sectionSep" />
+            <MultiplierTable gameVer={gameVer} />
+            <footer className="footer">
+              <hr className="sectionSep" />
+              <span>Made by </span>
+              <a className="authorLink" href="https://github.com/myjian" target="_blank">
+                myjian
+              </a>
+              <span>.</span>
+            </footer>
           </div>
         </div>
-        <div className="container">
-          <RatingTable ranks={ranks} levels={levels} />
-          <hr className="sectionSep" />
-          <MultiplierTable gameVer={gameVer} />
-          <footer className="footer">
-            <hr className="sectionSep" />
-            <span>Made by </span>
-            <a className="authorLink" href="https://github.com/myjian" target="_blank">
-              myjian
-            </a>
-            <span>.</span>
-          </footer>
-        </div>
-      </div>
+      </LangContext.Provider>
     );
   }
 
@@ -208,4 +222,15 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
 function calculateMaxRating(maxLv: number, gameVer: DxVersion) {
   const maxRank = getRankDefinitions(gameVer)[0];
   return Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100);
+}
+
+function updateDocumentTitle(lang: Language) {
+  switch (lang) {
+    case Language.en_US:
+      document.title = "maimai DX Rating Lookup Table & Visualization";
+      break;
+    case Language.zh_TW:
+      document.title = "maimai DX R值圖表";
+      break;
+  }
 }

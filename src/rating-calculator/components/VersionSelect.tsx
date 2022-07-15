@@ -1,38 +1,48 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {
   DxVersion,
   getVersionName,
   RATING_CALCULATOR_SUPPORTED_VERSIONS,
 } from '../../common/game-version';
-import {UIString} from '../i18n';
+import {Language} from '../../common/lang';
+import {useLanguage} from '../../common/lang-react';
+
+const MessagesByLang = {
+  [Language.en_US]: {
+    gameVer: "Game version:",
+  },
+  [Language.zh_TW]: {
+    gameVer: "遊戲版本：",
+  },
+};
 
 interface Props {
   handleVersionSelect: (ver: DxVersion) => void;
   gameVer: DxVersion;
 }
 
-export class VersionSelect extends React.PureComponent<Props> {
-  render() {
-    const {gameVer} = this.props;
-    return (
-      <label>
-        {UIString.gameVer}
-        <select className="gameVersion" onChange={this.handleChange}>
-          {RATING_CALCULATOR_SUPPORTED_VERSIONS.map((ver) => {
-            const verStr = ver.toFixed(0);
-            return (
-              <option key={verStr} value={verStr} selected={ver === gameVer}>
-                {getVersionName(ver)}
-              </option>
-            );
-          })}
-        </select>
-      </label>
-    );
-  }
-
-  private handleChange = (evt: React.FormEvent<HTMLSelectElement>) => {
-    this.props.handleVersionSelect(parseInt(evt.currentTarget.value));
-  };
-}
+export const VersionSelect = ({gameVer, handleVersionSelect}: Props) => {
+  const handleChange = useCallback(
+    (evt: React.FormEvent<HTMLSelectElement>) => {
+      handleVersionSelect(parseInt(evt.currentTarget.value));
+    },
+    [handleVersionSelect]
+  );
+  const messages = MessagesByLang[useLanguage()];
+  return (
+    <label>
+      {messages.gameVer}
+      <select className="gameVersion" onChange={handleChange}>
+        {RATING_CALCULATOR_SUPPORTED_VERSIONS.map((ver) => {
+          const verStr = ver.toFixed(0);
+          return (
+            <option key={verStr} value={verStr} selected={ver === gameVer}>
+              {getVersionName(ver)}
+            </option>
+          );
+        })}
+      </select>
+    </label>
+  );
+};

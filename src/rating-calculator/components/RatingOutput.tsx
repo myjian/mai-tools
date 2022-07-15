@@ -1,15 +1,25 @@
-import React from "react";
+import React, {useEffect, useMemo, useRef} from 'react';
 
-import {DxVersion} from "../../common/game-version";
-import {SongProperties} from "../../common/song-props";
-import {getCandidateCharts, getNotPlayedCharts} from "../candidate-songs";
-import {UIString} from "../i18n";
-import {getNumOfTopNewCharts, getNumOfTopOldCharts} from "../rating-analyzer";
-import {calculateMaxRating} from "../rating-functions";
-import {ChartRecordWithRating, GameRegion, RatingData} from "../types";
-import {RatingDetails} from "./RatingDetails";
-import {RatingOverview} from "./RatingOverview";
-import {RecommendedLevels} from "./RecommendedLevels";
+import {DxVersion} from '../../common/game-version';
+import {Language} from '../../common/lang';
+import {useLanguage} from '../../common/lang-react';
+import {SongProperties} from '../../common/song-props';
+import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
+import {getNumOfTopNewCharts, getNumOfTopOldCharts} from '../rating-analyzer';
+import {calculateMaxRating} from '../rating-functions';
+import {ChartRecordWithRating, GameRegion, RatingData} from '../types';
+import {RatingDetails} from './RatingDetails';
+import {RatingOverview} from './RatingOverview';
+import {RecommendedLevels} from './RecommendedLevels';
+
+const MessagesByLang = {
+  [Language.en_US]: {
+    analysisResult: "Analysis Result",
+  },
+  [Language.zh_TW]: {
+    analysisResult: "分析結果",
+  },
+};
 
 const NEW_CANDIDATE_SONGS_POOL_SIZE = 100;
 const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
@@ -34,9 +44,17 @@ interface State {
   maxOldChartsRating?: number;
 }
 
-export class RatingOutput extends React.PureComponent<Props, State> {
-  static getDerivedStateFromProps: React.GetDerivedStateFromProps<Props, State> = (props) => {
-    const {gameVer, newSongs, oldSongs, ratingData} = props;
+export const RatingOutput = ({
+  gameVer,
+  newSongs,
+  oldSongs,
+  ratingData,
+  gameRegion,
+  playerName,
+  playerGradeIndex,
+  songPropsByName,
+}: Props) => {
+  const state = useMemo<State>(() => {
     const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
 
     const newCandidateCharts = getCandidateCharts(
@@ -84,63 +102,60 @@ export class RatingOutput extends React.PureComponent<Props, State> {
       maxNewChartsRating,
       maxOldChartsRating,
     };
-  };
+  }, [gameVer, newSongs, oldSongs, ratingData]);
 
-  private outputArea = React.createRef<HTMLDivElement>();
+  const outputArea = useRef<HTMLDivElement>();
 
-  componentDidMount() {
-    if (this.outputArea.current) {
-      this.outputArea.current.scrollIntoView({behavior: "smooth"});
+  useEffect(() => {
+    if (outputArea.current) {
+      outputArea.current.scrollIntoView({behavior: "smooth"});
     }
-  }
+  });
 
-  render() {
-    const {gameRegion, gameVer, playerName, playerGradeIndex, songPropsByName} = this.props;
-    const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} =
-      this.props.ratingData;
-    const {
-      newCandidateCharts,
-      oldCandidateCharts,
-      notPlayedNewCharts,
-      notPlayedOldCharts,
-      maxNewChartsRating,
-      maxOldChartsRating,
-    } = this.state;
-    return (
-      <div className="outputArea" ref={this.outputArea}>
-        <h2 id="outputHeading">
-          {UIString.analysisResult}
-          {playerName ? ` - ${playerName}` : null}
-        </h2>
-        <RatingOverview
-          gameVer={gameVer}
-          newChartsRating={newChartsRating}
-          newChartsMaxRating={maxNewChartsRating}
-          newTopChartsCount={newTopChartsCount}
-          oldChartsRating={oldChartsRating}
-          oldChartsMaxRating={maxOldChartsRating}
-          oldTopChartsCount={oldTopChartsCount}
-          playerGradeIndex={gameVer > DxVersion.SPLASH ? 0 : playerGradeIndex}
-        />
-        <RecommendedLevels
-          gameRegion={gameRegion}
-          gameVer={gameVer}
-          newChartsRating={newChartsRating}
-          newTopChartsCount={newTopChartsCount}
-          oldChartsRating={oldChartsRating}
-          oldTopChartsCount={oldTopChartsCount}
-        />
-        <RatingDetails
-          gameVer={gameVer}
-          songPropsByName={songPropsByName}
-          newCandidateCharts={newCandidateCharts}
-          oldCandidateCharts={oldCandidateCharts}
-          notPlayedNewCharts={notPlayedNewCharts}
-          notPlayedOldCharts={notPlayedOldCharts}
-          ratingData={this.props.ratingData}
-        />
-        <hr className="sectionSep" />
-      </div>
-    );
-  }
-}
+  const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
+  const {
+    newCandidateCharts,
+    oldCandidateCharts,
+    notPlayedNewCharts,
+    notPlayedOldCharts,
+    maxNewChartsRating,
+    maxOldChartsRating,
+  } = state;
+  const messages = MessagesByLang[useLanguage()];
+  return (
+    <div className="outputArea" ref={outputArea}>
+      <h2 id="outputHeading">
+        {messages.analysisResult}
+        {playerName ? ` - ${playerName}` : null}
+      </h2>
+      <RatingOverview
+        gameVer={gameVer}
+        newChartsRating={newChartsRating}
+        newChartsMaxRating={maxNewChartsRating}
+        newTopChartsCount={newTopChartsCount}
+        oldChartsRating={oldChartsRating}
+        oldChartsMaxRating={maxOldChartsRating}
+        oldTopChartsCount={oldTopChartsCount}
+        playerGradeIndex={gameVer > DxVersion.SPLASH ? 0 : playerGradeIndex}
+      />
+      <RecommendedLevels
+        gameRegion={gameRegion}
+        gameVer={gameVer}
+        newChartsRating={newChartsRating}
+        newTopChartsCount={newTopChartsCount}
+        oldChartsRating={oldChartsRating}
+        oldTopChartsCount={oldTopChartsCount}
+      />
+      <RatingDetails
+        gameVer={gameVer}
+        songPropsByName={songPropsByName}
+        newCandidateCharts={newCandidateCharts}
+        oldCandidateCharts={oldCandidateCharts}
+        notPlayedNewCharts={notPlayedNewCharts}
+        notPlayedOldCharts={notPlayedOldCharts}
+        ratingData={ratingData}
+      />
+      <hr className="sectionSep" />
+    </div>
+  );
+};

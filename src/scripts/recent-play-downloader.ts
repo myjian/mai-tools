@@ -1,5 +1,5 @@
 import {DIFFICULTY_CLASSNAME_MAP} from '../common/constants';
-import {LANG} from '../common/lang';
+import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
 
@@ -19,8 +19,9 @@ type Options = {
 };
 declare var domtoimage: any;
 (function (d) {
+  const LANG = getInitialLanguage();
   const UIString = {
-    zh: {
+    [Language.zh_TW]: {
       date: "日期",
       songName: "歌曲",
       difficulty: "難度",
@@ -37,7 +38,7 @@ declare var domtoimage: any;
       copied: "已複製到剪貼簿",
       downloadAsImage: "存成圖片",
     },
-    en: {
+    [Language.en_US]: {
       date: "Date",
       songName: "Song",
       difficulty: "Difficulty",

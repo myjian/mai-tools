@@ -1,58 +1,57 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {UIString} from '../i18n';
+import {Language} from '../../common/lang';
+import {useLanguage} from '../../common/lang-react';
 
-interface State {
-  showTextarea: boolean;
-}
+const MessagesByLang = {
+  [Language.en_US]: {
+    internalLvHeading: "Chart Internal Level Data",
+    manualLv: "Manual input",
+    autoLv: "Automatic",
+  },
+  [Language.zh_TW]: {
+    internalLvHeading: "譜面定數",
+    manualLv: "手動輸入",
+    autoLv: "自動代入",
+  },
+};
 
-export class InternalLvInput extends React.PureComponent<{}, State> {
-  state: State = {showTextarea: false};
+export const InternalLvInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef) => {
+  const [showTextarea, setShowTextarea] = useState(false);
 
-  private textareaRef = React.createRef<HTMLTextAreaElement>();
+  const handleRadioChange = useCallback((evt: React.FormEvent<HTMLInputElement>) => {
+    setShowTextarea(evt.currentTarget.value === "1");
+  }, []);
 
-  render() {
-    const {showTextarea} = this.state;
-    return (
-      <div className="w90">
-        <h2 className="lvInputHeading">{UIString.internalLvHeading}</h2>
-        <form>
-          <label className="radioLabel">
-            <input
-              className="radioInput"
-              name="showLvInput"
-              value="0"
-              type="radio"
-              checked={!showTextarea}
-              onChange={this.handleRadioChange}
-            />
-            {UIString.autoLv}
-          </label>
-          <label className="radioLabel">
-            <input
-              className="radioInput"
-              name="showLvInput"
-              value="1"
-              type="radio"
-              checked={showTextarea}
-              onChange={this.handleRadioChange}
-            />
-            {UIString.manualLv}
-          </label>
-        </form>
-        {showTextarea && <textarea className="lvInput" ref={this.textareaRef} />}
-      </div>
-    );
-  }
-
-  getInput(): string {
-    if (this.textareaRef.current) {
-      return this.textareaRef.current.value;
-    }
-    return "";
-  }
-
-  private handleRadioChange = (evt: React.FormEvent<HTMLInputElement>) => {
-    this.setState({showTextarea: evt.currentTarget.value === "1"});
-  };
-}
+  const messages = MessagesByLang[useLanguage()];
+  return (
+    <div className="w90">
+      <h2 className="lvInputHeading">{messages.internalLvHeading}</h2>
+      <form>
+        <label className="radioLabel">
+          <input
+            className="radioInput"
+            name="showLvInput"
+            value="0"
+            type="radio"
+            checked={!showTextarea}
+            onChange={handleRadioChange}
+          />
+          {messages.autoLv}
+        </label>
+        <label className="radioLabel">
+          <input
+            className="radioInput"
+            name="showLvInput"
+            value="1"
+            type="radio"
+            checked={showTextarea}
+            onChange={handleRadioChange}
+          />
+          {messages.manualLv}
+        </label>
+      </form>
+      {showTextarea && <textarea className="lvInput" ref={textareaRef} />}
+    </div>
+  );
+});

@@ -1,7 +1,7 @@
-import {LANG} from './lang';
+import {Language} from './lang';
 
-const UIString = {
-  zh: {
+const MessagesByLang = {
+  [Language.zh_TW]: {
     advStart: "匯入黃譜成績中…",
     advDone: "✔",
     expStart: "匯入紅譜成績中…",
@@ -11,7 +11,7 @@ const UIString = {
     remStart: "匯入白譜成績中…",
     remDone: "✔",
   },
-  en: {
+  [Language.en_US]: {
     advStart: "Importing Advanced scores…",
     advDone: "✔",
     expStart: "Importing Expert scores…",
@@ -21,9 +21,10 @@ const UIString = {
     remStart: "Importing Re:Master scores…",
     remDone: "✔",
   },
-}[LANG];
+};
 
-export function statusText(what: string, end?: boolean): string {
+export function statusText(lang: Language, what: string, end?: boolean): string {
+  const UIString = MessagesByLang[lang];
   switch (what) {
     case "Re:MASTER":
       return end ? UIString.remDone + "\n" : UIString.remStart;

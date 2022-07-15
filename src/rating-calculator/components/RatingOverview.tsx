@@ -1,8 +1,26 @@
-import React from "react";
+import React, {useCallback, useState} from 'react';
 
-import {DxVersion} from "../../common/game-version";
-import {getGradeByIndex, getTopGradeBonus} from "../grade";
-import {UIString} from "../i18n";
+import {DxVersion} from '../../common/game-version';
+import {Language} from '../../common/lang';
+import {useLanguage} from '../../common/lang-react';
+import {getGradeByIndex, getTopGradeBonus} from '../grade';
+
+const MessagesByLang = {
+  [Language.en_US]: {
+    average: "Average",
+    column: ":",
+    newChartsRating: "New Charts Rating",
+    oldChartsRating: "Old Charts Rating",
+    grade: "Grade",
+  },
+  [Language.zh_TW]: {
+    average: "平均",
+    column: "：",
+    newChartsRating: "新譜面 Rating",
+    oldChartsRating: "舊譜面 Rating",
+    grade: "段位",
+  },
+};
 
 interface Props {
   gameVer: DxVersion;
@@ -15,113 +33,98 @@ interface Props {
   playerGradeIndex: number;
 }
 
-interface State {
-  forceDisplayRatingRatio?: boolean;
-}
+export const RatingOverview = ({
+  gameVer,
+  oldChartsRating,
+  oldChartsMaxRating,
+  oldTopChartsCount,
+  newChartsRating,
+  newChartsMaxRating,
+  newTopChartsCount,
+  playerGradeIndex,
+}: Props) => {
+  const [forceDisplayRatingRatio, setForceDisplayRatingRatio] = useState<boolean>();
 
-export class RatingOverview extends React.PureComponent<Props, State> {
-  state: State = {};
+  const handleForceShowRatio = useCallback(() => {
+    setForceDisplayRatingRatio(!forceDisplayRatingRatio);
+  }, [forceDisplayRatingRatio]);
 
-  render() {
-    const {
-      gameVer,
-      oldChartsRating,
-      oldChartsMaxRating,
-      oldTopChartsCount,
-      newChartsRating,
-      newChartsMaxRating,
-      newTopChartsCount,
-      playerGradeIndex,
-    } = this.props;
-    let totalRating = newChartsRating + oldChartsRating;
-    const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex) : null;
-    if (playerGrade) {
-      totalRating += playerGrade.bonus;
-    }
-    const topGradeBonus = getTopGradeBonus(gameVer);
+  const messages = MessagesByLang[useLanguage()];
+  let totalRating = newChartsRating + oldChartsRating;
+  const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex) : null;
+  if (playerGrade) {
+    totalRating += playerGrade.bonus;
+  }
+  const topGradeBonus = getTopGradeBonus(gameVer);
 
-    const {forceDisplayRatingRatio} = this.state;
-    let displayRatingRatio = forceDisplayRatingRatio;
-    if (forceDisplayRatingRatio !== false && oldChartsMaxRating && newChartsMaxRating) {
-      displayRatingRatio =
-        forceDisplayRatingRatio ||
-        oldChartsMaxRating - oldChartsRating < 100 ||
-        newChartsMaxRating - newChartsRating < 100;
-    } else {
-      displayRatingRatio = false;
-    }
+  let displayRatingRatio = forceDisplayRatingRatio;
+  if (forceDisplayRatingRatio !== false && oldChartsMaxRating && newChartsMaxRating) {
+    displayRatingRatio =
+      forceDisplayRatingRatio ||
+      oldChartsMaxRating - oldChartsRating < 100 ||
+      newChartsMaxRating - newChartsRating < 100;
+  } else {
+    displayRatingRatio = false;
+  }
 
-    if (displayRatingRatio && forceDisplayRatingRatio === undefined) {
-      // Making the first click disable rating ratio rather than enable it.
-      window.setTimeout(() => {
-        this.setState({forceDisplayRatingRatio: true});
-      }, 0);
-    }
+  if (displayRatingRatio && forceDisplayRatingRatio === undefined) {
+    // Making the first click disable rating ratio rather than enable it.
+    window.setTimeout(() => {
+      setForceDisplayRatingRatio(true);
+    }, 0);
+  }
 
-    return (
-      <div className="ratingOverview">
-        <div className="totalRatingRow" tabIndex={0} onClick={this.handleForceShowRatio}>
-          Rating：{" "}
-          <span>
-            {displayRatingRatio
-              ? `${totalRating} / ${newChartsMaxRating + oldChartsMaxRating + topGradeBonus}`
-              : totalRating}
-          </span>
-        </div>
-        <table className="ratingOverviewTable">
-          <tbody>
-            <tr>
-              <td>{UIString.newChartsRating}</td>
-              <td className="columnColumn">{UIString.column}</td>
-              <td className="subRatingColumn">
-                {displayRatingRatio
-                  ? `${newChartsRating} / ${newChartsMaxRating}`
-                  : newChartsRating}
-              </td>
-              <td className="avgRatingColumn">
-                ({UIString.average}
-                {UIString.column} {this.getAvg(newChartsRating, newTopChartsCount)})
-              </td>
-            </tr>
-            <tr>
-              <td>{UIString.oldChartsRating}</td>
-              <td>{UIString.column}</td>
-              <td className="subRatingColumn">
-                {displayRatingRatio
-                  ? `${oldChartsRating} / ${oldChartsMaxRating}`
-                  : oldChartsRating}
-              </td>
-              <td className="avgRatingColumn">
-                ({UIString.average}
-                {UIString.column} {this.getAvg(oldChartsRating, oldTopChartsCount)})
-              </td>
-            </tr>
-            {playerGrade && (
-              <tr>
-                <td>
-                  {UIString.grade} (<span>{playerGrade.title}</span>)
-                </td>
-                <td>{UIString.column}</td>
-                <td className="subRatingColumn">
-                  {displayRatingRatio
-                    ? `${playerGrade.bonus} / ${topGradeBonus}`
-                    : playerGrade.bonus}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+  return (
+    <div className="ratingOverview">
+      <div className="totalRatingRow" tabIndex={0} onClick={handleForceShowRatio}>
+        Rating：{" "}
+        <span>
+          {displayRatingRatio
+            ? `${totalRating} / ${newChartsMaxRating + oldChartsMaxRating + topGradeBonus}`
+            : totalRating}
+        </span>
       </div>
-    );
-  }
+      <table className="ratingOverviewTable">
+        <tbody>
+          <tr>
+            <td>{messages.newChartsRating}</td>
+            <td className="columnColumn">{messages.column}</td>
+            <td className="subRatingColumn">
+              {displayRatingRatio ? `${newChartsRating} / ${newChartsMaxRating}` : newChartsRating}
+            </td>
+            <td className="avgRatingColumn">
+              ({messages.average}
+              {messages.column} {getAvg(newChartsRating, newTopChartsCount)})
+            </td>
+          </tr>
+          <tr>
+            <td>{messages.oldChartsRating}</td>
+            <td>{messages.column}</td>
+            <td className="subRatingColumn">
+              {displayRatingRatio ? `${oldChartsRating} / ${oldChartsMaxRating}` : oldChartsRating}
+            </td>
+            <td className="avgRatingColumn">
+              ({messages.average}
+              {messages.column} {getAvg(oldChartsRating, oldTopChartsCount)})
+            </td>
+          </tr>
+          {playerGrade && (
+            <tr>
+              <td>
+                {messages.grade} (<span>{playerGrade.title}</span>)
+              </td>
+              <td>{messages.column}</td>
+              <td className="subRatingColumn">
+                {displayRatingRatio ? `${playerGrade.bonus} / ${topGradeBonus}` : playerGrade.bonus}
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
-  private handleForceShowRatio = () => {
-    this.setState(({forceDisplayRatingRatio}) => ({
-      forceDisplayRatingRatio: !forceDisplayRatingRatio,
-    }));
-  };
-
-  private getAvg(sum: number, count: number) {
-    return count ? (sum / count).toFixed(0) : 0;
-  }
+function getAvg(sum: number, count: number) {
+  return count ? (sum / count).toFixed(0) : 0;
 }

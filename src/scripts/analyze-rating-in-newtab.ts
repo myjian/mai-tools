@@ -1,9 +1,9 @@
-import {getPlayerGrade, getPlayerName} from "../common/fetch-score-util";
-import {fetchScores, SELF_SCORE_URLS} from "../common/fetch-self-score";
-import {DxVersion} from "../common/game-version";
-import {LANG} from "../common/lang";
-import {statusText} from "../common/score-fetch-progress";
-import {getScriptHost} from "../common/script-host";
+import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
+import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {DxVersion} from '../common/game-version';
+import {getInitialLanguage, Language} from '../common/lang';
+import {statusText} from '../common/score-fetch-progress';
+import {getScriptHost} from '../common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -11,7 +11,7 @@ import {
   fetchNewSongs,
   getPostMessageFunc,
   handleError,
-} from "../common/util";
+} from '../common/util';
 
 declare global {
   interface Window {
@@ -21,12 +21,13 @@ declare global {
 
 (function () {
   const BASE_URL = getScriptHost("analyze-rating-in-newtab") + "/rating-calculator/";
+  const LANG = getInitialLanguage();
   const UIString = {
-    zh: {
+    [Language.zh_TW]: {
       pleaseLogIn: "請登入 maimai NET",
       analyze: "分析 Rating",
     },
-    en: {
+    [Language.en_US]: {
       pleaseLogIn: "Please log in to maimai DX NET.",
       analyze: "Analyze Rating",
     },
@@ -44,12 +45,12 @@ declare global {
     // Fetch all scores
     const scoreList: string[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
-      send("appendPlayerScore", statusText(difficulty, false));
+      send("appendPlayerScore", statusText(LANG, difficulty, false));
       const dom = await fetchScores(difficulty, scoreList);
       if (difficulty === "MASTER") {
         allSongsDom = dom;
       }
-      send("appendPlayerScore", statusText(difficulty, true));
+      send("appendPlayerScore", statusText(LANG, difficulty, true));
     }
     send("replacePlayerScore", "");
     send("appendPlayerScore", scoreList.join("\n"));

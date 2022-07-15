@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {DxVersion, validateGameVersion} from '../../common/game-version';
+import {getInitialLanguage, Language} from '../../common/lang';
+import {LangContext} from '../../common/lang-react';
 import {iWantSomeMagic} from '../../common/magic';
 import {
   buildSongPropsMap,
@@ -10,7 +12,6 @@ import {
   SongProperties,
 } from '../../common/song-props';
 import {readFromCache, writeToCache} from '../cache';
-import {UIString} from '../i18n';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {GameRegion, RatingData} from '../types';
@@ -20,6 +21,15 @@ import {PageFooter} from './PageFooter';
 import {RatingOutput} from './RatingOutput';
 import {ScoreInput} from './ScoreInput';
 import {VersionSelect} from './VersionSelect';
+
+const MessagesByLang = {
+  [Language.en_US]: {
+    computeRating: "Calculate Rating",
+  },
+  [Language.zh_TW]: {
+    computeRating: "計算 Rating 值",
+  },
+};
 
 function getDebugText({action, payload}: {action: string; payload: number | string}) {
   if (action === "appendPlayerScore") {
@@ -66,6 +76,7 @@ async function readPlayerScoreFromText(text: string) {
 }
 
 interface State {
+  lang: Language;
   gameRegion: GameRegion;
   gameVer: DxVersion;
   ratingData?: RatingData;
@@ -78,8 +89,8 @@ interface State {
 
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
-  private lvInput = React.createRef<InternalLvInput>();
-  private scoreInput = React.createRef<ScoreInput>();
+  private internalLvTextarea = React.createRef<HTMLTextAreaElement>();
+  private scoreTextarea = React.createRef<HTMLTextAreaElement>();
   private referrer = document.referrer && new URL(document.referrer).origin;
 
   constructor(props: {}) {
@@ -90,7 +101,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
     const friendIdx = queryParams.get("friendIdx");
     const playerName = queryParams.get("playerName");
+    const lang = getInitialLanguage();
+    updateDocumentTitle(lang);
+
     this.state = {
+      lang,
       gameRegion: GameRegion.Jp,
       gameVer,
       friendIdx,
@@ -108,19 +123,23 @@ export class RootComponent extends React.PureComponent<{}, State> {
     ) {
       this.loadSongLists(this.state.gameVer);
     }
+    if (this.state.lang != prevState.lang) {
+      updateDocumentTitle(this.state.lang);
+    }
   }
 
   render() {
-    const {gameRegion, gameVer, playerName, ratingData, songPropsByName, oldSongs, newSongs} =
+    const {lang, gameRegion, gameVer, playerName, ratingData, songPropsByName, oldSongs, newSongs} =
       this.state;
+    const messages = MessagesByLang[lang];
     return (
-      <React.Fragment>
+      <LangContext.Provider value={lang}>
         <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
-        <InternalLvInput ref={this.lvInput} />
-        <ScoreInput ref={this.scoreInput} />
+        <InternalLvInput ref={this.internalLvTextarea} />
+        <ScoreInput ref={this.scoreTextarea} />
         <div className="actionArea">
           <button className="analyzeRatingBtn" onClick={this.analyzeRating}>
-            {UIString.computeRating}
+            {messages.computeRating}
           </button>
         </div>
         <hr className="sectionSep" />
@@ -138,7 +157,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         )}
         <PageFooter />
         <OtherTools gameVer={gameVer} />
-      </React.Fragment>
+      </LangContext.Provider>
     );
   }
 
@@ -150,8 +169,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
     if (evt) {
       evt.preventDefault();
     }
-    const songPropsText = this.lvInput.current ? this.lvInput.current.getInput() : "";
-    const scoreText = this.scoreInput.current ? this.scoreInput.current.getInput() : "";
+    const songPropsText = this.getInternalLvInput();
+    const scoreText = this.getScoreInput();
     const {gameVer, gameRegion} = this.state;
     console.log("gameVer", gameVer);
     const songPropsByName = await readSongProperties(gameVer, songPropsText);
@@ -202,10 +221,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
             }
             break;
           case "replacePlayerScore":
-            this.scoreInput.current.setText(evt.data.payload);
+            this.setScoreText(evt.data.payload);
             break;
           case "appendPlayerScore":
-            this.scoreInput.current.appendText(evt.data.payload);
+            this.appendScoreText(evt.data.payload);
             break;
           case "calculateRating":
             this.analyzeRating();
@@ -252,5 +271,42 @@ export class RootComponent extends React.PureComponent<{}, State> {
   private loadSongLists(gameVer: DxVersion) {
     this.postMessageToOpener({action: "fetchAllSongs"});
     this.postMessageToOpener({action: "fetchNewSongs", payload: gameVer});
+  }
+
+  private getInternalLvInput(): string {
+    if (this.internalLvTextarea.current) {
+      return this.internalLvTextarea.current.value;
+    }
+    return "";
+  }
+
+  private getScoreInput(): string {
+    if (this.scoreTextarea.current) {
+      return this.scoreTextarea.current.value;
+    }
+    return "";
+  }
+
+  private setScoreText(text: string): void {
+    if (this.scoreTextarea.current) {
+      this.scoreTextarea.current.value = text;
+    }
+  }
+
+  private appendScoreText(text: string): void {
+    if (this.scoreTextarea.current) {
+      this.scoreTextarea.current.value += text;
+    }
+  }
+}
+
+function updateDocumentTitle(lang: Language) {
+  switch (lang) {
+    case Language.en_US:
+      document.title = "maimai DX Rating Analyzer";
+      break;
+    case Language.zh_TW:
+      document.title = "maimai DX R 值分析工具";
+      break;
   }
 }

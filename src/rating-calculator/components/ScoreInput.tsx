@@ -1,42 +1,37 @@
 import React from 'react';
 
-import {UIString} from '../i18n';
+import {Language} from '../../common/lang';
+import {useLanguage} from '../../common/lang-react';
 
-export class ScoreInput extends React.PureComponent {
-  private textareaRef = React.createRef<HTMLTextAreaElement>();
+const MessagesByLang = {
+  [Language.en_US]: {
+    scoreInputHeading: "Player Scores",
+    scoreInputDescPrefix:
+      'Please use "Analyze Self DX Rating" or "Analyze Friend\'s DX Rating" from ',
+    bookmarketLinkLabel: "maimai bookmarklets",
+    scoreInputDescSuffix: " to fill in this field.",
+  },
+  [Language.zh_TW]: {
+    scoreInputHeading: "玩家成績輸入",
+    scoreInputDescPrefix: "請用 ",
+    bookmarketLinkLabel: "maimai 書籤小工具",
+    scoreInputDescSuffix: " 中的「分析自己 DX Rating」或「分析好友 DX Rating」填入此欄。",
+  },
+};
 
-  render() {
-    return (
-      <div className="w90">
-        <h2 className="scoreInputHeading">{UIString.scoreInputHeading}</h2>
-        <div>
-          {UIString.scoreInputDescPrefix}
-          <a href="/mai-tools/bookmarklets/" target="_blank">
-            {UIString.bookmarketLinkLabel}
-          </a>
-          {UIString.scoreInputDescSuffix}
-        </div>
-        <textarea className="scoreInputArea" ref={this.textareaRef}></textarea>
+export const ScoreInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef) => {
+  const messages = MessagesByLang[useLanguage()];
+  return (
+    <div className="w90">
+      <h2 className="scoreInputHeading">{messages.scoreInputHeading}</h2>
+      <div>
+        {messages.scoreInputDescPrefix}
+        <a href="/mai-tools/bookmarklets/" target="_blank">
+          {messages.bookmarketLinkLabel}
+        </a>
+        {messages.scoreInputDescSuffix}
       </div>
-    );
-  }
-
-  getInput(): string {
-    if (this.textareaRef.current) {
-      return this.textareaRef.current.value;
-    }
-    return "";
-  }
-
-  setText(text: string): void {
-    if (this.textareaRef.current) {
-      this.textareaRef.current.value = text;
-    }
-  }
-
-  appendText(text: string): void {
-    if (this.textareaRef.current) {
-      this.textareaRef.current.value += text;
-    }
-  }
-}
+      <textarea className="scoreInputArea" ref={textareaRef}></textarea>
+    </div>
+  );
+});

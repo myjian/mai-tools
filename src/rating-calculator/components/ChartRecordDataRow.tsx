@@ -28,7 +28,7 @@ interface Props {
   isCandidate?: boolean;
 }
 
-export const ChartRecordDataRow: React.FC<Props> = React.memo((props) => {
+export const ChartRecordDataRow = React.memo((props: Props) => {
   const {record, index, columns, songPropsByName, isCandidate} = props;
   const columnValues = columns.map<string | number>((c) => {
     switch (c) {
@@ -46,13 +46,17 @@ export const ChartRecordDataRow: React.FC<Props> = React.memo((props) => {
       case ColumnType.RANK:
         return getRankTitle(record.achievement);
       case ColumnType.NEXT_RANK:
-        return Array.from(record.nextRanks.values())
-          .map((r) => r.rank.minAchv + "%")
-          .join("\n");
+        return record.nextRanks
+          ? Array.from(record.nextRanks.values())
+              .map((r) => r.rank.minAchv + "%")
+              .join("\n")
+          : "";
       case ColumnType.NEXT_RATING:
-        return Array.from(record.nextRanks.values())
-          .map((r) => "+" + r.minRt.toFixed(0))
-          .join("\n");
+        return record.nextRanks
+          ? Array.from(record.nextRanks.values())
+              .map((r) => "+" + r.minRt.toFixed(0))
+              .join("\n")
+          : "";
       case ColumnType.RATING:
         return Math.floor(record.rating).toString();
     }

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
+import {useLanguage} from '../../common/lang-react';
 import {SongProperties} from '../../common/song-props';
-import {UIString} from '../i18n';
+import {CommonMessages} from '../common-messages';
 import {
   compareSongsByAchv,
   compareSongsByDifficulty,
@@ -25,17 +26,15 @@ const COLUMNS: ReadonlyArray<ColumnType> = [
   ColumnType.RATING,
 ];
 
-const COMPARATOR: Map<
-  ColumnType,
-  (x: ChartRecordWithRating, y: ChartRecordWithRating) => number
-> = new Map([
-  [ColumnType.SONG_TITLE, compareSongsByName],
-  [ColumnType.DIFFICULTY, compareSongsByDifficulty],
-  [ColumnType.LEVEL, compareSongsByLevel],
-  [ColumnType.ACHIEVEMENT, compareSongsByAchv],
-  [ColumnType.RANK, compareSongsByAchv],
-  [ColumnType.RATING, compareSongsByRating],
-]);
+const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithRating) => number> =
+  new Map([
+    [ColumnType.SONG_TITLE, compareSongsByName],
+    [ColumnType.DIFFICULTY, compareSongsByDifficulty],
+    [ColumnType.LEVEL, compareSongsByLevel],
+    [ColumnType.ACHIEVEMENT, compareSongsByAchv],
+    [ColumnType.RANK, compareSongsByAchv],
+    [ColumnType.RATING, compareSongsByRating],
+  ]);
 
 interface Props {
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
@@ -43,53 +42,52 @@ interface Props {
   limit: number;
   hidden?: boolean;
 }
-interface State {
-  sortBy?: ColumnType;
-  reverse?: boolean;
-}
-export class TopChartRecords extends React.PureComponent<Props, State> {
-  state: State = {sortBy: ColumnType.RATING};
-  render() {
-    const {hidden, records: allRecords, limit, songPropsByName} = this.props;
-    const {sortBy, reverse} = this.state;
-    let records = allRecords.slice(0, limit);
-    records.forEach((r, i) => (r.order = i + 1));
-    if (sortBy) {
-      records.sort(COMPARATOR.get(sortBy));
-      if (reverse) {
-        records.reverse();
+
+export const TopChartRecords = ({hidden, records: allRecords, limit, songPropsByName}: Props) => {
+  const [sortBy, setSortBy] = useState(ColumnType.RATING);
+  const [reverse, setReverse] = useState(false);
+
+  const handleSortBy = useCallback(
+    (col: ColumnType) => {
+      if (!COMPARATOR.has(col)) {
+        setSortBy(undefined);
+      } else if (col === sortBy) {
+        setReverse(!reverse);
+      } else {
+        setSortBy(col);
+        setReverse(false);
       }
+    },
+    [sortBy, reverse]
+  );
+
+  let records = allRecords.slice(0, limit);
+  records.forEach((r, i) => (r.order = i + 1));
+  if (sortBy) {
+    records.sort(COMPARATOR.get(sortBy));
+    if (reverse) {
+      records.reverse();
     }
-    return (
-      <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
-        <div className="responsiveFlexBox">
-          <LevelRankDistribution
-            topLeftCell={UIString.level}
-            chartRecords={records}
-            topChartsCount={limit}
-          />
-          <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
-        </div>
-        <ChartRecordsTable
-          songPropsByName={songPropsByName}
-          columns={COLUMNS}
-          tableClassname="topRecordTable"
-          records={records}
-          sortBy={this.handleSortBy}
-        />
-      </CollapsibleContainer>
-    );
   }
 
-  private handleSortBy = (col: ColumnType) => {
-    this.setState((state) => {
-      if (!COMPARATOR.has(col)) {
-        this.setState({sortBy: undefined});
-      } else if (col === state.sortBy) {
-        this.setState({reverse: !state.reverse});
-      } else {
-        this.setState({sortBy: col, reverse: false});
-      }
-    });
-  };
-}
+  const lang = useLanguage();
+  return (
+    <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
+      <div className="responsiveFlexBox">
+        <LevelRankDistribution
+          topLeftCell={CommonMessages[lang].level}
+          chartRecords={records}
+          topChartsCount={limit}
+        />
+        <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
+      </div>
+      <ChartRecordsTable
+        songPropsByName={songPropsByName}
+        columns={COLUMNS}
+        tableClassname="topRecordTable"
+        records={records}
+        sortBy={handleSortBy}
+      />
+    </CollapsibleContainer>
+  );
+};

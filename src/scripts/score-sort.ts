@@ -1,7 +1,7 @@
 import {DIFFICULTIES} from '../common/constants';
 import {getChartDifficulty, getChartType, getSongName} from '../common/fetch-score-util';
 import {SELF_SCORE_URLS} from '../common/fetch-self-score';
-import {LANG} from '../common/lang';
+import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel} from '../common/level-helper';
 import {iWantSomeMagic} from '../common/magic';
 import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
@@ -45,8 +45,9 @@ type Cache = {
 };
 
 (function (d) {
+  const LANG = getInitialLanguage();
   const SortLabels: Record<SortBy, string> = {
-    en: {
+    [Language.en_US]: {
       [SortBy.None]: "-- Choose Sort Option --",
       [SortBy.RankAsc]: "Rank (low \u2192 high)",
       [SortBy.RankDes]: "Rank (high \u2192 low)",
@@ -63,7 +64,7 @@ type Cache = {
       [SortBy.DxStarDes]: "DX-Star (5 \u2192 none)",
       [SortBy.DxStarAsc]: "DX-Star (none \u2192 5)",
     },
-    zh: {
+    [Language.zh_TW]: {
       [SortBy.None]: "-- 選擇排序方式 --",
       [SortBy.RankAsc]: "達成率 (由低至高)",
       [SortBy.RankDes]: "達成率 (由高至低)",

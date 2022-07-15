@@ -1,7 +1,8 @@
 import React from 'react';
 
 import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
-import {UIString} from '../i18n';
+import {useLanguage} from '../../common/lang-react';
+import {CommonMessages} from '../common-messages';
 import {ChartRecord} from '../types';
 import {RankDistributionDataRow} from './RankDistributionDataRow';
 import {RankDistributionHeadRow} from './RankDistributionHeadRow';
@@ -25,44 +26,40 @@ interface Props {
   topChartsCount: number;
 }
 
-export class DifficultyDistribution extends React.PureComponent<Props> {
-  render() {
-    const {chartRecords, topChartsCount} = this.props;
-    const topRecords = chartRecords.slice(0, topChartsCount);
-    const recordsPerDiff = getRecordsPerDifficulty(topRecords);
-    const keyMap = new Map<string, boolean>([[UIString.subtotal, true]]);
-    return (
-      <table className="rankDistributionTable">
-        <thead>
-          <RankDistributionHeadRow
-            firstCell={UIString.difficulty}
-            baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
-            perColumnClassnames={[DIFF_RANK_TOP_LEFT_CELL_CLASSNAME]}
-            columns={keyMap.keys()}
-          />
-        </thead>
-        <tbody>
-          {Array.from(recordsPerDiff.entries()).map(([d, records]) => {
-            if (!records.length) {
-              return;
-            }
-            const dist = new Map<string, number>([
-              [UIString.subtotal, records.length],
-            ]);
-            return (
-              <RankDistributionDataRow
-                key={d}
-                rowHead={d}
-                columns={keyMap.keys()}
-                rankDist={dist}
-                rowClassname={DIFFICULTY_CLASSNAME_MAP.get(d)}
-                baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
-                perColumnClassnames={[]}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  }
-}
+export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) => {
+  const lang = useLanguage();
+  const topRecords = chartRecords.slice(0, topChartsCount);
+  const recordsPerDiff = getRecordsPerDifficulty(topRecords);
+  const keyMap = new Map<string, boolean>([[CommonMessages[lang].subtotal, true]]);
+  return (
+    <table className="rankDistributionTable">
+      <thead>
+        <RankDistributionHeadRow
+          firstCell={CommonMessages[lang].difficulty}
+          baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
+          perColumnClassnames={[DIFF_RANK_TOP_LEFT_CELL_CLASSNAME]}
+          columns={keyMap.keys()}
+        />
+      </thead>
+      <tbody>
+        {Array.from(recordsPerDiff.entries()).map(([d, records]) => {
+          if (!records.length) {
+            return;
+          }
+          const dist = new Map<string, number>([[CommonMessages[lang].subtotal, records.length]]);
+          return (
+            <RankDistributionDataRow
+              key={d}
+              rowHead={d}
+              columns={keyMap.keys()}
+              rankDist={dist}
+              rowClassname={DIFFICULTY_CLASSNAME_MAP.get(d)}
+              baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
+              perColumnClassnames={[]}
+            />
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};

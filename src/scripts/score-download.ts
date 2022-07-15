@@ -1,17 +1,18 @@
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
-import {LANG} from '../common/lang';
+import {getInitialLanguage, Language} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
 import {handleError} from '../common/util';
 
 (function () {
+  const LANG = getInitialLanguage();
   const UIString = {
-    zh: {
+    [Language.zh_TW]: {
       pleaseLogIn: "請登入 maimai NET",
       copy: "複製成績",
       copied: "已複製到剪貼簿",
       allDone: "✅ 全部成績下載完畢，請按網頁上的「複製成績」把資料複製到剪貼簿。",
     },
-    en: {
+    [Language.en_US]: {
       pleaseLogIn: "Please log in to maimai DX NET.",
       copy: "Copy",
       copied: "Copied to clipboard",
@@ -68,9 +69,9 @@ import {handleError} from '../common/util';
     }
     const scoreList: string[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
-      onLog(statusText(difficulty, false));
+      onLog(statusText(LANG, difficulty, false));
       await fetchScores(difficulty, scoreList);
-      onLog(statusText(difficulty, true));
+      onLog(statusText(LANG, difficulty, true));
     }
     let textarea = document.getElementById("outputText") as HTMLTextAreaElement;
     if (!textarea) {

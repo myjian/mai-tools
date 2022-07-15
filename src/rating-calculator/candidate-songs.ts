@@ -1,16 +1,16 @@
-import {shuffleArray} from "../common/array-util";
-import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from "../common/constants";
-import {DxVersion} from "../common/game-version";
+import {shuffleArray} from '../common/array-util';
+import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DxVersion} from '../common/game-version';
 import {
   getRankByAchievement,
   getRankDefinitions,
   getRankIndexByAchievement,
-} from "../common/rank-functions";
-import {getSongNickname} from "../common/song-name-helper";
-import {SongProperties} from "../common/song-props";
-import {calculateRatingRange} from "./rating-functions";
-import {compareCandidate, compareSongsByLevel} from "./record-comparator";
-import {ChartRecordWithRating} from "./types";
+} from '../common/rank-functions';
+import {getSongNickname} from '../common/song-name-helper';
+import {SongProperties} from '../common/song-props';
+import {calculateRatingRange} from './rating-functions';
+import {compareCandidate, compareSongsByLevel} from './record-comparator';
+import {ChartRecordWithRating} from './types';
 
 // const MIN_RATING_ADJUSTMENT = 10; // for sorting order tweak
 

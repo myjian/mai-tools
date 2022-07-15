@@ -10,6 +10,7 @@
   color: #eee;
   padding: 5px 20px;
   margin-bottom: 6px;
+  cursor: pointer;
 }
 
 .ratingOverviewTable {

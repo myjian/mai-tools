@@ -18,7 +18,7 @@ const SCORE_RECORD_CELL_CLASSNAMES = [
 
 interface Props {
   className?: string;
-  columnValues: ReadonlyArray<React.ReactText>;
+  columnValues: ReadonlyArray<string | number>;
   isHeading?: boolean;
   onClickCell?: (index: number) => void;
 }
@@ -35,7 +35,17 @@ export class ChartRecordRow extends React.PureComponent<Props> {
           const columnClassName = SCORE_RECORD_CELL_CLASSNAMES[index];
           let className = SCORE_RECORD_CELL_BASE_CLASSNAME + " " + columnClassName;
           const children = this.getChildren(v, index, isHeading);
-          const clickProps = onClickCell ? {tabIndex: 0, onClick: () => onClickCell(index)} : {};
+          const clickProps = onClickCell
+            ? {
+                tabIndex: 0,
+                onClick: () => onClickCell(index),
+                onKeyDown: (evt: React.KeyboardEvent) => {
+                  if (evt.key === "Enter") {
+                    onClickCell(index);
+                  }
+                },
+              }
+            : {};
           if (isHeading) {
             return (
               <th className={className} {...clickProps}>
