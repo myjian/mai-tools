@@ -1,3 +1,4 @@
+import {Difficulty} from '../common/difficulties';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getInitialLanguage, Language} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
@@ -68,9 +69,9 @@ import {handleError} from '../common/util';
       return;
     }
     const scoreList: string[] = [];
-    for (const difficulty of SELF_SCORE_URLS.keys()) {
+    for (const difficulty of Object.keys(SELF_SCORE_URLS)) {
       onLog(statusText(LANG, difficulty, false));
-      await fetchScores(difficulty, scoreList);
+      await fetchScores(difficulty as Difficulty, scoreList);
       onLog(statusText(LANG, difficulty, true));
     }
     let textarea = document.getElementById("outputText") as HTMLTextAreaElement;

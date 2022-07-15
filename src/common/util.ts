@@ -1,8 +1,8 @@
-import {getChartType, getSongName} from "./fetch-score-util";
-import {SELF_SCORE_URLS} from "./fetch-self-score";
-import {DxVersion} from "./game-version";
-import {getSongIdx, isNicoNicoLink} from "./song-name-helper";
-import {BasicSongProps} from "./song-props";
+import {getChartType, getSongName} from './fetch-score-util';
+import {SELF_SCORE_URLS} from './fetch-self-score';
+import {DxVersion} from './game-version';
+import {getSongIdx, isNicoNicoLink} from './song-name-helper';
+import {BasicSongProps} from './song-props';
 
 export const ALLOWED_ORIGINS = [
   "https://cdpn.io",
@@ -51,7 +51,7 @@ async function parseSongList(dom: Document) {
 
 export async function fetchAllSongs(dom?: Document) {
   if (!dom) {
-    const url = SELF_SCORE_URLS.get("MASTER");
+    const url = SELF_SCORE_URLS["MASTER"];
     dom = await fetchPage(url);
   }
   return await parseSongList(dom);

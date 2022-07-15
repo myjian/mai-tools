@@ -1,6 +1,6 @@
-import {DIFFICULTIES} from "./constants";
-import {DxVersion} from "./game-version";
-import {getSongNickname, normalizeSongName} from "./song-name-helper";
+import {DIFFICULTIES} from './constants';
+import {DxVersion} from './game-version';
+import {getSongNickname, normalizeSongName} from './song-name-helper';
 
 export const enum ChartType {
   STANDARD = 0,
@@ -10,7 +10,7 @@ export const enum ChartType {
 export interface BasicSongProps {
   dx: ChartType;
   name: string;
-  nickname?: string;
+  nickname?: string | null;
 }
 
 export interface SongProperties extends BasicSongProps {
@@ -73,7 +73,7 @@ const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
  * {dx:0, v: 2, lv:[4.0, 6.0, 8.8, 10.9, 12.3], n:"Bad Apple!! feat nomico", nn:"Bad Apple!!"},
  * {dx:1, v:13, lv:[3.0, 7.0, 9.2, 11.8, 0], n:"METEOR"},
  */
-function parseSongProperties(line: string): SongProperties {
+function parseSongProperties(line: string): SongProperties | undefined {
   const dxMatch = line.match(DX_REGEX);
   const lvMatch = line.match(LV_REGEX);
   const debutVerMatch = line.match(VERSION_REGEX);
@@ -82,7 +82,7 @@ function parseSongProperties(line: string): SongProperties {
   if (dxMatch && lvMatch && debutVerMatch && songNameMatch) {
     let lvList = JSON.parse(lvMatch[1]) as number[];
     if (lvList.length > DIFFICULTIES.length) {
-      const newReMasterLv = lvList.pop();
+      const newReMasterLv = lvList.pop()!;
       lvList[DIFFICULTIES.length - 1] = newReMasterLv;
     }
     return {
@@ -99,7 +99,7 @@ function insertOrUpdateSongProps(map: Map<string, SongProperties[]>, props: Song
   if (!map.has(props.name)) {
     map.set(props.name, []);
   }
-  const arr = map.get(props.name);
+  const arr = map.get(props.name)!;
   const match = arr.findIndex((p) => props.dx === p.dx);
   if (match >= 0) {
     // replace same chart type
@@ -132,7 +132,7 @@ export function getSongProperties(
   songName: string,
   genre: string,
   chartType: ChartType
-) {
+): SongProperties | undefined {
   let songPropsArray = songPropsByName.get(songName);
   if (songPropsArray && songPropsArray.length > 0) {
     if (songPropsArray.length > 1) {
@@ -153,7 +153,7 @@ export function getSongProperties(
     }
   }
   console.warn(`Could not find song properties for ${songName} ${chartType}`);
-  return null;
+  return undefined;
 }
 
 export function filterSongsByVersion(

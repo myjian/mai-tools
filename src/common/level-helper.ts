@@ -14,7 +14,7 @@ export function getOfficialLevel(level: number): string {
  *   Lv10 => 10.0 (actual range: 10.0 - 10.6)
  *   Lv10 => 10.7 (actual range: 10.7 - 10.9)
  */
-export function getDefaultLevel(officialLevel: string): number {
+export function getDefaultLevel(officialLevel: string | undefined): number {
   if (!officialLevel) {
     return MIN_LEVEL;
   }

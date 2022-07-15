@@ -158,8 +158,8 @@ type Cache = {
     return "UNKNOWN LEVEL " + lv.toFixed(0);
   }
 
-  function createMap(sections: string[], reverse: boolean) {
-    const map = new Map<string, HTMLElement[]>();
+  function createMap(sections: (string | null)[], reverse: boolean) {
+    const map = new Map<string | null, HTMLElement[]>();
     if (reverse) {
       sections.reverse();
     }
@@ -223,8 +223,8 @@ type Cache = {
     return row.getElementsByClassName("music_lv_block")[0] as HTMLElement;
   }
 
-  function getChartLv(row: HTMLElement, key: string = "lv"): string {
-    return getChartLvElem(row).dataset[key];
+  function getChartLv(row: HTMLElement, key: string = "lv"): string | undefined {
+    return getChartLvElem(row)?.dataset[key];
   }
 
   function saveInLv(row: HTMLElement, lv: number) {
@@ -241,7 +241,7 @@ type Cache = {
     }
   }
 
-  function coalesceInLv(row: HTMLElement, lvIndex: number, props?: SongProperties) {
+  function coalesceInLv(row: HTMLElement, lvIndex: number, props?: SongProperties | null) {
     let lv = 0;
     if (props) {
       lv = props.lv[lvIndex];
@@ -271,7 +271,7 @@ type Cache = {
       } else if (cache.originalLinkIdx === idx) {
         props = getSongProperties(songProps, song, "", t);
       }
-      console.log(props);
+      console.log(props!);
     } else {
       props = getSongProperties(songProps, song, "", t);
     }
@@ -279,8 +279,8 @@ type Cache = {
   }
 
   function compareInLv(row1: HTMLElement, row2: HTMLElement) {
-    const lv1 = getChartInLv(row1, cache.songProps);
-    const lv2 = getChartInLv(row2, cache.songProps);
+    const lv1 = getChartInLv(row1, cache.songProps!);
+    const lv2 = getChartInLv(row2, cache.songProps!);
     return lv1 < lv2 ? -1 : lv2 < lv1 ? 1 : 0;
   }
 
@@ -288,7 +288,7 @@ type Cache = {
     const map = createMap(CHART_LEVELS, reverse);
     rows.forEach((row) => {
       const lv = getChartLv(row);
-      map.get(lv).push(row);
+      map.get(lv)!.push(row);
     });
     if (cache.songProps) {
       map.forEach((subRows) => {
@@ -506,7 +506,7 @@ type Cache = {
     const inLvSet = new Map<number, boolean>();
     const inLvs: number[] = [];
     for (const row of Array.from(rows)) {
-      const lv = getChartInLv(row, cache.songProps);
+      const lv = getChartInLv(row, cache.songProps!);
       inLvSet.set(lv, true);
       inLvs.push(lv);
     }
@@ -593,10 +593,14 @@ type Cache = {
   }
 
   async function addSummaryBlock() {
-    const scorePage = await fetchPage(SELF_SCORE_URLS.get("Re:MASTER"));
-    const summaryTable = scorePage.querySelector(".music_scorelist_table").parentElement;
+    const scorePage = await fetchPage(SELF_SCORE_URLS["Re:MASTER"]);
+    const summaryTable = scorePage.querySelector(".music_scorelist_table")?.parentElement;
+    if (!summaryTable) {
+      console.warn("could not find summary table");
+      return;
+    }
     if (!isDxScoreVs) {
-      summaryTable.querySelector("tr:last-child").remove();
+      summaryTable.querySelector("tr:last-child")?.remove();
     }
     const rows = getScoreRows();
     const total = rows.length;
@@ -784,7 +788,7 @@ type Cache = {
           // idx is not available on friend score page and getSongIdx will throw.
           const idx = getSongIdx(row);
           const isNico = await isNicoNicoLink(idx);
-          let props: SongProperties;
+          let props: SongProperties | null;
           if (isNico) {
             cache.nicoLinkIdx = idx;
             props = getSongProperties(songProps, song, "niconico", ChartType.STANDARD);

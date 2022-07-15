@@ -1,3 +1,4 @@
+import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {DxVersion} from '../common/game-version';
@@ -44,9 +45,9 @@ declare global {
     }
     // Fetch all scores
     const scoreList: string[] = [];
-    for (const difficulty of SELF_SCORE_URLS.keys()) {
+    for (const difficulty of Object.keys(SELF_SCORE_URLS)) {
       send("appendPlayerScore", statusText(LANG, difficulty, false));
-      const dom = await fetchScores(difficulty, scoreList);
+      const dom = await fetchScores(difficulty as Difficulty, scoreList);
       if (difficulty === "MASTER") {
         allSongsDom = dom;
       }
