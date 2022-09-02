@@ -14,6 +14,9 @@ function getMaimaiSongsLink(
   const q = new URLSearchParams();
   q.set("maxLevelValue", officialLv);
   q.set("minLevelValue", officialLv);
+  if (gameRegion === GameRegion.Jp) {
+    q.set("region", "jp");
+  }
   if (gameRegion === GameRegion.Intl) {
     q.set("region", "intl");
   }
@@ -23,7 +26,7 @@ function getMaimaiSongsLink(
     minGameVer++;
   }
   q.set("versions", versions.join("|"));
-  return "https://maimai-songs.zetaraku.dev/?" + q;
+  return "https://arcade-songs.zetaraku.dev/maimai/?" + q;
 }
 
 interface Props {
