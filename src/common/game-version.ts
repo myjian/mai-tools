@@ -36,7 +36,7 @@ export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
 
 export function validateGameVersion(
   ver: number | string | null,
-  fallback: DxVersion = DxVersion.UNIVERSE
+  fallback: DxVersion = DxVersion.UNIVERSE_PLUS
 ): DxVersion {
   const numVer = typeof ver === "string" ? parseInt(ver) : ver;
   if (!ver || isNaN(numVer)) {
