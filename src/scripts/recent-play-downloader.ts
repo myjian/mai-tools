@@ -108,7 +108,13 @@ declare var domtoimage: any;
   }
 
   function getSongName(row: HTMLElement) {
-    return (row.querySelector(".m_5.p_5.f_13").childNodes[1] as Text).wholeText;
+    try {
+      return (row.querySelector(".m_5.p_5.f_13") as HTMLElement).textContent;
+    } catch (e) {
+      console.log(e);
+      console.log(row);
+      return "";
+    }
   }
 
   async function getSongImgSrc(
