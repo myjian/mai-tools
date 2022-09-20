@@ -40,7 +40,15 @@ const RankFactorRow = (props: RankFactorRowProps) => {
         if (index < RANK_FACTOR_CELL_CLASSNAMES.length) {
           className += " " + RANK_FACTOR_CELL_CLASSNAMES[index];
         }
-        return useTh ? <th className={className}>{v}</th> : <td className={className}>{v}</td>;
+        return useTh ? (
+          <th key={index} className={className}>
+            {v}
+          </th>
+        ) : (
+          <td key={index} className={className}>
+            {v}
+          </td>
+        );
       })}
     </tr>
   );
@@ -73,7 +81,9 @@ export const MultiplierTable = ({gameVer}: Props) => {
             const maxMulText = maxMultiplier.toFixed(3);
             const multiplierRange =
               minMulText !== maxMulText ? `${minMulText} - ${maxMulText}` : minMulText;
-            return <RankFactorRow values={[r.title, r.minAchv, r.factor, multiplierRange]} />;
+            return (
+              <RankFactorRow key={idx} values={[r.title, r.minAchv, r.factor, multiplierRange]} />
+            );
           })}
         </tbody>
       </table>

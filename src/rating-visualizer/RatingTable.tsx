@@ -21,22 +21,22 @@ export class RatingTable extends React.PureComponent<Props> {
         <thead className="lookupTableHead">
           <tr>
             <th className="lookupTopLeftCell"></th>
-            {ranks.map((r) => (
-              <th>{r.title}</th>
+            {ranks.map((r, idx) => (
+              <th key={idx}>{r.title}</th>
             ))}
           </tr>
         </thead>
         <tbody className="lookupTableBody">
-          {levels.map((lv) => {
+          {levels.map((lv, idx) => {
             return (
-              <tr>
+              <tr key={idx}>
                 <th>{lv.title}</th>
                 {ranks.map((r, idx) => {
                   const maxAchv = idx === 0 ? r.minAchv : ranks[idx - 1].minAchv - 0.0001;
                   const minRating = Math.floor(lv.minLv * r.minAchv * r.factor * 0.01);
                   const maxRating = Math.floor(lv.maxLv * maxAchv * r.factor * 0.01);
                   const text = minRating === maxRating ? minRating : `${maxRating} - ${minRating}`;
-                  return <td>{text}</td>;
+                  return <td key={idx}>{text}</td>;
                 })}
               </tr>
             );

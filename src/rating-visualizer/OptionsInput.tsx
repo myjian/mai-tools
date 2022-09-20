@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import {DxVersion} from "../common/game-version";
-import {DX_LEVELS, getLvIndex} from "./levels";
+import {DxVersion} from '../common/game-version';
+import {DX_LEVELS, getLvIndex} from './levels';
 
 interface OptionsInputProps {
   heightUnit: number;
@@ -23,46 +23,34 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
         <div className="container" onFocus={onFocus} onBlur={onBlur} tabIndex={-1}>
           <label className="optionGroup">
             Ver:&nbsp;
-            <select onChange={this.handleSetGameVer}>
-              <option value={DxVersion.SPLASH} selected={gameVer === DxVersion.SPLASH}>
-                Splash
-              </option>
-              <option value={DxVersion.SPLASH_PLUS} selected={gameVer === DxVersion.SPLASH_PLUS}>
-                Splash PLUS
-              </option>
+            <select onChange={this.handleSetGameVer} value={gameVer}>
+              <option value={DxVersion.SPLASH}>Splash (and older)</option>
+              <option value={DxVersion.SPLASH_PLUS}>Current version</option>
             </select>
           </label>
           <label className="optionGroup">
             Scale:&nbsp;
-            <select onChange={this.handleChangeHeightUnit}>
-              <option value="0" selected={heightUnit === 0}>
-                Hide
-              </option>
-              <option value="3" selected={heightUnit === 3}>
-                3x
-              </option>
-              <option value="4" selected={heightUnit === 4}>
-                4x
-              </option>
-              <option value="5" selected={heightUnit === 5}>
-                5x
-              </option>
-              <option value="8" selected={heightUnit === 8}>
-                8x
-              </option>
-              <option value="12" selected={heightUnit === 12}>
-                12x
-              </option>
+            <select onChange={this.handleChangeHeightUnit} value={heightUnit.toFixed(0)}>
+              <option value="0">Hide</option>
+              <option value="3">3x</option>
+              <option value="4">4x</option>
+              <option value="5">5x</option>
+              <option value="8">8x</option>
+              <option value="12">12x</option>
             </select>
           </label>
           <span className="lvRangeLabelContainer">
             <label className="optionGroup">
               Min&nbsp;Level:&nbsp;
-              <select onChange={this.handleChangeMinLv}>{this.renderLvOptions(minLv)}</select>
+              <select onChange={this.handleChangeMinLv} value={minLv}>
+                {this.renderLvOptions()}
+              </select>
             </label>
             <label className="optionGroup">
               Max&nbsp;Level:&nbsp;
-              <select onChange={this.handleChangeMaxLv}>{this.renderLvOptions(maxLv)}</select>
+              <select onChange={this.handleChangeMaxLv} value={maxLv}>
+                {this.renderLvOptions()}
+              </select>
             </label>
           </span>
         </div>
@@ -70,13 +58,12 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
     );
   }
 
-  private renderLvOptions(selectedLv: string) {
+  private renderLvOptions() {
     const options: JSX.Element[] = [];
     for (let i = DX_LEVELS.length - 1; i >= 0; i--) {
       const lv = DX_LEVELS[i];
-      const isSelected = selectedLv === lv.title;
       options.push(
-        <option key={i} value={lv.title} selected={isSelected}>
+        <option key={i} value={lv.title}>
           {lv.title}
         </option>
       );

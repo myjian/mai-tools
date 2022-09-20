@@ -143,7 +143,6 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     const lvs = [];
     const maxLv = DX_LEVELS[endIdx].maxLv;
     let currentLv = DX_LEVELS[startIdx].minLv;
-    console.log(currentLv, maxLv);
     while (currentLv <= maxLv) {
       lvs.push({
         title: currentLv.toFixed(1),
@@ -152,7 +151,6 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
       });
       currentLv += 0.1;
     }
-    console.log(lvs);
     return lvs;
   }
 
@@ -160,7 +158,6 @@ export class RatingVisualizer extends React.PureComponent<{}, RatingVisualizerSt
     const {minLv, maxLv} = this.state;
     const startIdx = getLvIndex(minLv);
     const endIdx = getLvIndex(maxLv);
-    console.log(startIdx, endIdx);
     if (endIdx - startIdx < 2) {
       return this.getDetailLevels(startIdx, endIdx);
     }

@@ -33,11 +33,11 @@ export const VersionSelect = ({gameVer, handleVersionSelect}: Props) => {
   return (
     <label>
       {messages.gameVer}
-      <select className="gameVersion" onChange={handleChange}>
+      <select className="gameVersion" onChange={handleChange} value={gameVer}>
         {RATING_CALCULATOR_SUPPORTED_VERSIONS.map((ver) => {
           const verStr = ver.toFixed(0);
           return (
-            <option key={verStr} value={verStr} selected={ver === gameVer}>
+            <option key={verStr} value={verStr}>
               {getVersionName(ver)}
             </option>
           );

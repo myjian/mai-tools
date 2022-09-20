@@ -22,11 +22,11 @@ export const LanguageChooser = ({activeLanguage, changeLanguage}: Props) => {
   return (
     <label>
       介面語言 (Language)：
-      <select className="language" onChange={handleChange}>
+      <select className="language" onChange={handleChange} value={activeLanguage}>
         {SUPPORTED_LANGUAGES.map((lang) => {
           const langText = LangText[lang];
           return (
-            <option key={lang} value={lang} selected={lang === activeLanguage}>
+            <option key={lang} value={lang}>
               {langText}
             </option>
           );
