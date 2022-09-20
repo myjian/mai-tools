@@ -40,7 +40,7 @@ export const scoreConverter: Bookmarklet = {
     [Language.zh_TW]:
       "功能：可轉換 DX 達成率為舊版 (maimai FiNALE) 計分方式，以及分析各指令扣分比例。",
     [Language.en_US]:
-      "featureByLang: Convert DX achievement to old achievement (maimai FiNALE & older), and analyze score penalty by note type.",
+      "Feature: Convert DX achievement to old achievement (maimai FiNALE & older), and analyze score penalty by note type.",
   },
   howToByLang: {
     [Language.zh_TW]:
@@ -60,7 +60,7 @@ export const scoreSorter: Bookmarklet = {
   featureByLang: {
     [Language.zh_TW]: "功能：可依照達成率、AP/FC 成就、Sync 進度或譜面等級，排序自己或好友的成績。",
     [Language.en_US]:
-      "featureByLang: Sort scores by rank, AP/FC status, sync status, or level. You can sort friend's scores too.",
+      "Feature: Sort scores by rank, AP/FC status, sync status, or level. You can sort friend's scores too.",
   },
   howToByLang: {
     [Language.zh_TW]:
@@ -79,7 +79,7 @@ export const recentPlaySummary: Bookmarklet = {
   },
   featureByLang: {
     [Language.zh_TW]: "功能：以表格方式整理最近的遊玩紀錄，並將遊戲時間修正為當地時間。",
-    [Language.en_US]: "featureByLang: Organize recent game records into a condensed table.",
+    [Language.en_US]: "Feature: Organize recent game records into a condensed table.",
   },
   howToByLang: {
     [Language.zh_TW]:
@@ -97,7 +97,7 @@ export const ratingAnalyzer: Bookmarklet = {
   },
   featureByLang: {
     [Language.zh_TW]: "功能：可分析自己的 DX Rating 組成。",
-    [Language.en_US]: "featureByLang: Analyze your DX Rating composition.",
+    [Language.en_US]: "Feature: Analyze your DX Rating composition.",
   },
   howToByLang: {
     [Language.zh_TW]:
@@ -115,7 +115,7 @@ export const analyzeFriendRating: Bookmarklet = {
   },
   featureByLang: {
     [Language.zh_TW]: "功能：可分析朋友的 DX Rating 組成。",
-    [Language.en_US]: "featureByLang: Analyze your favorite friend's DX Rating composition.",
+    [Language.en_US]: "Feature: Analyze your favorite friend's DX Rating composition.",
   },
   howToByLang: {
     [Language.zh_TW]:
@@ -149,7 +149,7 @@ export const scoreDownloader: Bookmarklet = {
   },
   featureByLang: {
     [Language.zh_TW]: "功能：下載所有白譜、紫譜、紅譜、黃譜的成績。可用於個人紀錄或是 R 值分析。",
-    [Language.en_US]: "featureByLang: Download all ADVANCED, EXPERT, MASTER, and Re:MASTER scores.",
+    [Language.en_US]: "Feature: Download all ADVANCED, EXPERT, MASTER, and Re:MASTER scores.",
   },
   howToByLang: (lang: Language) => (
     <React.Fragment>
@@ -173,7 +173,7 @@ export const albumDownloadHelper: Bookmarklet = {
     [Language.zh_TW]:
       '功能：把相簿內的照片以 "日期 曲名 難度.jpg" 方式命名，並且可以直接點擊照片下載。',
     [Language.en_US]:
-      'featureByLang: Make photos in the album downloadable with filenames like "Date Songname Difficulty.jpg"',
+      'Feature: Make photos in the album downloadable with filenames like "Date Songname Difficulty.jpg"',
   },
   howToByLang: {
     [Language.zh_TW]:

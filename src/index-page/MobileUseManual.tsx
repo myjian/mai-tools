@@ -7,7 +7,7 @@ const MessagesByLang = {
   [Language.zh_TW]: {
     title: "在手機上怎麼使用書籤？",
     step1: "打開 Chrome，登入 maimai NET",
-    step2: "進入想要使用書籤的頁面（例如：想要使用「分析自己 DX Rating」，就打開玩家資料的頁面）",
+    step2: "進入想要使用書籤的頁面（例如：想要使用「分析自己 DX Rating」，就打開個人檔案的頁面）",
     step3: "點網址欄",
     chrome4: "把原本的網址刪除，再輸入「MMBL」",
     chrome5: "找到剛才新增的書籤（網址開頭會是 javascript），點下去",

@@ -2,7 +2,7 @@ import React from 'react';
 
 import {Language} from '../common/lang';
 import {useLanguage} from '../common/lang-react';
-import {BOOKMARKLET_LINK, LinkNameByLang} from './bookmarklets';
+import {BOOKMARKLET_LINK, LinkNameByLang} from './all-bookmarklets';
 
 const MessagesByLang = {
   [Language.zh_TW]: {

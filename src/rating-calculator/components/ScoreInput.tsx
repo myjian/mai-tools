@@ -26,7 +26,7 @@ export const ScoreInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef)
       <h2 className="scoreInputHeading">{messages.scoreInputHeading}</h2>
       <div>
         {messages.scoreInputDescPrefix}
-        <a href="/mai-tools/bookmarklets/" target="_blank">
+        <a href="../#bookmarklets" target="_blank">
           {messages.bookmarketLinkLabel}
         </a>
         {messages.scoreInputDescSuffix}

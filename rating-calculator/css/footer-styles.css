@@ -7,6 +7,14 @@
   padding-bottom: 10px;
 }
 
+.toolItem a {
+  color: rgb(0, 56, 216);
+}
+
+.toolItem a:visited {
+  color: rgb(0, 56, 216);
+}
+
 footer {
   margin-bottom: 40px;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {useLanguage} from '../common/lang-react';
-import {Bookmarklet} from './bookmarklets';
+import {Bookmarklet} from './all-bookmarklets';
 
 export const BookmarkItem = (props: Bookmarklet) => {
   const lang = useLanguage();
@@ -16,9 +16,7 @@ export const BookmarkItem = (props: Bookmarklet) => {
         </ul>
       </div>
       <div className="bookmarkletImage">
-        <a href={screenshotUrl}>
-          <img className="screenshot" alt="screenshot" src={screenshotUrl} />
-        </a>
+        <img className="screenshot" alt="screenshot" src={screenshotUrl} />
       </div>
     </div>
   );

@@ -46,6 +46,19 @@ body {
   flex-shrink: 1;
 }
 
+.otherToolsHeading {
+  margin-bottom: 10px;
+}
+
+.toolItem {
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+.toolItem a:visited {
+  color: rgb(0, 56, 216);
+}
+
 .footer {
   margin-top: 40px;
 }
@@ -55,13 +68,12 @@ body {
   color: #222;
 }
 
-.credit a {
-  color: rgb(0, 56, 216);
-  text-decoration: none;
+.authorLink {
+  color: inherit;
 }
 
-.credit a:visited {
-  color: rgb(0, 56, 216);
+.authorLink:visited {
+  color: inherit;
 }
 
 @media only screen and (max-width: 630px) {
