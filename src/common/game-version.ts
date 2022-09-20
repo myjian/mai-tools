@@ -21,7 +21,7 @@ const VERSION_NAMES = [
   "FESTiVAL",
 ];
 
-export enum DxVersion {
+export const enum DxVersion {
   SPLASH = 15,
   SPLASH_PLUS = 16,
   UNIVERSE = 17,
@@ -45,7 +45,10 @@ export function validateGameVersion(
   if (!ver || isNaN(numVer)) {
     return fallback;
   }
-  if (numVer >= DxVersion.SPLASH && numVer <= DxVersion.UNIVERSE_PLUS) {
+  if (
+    numVer >= RATING_CALCULATOR_SUPPORTED_VERSIONS[0] &&
+    numVer <= RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1]
+  ) {
     return numVer;
   }
   return fallback;

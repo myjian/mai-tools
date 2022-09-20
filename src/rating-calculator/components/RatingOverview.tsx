@@ -43,11 +43,11 @@ export const RatingOverview = ({
   newTopChartsCount,
   playerGradeIndex,
 }: Props) => {
-  const [forceDisplayRatingRatio, setForceDisplayRatingRatio] = useState<boolean>();
+  const [showRatingRatio, setShowRatingRatio] = useState<boolean>();
 
-  const handleForceShowRatio = useCallback(() => {
-    setForceDisplayRatingRatio(!forceDisplayRatingRatio);
-  }, [forceDisplayRatingRatio]);
+  const toggleRatingRatio = useCallback(() => {
+    setShowRatingRatio(!showRatingRatio);
+  }, [showRatingRatio]);
 
   const messages = MessagesByLang[useLanguage()];
   let totalRating = newChartsRating + oldChartsRating;
@@ -57,29 +57,12 @@ export const RatingOverview = ({
   }
   const topGradeBonus = getTopGradeBonus(gameVer);
 
-  let displayRatingRatio = forceDisplayRatingRatio;
-  if (forceDisplayRatingRatio !== false && oldChartsMaxRating && newChartsMaxRating) {
-    displayRatingRatio =
-      forceDisplayRatingRatio ||
-      oldChartsMaxRating - oldChartsRating < 100 ||
-      newChartsMaxRating - newChartsRating < 100;
-  } else {
-    displayRatingRatio = false;
-  }
-
-  if (displayRatingRatio && forceDisplayRatingRatio === undefined) {
-    // Making the first click disable rating ratio rather than enable it.
-    window.setTimeout(() => {
-      setForceDisplayRatingRatio(true);
-    }, 0);
-  }
-
   return (
     <div className="ratingOverview">
-      <div className="totalRatingRow" tabIndex={0} onClick={handleForceShowRatio}>
+      <div className="totalRatingRow" tabIndex={0} onClick={toggleRatingRatio}>
         Rating：{" "}
         <span>
-          {displayRatingRatio
+          {showRatingRatio
             ? `${totalRating} / ${newChartsMaxRating + oldChartsMaxRating + topGradeBonus}`
             : totalRating}
         </span>
@@ -90,7 +73,7 @@ export const RatingOverview = ({
             <td>{messages.newChartsRating}</td>
             <td className="columnColumn">{messages.column}</td>
             <td className="subRatingColumn">
-              {displayRatingRatio ? `${newChartsRating} / ${newChartsMaxRating}` : newChartsRating}
+              {showRatingRatio ? `${newChartsRating} / ${newChartsMaxRating}` : newChartsRating}
             </td>
             <td className="avgRatingColumn">
               ({messages.average}
@@ -101,7 +84,7 @@ export const RatingOverview = ({
             <td>{messages.oldChartsRating}</td>
             <td>{messages.column}</td>
             <td className="subRatingColumn">
-              {displayRatingRatio ? `${oldChartsRating} / ${oldChartsMaxRating}` : oldChartsRating}
+              {showRatingRatio ? `${oldChartsRating} / ${oldChartsMaxRating}` : oldChartsRating}
             </td>
             <td className="avgRatingColumn">
               ({messages.average}
@@ -115,7 +98,7 @@ export const RatingOverview = ({
               </td>
               <td>{messages.column}</td>
               <td className="subRatingColumn">
-                {displayRatingRatio ? `${playerGrade.bonus} / ${topGradeBonus}` : playerGrade.bonus}
+                {showRatingRatio ? `${playerGrade.bonus} / ${topGradeBonus}` : playerGrade.bonus}
               </td>
             </tr>
           )}
