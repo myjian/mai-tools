@@ -18,6 +18,7 @@ const VERSION_NAMES = [
   "Splash PLUS",
   "UNiVERSE",
   "UNiVERSE PLUS",
+  "FESTiVAL",
 ];
 
 export enum DxVersion {
@@ -25,6 +26,7 @@ export enum DxVersion {
   SPLASH_PLUS = 16,
   UNIVERSE = 17,
   UNIVERSE_PLUS = 18,
+  FESTiVAL = 19,
 }
 
 export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
@@ -32,6 +34,7 @@ export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
   DxVersion.SPLASH_PLUS,
   DxVersion.UNIVERSE,
   DxVersion.UNIVERSE_PLUS,
+  DxVersion.FESTiVAL,
 ];
 
 export function validateGameVersion(
