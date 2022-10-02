@@ -278,7 +278,7 @@ declare var domtoimage: any;
     container.style.paddingBottom = Math.floor(records.length / 2) + 2 + "px";
   }
 
-  function getFilterAndOptions(): Options {
+  function getSelectedDates(): Set<string> {
     const dateOptions = d.querySelectorAll(
       "input." + DATE_CHECKBOX_CLASSNAME
     ) as NodeListOf<HTMLInputElement>;
@@ -288,6 +288,11 @@ declare var domtoimage: any;
         selectedDates.add(op.value);
       }
     });
+    return selectedDates;
+  }
+
+  function getFilterAndOptions(): Options {
+    const selectedDates = getSelectedDates();
     let showAllRecords = false;
     const newRecordRadios = d.getElementsByName(
       NEW_RECORD_RADIO_NAME
@@ -450,7 +455,7 @@ declare var domtoimage: any;
       }
       const elem = d.querySelector(".playRecordContainer");
       domtoimage.toPng(elem).then((dataUrl: string) => {
-        const dtStr = formatDate(new Date()).replace(" ", "_").replace(":", "-");
+        const dtStr = Array.from(getSelectedDates()).join(",");
         const filename = "record_" + dtStr + ".png";
         const a = ce("a");
         a.href = dataUrl;
