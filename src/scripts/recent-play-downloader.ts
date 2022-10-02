@@ -70,7 +70,6 @@ declare var domtoimage: any;
     ["fsd", "FULL SYNC DX"],
     ["fsdplus", "FULL SYNC DX+"],
   ]);
-  const IMG_HW = 90; // height and width
   const DATE_CHECKBOX_CLASSNAME = "dateCheckbox";
   const NEW_RECORD_RADIO_NAME = "newRecordRadio";
   const SORT_BY_RADIO_NAME = "sortByRadio";
@@ -117,24 +116,9 @@ declare var domtoimage: any;
     }
   }
 
-  async function getSongImgSrc(
-    row: HTMLElement,
-    canvas: HTMLCanvasElement,
-    context: CanvasRenderingContext2D
-  ): Promise<string> {
-    context.drawImage(
-      row.querySelector(".music_img") as HTMLImageElement,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-    return new Promise((resolve) => {
-      resolve(canvas.toDataURL());
-      //canvas.toBlob((blob) => {
-      //  resolve(URL.createObjectURL(blob));
-      //}, 'image/jpeg', 1.0);
-    });
+  function getSongImgSrc(row: HTMLElement): string {
+    const img = row.querySelector(".music_img") as HTMLImageElement;
+    return img ? img.src : "";
   }
 
   function getDifficulty(row: HTMLElement) {
@@ -192,15 +176,11 @@ declare var domtoimage: any;
       d.querySelectorAll(".main_wrapper .p_10.t_l.f_0.v_b")
     ) as HTMLElement[];
     const results: ScoreRecord[] = [];
-    const canvas = ce("canvas");
-    canvas.width = IMG_HW;
-    canvas.height = IMG_HW;
-    const context = canvas.getContext("2d");
     for (const row of scoreList) {
       results.push({
         date: getPlayDate(row),
         songName: getSongName(row),
-        songImgSrc: await getSongImgSrc(row, canvas, context),
+        songImgSrc: getSongImgSrc(row),
         difficulty: getDifficulty(row),
         achievement: getAchievement(row),
         stamps: getStamps(row),
@@ -239,8 +219,12 @@ declare var domtoimage: any;
       if (typeof v === "string") {
         cell.append(v);
       } else {
-        cell.classList.add("songImg");
-        cell.style.backgroundImage = 'url("' + v[1] + '")';
+        if (v[1]) {
+          const img = ce("img");
+          img.classList.add("songImg");
+          img.src = v[1];
+          cell.append(img);
+        }
         cell.append(v[0]);
       }
       cell.classList.add(SCORE_RECORD_CELL_BASE_CLASSNAME);
