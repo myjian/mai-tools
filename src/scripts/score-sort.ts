@@ -61,8 +61,8 @@ type Cache = {
       [SortBy.LvDes]: "Level (high \u2192 low)",
       [SortBy.InLvAsc]: "Internal Level (low \u2192 high)",
       [SortBy.InLvDes]: "Internal Level (high \u2192 low)",
-      [SortBy.DxStarDes]: "DX-Star (5 \u2192 none)",
-      [SortBy.DxStarAsc]: "DX-Star (none \u2192 5)",
+      [SortBy.DxStarDes]: "DX-Star (7 \u2192 none)",
+      [SortBy.DxStarAsc]: "DX-Star (none \u2192 7)",
     },
     [Language.zh_TW]: {
       [SortBy.None]: "-- 選擇排序方式 --",
@@ -78,8 +78,8 @@ type Cache = {
       [SortBy.LvDes]: "譜面等級 (由高至低)",
       [SortBy.InLvAsc]: "內部譜面等級 (由低至高)",
       [SortBy.InLvDes]: "內部譜面等級 (由高至低)",
-      [SortBy.DxStarDes]: "DX-Star (5 星至無星)",
-      [SortBy.DxStarAsc]: "DX-Star (無星至 5 星)",
+      [SortBy.DxStarDes]: "DX-Star (7 星至無星)",
+      [SortBy.DxStarAsc]: "DX-Star (無星至 7 星)",
     },
   }[LANG];
   const CHART_LEVELS = [
@@ -127,7 +127,16 @@ type Cache = {
   const AP_FC_TYPES = ["AP+", "AP", "FC+", "FC", null];
   const SYNC_TYPES = ["FDX+", "FDX", "FS+", "FS", null];
   const VS_RESULTS = ["WIN", "DRAW", "LOSE"];
-  const DX_STARS = [null, "✦", "✦✦", "✦✦✦", "✦✦✦✦", "✦✦✦✦✦"];
+  const DX_STARS = [
+    null,
+    "✦ - 85%",
+    "✦✦ - 90%",
+    "✦✦✦ - 93%",
+    "✦✦✦✦ - 95%",
+    "✦✦✦✦✦ - 97%",
+    "✦6 - 99%",
+    "✦7 - 100%",
+  ];
   const LV_DELTA = 0.02;
   const isFriendScore = location.pathname.includes("battleStart");
   const isDxScoreVs = location.search.includes("scoreType=1");
@@ -448,7 +457,11 @@ type Cache = {
       const playerScore = parseInt(scoreSegments[0].replace(",", "").trim());
       const maxScore = parseInt(scoreSegments[1].replace(",", "").trim());
       const dxScoreRatio = playerScore / maxScore;
-      if (dxScoreRatio >= 0.97) {
+      if (playerScore === maxScore) {
+        return DX_STARS[7];
+      } else if (dxScoreRatio >= 0.99) {
+        return DX_STARS[6];
+      } else if (dxScoreRatio >= 0.97) {
         return DX_STARS[5];
       } else if (dxScoreRatio >= 0.95) {
         return DX_STARS[4];
@@ -467,11 +480,11 @@ type Cache = {
 
   function getDxStar(row: HTMLElement) {
     if (isFriendScore) {
-      const img = row.querySelector("tr:first-child td:last-child img");
+      const img = row.querySelector("tr:first-child td:last-child img") as HTMLImageElement;
       if (!img) {
         return null;
       }
-      const imgPath = new URL((img as HTMLImageElement).src).pathname;
+      const imgPath = new URL(img.src).pathname;
       const dxStar = imgPath.substring(imgPath.lastIndexOf("_") + 1, imgPath.lastIndexOf("."));
       try {
         const dxStarInt = parseInt(dxStar);
@@ -680,7 +693,7 @@ type Cache = {
         dxStarCount[getDxStar(row)]++;
       });
 
-      for (let i = 4; i >= 1; i--) {
+      for (let i = DX_STARS.length - 2; i >= 1; i--) {
         dxStarCount[DX_STARS[i]] += dxStarCount[DX_STARS[i + 1]];
       }
 
