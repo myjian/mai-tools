@@ -65,10 +65,10 @@ declare var domtoimage: any;
   ]);
 
   const FS_FDX_IMG_NAME_TO_TEXT = new Map([
-    ["fs", "FULL SYNC"],
-    ["fsplus", "FULL SYNC+"],
-    ["fsd", "FULL SYNC DX"],
-    ["fsdplus", "FULL SYNC DX+"],
+    ["fs", "FS"],
+    ["fsplus", "FS+"],
+    ["fsd", "FSD"],
+    ["fsdplus", "FSD+"],
   ]);
   const DATE_CHECKBOX_CLASSNAME = "dateCheckbox";
   const NEW_RECORD_RADIO_NAME = "newRecordRadio";
@@ -136,7 +136,43 @@ declare var domtoimage: any;
     return parseFloat((row.querySelector(".playlog_achievement_txt") as HTMLElement).innerText);
   }
 
-  function getStamps(row: HTMLElement) {
+  /*
+    ✦ - 85%
+    ✦✦ - 90%
+    ✦✦✦ - 93%
+    ✦✦✦✦ - 95%
+    ✦✦✦✦✦ - 97%
+    ✦6 - 99%
+    ✦7 - 100%
+  */
+  function getDxStar(row: HTMLElement): string {
+    const dxScoreBlock = row.querySelector(".playlog_score_block_star");
+    if (!dxScoreBlock) {
+      return "";
+    }
+    const [playerDxScore, maxDxScore] = dxScoreBlock.textContent
+      .split("/")
+      .map((t) => parseInt(t.replace(",", "").trim()));
+    const dxScoreRatio = playerDxScore / maxDxScore;
+    if (playerDxScore === maxDxScore) {
+      return "✦7";
+    } else if (dxScoreRatio >= 0.99) {
+      return "✦6";
+    } else if (dxScoreRatio >= 0.97) {
+      return "✦5";
+    } else if (dxScoreRatio >= 0.95) {
+      return "✦4";
+    } else if (dxScoreRatio >= 0.93) {
+      return "✦3";
+    } else if (dxScoreRatio >= 0.9) {
+      return "✦2";
+    } else if (dxScoreRatio >= 0.85) {
+      return "✦1";
+    }
+    return "";
+  }
+
+  function getStamps(row: HTMLElement): string {
     const rankImgSrc = (row.querySelector("img.playlog_scorerank") as HTMLImageElement).src.replace(
       /\?ver=.*$/,
       ""
@@ -145,22 +181,32 @@ declare var domtoimage: any;
       .substring(rankImgSrc.lastIndexOf("/") + 1, rankImgSrc.lastIndexOf("."))
       .replace("plus", "+")
       .toUpperCase();
+    let result = rank;
+
+    // FC/AP
     const stampImgs = row.querySelectorAll(
       ".playlog_result_innerblock > img"
     ) as NodeListOf<HTMLImageElement>;
     const fcapSrc = stampImgs[0].src.replace(/\?ver=.*$/, "");
     const fcapImgName = fcapSrc.substring(fcapSrc.lastIndexOf("/") + 1, fcapSrc.lastIndexOf("."));
+    if (AP_FC_IMG_NAME_TO_TEXT.has(fcapImgName)) {
+      result += " / " + AP_FC_IMG_NAME_TO_TEXT.get(fcapImgName);
+    }
+
+    // SYNC
     const fullSyncSrc = stampImgs[1].src.replace(/\?ver=.*$/, "");
     const fullSyncImgName = fullSyncSrc.substring(
       fullSyncSrc.lastIndexOf("/") + 1,
       fullSyncSrc.lastIndexOf(".")
     );
-    let result = rank;
-    if (AP_FC_IMG_NAME_TO_TEXT.has(fcapImgName)) {
-      result += " / " + AP_FC_IMG_NAME_TO_TEXT.get(fcapImgName);
-    }
     if (FS_FDX_IMG_NAME_TO_TEXT.has(fullSyncImgName)) {
       result += " / " + FS_FDX_IMG_NAME_TO_TEXT.get(fullSyncImgName);
+    }
+
+    // DX Star
+    const dxStar = getDxStar(row);
+    if (dxStar) {
+      result += " / " + dxStar;
     }
     return result;
   }
@@ -220,10 +266,8 @@ declare var domtoimage: any;
         cell.append(v);
       } else {
         if (v[1]) {
-          const img = ce("img");
-          img.classList.add("songImg");
-          img.src = v[1];
-          cell.append(img);
+          cell.classList.add("songImg");
+          cell.style.backgroundImage = `url("${v[1]}")`;
         }
         cell.append(v[0]);
       }

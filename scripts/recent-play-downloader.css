@@ -46,7 +46,6 @@ td.recordCell {
 
 td.songTitleCell {
   padding-left: 44px;
-  position: relative; /* this allows child elements to use position: absolute */
   text-align: left;
   word-break: break-all;
 }
@@ -68,11 +67,9 @@ td.songTitleCell {
 }
 
 .songImg {
-  position: absolute;
-  top: 0;
-  left: 2px;
-  height: 38px;
-  width: 38px;
+  background-position: 2px center;
+  background-size: 37px;
+  background-repeat: no-repeat;
 }
 
 .dateOptionLabel {
