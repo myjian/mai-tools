@@ -3,19 +3,21 @@ import React from 'react';
 import {RankDef} from '../common/rank-functions';
 import {LevelDef} from './levels';
 
-const MIN_RANK_TITLE = "AAA";
+export const enum DisplayValue {
+  MIN = "MIN",
+  MAX = "MAX",
+  RANGE = "RANGE"
+}
 
 interface Props {
   levels: ReadonlyArray<LevelDef>;
   ranks: ReadonlyArray<RankDef>;
+  displayValue: DisplayValue;
 }
 
 export class RatingTable extends React.PureComponent<Props> {
   render() {
-    const {levels} = this.props;
-    let {ranks} = this.props;
-    const rankLastIdx = ranks.findIndex((r) => r.title === MIN_RANK_TITLE);
-    ranks = ranks.slice(0, rankLastIdx + 1);
+    const {displayValue, levels, ranks} = this.props;
     return (
       <table className="lookupTable">
         <thead className="lookupTableHead">
@@ -34,13 +36,20 @@ export class RatingTable extends React.PureComponent<Props> {
                 {ranks.map((r, idx) => {
                   const maxAchv = idx === 0 ? r.minAchv : ranks[idx - 1].minAchv - 0.0001;
                   const minRating = Math.floor(lv.minLv * r.minAchv * r.factor * 0.01);
+                  if (displayValue === DisplayValue.MIN) {
+                    return <td key={idx}>{minRating}</td>;
+                  }
                   const maxRating = Math.floor(lv.maxLv * maxAchv * r.factor * 0.01);
+                  if (displayValue === DisplayValue.MAX) {
+                    return <td key={idx}>{maxRating}</td>;
+                  }
                   const text = minRating === maxRating ? minRating : `${maxRating} - ${minRating}`;
                   return <td key={idx}>{text}</td>;
                 })}
               </tr>
             );
-          })}
+          }).reverse() // make highest level the first row
+          }
         </tbody>
       </table>
     );

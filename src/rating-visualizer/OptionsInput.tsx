@@ -1,25 +1,52 @@
 import React from 'react';
 
 import {DX_LEVELS, getLvIndex} from './levels';
+import { DisplayValue } from './RatingTable';
 
 interface OptionsInputProps {
   heightUnit: number;
   minLv: string;
   maxLv: string;
+  minRank: string;
+  tableDisplay: DisplayValue;
   onSetRange: (minLv: string, maxLv: string) => void;
   onChangeUnit: (heightUnit: number) => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
+  onSetMinRank: (minRank: string) => void;
+  onSetTableDisplay: (display: DisplayValue) => void;
 }
 
 export class OptionsInput extends React.PureComponent<OptionsInputProps> {
   render() {
-    const {heightUnit, minLv, maxLv, onFocus, onBlur} = this.props;
+    const {heightUnit, minLv, minRank, maxLv, tableDisplay} = this.props;
     return (
       <div className="optionsContainer">
-        <div className="container" onFocus={onFocus} onBlur={onBlur} tabIndex={-1}>
+        <div className="container" tabIndex={-1}>
+          <span className="lvRangeLabelContainer">
+            <label className="optionGroup">
+              Min&nbsp;Lv:&nbsp;
+              <select onChange={this.handleChangeMinLv} value={minLv}>
+                {this.renderLvOptions()}
+              </select>
+            </label>
+            <label className="optionGroup">
+              Max&nbsp;Lv:&nbsp;
+              <select onChange={this.handleChangeMaxLv} value={maxLv}>
+                {this.renderLvOptions()}
+              </select>
+            </label>
+          </span>
           <label className="optionGroup">
-            Scale:&nbsp;
+            Min Rank:&nbsp;
+            <select onChange={this.handleChangeMinRank} value={minRank}>
+              <option value="AAA">AAA</option>
+              <option value="S">S</option>
+              <option value="SS">SS</option>
+              <option value="SSS">SSS</option>
+            </select>
+          </label>
+          <br></br>
+          <label className="optionGroup">
+            Graph:&nbsp;
             <select onChange={this.handleChangeHeightUnit} value={heightUnit.toFixed(0)}>
               <option value="0">Hide</option>
               <option value="3">3x</option>
@@ -29,20 +56,14 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
               <option value="12">12x</option>
             </select>
           </label>
-          <span className="lvRangeLabelContainer">
-            <label className="optionGroup">
-              Min&nbsp;Level:&nbsp;
-              <select onChange={this.handleChangeMinLv} value={minLv}>
-                {this.renderLvOptions()}
-              </select>
-            </label>
-            <label className="optionGroup">
-              Max&nbsp;Level:&nbsp;
-              <select onChange={this.handleChangeMaxLv} value={maxLv}>
-                {this.renderLvOptions()}
-              </select>
-            </label>
-          </span>
+          <label className="optionGroup">
+            Table values:&nbsp;
+            <select onChange={this.handleChangeTableDisplay} value={tableDisplay}>
+              <option value="MIN">MIN</option>
+              <option value="MAX">MAX</option>
+              <option value="RANGE">RANGE</option>
+            </select>
+          </label>
         </div>
       </div>
     );
@@ -80,4 +101,12 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
     const unit = parseInt(evt.currentTarget.value);
     this.props.onChangeUnit(unit);
   };
+
+  private handleChangeMinRank = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+    this.props.onSetMinRank(evt.currentTarget.value);
+  }
+
+  private handleChangeTableDisplay = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+    this.props.onSetTableDisplay(evt.currentTarget.value as DisplayValue);
+  }
 }

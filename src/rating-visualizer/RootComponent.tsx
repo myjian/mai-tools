@@ -7,7 +7,7 @@ import {getRankDefinitions} from '../common/rank-functions';
 import {DX_LEVELS, getLvIndex, LevelDef} from './levels';
 import {MultiplierTable} from './MultiplierTable';
 import {OptionsInput} from './OptionsInput';
-import {RatingTable} from './RatingTable';
+import {DisplayValue, RatingTable} from './RatingTable';
 import {RatingVisualizer} from './RatingVisualizer';
 
 const gameVer = DxVersion.UNIVERSE;
@@ -18,7 +18,9 @@ interface State {
   heightUnit: number;
   maxRating: number;
   minLv: string;
+  minRank: string;
   maxLv: string;
+  tableDisplay: DisplayValue;
   topPadding: number;
   axisLabelStep: number;
 }
@@ -26,17 +28,20 @@ interface State {
 export class RootComponent extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
-    const heightUnit = 0; // Hide visualizer by default
+    const savedHeightUnit = parseInt(window.localStorage.getItem("visualizerHeightUnit"));
+    const heightUnit = isNaN(savedHeightUnit) ? 0 : savedHeightUnit; // Hide visualizer by default
     const maxLv = 15;
     const lang = getInitialLanguage();
     updateDocumentTitle(lang);
     this.state = {
       lang,
-      minLv: "10",
-      maxLv: "14",
+      minLv: window.localStorage.getItem("visualizerMinLv") || "10",
+      minRank: window.localStorage.getItem("visualizerMinRank") || "SS",
+      maxLv: window.localStorage.getItem("visualizerMaxLv") || "14",
       width: 30,
       heightUnit,
-      maxRating: calculateMaxRating(maxLv, gameVer),
+      maxRating: calculateMaxRating(maxLv),
+      tableDisplay: window.localStorage.getItem("visualizerTableDisplay") as DisplayValue || DisplayValue.RANGE,
       topPadding: heightUnit * 2 + 50,
       axisLabelStep: 5,
     };
@@ -49,23 +54,26 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {lang, heightUnit, maxRating, axisLabelStep, minLv, maxLv, topPadding} =
+    const {lang, heightUnit, maxRating, axisLabelStep, minLv, minRank, maxLv, tableDisplay, topPadding} =
       this.state;
     const canZoomIn = maxLv !== minLv;
     const levels = this.getLevels();
-    // Only include SSS+ - A
-    const ranks = getRankDefinitions(gameVer).slice(0, 9);
+    const allRanks = getRankDefinitions(gameVer);
+    const ranksEndIndex = allRanks.findIndex(rank => rank.title == minRank);
+    const ranks = allRanks.slice(0, ranksEndIndex+1);
     return (
       <LangContext.Provider value={lang}>
         <div className="ratingVisualizer">
           <OptionsInput
             heightUnit={heightUnit}
-            onChangeUnit={this.handleChangeHeightUnit}
-            onSetRange={this.handleSetRange}
-            minLv={minLv}
             maxLv={maxLv}
-            // onBlur={this.removeHighlightInterval}
-            // onFocus={this.cancelRemoveHighlightInterval}
+            minLv={minLv}
+            minRank={minRank}
+            tableDisplay={tableDisplay}
+            onChangeUnit={this.handleChangeHeightUnit}
+            onSetMinRank={this.handleSetMinRank}
+            onSetRange={this.handleSetRange}
+            onSetTableDisplay={this.handleSetTableDisplay}
           />
           <RatingVisualizer
             canZoomIn={canZoomIn}
@@ -78,7 +86,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
             handleSetRange={this.handleSetRange}
           />
           <div className="container">
-            <RatingTable ranks={ranks} levels={levels} />
+            <RatingTable ranks={ranks} levels={levels} displayValue={tableDisplay} />
             <hr className="sectionSep" />
             <MultiplierTable gameVer={gameVer} />
             <footer className="footer">
@@ -115,29 +123,39 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const startIdx = getLvIndex(minLv);
     const endIdx = getLvIndex(maxLv);
     if (endIdx - startIdx < 2) {
-      return this.getDetailLevels(startIdx, endIdx).reverse();
+      return this.getDetailLevels(startIdx, endIdx);
     }
-    return DX_LEVELS.slice(startIdx, endIdx + 1).reverse();
+    return DX_LEVELS.slice(startIdx, endIdx + 1);
   }
 
   private handleChangeHeightUnit = (unit: number) => {
+    window.localStorage.setItem("visualizerHeightUnit", unit.toFixed(0));
     this.setState({heightUnit: unit});
-    if (unit === 0) {
-      // this.removeHighlightInterval();
-    }
   };
 
   private handleSetRange = (minLv: string, maxLv: string) => {
     const maxLvDef = DX_LEVELS.find((lv) => lv.title === maxLv);
+    window.localStorage.setItem("visualizerMinLv", minLv);
+    window.localStorage.setItem("visualizerMaxLv", maxLv);
     this.setState({
       minLv,
       maxLv,
-      maxRating: calculateMaxRating(maxLvDef.maxLv, gameVer),
+      maxRating: calculateMaxRating(maxLvDef.maxLv),
     });
   };
+
+  private handleSetMinRank = (minRank: string) => {
+    window.localStorage.setItem("visualizerMinRank", minRank);
+    this.setState({minRank});
+  }
+
+  private handleSetTableDisplay = (tableDisplay: DisplayValue) => {
+    window.localStorage.setItem("visualizerTableDisplay", tableDisplay);
+    this.setState({tableDisplay});
+  }
 }
 
-function calculateMaxRating(maxLv: number, gameVer: DxVersion) {
+function calculateMaxRating(maxLv: number) {
   const maxRank = getRankDefinitions(gameVer)[0];
   return Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100);
 }
