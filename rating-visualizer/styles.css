@@ -255,6 +255,8 @@ body {
 
 .lookupTableBody td {
   text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .lookupTableBody tr:nth-child(2n) {

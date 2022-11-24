@@ -1,33 +1,23 @@
 import React from 'react';
 
-import {DxVersion} from '../common/game-version';
 import {DX_LEVELS, getLvIndex} from './levels';
 
 interface OptionsInputProps {
   heightUnit: number;
-  gameVer: DxVersion;
   minLv: string;
   maxLv: string;
-  onSetGameVer: (gameVer: DxVersion) => void;
   onSetRange: (minLv: string, maxLv: string) => void;
   onChangeUnit: (heightUnit: number) => void;
-  onFocus: () => void;
-  onBlur: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export class OptionsInput extends React.PureComponent<OptionsInputProps> {
   render() {
-    const {heightUnit, gameVer, minLv, maxLv, onFocus, onBlur} = this.props;
+    const {heightUnit, minLv, maxLv, onFocus, onBlur} = this.props;
     return (
       <div className="optionsContainer">
         <div className="container" onFocus={onFocus} onBlur={onBlur} tabIndex={-1}>
-          <label className="optionGroup">
-            Ver:&nbsp;
-            <select onChange={this.handleSetGameVer} value={gameVer}>
-              <option value={DxVersion.SPLASH}>Splash (and older)</option>
-              <option value={DxVersion.SPLASH_PLUS}>Current version</option>
-            </select>
-          </label>
           <label className="optionGroup">
             Scale:&nbsp;
             <select onChange={this.handleChangeHeightUnit} value={heightUnit.toFixed(0)}>
@@ -70,11 +60,6 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
     }
     return options;
   }
-
-  private handleSetGameVer = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    const gameVerText = evt.currentTarget.value;
-    this.props.onSetGameVer(parseInt(gameVerText));
-  };
 
   private handleChangeMinLv = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
     const minLv = evt.currentTarget.value;
