@@ -1,10 +1,10 @@
-import {Difficulty} from '../common/difficulties';
-import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
-import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
-import {DxVersion} from '../common/game-version';
-import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
-import {statusText} from '../common/score-fetch-progress';
-import {getScriptHost} from '../common/script-host';
+import { Difficulty } from '../common/difficulties';
+import { getPlayerGrade, getPlayerName } from '../common/fetch-score-util';
+import { fetchScores, SELF_SCORE_URLS } from '../common/fetch-self-score';
+import { DxVersion } from '../common/game-version';
+import { getInitialLanguage, Language, saveLanguage } from '../common/lang';
+import { statusText } from '../common/score-fetch-progress';
+import { getScriptHost } from '../common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -97,21 +97,16 @@ declare global {
     }
     const playerName = isOnFriendPage ? null : getPlayerName(document.body);
     const url = playerName
-      ? BASE_URL + "?" + new URLSearchParams({playerName: playerName})
+      ? BASE_URL + "?" + new URLSearchParams({ playerName: playerName })
       : BASE_URL;
-    if (navigator.userAgent.startsWith("Mozilla/5.0 (iP")) {
-      // iOS does not allow pop-up window
-      insertAnalyzeButton(url);
-    } else {
-      window.open(url, "selfRating");
-    }
+    insertAnalyzeButton(url);
     const gameVerPromise = fetchGameVersion(document.body);
     let allSongsDom: Promise<Document>;
     if (window.ratingCalcMsgListener) {
       window.removeEventListener("message", window.ratingCalcMsgListener);
     }
     window.ratingCalcMsgListener = async (
-      evt: MessageEvent<string | {action: string; payload?: string | number}>
+      evt: MessageEvent<string | { action: string; payload?: string | number }>
     ) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {

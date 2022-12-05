@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {Language} from '../common/lang';
+import { Language } from '../common/lang';
 
-const ALL_IN_ONE_SCRIPT = "https://myjian.github.io/mai-tools/scripts/all-in-one.js";
-// const ALL_IN_ONE_SCRIPT = "http://localhost:8080/scripts/all-in-one.js";
+const ALL_IN_ONE_SCRIPT = window.location.pathname.startsWith("/mai-tools") ? `${location.origin}/mai-tools/scripts/all-in-one.js` : `${location.origin}/scripts/all-in-one.js`;
 
 export const BOOKMARKLET_LINK = `javascript:void (
   function(d) {

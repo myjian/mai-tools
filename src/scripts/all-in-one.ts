@@ -1,5 +1,5 @@
-import {removeScrollControl} from '../common/net-helpers';
-import {getScriptHost} from '../common/script-host';
+import { removeScrollControl } from '../common/net-helpers';
+import { getScriptHost } from '../common/script-host';
 
 (function (d) {
   const SCRIPT_HOST = getScriptHost("all-in-one") + "/scripts/";
@@ -36,6 +36,7 @@ import {getScriptHost} from '../common/script-host';
     path.indexOf("/maimai-mobile/playerData/") >= 0
   ) {
     removeScrollControl(d);
+    appendScript("score-download.js");
     appendScript("analyze-rating-in-newtab.js");
   } else if (path.indexOf("/maimai-mobile/photo/") >= 0) {
     appendScript("album-download-helper.js");
