@@ -1,8 +1,8 @@
-import React, {useCallback, useRef} from 'react';
+import React, { useCallback, useRef } from 'react';
 
-import {Language} from '../common/lang';
-import {useLanguage} from '../common/lang-react';
-import {BOOKMARKLET_LINK, LinkNameByLang} from './all-bookmarklets';
+import { Language } from '../common/lang';
+import { useLanguage } from '../common/lang-react';
+import { BOOKMARKLET_LINK, LinkNameByLang } from './all-bookmarklets';
 
 const MessagesByLang = {
   [Language.zh_TW]: {
@@ -12,9 +12,8 @@ const MessagesByLang = {
     chrome2: "打開瀏覽器右上角的選單，按星星把此頁加入書籤",
     chrome3: "畫面下方會顯示「已加入書籤」，點右邊「編輯」",
     chrome4: "把網址完全刪除，並貼上剛才複製的連結",
-    chrome5: `把書籤的名稱設成「${
-      LinkNameByLang[Language.zh_TW]
-    }」（MMBL 是 MaiMai BookmarkLets 的縮寫，我們接下來會用到）`,
+    chrome5: `把書籤的名稱設成「${LinkNameByLang[Language.zh_TW]
+      }」（MMBL 是 MaiMai BookmarkLets 的縮寫，我們接下來會用到）`,
     chrome6: "返回上一頁，書籤即建立完成",
     chrome7: "書籤建立之後可以重複使用，不需要再回到這個網頁複製連結",
   },
@@ -28,7 +27,7 @@ const MessagesByLang = {
     chrome5: `Set the bookmarklet name to "${LinkNameByLang[Language.en_US]}".`,
     chrome6: "Go back to previous page and the bookmarklet should be ready to use.",
     chrome7:
-      "Once you set up the bookmarklet, you can use them repeatedly. You don't need to come back to this page to copy links.",
+      "Once you set up the bookmarklet, you can use it repeatedly. You don't need to come back to this page to copy links.",
   },
 };
 

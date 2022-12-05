@@ -1,26 +1,28 @@
 import React from "react";
-import { Language, SUPPORTED_LANGUAGES } from "../common/lang";
+import { Language, saveLanguage, SUPPORTED_LANGUAGES } from "../common/lang";
 import { useLanguage } from "../common/lang-react";
 
 const UIString = {
-  [Language.zh_TW]: "切換為繁體中文",
-  [Language.en_US]: "View in English",
+  [Language.zh_TW]: "繁體中文",
+  [Language.en_US]: "English",
 };
-
 
 export function LangSwitcher() {
   const lang = useLanguage();
 
+  const handleClick = (evt: React.SyntheticEvent<HTMLAnchorElement>) => {
+    saveLanguage(evt.currentTarget.dataset["lang"] as Language);
+  };
+
   return <div>
-    <br />
+    <br />語言 (Language)：
     {SUPPORTED_LANGUAGES
-      .filter(otherLang => otherLang !== lang)
       .map(otherLang => (
-        <React.Fragment key={otherLang}>
-          <a href={`?hl=${otherLang}`}>
+        otherLang === lang ? <>{UIString[otherLang]}&nbsp;</> : <React.Fragment key={otherLang}>
+          <a href={`?hl=${otherLang}`} data-lang={otherLang} onClick={handleClick}>
             {UIString[otherLang]}
           </a>
-          <br />
+          &nbsp;
         </React.Fragment>
       ))}
   </div>;
