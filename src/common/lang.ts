@@ -24,14 +24,14 @@ export function saveLanguage(lang: Language) {
 
 export function getInitialLanguage(): Language {
   const queryParams = new URLSearchParams(location.search);
+  // URL query parameter
+  if (queryParams.get("hl")) {
+    return queryParams.get("hl").startsWith("zh") ? Language.zh_TW : Language.en_US;
+  }
   // LocalStorage
   const langPreference = loadLanguage();
   if (langPreference) {
     return langPreference;
-  }
-  // URL query parameter
-  if (queryParams.get("hl")) {
-    return queryParams.get("hl").startsWith("zh") ? Language.zh_TW : Language.en_US;
   }
   // Browser
   if (navigator.language.startsWith("zh")) {

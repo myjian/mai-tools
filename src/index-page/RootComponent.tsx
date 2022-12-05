@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {getInitialLanguage, Language} from '../common/lang';
-import {LangContext} from '../common/lang-react';
-import {Bookmarklets} from './Bookmarklets';
-import {OtherTools} from './OtherTools';
+import { getInitialLanguage, Language } from '../common/lang';
+import { LangContext } from '../common/lang-react';
+import { Bookmarklets } from './Bookmarklets';
+import { LangSwitcher } from './LangSwitcher';
+import { OtherTools } from './OtherTools';
 
 const UIMessages = {
-  [Language.zh_TW]: {pageTitle: "mai-tools 介紹"},
-  [Language.en_US]: {pageTitle: "mai-tools index"},
+  [Language.zh_TW]: { pageTitle: "mai-tools 介紹" },
+  [Language.en_US]: { pageTitle: "mai-tools index" },
 };
 
 export const RootComponent = () => {
@@ -19,6 +20,7 @@ export const RootComponent = () => {
 
   return (
     <LangContext.Provider value={lang}>
+      <LangSwitcher />
       <Bookmarklets />
       <OtherTools />
       <div className="footer">
