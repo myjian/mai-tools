@@ -1,14 +1,15 @@
-import {Difficulty} from './difficulties';
+import {Difficulty, getDifficultyName} from './difficulties';
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
 import {ChartType} from './song-props';
 import {fetchPage} from './util';
 
-export const SELF_SCORE_URLS: Record<Difficulty, string> = {
-  "Re:MASTER": "/maimai-mobile/record/musicGenre/search/?genre=99&diff=4",
-  MASTER: "/maimai-mobile/record/musicGenre/search/?genre=99&diff=3",
-  EXPERT: "/maimai-mobile/record/musicGenre/search/?genre=99&diff=2",
-  ADVANCED: "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1",
-};
+export const SELF_SCORE_URLS = new Map([
+  [Difficulty.ReMASTER, "/maimai-mobile/record/musicGenre/search/?genre=99&diff=4"],
+  [Difficulty.MASTER, "/maimai-mobile/record/musicGenre/search/?genre=99&diff=3"],
+  [Difficulty.EXPERT, "/maimai-mobile/record/musicGenre/search/?genre=99&diff=2"],
+  [Difficulty.ADVANCED, "/maimai-mobile/record/musicGenre/search/?genre=99&diff=1"],
+  [Difficulty.BASIC, "/maimai-mobile/record/musicGenre/search/?genre=99&diff=0"],
+]);
 
 function getAchievement(row: HTMLElement) {
   const ach = row.querySelector(".music_score_block.w_120") as HTMLElement;
@@ -17,7 +18,7 @@ function getAchievement(row: HTMLElement) {
 
 function processRow(
   row: HTMLElement,
-  difficulty: string,
+  difficulty: Difficulty,
   state: {genre: string; scoreList: string[]}
 ) {
   const isGenreRow = row.classList.contains("screw_block");
@@ -37,7 +38,7 @@ function processRow(
       return;
     }
     state.scoreList.push(
-      [songName, state.genre, difficulty, level, chartType, achievement].join("\t")
+      [songName, state.genre, getDifficultyName(difficulty), level, chartType, achievement].join("\t")
     );
   }
 }
@@ -46,7 +47,7 @@ export async function fetchScores(
   difficulty: Difficulty,
   scoreList: string[]
 ): Promise<Document | undefined> {
-  const url = SELF_SCORE_URLS[difficulty];
+  const url = SELF_SCORE_URLS.get(difficulty);
   if (!url) {
     return;
   }

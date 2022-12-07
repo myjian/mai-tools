@@ -1,6 +1,6 @@
-import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DIFFICULTIES} from '../common/difficulties';
 import {DxVersion} from '../common/game-version';
-import {getRankByAchievement} from '../common/rank-functions';
+import {getRankByAchievement, SSSPLUS_MIN_ACHIEVEMENT} from '../common/rank-functions';
 import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
 import {getRemovedSongsByVersion} from './removed-songs';

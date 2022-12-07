@@ -1,4 +1,4 @@
-import {DIFFICULTY_CLASSNAME_MAP} from '../common/constants';
+import {DIFFICULTY_CLASSNAME_MAP} from '../common/difficulties';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';

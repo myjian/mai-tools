@@ -1,3 +1,4 @@
+import {Difficulty} from './difficulties';
 import {getChartType, getSongName} from './fetch-score-util';
 import {SELF_SCORE_URLS} from './fetch-self-score';
 import {DxVersion} from './game-version';
@@ -51,7 +52,7 @@ async function parseSongList(dom: Document) {
 
 export async function fetchAllSongs(dom?: Document) {
   if (!dom) {
-    const url = SELF_SCORE_URLS["MASTER"];
+    const url = SELF_SCORE_URLS.get(Difficulty.ADVANCED);
     dom = await fetchPage(url);
   }
   return await parseSongList(dom);

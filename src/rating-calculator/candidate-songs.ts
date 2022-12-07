@@ -1,9 +1,10 @@
 import {shuffleArray} from '../common/array-util';
-import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
+import {DIFFICULTIES} from '../common/difficulties';
 import {
   getRankByAchievement,
   getRankDefinitions,
   getRankIndexByAchievement,
+  SSSPLUS_MIN_ACHIEVEMENT,
 } from '../common/rank-functions';
 import {getSongNickname} from '../common/song-name-helper';
 import {SongProperties} from '../common/song-props';

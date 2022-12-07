@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
+import {DIFFICULTY_CLASSNAME_MAP} from '../../common/difficulties';
 import {getRankTitle} from '../../common/rank-functions';
 import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
 import {SongProperties} from '../../common/song-props';
@@ -48,14 +48,14 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
       case ColumnType.NEXT_RANK:
         return record.nextRanks
           ? Array.from(record.nextRanks.values())
-              .map((r) => r.rank.minAchv + "%")
-              .join("\n")
+            .map((r) => r.rank.minAchv + "%")
+            .join("\n")
           : "";
       case ColumnType.NEXT_RATING:
         return record.nextRanks
           ? Array.from(record.nextRanks.values())
-              .map((r) => "+" + r.minRt.toFixed(0))
-              .join("\n")
+            .map((r) => "+" + r.minRt.toFixed(0))
+            .join("\n")
           : "";
       case ColumnType.RATING:
         return Math.floor(record.rating).toString();

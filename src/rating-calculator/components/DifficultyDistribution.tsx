@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP} from '../../common/constants';
+import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP} from '../../common/difficulties';
 import {useLanguage} from '../../common/lang-react';
 import {CommonMessages} from '../common-messages';
 import {ChartRecord} from '../types';

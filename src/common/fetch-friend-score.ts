@@ -1,15 +1,17 @@
+import {Difficulty, getDifficultyName} from './difficulties';
 import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
 import {ChartType} from './song-props';
 import {fetchPage} from './util';
 
 export const FRIEND_SCORE_URLS = new Map([
   [
-    "Re:MASTER",
+    Difficulty.ReMASTER,
     "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=4&idx=",
   ],
-  ["MASTER", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=3&idx="],
-  ["EXPERT", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=2&idx="],
-  ["ADVANCED", "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=1&idx="],
+  [Difficulty.MASTER, "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=3&idx="],
+  [Difficulty.EXPERT, "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=2&idx="],
+  [Difficulty.ADVANCED, "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=1&idx="],
+  [Difficulty.BASIC, "/maimai-mobile/friend/friendGenreVs/battleStart/?scoreType=2&genre=99&diff=0&idx="],
 ]);
 
 function getAchievement(row: HTMLElement): string | null {
@@ -20,7 +22,7 @@ function getAchievement(row: HTMLElement): string | null {
 
 function processRow(
   row: HTMLElement,
-  difficulty: string,
+  difficulty: Difficulty,
   state: {genre: string; scoreList: string[]}
 ) {
   const isGenreRow = row.classList.contains("screw_block");
@@ -40,14 +42,14 @@ function processRow(
       return;
     }
     state.scoreList.push(
-      [songName, state.genre, difficulty, level, chartType, achievement].join("\t")
+      [songName, state.genre, getDifficultyName(difficulty), level, chartType, achievement].join("\t")
     );
   }
 }
 
 export async function fetchFriendScores(
   friendIdx: string,
-  difficulty: string,
+  difficulty: Difficulty,
   scoreList: string[]
 ) {
   let url = FRIEND_SCORE_URLS.get(difficulty);

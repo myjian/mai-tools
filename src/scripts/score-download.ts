@@ -1,8 +1,7 @@
-import { Difficulty } from '../common/difficulties';
-import { fetchScores, SELF_SCORE_URLS } from '../common/fetch-self-score';
-import { getInitialLanguage, Language } from '../common/lang';
-import { statusText } from '../common/score-fetch-progress';
-import { handleError } from '../common/util';
+import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {getInitialLanguage, Language} from '../common/lang';
+import {statusText} from '../common/score-fetch-progress';
+import {handleError} from '../common/util';
 
 (function () {
   const LANG = getInitialLanguage();
@@ -87,9 +86,9 @@ import { handleError } from '../common/util';
     }
     const textarea = document.getElementById("outputText") as HTMLTextAreaElement;
     const scoreList: string[] = [];
-    for (const difficulty of Object.keys(SELF_SCORE_URLS)) {
+    for (const difficulty of SELF_SCORE_URLS.keys()) {
       textarea.value += statusText(LANG, difficulty, false) + "\n";
-      await fetchScores(difficulty as Difficulty, scoreList);
+      await fetchScores(difficulty, scoreList);
     }
     textarea.value = scoreList.join("\n");
     (document.querySelector(".fetchStatus") as HTMLElement).innerText = UIString.allDone;

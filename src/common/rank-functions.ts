@@ -4,6 +4,8 @@ export interface RankDef {
   title: string;
 }
 
+export const SSSPLUS_MIN_ACHIEVEMENT = 100.5;
+
 const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
   {minAchv: 100.5, factor: 22.4, title: "SSS+"},
   {minAchv: 100.0, factor: 21.6, title: "SSS"},

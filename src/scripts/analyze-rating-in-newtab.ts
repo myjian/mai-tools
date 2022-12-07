@@ -1,10 +1,10 @@
-import { Difficulty } from '../common/difficulties';
-import { getPlayerGrade, getPlayerName } from '../common/fetch-score-util';
-import { fetchScores, SELF_SCORE_URLS } from '../common/fetch-self-score';
-import { DxVersion } from '../common/game-version';
-import { getInitialLanguage, Language, saveLanguage } from '../common/lang';
-import { statusText } from '../common/score-fetch-progress';
-import { getScriptHost } from '../common/script-host';
+import {Difficulty} from '../common/difficulties';
+import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
+import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {DxVersion} from '../common/game-version';
+import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
+import {statusText} from '../common/score-fetch-progress';
+import {getScriptHost} from '../common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -45,10 +45,10 @@ declare global {
     }
     // Fetch all scores
     const scoreList: string[] = [];
-    for (const difficulty of Object.keys(SELF_SCORE_URLS)) {
+    for (const difficulty of SELF_SCORE_URLS.keys()) {
       send("appendPlayerScore", statusText(LANG, difficulty, false));
-      const dom = await fetchScores(difficulty as Difficulty, scoreList);
-      if (difficulty === "MASTER") {
+      const dom = await fetchScores(difficulty, scoreList);
+      if (difficulty === Difficulty.MASTER) {
         allSongsDom = dom;
       }
       send("appendPlayerScore", statusText(LANG, difficulty, true));
@@ -97,7 +97,7 @@ declare global {
     }
     const playerName = isOnFriendPage ? null : getPlayerName(document.body);
     const url = playerName
-      ? BASE_URL + "?" + new URLSearchParams({ playerName: playerName })
+      ? BASE_URL + "?" + new URLSearchParams({playerName: playerName})
       : BASE_URL;
     insertAnalyzeButton(url);
     const gameVerPromise = fetchGameVersion(document.body);
@@ -106,7 +106,7 @@ declare global {
       window.removeEventListener("message", window.ratingCalcMsgListener);
     }
     window.ratingCalcMsgListener = async (
-      evt: MessageEvent<string | { action: string; payload?: string | number }>
+      evt: MessageEvent<string | {action: string; payload?: string | number}>
     ) => {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {

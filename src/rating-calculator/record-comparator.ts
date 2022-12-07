@@ -1,4 +1,4 @@
-import {DIFFICULTIES} from '../common/constants';
+import {DIFFICULTIES} from '../common/difficulties';
 import {RankDef} from '../common/rank-functions';
 import {ChartRecord, ChartRecordWithRating} from './types';
 

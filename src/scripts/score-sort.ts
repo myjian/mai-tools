@@ -1,4 +1,4 @@
-import {DIFFICULTIES} from '../common/constants';
+import {DIFFICULTIES, Difficulty} from '../common/difficulties';
 import {getChartDifficulty, getChartType, getSongName} from '../common/fetch-score-util';
 import {SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getInitialLanguage, Language} from '../common/lang';
@@ -606,7 +606,7 @@ type Cache = {
   }
 
   async function addSummaryBlock() {
-    const scorePage = await fetchPage(SELF_SCORE_URLS["Re:MASTER"]);
+    const scorePage = await fetchPage(SELF_SCORE_URLS.get(Difficulty.ReMASTER));
     const summaryTable = scorePage.querySelector(".music_scorelist_table")?.parentElement;
     if (!summaryTable) {
       console.warn("could not find summary table");

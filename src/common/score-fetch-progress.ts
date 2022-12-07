@@ -1,7 +1,10 @@
+import {Difficulty} from './difficulties';
 import {Language} from './lang';
 
 const MessagesByLang = {
   [Language.zh_TW]: {
+    bscStart: "匯入綠譜成績中…",
+    bscDone: "✔",
     advStart: "匯入黃譜成績中…",
     advDone: "✔",
     expStart: "匯入紅譜成績中…",
@@ -12,6 +15,8 @@ const MessagesByLang = {
     remDone: "✔",
   },
   [Language.en_US]: {
+    bscStart: "Loading Basic scores…",
+    bscDone: "✔",
     advStart: "Loading Advanced scores…",
     advDone: "✔",
     expStart: "Loading Expert scores…",
@@ -23,17 +28,19 @@ const MessagesByLang = {
   },
 };
 
-export function statusText(lang: Language, what: string, end?: boolean): string {
+export function statusText(lang: Language, difficulty: Difficulty, end?: boolean): string {
   const UIString = MessagesByLang[lang];
-  switch (what) {
-    case "Re:MASTER":
+  switch (difficulty) {
+    case Difficulty.ReMASTER:
       return end ? UIString.remDone + "\n" : UIString.remStart;
-    case "MASTER":
+    case Difficulty.MASTER:
       return end ? UIString.masDone + "\n" : UIString.masStart;
-    case "EXPERT":
+    case Difficulty.EXPERT:
       return end ? UIString.expDone + "\n" : UIString.expStart;
-    case "ADVANCED":
+    case Difficulty.ADVANCED:
       return end ? UIString.advDone + "\n" : UIString.advStart;
+    case Difficulty.BASIC:
+      return end ? UIString.bscDone + "\n" : UIString.bscStart;
   }
   return "";
 }

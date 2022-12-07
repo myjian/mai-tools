@@ -1,4 +1,4 @@
-import {DIFFICULTIES} from "./constants";
+import {DIFFICULTIES} from "./difficulties";
 import {DxVersion} from "./game-version";
 import {getSongNickname, normalizeSongName} from "./song-name-helper";
 
