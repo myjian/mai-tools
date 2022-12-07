@@ -1,11 +1,11 @@
 import React from 'react';
 
+import {GameRegion} from "../../common/game-region";
 import {DxVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {roundFloat} from '../../common/number-helper';
 import {getRankDefinitions, RankDef} from '../../common/rank-functions';
-import {GameRegion} from '../types';
 import {RecommendedLevelCell} from './RecommendedLevelCell';
 
 const MIN_RANK = "SS";

@@ -1,10 +1,11 @@
 import {DIFFICULTIES} from '../common/difficulties';
+import {GameRegion} from "../common/game-region";
 import {DxVersion} from '../common/game-version';
 import {getRankByAchievement, SSSPLUS_MIN_ACHIEVEMENT} from '../common/rank-functions';
 import {ChartType, getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
 import {getRemovedSongsByVersion} from './removed-songs';
-import {ChartRecord, ChartRecordWithRating, GameRegion, RatingData} from './types';
+import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
 const NUM_TOP_OLD_SONGS = 35;

@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { DxVersion, validateGameVersion } from '../../common/game-version';
-import { getInitialLanguage, Language, saveLanguage } from '../../common/lang';
-import { LangContext } from '../../common/lang-react';
-import { iWantSomeMagic } from '../../common/magic';
+import {GameRegion} from "../../common/game-region";
+import {DxVersion, validateGameVersion} from '../../common/game-version';
+import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
+import {LangContext} from '../../common/lang-react';
+import {iWantSomeMagic} from '../../common/magic';
 import {
   buildSongPropsMap,
   filterSongsByVersion,
@@ -11,17 +12,17 @@ import {
   MatchMode,
   SongProperties,
 } from '../../common/song-props';
-import { readFromCache, writeToCache } from '../cache';
-import { parseScoreLine } from '../player-score-parser';
-import { analyzePlayerRating } from '../rating-analyzer';
-import { GameRegion, RatingData } from '../types';
-import { InternalLvInput } from './InternalLvInput';
-import { LanguageChooser } from './LanguageChooser';
-import { OtherTools } from './OtherTools';
-import { PageFooter } from './PageFooter';
-import { RatingOutput } from './RatingOutput';
-import { ScoreInput } from './ScoreInput';
-import { VersionSelect } from './VersionSelect';
+import {readFromCache, writeToCache} from '../cache';
+import {parseScoreLine} from '../player-score-parser';
+import {analyzePlayerRating} from '../rating-analyzer';
+import {RatingData} from '../types';
+import {InternalLvInput} from './InternalLvInput';
+import {LanguageChooser} from './LanguageChooser';
+import {OtherTools} from './OtherTools';
+import {PageFooter} from './PageFooter';
+import {RatingOutput} from './RatingOutput';
+import {ScoreInput} from './ScoreInput';
+import {VersionSelect} from './VersionSelect';
 
 const MessagesByLang = {
   [Language.en_US]: {
@@ -32,7 +33,7 @@ const MessagesByLang = {
   },
 };
 
-function getDebugText({ action, payload }: { action: string; payload: number | string }) {
+function getDebugText({action, payload}: {action: string; payload: number | string}) {
   if (action === "appendPlayerScore") {
     return "string of length " + (payload as string).length;
   }
@@ -41,18 +42,19 @@ function getDebugText({ action, payload }: { action: string; payload: number | s
 
 function readSongProperties(
   gameVer: DxVersion,
+  gameRegion: GameRegion,
   inputText: string
 ): Promise<Map<string, SongProperties[]>> {
   return new Promise((resolve) => {
     // Read from user input
     if (inputText.length > 0) {
-      resolve(buildSongPropsMap(inputText));
+      resolve(buildSongPropsMap(gameVer, gameRegion, inputText));
       return;
     }
     // Read from cache
     const cachedGameData = readFromCache(gameVer);
     if (cachedGameData) {
-      resolve(buildSongPropsMap(cachedGameData));
+      resolve(buildSongPropsMap(gameVer, gameRegion, cachedGameData));
       return;
     }
     // Read from Internet
@@ -61,7 +63,7 @@ function readSongProperties(
       if (!responseText.startsWith("<!DOCTYPE html>")) {
         writeToCache(gameVer, responseText);
       }
-      resolve(buildSongPropsMap(responseText));
+      resolve(buildSongPropsMap(gameVer, gameRegion, responseText));
     });
   });
 }
@@ -132,7 +134,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const { lang, gameRegion, gameVer, playerName, ratingData, songPropsByName, oldSongs, newSongs } =
+    const {lang, gameRegion, gameVer, playerName, ratingData, songPropsByName, oldSongs, newSongs} =
       this.state;
     const messages = MessagesByLang[lang];
     return (
@@ -168,13 +170,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   private changeLanguage = (lang: Language) => {
-    this.setState({ lang });
+    this.setState({lang});
     saveLanguage(lang);
-    this.postMessageToOpener({ action: "saveLanguage", payload: lang });
+    this.postMessageToOpener({action: "saveLanguage", payload: lang});
   };
 
   private selectVersion = (gameVer: DxVersion) => {
-    this.setState({ gameVer }, this.analyzeRating);
+    this.setState({gameVer}, this.analyzeRating);
   };
 
   private analyzeRating = async (evt?: React.SyntheticEvent) => {
@@ -183,14 +185,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
     const songPropsText = this.getInternalLvInput();
     const scoreText = this.getScoreInput();
-    const { gameVer, gameRegion } = this.state;
+    const {gameVer, gameRegion} = this.state;
     console.log("gameVer", gameVer);
-    const songPropsByName = await readSongProperties(gameVer, songPropsText);
+    const songPropsByName = await readSongProperties(gameVer, gameRegion, songPropsText);
     console.log("Song properties:", songPropsByName);
     const playerScores = await readPlayerScoreFromText(scoreText);
     console.log("Player scores:", playerScores);
     if (!playerScores.length) {
-      this.setState({ ratingData: undefined });
+      this.setState({ratingData: undefined});
       return;
     }
     const ratingData = await analyzePlayerRating(
@@ -200,10 +202,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
       gameRegion
     );
     console.log("Rating Data:", ratingData);
-    this.setState({ ratingData, songPropsByName });
+    this.setState({ratingData, songPropsByName});
   };
 
-  private postMessageToOpener(data: { action: string; payload?: string | number }) {
+  private postMessageToOpener(data: {action: string; payload?: string | number}) {
     if (window.opener) {
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
@@ -270,19 +272,19 @@ export class RootComponent extends React.PureComponent<{}, State> {
         }
       }
     });
-    const { friendIdx, lang } = this.state;
+    const {friendIdx, lang} = this.state;
     if (friendIdx) {
       // Analyze friend rating
-      this.postMessageToOpener({ action: "getFriendRecords", payload: friendIdx });
+      this.postMessageToOpener({action: "getFriendRecords", payload: friendIdx});
     } else {
       // Analyze self rating
-      this.postMessageToOpener({ action: "ready", payload: lang });
+      this.postMessageToOpener({action: "ready", payload: lang});
     }
   }
 
   private loadSongLists(gameVer: DxVersion) {
-    this.postMessageToOpener({ action: "fetchAllSongs" });
-    this.postMessageToOpener({ action: "fetchNewSongs", payload: gameVer });
+    this.postMessageToOpener({action: "fetchAllSongs"});
+    this.postMessageToOpener({action: "fetchNewSongs", payload: gameVer});
   }
 
   private getInternalLvInput(): string {

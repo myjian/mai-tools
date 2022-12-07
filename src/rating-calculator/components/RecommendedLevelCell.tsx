@@ -1,8 +1,8 @@
 import React from 'react';
 
+import {GameRegion} from "../../common/game-region";
 import {DxVersion, getVersionName} from '../../common/game-version';
 import {getOfficialLevel} from '../../common/level-helper';
-import {GameRegion} from '../types';
 
 function getMaimaiSongsLink(
   officialLv: string,

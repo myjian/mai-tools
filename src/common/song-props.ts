@@ -1,3 +1,4 @@
+import {GameRegion} from "./game-region";
 import {DIFFICULTIES} from "./difficulties";
 import {DxVersion} from "./game-version";
 import {getSongNickname, normalizeSongName} from "./song-name-helper";
@@ -30,8 +31,19 @@ const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 
 const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
-  {dx: 1, debut: 16, lv: [5, 8.2, 12.2, 14.4, 0], name: "宿星審判"},
+  // 宿星審判 debut is SPLASH PLUS (intl), UNiVERSE (Jp)
+  {name: "宿星審判", dx: 1, debut: 16, lv: [-4, -8, -12, 14.4, 0]},
 ];
+
+const OVERRIDES_BY_VERSION = new Map<DxVersion, ReadonlyArray<Partial<SongProperties>>>([
+  [DxVersion.FESTiVAL, [
+    {name: "39", dx: 1, lv: [NaN, NaN, NaN, 12.8]},
+    {name: "ヒステリックナイトガール", dx: 1, lv: [NaN, NaN, NaN, 12.8]},
+    {name: "MOBILYS", dx: 1, lv: [NaN, NaN, NaN, 13.1]},
+    {name: "マトリョシカ", dx: 0, lv: [NaN, NaN, NaN, NaN, 13.2]},
+    {name: "宿星審判", dx: 1, lv: [NaN, NaN, NaN, 14.3]},
+  ]],
+]);
 
 /**
  * Parse song properties from text.
@@ -62,21 +74,43 @@ function parseSongProperties(line: string): SongProperties | undefined {
   }
 }
 
-function insertOrUpdateSongProps(map: Map<string, SongProperties[]>, props: SongProperties) {
+function mergeSongProps(p1: SongProperties, p2: Partial<SongProperties>): SongProperties {
+  let levels = p1.lv;
+  if (p2.lv instanceof Array) {
+    levels = p1.lv.map(
+      (currentLv, i) => isNaN(p2.lv[i]) ? currentLv : p2.lv[i]
+    );
+  }
+  return {...p1, ...p2, lv: levels};
+}
+
+/**
+ * @return true if song prop is successfully updated.
+ */
+function updateSongProps(map: Map<string, SongProperties[]>, props: Partial<SongProperties>): boolean {
   if (!map.has(props.name)) {
-    map.set(props.name, []);
+    return false;
   }
   const arr = map.get(props.name)!;
   const match = arr.findIndex((p) => props.dx === p.dx);
-  if (match >= 0) {
-    // replace same chart type
-    arr[match] = props;
-  } else {
-    arr.push(props);
+  if (match < 0) {
+    return false;
   }
+  arr[match] = mergeSongProps(arr[match], props);
+  return true;
 }
 
-export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
+function insertOrUpdateSongProps(map: Map<string, SongProperties[]>, props: SongProperties) {
+  if (updateSongProps(map, props)) {
+    return;
+  }
+  if (!map.has(props.name)) {
+    map.set(props.name, []);
+  }
+  map.get(props.name).push(props);
+}
+
+export function buildSongPropsMap(gameVer: DxVersion, gameRegion: GameRegion, text: string): Map<string, SongProperties[]> {
   const lines = text.split("\n");
   // songPropsByName: song name -> array of song properties
   // most arrays have only 1 entry, but some arrays have more than 1 entries
@@ -88,8 +122,16 @@ export function buildSongPropsMap(text: string): Map<string, SongProperties[]> {
       insertOrUpdateSongProps(songPropsByName, songProps);
     }
   }
-  for (const songProps of INTL_VER_SONG_PROPS) {
-    insertOrUpdateSongProps(songPropsByName, songProps);
+  if (gameRegion === GameRegion.Intl) {
+    for (const songProps of INTL_VER_SONG_PROPS) {
+      insertOrUpdateSongProps(songPropsByName, songProps);
+    }
+  }
+  const overrides = OVERRIDES_BY_VERSION.get(gameVer);
+  if (overrides) {
+    for (const songProps of overrides) {
+      updateSongProps(songPropsByName, songProps);
+    }
   }
   return songPropsByName;
 }

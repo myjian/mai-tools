@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 
+import {GameRegion} from "../../common/game-region";
 import {DxVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
@@ -7,7 +8,7 @@ import {SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {getNumOfTopNewCharts, getNumOfTopOldCharts} from '../rating-analyzer';
 import {calculateMaxRating} from '../rating-functions';
-import {ChartRecordWithRating, GameRegion, RatingData} from '../types';
+import {ChartRecordWithRating, RatingData} from '../types';
 import {RatingDetails} from './RatingDetails';
 import {RatingOverview} from './RatingOverview';
 import {RecommendedLevels} from './RecommendedLevels';
