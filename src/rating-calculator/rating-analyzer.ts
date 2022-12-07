@@ -7,12 +7,11 @@ import {getRemovedSongsByVersion} from './removed-songs';
 import {ChartRecord, ChartRecordWithRating, GameRegion, RatingData} from './types';
 
 const NUM_TOP_NEW_SONGS = 15;
-const NUM_TOP_OLD_SONGS_SPLASH = 25;
 const NUM_TOP_OLD_SONGS = 35;
 
-function getScoreMultiplier(achievement: number, gameVer: DxVersion) {
+function getScoreMultiplier(achievement: number) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
-  const rank = getRankByAchievement(achievement, gameVer);
+  const rank = getRankByAchievement(achievement);
   if (!rank) {
     console.warn(`Could not find rank for achievement ${achievement.toFixed(4)}%`);
   }
@@ -24,8 +23,8 @@ export function getNumOfTopNewCharts() {
   return NUM_TOP_NEW_SONGS;
 }
 
-export function getNumOfTopOldCharts(gameVer: DxVersion) {
-  return gameVer > DxVersion.SPLASH ? NUM_TOP_OLD_SONGS : NUM_TOP_OLD_SONGS_SPLASH;
+export function getNumOfTopOldCharts() {
+  return NUM_TOP_OLD_SONGS;
 }
 
 /**
@@ -33,7 +32,6 @@ export function getNumOfTopOldCharts(gameVer: DxVersion) {
  * If we don't find the inner level for the chart, use its estimated level and move on.
  */
 export function analyzeSongRating(
-  gameVer: DxVersion,
   record: ChartRecord,
   songProps?: SongProperties
 ): ChartRecordWithRating {
@@ -47,7 +45,7 @@ export function analyzeSongRating(
   }
   return {
     ...record,
-    rating: record.level * getScoreMultiplier(record.achievement, gameVer),
+    rating: record.level * getScoreMultiplier(record.achievement),
   };
 }
 
@@ -71,7 +69,7 @@ export async function analyzePlayerRating(
       record.chartType
     );
     const isNewChart = songProps ? songProps.debut === gameVer : record.chartType === ChartType.DX;
-    const recordWithRating = analyzeSongRating(gameVer, record, songProps);
+    const recordWithRating = analyzeSongRating(record, songProps);
     if (isNewChart) {
       newChartRecords.push(recordWithRating);
     } else {
@@ -91,7 +89,7 @@ export async function analyzePlayerRating(
   }
 
   let oldChartsRating = 0;
-  const oldTopChartsCount = Math.min(getNumOfTopOldCharts(gameVer), oldChartRecords.length);
+  const oldTopChartsCount = Math.min(getNumOfTopOldCharts(), oldChartRecords.length);
   for (let i = 0; i < oldTopChartsCount; i++) {
     const rec = oldChartRecords[i];
     rec.isTarget = true;

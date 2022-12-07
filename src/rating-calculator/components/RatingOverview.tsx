@@ -1,9 +1,8 @@
 import React, {useCallback, useState} from 'react';
 
-import {DxVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {getGradeByIndex, getTopGradeBonus} from '../grade';
+import {getGradeByIndex} from '../grade';
 
 const MessagesByLang = {
   [Language.en_US]: {
@@ -23,7 +22,6 @@ const MessagesByLang = {
 };
 
 interface Props {
-  gameVer: DxVersion;
   oldChartsRating: number;
   oldChartsMaxRating?: number;
   oldTopChartsCount: number;
@@ -34,7 +32,6 @@ interface Props {
 }
 
 export const RatingOverview = ({
-  gameVer,
   oldChartsRating,
   oldChartsMaxRating,
   oldTopChartsCount,
@@ -52,10 +49,6 @@ export const RatingOverview = ({
   const messages = MessagesByLang[useLanguage()];
   let totalRating = newChartsRating + oldChartsRating;
   const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex) : null;
-  if (playerGrade) {
-    totalRating += playerGrade.bonus;
-  }
-  const topGradeBonus = getTopGradeBonus(gameVer);
 
   return (
     <div className="ratingOverview">
@@ -63,7 +56,7 @@ export const RatingOverview = ({
         Rating：{" "}
         <span>
           {showRatingRatio
-            ? `${totalRating} / ${newChartsMaxRating + oldChartsMaxRating + topGradeBonus}`
+            ? `${totalRating} / ${newChartsMaxRating + oldChartsMaxRating}`
             : totalRating}
         </span>
       </div>
@@ -94,11 +87,11 @@ export const RatingOverview = ({
           {playerGrade && (
             <tr>
               <td>
-                {messages.grade} (<span>{playerGrade.title}</span>)
+                {messages.grade}
               </td>
               <td>{messages.column}</td>
-              <td className="subRatingColumn">
-                {showRatingRatio ? `${playerGrade.bonus} / ${topGradeBonus}` : playerGrade.bonus}
+              <td className="subRatingColumn" colSpan={2}>
+                {playerGrade.title}
               </td>
             </tr>
           )}

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {DxVersion} from '../common/game-version';
 import {getInitialLanguage, Language} from '../common/lang';
 import {LangContext} from '../common/lang-react';
 import {getRankDefinitions} from '../common/rank-functions';
@@ -9,8 +8,6 @@ import {MultiplierTable} from './MultiplierTable';
 import {OptionsInput} from './OptionsInput';
 import {DisplayValue, RatingTable} from './RatingTable';
 import {RatingVisualizer} from './RatingVisualizer';
-
-const gameVer = DxVersion.UNIVERSE;
 
 interface State {
   lang: Language;
@@ -58,9 +55,9 @@ export class RootComponent extends React.PureComponent<{}, State> {
       this.state;
     const canZoomIn = maxLv !== minLv;
     const levels = this.getLevels();
-    const allRanks = getRankDefinitions(gameVer);
+    const allRanks = getRankDefinitions();
     const ranksEndIndex = allRanks.findIndex(rank => rank.title == minRank);
-    const ranks = allRanks.slice(0, ranksEndIndex+1);
+    const ranks = allRanks.slice(0, ranksEndIndex + 1);
     return (
       <LangContext.Provider value={lang}>
         <div className="ratingVisualizer">
@@ -88,7 +85,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
           <div className="container">
             <RatingTable ranks={ranks} levels={levels} displayValue={tableDisplay} />
             <hr className="sectionSep" />
-            <MultiplierTable gameVer={gameVer} />
+            <MultiplierTable />
             <footer className="footer">
               <hr className="sectionSep" />
               <span>Made by </span>
@@ -156,7 +153,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
 }
 
 function calculateMaxRating(maxLv: number) {
-  const maxRank = getRankDefinitions(gameVer)[0];
+  const maxRank = getRankDefinitions()[0];
   return Math.floor((maxRank.minAchv * maxRank.factor * maxLv) / 100);
 }
 

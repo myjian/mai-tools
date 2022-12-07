@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {DxVersion} from '../common/game-version';
 import {Language} from '../common/lang';
 import {useLanguage} from '../common/lang-react';
 import {getRankDefinitions} from '../common/rank-functions';
@@ -54,12 +53,8 @@ const RankFactorRow = (props: RankFactorRowProps) => {
   );
 };
 
-interface Props {
-  gameVer: DxVersion;
-}
-
-export const MultiplierTable = ({gameVer}: Props) => {
-  const rankDefs = getRankDefinitions(gameVer);
+export const MultiplierTable = () => {
+  const rankDefs = getRankDefinitions();
   const stopIndex = rankDefs.findIndex((r) => r.title === MIN_RANK_OPTION) + 1;
   const messages = MessagesByLang[useLanguage()];
   return (

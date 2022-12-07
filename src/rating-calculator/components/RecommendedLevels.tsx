@@ -47,7 +47,7 @@ export const RecommendedLevels = ({
   oldTopChartsCount,
 }: Props) => {
   const messages = MessagesByLang[useLanguage()];
-  let ranks = getRankDefinitions(gameVer);
+  let ranks = getRankDefinitions();
   const minRankIdx = ranks.findIndex((r) => r.title === MIN_RANK);
   ranks = ranks
     .slice(0, minRankIdx + 1)

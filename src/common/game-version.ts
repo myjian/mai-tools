@@ -22,16 +22,12 @@ const VERSION_NAMES = [
 ];
 
 export const enum DxVersion {
-  SPLASH = 15,
-  SPLASH_PLUS = 16,
   UNIVERSE = 17,
   UNIVERSE_PLUS = 18,
   FESTiVAL = 19,
 }
 
 export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
-  DxVersion.SPLASH,
-  DxVersion.SPLASH_PLUS,
   DxVersion.UNIVERSE,
   DxVersion.UNIVERSE_PLUS,
   DxVersion.FESTiVAL,

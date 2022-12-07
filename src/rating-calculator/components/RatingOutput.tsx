@@ -51,48 +51,43 @@ export const RatingOutput = ({
   ratingData,
   gameRegion,
   playerName,
-  playerGradeIndex,
   songPropsByName,
 }: Props) => {
   const state = useMemo<State>(() => {
     const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
 
     const newCandidateCharts = getCandidateCharts(
-      gameVer,
       newChartRecords,
       newTopChartsCount,
       NEW_CANDIDATE_SONGS_POOL_SIZE
     );
     const notPlayedNewCharts = newSongs
       ? getNotPlayedCharts(
-          gameVer,
-          newSongs,
-          newChartRecords,
-          newTopChartsCount,
-          NEW_CANDIDATE_SONGS_POOL_SIZE
-        )
+        newSongs,
+        newChartRecords,
+        newTopChartsCount,
+        NEW_CANDIDATE_SONGS_POOL_SIZE
+      )
       : [];
     const oldCandidateCharts = getCandidateCharts(
-      gameVer,
       oldChartRecords,
       oldTopChartsCount,
       OLD_CANDIDATE_SONGS_POOL_SIZE
     );
     const notPlayedOldCharts = oldSongs
       ? getNotPlayedCharts(
-          gameVer,
-          oldSongs,
-          oldChartRecords,
-          oldTopChartsCount,
-          OLD_CANDIDATE_SONGS_POOL_SIZE
-        )
+        oldSongs,
+        oldChartRecords,
+        oldTopChartsCount,
+        OLD_CANDIDATE_SONGS_POOL_SIZE
+      )
       : [];
 
     const maxNewChartsRating = newSongs
-      ? calculateMaxRating(gameVer, newSongs, getNumOfTopNewCharts())
+      ? calculateMaxRating(newSongs, getNumOfTopNewCharts())
       : 0;
     const maxOldChartsRating = oldSongs
-      ? calculateMaxRating(gameVer, oldSongs, getNumOfTopOldCharts(gameVer))
+      ? calculateMaxRating(oldSongs, getNumOfTopOldCharts())
       : 0;
     return {
       newCandidateCharts,
@@ -102,7 +97,7 @@ export const RatingOutput = ({
       maxNewChartsRating,
       maxOldChartsRating,
     };
-  }, [gameVer, newSongs, oldSongs, ratingData]);
+  }, [newSongs, oldSongs, ratingData]);
 
   const outputArea = useRef<HTMLDivElement>();
 
@@ -129,14 +124,13 @@ export const RatingOutput = ({
         {playerName ? ` - ${playerName}` : null}
       </h2>
       <RatingOverview
-        gameVer={gameVer}
         newChartsRating={newChartsRating}
         newChartsMaxRating={maxNewChartsRating}
         newTopChartsCount={newTopChartsCount}
         oldChartsRating={oldChartsRating}
         oldChartsMaxRating={maxOldChartsRating}
         oldTopChartsCount={oldTopChartsCount}
-        playerGradeIndex={gameVer > DxVersion.SPLASH ? 0 : playerGradeIndex}
+        playerGradeIndex={0}
       />
       <RecommendedLevels
         gameRegion={gameRegion}
@@ -147,7 +141,6 @@ export const RatingOutput = ({
         oldTopChartsCount={oldTopChartsCount}
       />
       <RatingDetails
-        gameVer={gameVer}
         songPropsByName={songPropsByName}
         newCandidateCharts={newCandidateCharts}
         oldCandidateCharts={oldCandidateCharts}

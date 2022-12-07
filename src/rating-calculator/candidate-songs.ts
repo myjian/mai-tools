@@ -1,6 +1,5 @@
 import {shuffleArray} from '../common/array-util';
 import {DIFFICULTIES, SSSPLUS_MIN_ACHIEVEMENT} from '../common/constants';
-import {DxVersion} from '../common/game-version';
 import {
   getRankByAchievement,
   getRankDefinitions,
@@ -17,7 +16,6 @@ import {ChartRecordWithRating} from './types';
 type NextRatingCandidate = Pick<ChartRecordWithRating, "achievement" | "level">;
 
 function getNextRating(
-  gameVer: DxVersion,
   record: NextRatingCandidate,
   ratingRangeMin: number,
   numOfRanks: number
@@ -26,14 +24,14 @@ function getNextRating(
   if (rankDefIdx === -1) {
     rankDefIdx = getRankIndexByAchievement(94);
   }
-  const ranks = getRankDefinitions(gameVer);
+  const ranks = getRankDefinitions();
   const ratingByRank = new Map();
   for (let i = rankDefIdx - 1; i >= 0; i--) {
     const rank = ranks[i];
     if (rank.title === ranks[i + 1].title) {
       continue;
     }
-    const [minRt] = calculateRatingRange(gameVer, record.level, rank);
+    const [minRt] = calculateRatingRange(record.level, rank);
     if (minRt > ratingRangeMin) {
       ratingByRank.set(rank.title, {minRt: minRt - ratingRangeMin, rank});
       if (ratingByRank.size >= numOfRanks) {
@@ -45,7 +43,6 @@ function getNextRating(
 }
 
 export function getCandidateCharts(
-  gameVer: DxVersion,
   records: ReadonlyArray<ChartRecordWithRating>,
   topCount: number,
   count: number
@@ -57,7 +54,7 @@ export function getCandidateCharts(
   for (let i = 0; i < topCount; i++) {
     const record = records[i];
     if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
-      const ratingByRank = getNextRating(gameVer, record, Math.floor(record.rating), 2);
+      const ratingByRank = getNextRating(record, Math.floor(record.rating), 2);
       if (!ratingByRank.size) {
         continue;
       }
@@ -69,7 +66,7 @@ export function getCandidateCharts(
   for (let i = topCount; i < records.length; i++) {
     const record = records[i];
     if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
-      const ratingByRank = getNextRating(gameVer, record, minRating, 2);
+      const ratingByRank = getNextRating(record, minRating, 2);
       if (!ratingByRank.size) {
         continue;
       }
@@ -85,7 +82,6 @@ export function getCandidateCharts(
 }
 
 export function getNotPlayedCharts(
-  gameVer: DxVersion,
   songList: ReadonlyArray<SongProperties>,
   records: ReadonlyArray<ChartRecordWithRating>,
   topCount: number,
@@ -98,8 +94,8 @@ export function getNotPlayedCharts(
   }
   const maxRating = records.length ? Math.ceil(records[0].rating) : 0;
   const minRating = records.length ? Math.floor(records[topCount - 1].rating) : 0;
-  const maxRank = getRankByAchievement(100.5, gameVer);
-  const minRank = getRankByAchievement(97, gameVer);
+  const maxRank = getRankByAchievement(100.5);
+  const minRank = getRankByAchievement(97);
   const hardestLv = maxRating ? (maxRating * 100) / (minRank.factor * minRank.minAchv) : 15;
   const easiestLv = (minRating * 100) / (maxRank.factor * maxRank.minAchv);
   const candidates: ChartRecordWithRating[] = [];
@@ -128,7 +124,7 @@ export function getNotPlayedCharts(
         rating: 0,
         achievement: 0,
       };
-      const ratingByRank = getNextRating(gameVer, record, minRating, 1);
+      const ratingByRank = getNextRating(record, minRating, 1);
       if (!ratingByRank.size) {
         continue;
       }

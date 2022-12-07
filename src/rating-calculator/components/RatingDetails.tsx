@@ -1,10 +1,9 @@
 import React, {useCallback, useState} from 'react';
 
-import {DxVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {SongProperties} from '../../common/song-props';
-import {getNumOfTopOldCharts} from '../rating-analyzer';
+import {getNumOfTopNewCharts, getNumOfTopOldCharts} from '../rating-analyzer';
 import {ChartRecordWithRating, RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
 import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
@@ -12,13 +11,13 @@ import {TopChartRecords} from './TopChartRecords';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    newChartsRatingTargets: "New Charts Rating Subjects (best 15):",
+    newChartsRatingTargets: "New Charts Rating Subjects (best {count}):",
     oldChartsRatingTargets: "Old Charts Rating Subjects (best {count}):",
     newChartsRatingCandidates: "New Charts Rating Candidates:",
     oldChartsRatingCandidates: "Old Charts Rating Candidates:",
   },
   [Language.zh_TW]: {
-    newChartsRatingTargets: "新譜面 Rating 對象曲 (取最佳 15 首)：",
+    newChartsRatingTargets: "新譜面 Rating 對象曲 (取最佳 {count} 首)：",
     oldChartsRatingTargets: "舊譜面 Rating 對象曲 (取最佳 {count} 首)：",
     newChartsRatingCandidates: "新譜面 Rating 候選曲：",
     oldChartsRatingCandidates: "舊譜面 Rating 候選曲：",
@@ -26,7 +25,6 @@ const MessagesByLang = {
 };
 
 interface Props {
-  gameVer: DxVersion;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   newCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
@@ -36,7 +34,6 @@ interface Props {
 }
 
 export const RatingDetails = ({
-  gameVer,
   newCandidateCharts,
   notPlayedNewCharts,
   oldCandidateCharts,
@@ -71,7 +68,10 @@ export const RatingDetails = ({
     <>
       <div className="songRecordsContainer">
         <ChartRecordSectionTitle
-          title={messages.newChartsRatingTargets}
+          title={messages.newChartsRatingTargets.replace(
+            "{count}",
+            getNumOfTopNewCharts().toFixed(0)
+          )}
           contentHidden={hideNewTopSongs}
           onClick={toggleNewTopChartsDisplay}
         />
@@ -86,7 +86,7 @@ export const RatingDetails = ({
         <ChartRecordSectionTitle
           title={messages.oldChartsRatingTargets.replace(
             "{count}",
-            getNumOfTopOldCharts(gameVer).toFixed(0)
+            getNumOfTopOldCharts().toFixed(0)
           )}
           contentHidden={hideOldTopSongs}
           onClick={toggleOldTopChartsDisplay}

@@ -1,10 +1,9 @@
-import {DxVersion} from "../common/game-version";
 import {compareNumber} from "../common/number-helper";
 import {getRankDefinitions, RankDef} from "../common/rank-functions";
 import {SongProperties} from "../common/song-props";
 
-export function calculateRatingRange(gameVer: DxVersion, lv: number, rank: RankDef) {
-  const rankDefs = getRankDefinitions(gameVer);
+export function calculateRatingRange(lv: number, rank: RankDef) {
+  const rankDefs = getRankDefinitions();
   const idx = rankDefs.indexOf(rank);
   const maxAchv = idx >= 1 ? rankDefs[idx - 1].minAchv - 0.0001 : rank.minAchv;
   const minRating = Math.floor((lv * rank.minAchv * rank.factor) / 100);
@@ -13,7 +12,6 @@ export function calculateRatingRange(gameVer: DxVersion, lv: number, rank: RankD
 }
 
 export function calculateMaxRating(
-  gameVer: DxVersion,
   songs: ReadonlyArray<SongProperties>,
   count: number
 ) {
@@ -25,7 +23,7 @@ export function calculateMaxRating(
   }
   allLvs.sort(compareNumber);
   const topLvs = allLvs.slice(Math.max(0, allLvs.length - count));
-  const topRank = getRankDefinitions(gameVer)[0];
+  const topRank = getRankDefinitions()[0];
   let totalRating = 0;
   for (const lv of topLvs) {
     totalRating += Math.floor((lv * topRank.minAchv * topRank.factor) / 100);
