@@ -1,3 +1,4 @@
+import {determineDxStarText} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
@@ -240,10 +241,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
     linkElem.append(placeNameSpan);
   }
 
-  if (
-    (d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") &&
-    d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")
-  ) {
+  function addScoreConverterLink() {
     removeScrollControl(d);
     let url =
       BASE_NEWTAB_URL +
@@ -302,5 +300,36 @@ import {ALLOWED_ORIGINS} from '../common/util';
         }
       }
     });
+  }
+
+  function calculateDetailedDxStar() {
+    const dxScoreBlock = d.querySelector(".playlog_result_innerblock .playlog_score_block");
+    if (!dxScoreBlock) {
+      return "";
+    }
+    const dxScoreLabel = dxScoreBlock.querySelector(".w_80");
+    if (!dxScoreLabel) {
+      // do nothing if this function is run more than once
+      return;
+    }
+    dxScoreLabel.remove();
+    const [playerDxScore, maxDxScore] = dxScoreBlock.textContent
+      .split("/")
+      .map((t) => parseInt(t.replace(",", "").trim()));
+    const dxScoreRatio = playerDxScore / maxDxScore;
+    const dxStar =
+      determineDxStarText(dxScoreRatio, true) + ` (${(dxScoreRatio * 100).toFixed(1)}%)`;
+    const dxStarBlock = d.createElement("div");
+    dxStarBlock.className = "white p_r_5 f_15 f_l";
+    dxStarBlock.append(dxStar);
+    dxScoreBlock.prepend(dxStarBlock);
+  }
+
+  if (
+    (d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") &&
+    d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")
+  ) {
+    addScoreConverterLink();
+    calculateDetailedDxStar();
   }
 })(document);

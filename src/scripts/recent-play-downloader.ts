@@ -1,4 +1,5 @@
 import {DIFFICULTY_CLASSNAME_MAP} from '../common/difficulties';
+import {determineDxStarText} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
@@ -153,23 +154,7 @@ declare var domtoimage: any;
     const [playerDxScore, maxDxScore] = dxScoreBlock.textContent
       .split("/")
       .map((t) => parseInt(t.replace(",", "").trim()));
-    const dxScoreRatio = playerDxScore / maxDxScore;
-    if (playerDxScore === maxDxScore) {
-      return "✦7";
-    } else if (dxScoreRatio >= 0.99) {
-      return "✦6";
-    } else if (dxScoreRatio >= 0.97) {
-      return "✦5";
-    } else if (dxScoreRatio >= 0.95) {
-      return "✦4";
-    } else if (dxScoreRatio >= 0.93) {
-      return "✦3";
-    } else if (dxScoreRatio >= 0.9) {
-      return "✦2";
-    } else if (dxScoreRatio >= 0.85) {
-      return "✦1";
-    }
-    return "";
+    return determineDxStarText(playerDxScore / maxDxScore);
   }
 
   function getStamps(row: HTMLElement): string {
