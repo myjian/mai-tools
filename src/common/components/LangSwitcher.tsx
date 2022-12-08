@@ -1,6 +1,6 @@
 import React from "react";
-import { Language, saveLanguage, SUPPORTED_LANGUAGES } from "../common/lang";
-import { useLanguage } from "../common/lang-react";
+import {Language, saveLanguage, SUPPORTED_LANGUAGES} from "../lang";
+import {useLanguage} from "../lang-react";
 
 const UIString = {
   [Language.zh_TW]: "繁體中文",
@@ -15,7 +15,7 @@ export function LangSwitcher() {
   };
 
   return <div>
-    <br />語言 (Language)：
+    語言 (Language)：
     {SUPPORTED_LANGUAGES
       .map(otherLang => (
         otherLang === lang ? <>{UIString[otherLang]}&nbsp;</> : <React.Fragment key={otherLang}>

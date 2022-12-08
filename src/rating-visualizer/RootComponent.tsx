@@ -1,4 +1,5 @@
 import React from 'react';
+import {LangSwitcher} from '../common/components/LangSwitcher';
 
 import {getInitialLanguage, Language} from '../common/lang';
 import {LangContext} from '../common/lang-react';
@@ -88,6 +89,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
             <MultiplierTable />
             <footer className="footer">
               <hr className="sectionSep" />
+              <LangSwitcher />
+              <br />
               <span>Made by </span>
               <a className="authorLink" href="https://github.com/myjian" target="_blank">
                 myjian
