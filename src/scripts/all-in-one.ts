@@ -1,5 +1,5 @@
-import { removeScrollControl } from '../common/net-helpers';
-import { getScriptHost } from '../common/script-host';
+import {removeScrollControl} from '../common/net-helpers';
+import {getScriptHost} from '../common/script-host';
 
 (function (d) {
   const SCRIPT_HOST = getScriptHost("all-in-one") + "/scripts/";
@@ -21,6 +21,7 @@ import { getScriptHost } from '../common/script-host';
     appendScript("score-converter.js");
   } else if (path.indexOf("/maimai-mobile/record/musicDetail/") >= 0) {
     removeScrollControl(d);
+    appendScript("song-detail-helper.js");
   } else if (path.indexOf("/maimai-mobile/record/music") >= 0) {
     appendScript("score-sort.js");
   } else if (path.indexOf("/maimai-mobile/friend/") >= 0) {

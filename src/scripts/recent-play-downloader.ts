@@ -1,5 +1,5 @@
 import {DIFFICULTY_CLASSNAME_MAP} from '../common/difficulties';
-import {determineDxStarText} from '../common/dx-star';
+import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
@@ -137,24 +137,9 @@ declare var domtoimage: any;
     return parseFloat((row.querySelector(".playlog_achievement_txt") as HTMLElement).innerText);
   }
 
-  /*
-    ✦ - 85%
-    ✦✦ - 90%
-    ✦✦✦ - 93%
-    ✦✦✦✦ - 95%
-    ✦✦✦✦✦ - 97%
-    ✦6 - 99%
-    ✦7 - 100%
-  */
   function getDxStar(row: HTMLElement): string {
-    const dxScoreBlock = row.querySelector(".playlog_score_block_star");
-    if (!dxScoreBlock) {
-      return "";
-    }
-    const [playerDxScore, maxDxScore] = dxScoreBlock.textContent
-      .split("/")
-      .map((t) => parseInt(t.replace(",", "").trim()));
-    return determineDxStarText(playerDxScore / maxDxScore);
+    const dxStarIndex = calculateDetailedDxStar(row);
+    return getDxStarText(dxStarIndex);
   }
 
   function getStamps(row: HTMLElement): string {
