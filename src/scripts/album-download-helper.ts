@@ -47,21 +47,9 @@
       : `${formatDate(playDate)} ${songName}.jpg`;
   }
 
-  function getPhotoLink(row: HTMLElement) {
+  async function getPhotoLink(row: HTMLElement) {
     const img = row.querySelector("img.w_430") as HTMLImageElement;
-    return img.src;
-  }
-
-  function addLinkToPhoto(row: HTMLElement, href: string, filename: string) {
-    if (row.getElementsByTagName("a").length) {
-      return;
-    }
-    const img = row.querySelector("img.w_430") as HTMLImageElement;
-    const link = d.createElement("a");
-    link.download = filename;
-    link.href = href;
-    img.insertAdjacentElement("beforebegin", link);
-    link.append(img);
+    return fetch(img.src).then(res => res.blob()).then(b => URL.createObjectURL(b));
   }
 
   function addLinkToSongname(row: HTMLElement, href: string, filename: string) {
@@ -77,14 +65,13 @@
     link.append(songnameBlock.childNodes[0], " ", DOWNLOAD_ICON);
   }
 
-  function main() {
+  async function main() {
     // Enable right click
-    document.body.oncontextmenu = null;
+    d.body.oncontextmenu = null;
     const rows = Array.from(d.getElementsByClassName("black_block")).map((r) => r.parentElement);
     for (const row of rows) {
-      const photoLink = getPhotoLink(row);
+      const photoLink = await getPhotoLink(row);
       const filename = getFileName(row);
-      addLinkToPhoto(row, photoLink, filename);
       addLinkToSongname(row, photoLink, filename);
     }
   }
