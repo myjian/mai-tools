@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import {formatFloat} from "../../common/number-helper";
-import {getRankDefinitions, getRankIndexByAchievement} from "../../common/rank-functions";
-import {DisplayMode} from "../constants";
+import {formatFloat} from '../../common/number-helper';
+import {getRankDefinitions, getRankIndexByAchievement} from '../../common/rank-functions';
+import {DisplayMode} from '../constants';
 import {
   BreakScoreMap,
   FullJudgementMap,
@@ -12,12 +12,12 @@ import {
   NoteType,
   ScorePerType,
   StrictJudgementMap,
-} from "../types";
-import {AchievementInfo} from "./AchievementInfo";
-import {DateAndPlace} from "./DateAndPlace";
-import {JudgementContainer} from "./JudgementContainer";
-import {SongImg} from "./SongImg";
-import {SongInfo} from "./SongInfo";
+} from '../types';
+import {AchievementInfo} from './AchievementInfo';
+import {DateAndPlace} from './DateAndPlace';
+import {JudgementContainer} from './JudgementContainer';
+import {SongImg} from './SongImg';
+import {SongInfo} from './SongInfo';
 
 const LOSS_PREFIX = "-";
 
@@ -71,12 +71,10 @@ interface ScorePageProps {
 interface ScorePageState {
   isDxMode: boolean;
   displayMode: DisplayMode;
-  displayScorePerType?: ScorePerType;
-  displayNoteJudgements?: Map<FullNoteType, JudgementDisplayMap>;
 }
 
 export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageState> {
-  state: ScorePageState = {isDxMode: false, displayMode: DisplayMode.NORMAL};
+  state: ScorePageState = {isDxMode: true, displayMode: DisplayMode.LOSS};
 
   render() {
     const {
@@ -100,7 +98,9 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
       totalJudgements,
       playerScorePerType,
     } = this.props;
-    const {isDxMode, displayMode, displayScorePerType, displayNoteJudgements} = this.state;
+    const {isDxMode, displayMode} = this.state;
+    const displayNoteJudgements = this.getNoteJudgementLoss(isDxMode, displayMode);
+    const displayScorePerType = this.getDisplayScorePerType(isDxMode, displayMode);
     return (
       <div className="songScoreContainer">
         <DateAndPlace date={date} isDxMode={isDxMode} toggleDxMode={this.toggleDxMode} />
@@ -143,20 +143,14 @@ export class ScorePage extends React.PureComponent<ScorePageProps, ScorePageStat
   private toggleDxMode = () => {
     this.setState((state) => {
       const isDxMode = !state.isDxMode;
-      const {displayMode} = state;
-      const displayNoteJudgements = this.getNoteJudgementLoss(isDxMode, displayMode);
-      const displayScorePerType = this.getDisplayScorePerType(isDxMode, displayMode);
-      return {isDxMode, displayNoteJudgements, displayScorePerType};
+      return {isDxMode};
     });
   };
 
   private toggleDisplayMode = () => {
     this.setState((state) => {
       const displayMode = getNextDisplayMode(state.displayMode);
-      const {isDxMode} = state;
-      const displayNoteJudgements = this.getNoteJudgementLoss(isDxMode, displayMode);
-      const displayScorePerType = this.getDisplayScorePerType(isDxMode, displayMode);
-      return {displayMode, displayNoteJudgements, displayScorePerType};
+      return {displayMode};
     });
   };
 

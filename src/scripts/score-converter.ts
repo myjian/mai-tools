@@ -1,8 +1,17 @@
+import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
 import {ALLOWED_ORIGINS} from '../common/util';
 
 (function (d) {
+  const UIString = {
+    [Language.en_US]: {
+      analyzeScore: "🔍 CLICK ME TO ANALYZE SCORE",
+    },
+    [Language.zh_TW]: {
+      analyzeScore: "🔍 點我分析分數",
+    },
+  }[getInitialLanguage()];
   const BASE_NEWTAB_URL = getScriptHost("score-converter") + "/classic-layout/";
   const FINALE_RANK_IMG = new Map([
     ["S", "/maimai-mobile/maimai-img/icon_s.png"],
@@ -194,6 +203,43 @@ import {ALLOWED_ORIGINS} from '../common/util';
     return Promise.resolve(null);
   }
 
+  function createPlaceBlock() {
+    const placeNameBlock = d.createElement("div");
+    placeNameBlock.className = "basic_block m_10 p_l_10 t_l f_14 break";
+    const placeNameSpan = d.createElement("span");
+    placeNameSpan.className = "m_t_5 p_5 d_ib";
+    const clearfix = d.createElement("div");
+    clearfix.className = "clearfix";
+
+    placeNameBlock.append(placeNameSpan, clearfix);
+    d.querySelector(".gray_block").insertAdjacentElement("afterend", placeNameBlock);
+    return placeNameBlock;
+  }
+
+  function addLinkToPlace(link: string) {
+    let placeNameBlock = d.getElementById("placeName");
+    if (!placeNameBlock) {
+      placeNameBlock = createPlaceBlock();
+    }
+    const placeNameCtrl = d.getElementById("placeNameCtrl");
+    if (placeNameCtrl) {
+      placeNameCtrl.remove();
+    }
+    const placeNameSpan = placeNameBlock.querySelector("span");
+    if (placeNameSpan.parentElement instanceof HTMLAnchorElement) {
+      // Do nothing if this function is run more than once.
+      return;
+    }
+    placeNameSpan.innerText = UIString.analyzeScore;
+    const linkElem = d.createElement("a");
+    linkElem.href = link;
+    linkElem.target = "_blank";
+    linkElem.className = "blue d_ib";
+    linkElem.style.height = "40px";
+    placeNameBlock.append(linkElem);
+    linkElem.append(placeNameSpan);
+  }
+
   if (
     (d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") &&
     d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")
@@ -223,7 +269,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
     }
     console.log(url);
     console.log("url length: " + url.length);
-    window.open(url, "_blank");
+    addLinkToPlace(url);
     window.addEventListener("message", (evt) => {
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const data = evt.data;
