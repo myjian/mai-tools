@@ -13,7 +13,7 @@ Run
     npm install -g serve
     npm start
 
-Development
+Develop
 ----
 
     npm run-script watch
