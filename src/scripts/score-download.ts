@@ -20,6 +20,13 @@ import {handleError} from '../common/util';
       copied: "Copied to clipboard",
       allDone: '✅ All scores are loaded into text box. Click "Copy" to copy scores to clipboard. You can paste it in Excel or Google Sheets.',
     },
+    [Language.ko_KR]: {
+      pleaseLogIn: "maimai DX NET에 로그인 해 주세요.",
+      fetch: "모든 기록 불러오기",
+      copy: "복사",
+      copied: "클립보드에 복사되었습니다",
+      allDone: '✅ 모든 기록이 로드되었습니다. "복사"를 눌러 클립보드로 복사하고 엑셀이나 구글 시트에 붙여 넣으세요.',
+    },
   }[LANG];
 
   function createOutputArea(container: HTMLElement): HTMLTextAreaElement {

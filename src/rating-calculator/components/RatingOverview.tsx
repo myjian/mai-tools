@@ -19,6 +19,13 @@ const MessagesByLang = {
     oldChartsRating: "舊譜面 Rating",
     grade: "段位",
   },
+  [Language.ko_KR]: {
+    average: "평균",
+    column: "：",
+    newChartsRating: "신곡 레이팅",
+    oldChartsRating: "구곡 레이팅",
+    grade: "등급",
+  },
 };
 
 interface Props {

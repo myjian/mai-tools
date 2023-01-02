@@ -5,6 +5,7 @@ import {useLanguage} from "../lang-react";
 const UIString = {
   [Language.zh_TW]: "繁體中文",
   [Language.en_US]: "English",
+  [Language.ko_KR]: "한국어",
 };
 
 export function LangSwitcher() {

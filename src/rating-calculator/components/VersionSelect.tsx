@@ -15,6 +15,9 @@ const MessagesByLang = {
   [Language.zh_TW]: {
     gameVer: "遊戲版本：",
   },
+  [Language.ko_KR]: {
+    gameVer: "게임 버전：",
+  },
 };
 
 interface Props {

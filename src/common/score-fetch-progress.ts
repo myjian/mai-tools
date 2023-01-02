@@ -26,6 +26,18 @@ const MessagesByLang = {
     remStart: "Loading Re:Master scores…",
     remDone: "✔",
   },
+  [Language.ko_KR]: {
+    bscStart: "Basic 정확도 불러오는 중…",
+    bscDone: "✔",
+    advStart: "Advanced 정확도 불러오는 중…",
+    advDone: "✔",
+    expStart: "Expert 정확도 불러오는 중…",
+    expDone: "✔",
+    masStart: "Master 정확도 불러오는 중…",
+    masDone: "✔",
+    remStart: "Re:Master 정확도 불러오는 중…",
+    remDone: "✔",
+  },
 };
 
 export function statusText(lang: Language, difficulty: Difficulty, end?: boolean): string {

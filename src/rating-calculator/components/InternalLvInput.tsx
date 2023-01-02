@@ -14,6 +14,11 @@ const MessagesByLang = {
     manualLv: "手動輸入",
     autoLv: "自動代入",
   },
+  [Language.ko_KR]: {
+    internalLvHeading: "채보 상수 데이터",
+    manualLv: "직접입력",
+    autoLv: "자동입력",
+  },
 };
 
 export const InternalLvInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef) => {

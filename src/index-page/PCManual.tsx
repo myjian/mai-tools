@@ -18,6 +18,12 @@ const MessagesByLang = {
       "Drag the link into the bookmarks bar to save the bookmarklet. (MMBL stands for MaiMai BookmarkLets)",
     use: "To use the bookmarklet, log in to maimai DX NET and open the page you want to use the bookmarklet on, and then click the bookmarklet in bookmarks bar.",
   },
+  [Language.ko_KR]: {
+    title: "어떻게 하면 PC에서 북마크를 만들고 실행할 수 있나요?",
+    showBookmarksBar: "브라우저의 북마크 (혹은 즐겨찾기)를 여세요.",
+    create: "링크를 북마크로 드래그 하세요. (MMBL은 MaiMai BookmarkLets를 의미합니다)",
+    use: "북마크를 사용하려면 maimai DX NET에 로그인하고 사용하고 싶은 페이지에서 북마크를 클릭합니다.",
+  },
 };
 
 export const PCManual = () => {

@@ -22,6 +22,12 @@ const MessagesByLang = {
     newChartsRatingCandidates: "新譜面 Rating 候選曲：",
     oldChartsRatingCandidates: "舊譜面 Rating 候選曲：",
   },
+  [Language.ko_KR]: {
+    newChartsRatingTargets: "신곡 레이팅 (최고 기록 {count} 개)：",
+    oldChartsRatingTargets: "구곡 레이팅 (최고 기록 {count} 개)：",
+    newChartsRatingCandidates: "신곡 레이팅 후보：",
+    oldChartsRatingCandidates: "구곡 레이팅 후보：",
+  },
 };
 
 interface Props {

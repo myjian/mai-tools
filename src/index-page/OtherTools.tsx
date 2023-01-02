@@ -14,6 +14,11 @@ const UIMessages = {
     dxAchievement: "Convert FiNALE score to DX achievement",
     ratingVisualizer: "Rating Lookup Table & Visualization",
   },
+  [Language.ko_KR]: {
+    otherToolsTitle: "다른 도구들 (북마크에 포함되지 않은 도구들)",
+    dxAchievement: "FiNALE 점수 -> DX 정확도 변환",
+    ratingVisualizer: "레이팅 점수표 & 시각화",
+  },
 };
 
 export const OtherTools = () => {

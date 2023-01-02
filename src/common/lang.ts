@@ -1,9 +1,10 @@
 export const enum Language {
   en_US = "en_US",
   zh_TW = "zh_TW",
+  ko_KR = "ko_KR",
 }
 
-export const SUPPORTED_LANGUAGES = [Language.en_US, Language.zh_TW];
+export const SUPPORTED_LANGUAGES = [Language.en_US, Language.zh_TW, Language.ko_KR];
 
 const LANG_STORAGE_NAME = "MaiToolsLang";
 
@@ -14,6 +15,8 @@ function loadLanguage(): Language {
       return Language.en_US;
     case Language.zh_TW:
       return Language.zh_TW;
+    case Language.ko_KR:
+      return Language.ko_KR;
   }
   return null;
 }
@@ -23,10 +26,11 @@ export function saveLanguage(lang: Language) {
 }
 
 export function getInitialLanguage(): Language {
-  const queryParams = new URLSearchParams(location.search);
+  const queryParamsHl = new URLSearchParams(location.search).get("hl");
   // URL query parameter
-  if (queryParams.get("hl")) {
-    return queryParams.get("hl").startsWith("zh") ? Language.zh_TW : Language.en_US;
+  if (queryParamsHl) {
+    return queryParamsHl.startsWith("zh") ? Language.zh_TW :
+           queryParamsHl.startsWith("ko") ? Language.ko_KR : Language.en_US;
   }
   // LocalStorage
   const langPreference = loadLanguage();
@@ -36,6 +40,9 @@ export function getInitialLanguage(): Language {
   // Browser
   if (navigator.language.startsWith("zh")) {
     return Language.zh_TW;
+  }
+  if (navigator.language.startsWith("ko")) {
+    return Language.ko_KR;
   }
   return Language.en_US;
 }

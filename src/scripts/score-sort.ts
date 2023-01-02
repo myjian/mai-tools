@@ -82,6 +82,23 @@ type Cache = {
       [SortBy.DxStarDes]: "DX-Star (7 星至無星)",
       [SortBy.DxStarAsc]: "DX-Star (無星至 7 星)",
     },
+    [Language.ko_KR]: {
+      [SortBy.None]: "-- 정렬 순서를 선택해주세요 --",
+      [SortBy.RankAsc]: "정확도 오름차순 (낮음 \u2192 높음)",
+      [SortBy.RankDes]: "정확도 내림차순 (높음 \u2192 낮음)",
+      [SortBy.ApFcAsc]: "AP/FC (FC \u2192 AP+)",
+      [SortBy.ApFcDes]: "AP/FC (AP+ \u2192 FC)",
+      [SortBy.SyncAsc]: "Sync (FS \u2192 FDX+)",
+      [SortBy.SyncDes]: "Sync (FDX+ \u2192 FS)",
+      [SortBy.VsResultAsc]: "VS 결과 (Lose \u2192 Win)",
+      [SortBy.VsResultDes]: "VS 결과 (Win \u2192 Lose)",
+      [SortBy.LvAsc]: "난이도 (낮음 \u2192 높음)",
+      [SortBy.LvDes]: "난이도 (높음 \u2192 낮음)",
+      [SortBy.InLvAsc]: "난이도 상수 (낮음 \u2192 높음)",
+      [SortBy.InLvDes]: "난이도 상수 (높음 \u2192 낮음)",
+      [SortBy.DxStarDes]: "DX-Star (7 \u2192 none)",
+      [SortBy.DxStarAsc]: "DX-Star (none \u2192 7)",
+    }
   }[LANG];
   const CHART_LEVELS = [
     "1",

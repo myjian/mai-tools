@@ -27,6 +27,13 @@ const MessagesByLang = {
     oldChartsRecLv: "舊譜面",
     levelComment: "註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。",
   },
+  [Language.ko_KR]: {
+    recommendedLevels: "추천 난이도",
+    projectedRating: "잠재적 레이팅",
+    newChartsRecLv: "신곡 채보",
+    oldChartsRecLv: "구곡 채보",
+    levelComment: "참고：X.7 이상은 X+로 표시됩니다. 예를 들면 10.7, 10.8, 10.9는 10+입니다.",
+  },
 };
 
 interface Props {

@@ -29,6 +29,17 @@ const MessagesByLang = {
     chrome7:
       "Once you set up the bookmarklet, you can use it repeatedly. You don't need to come back to this page to copy links.",
   },
+  [Language.ko_KR]: {
+    title: "핸드폰에서 북마크를 어떻게 만드나요?",
+    desc: "가장 쉬운 방법은 PC에서 만들고 핸드폰으로 싱크하는 것입니다. 그러나 만약 되지 않는다면, 아래 방법대로 따라해 보세요.",
+    chrome1: "북마크 링크를 복사하세요 (클릭)",
+    chrome2: "브라우저 메뉴를 누르고 별 아이콘을 클릭해 현제 페이지를 북마크에 추가하세요.",
+    chrome3: '추가된 북마크의 수정 버튼을 누르세요.',
+    chrome4: "북마크의 URL을 처음에 복사한 링크로 바꾸세요.",
+    chrome5: `북마크 이름을 "${LinkNameByLang[Language.ko_KR]}"로 설정하세요.`,
+    chrome6: "이전 페이지로 돌아가면 북마크를 사용할 준비가 끝났습니다.",
+    chrome7: "북마크를 설정 해 두면 계속 쓸 수 있습니다. 다시 이 페이지로 돌아와서 북마크를 설정 할 필요도 없습니다.",
+  },
 };
 
 export const MobileCreateManual = () => {

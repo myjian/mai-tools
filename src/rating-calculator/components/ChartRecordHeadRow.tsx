@@ -26,6 +26,16 @@ const MessagesByLang = {
     rank: "Rank",
     achievementAbbr: "達成率",
   },
+  [Language.ko_KR]: {
+    num: "#",
+    song: "노래",
+    level: "난이도",
+    rating: "레이팅",
+    nextGoal: "다음 목표",
+    nextRating: "+레이팅",
+    rank: "등수",
+    achievementAbbr: "정확도",
+  },
 };
 
 function getColumnTitle(lang: Language, col: ColumnType): string {

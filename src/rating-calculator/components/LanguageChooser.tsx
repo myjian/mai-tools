@@ -5,6 +5,7 @@ import {Language, SUPPORTED_LANGUAGES} from '../../common/lang';
 const LangText = {
   [Language.zh_TW]: "繁體中文",
   [Language.en_US]: "English",
+  [Language.ko_KR]: "한국어",
 };
 
 interface Props {
