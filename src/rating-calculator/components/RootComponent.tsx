@@ -4,7 +4,7 @@ import {GameRegion} from "../../common/game-region";
 import {DxVersion, validateGameVersion} from '../../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
-import {iWantSomeMagic} from '../../common/magic';
+import {fetchMagic, readMagicFromCache, writeMagicToCache} from '../../common/magic';
 import {
   buildSongPropsMap,
   filterSongsByVersion,
@@ -12,7 +12,6 @@ import {
   MatchMode,
   SongProperties,
 } from '../../common/song-props';
-import {readFromCache, writeToCache} from '../cache';
 import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {RatingData} from '../types';
@@ -55,16 +54,16 @@ function readSongProperties(
       return;
     }
     // Read from cache
-    const cachedGameData = readFromCache(gameVer);
+    const cachedGameData = readMagicFromCache(gameVer);
     if (cachedGameData) {
       resolve(buildSongPropsMap(gameVer, gameRegion, cachedGameData));
       return;
     }
     // Read from Internet
     console.log("Magic happening...");
-    iWantSomeMagic(gameVer).then((responseText) => {
+    fetchMagic(gameVer).then((responseText) => {
       if (!responseText.startsWith("<!DOCTYPE html>")) {
-        writeToCache(gameVer, responseText);
+        writeMagicToCache(gameVer, responseText);
       }
       resolve(buildSongPropsMap(gameVer, gameRegion, responseText));
     });

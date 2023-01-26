@@ -4,7 +4,7 @@ import {SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {GameRegion} from "../common/game-region";
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel} from '../common/level-helper';
-import {iWantSomeMagic} from '../common/magic';
+import {fetchMagic} from '../common/magic';
 import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
 import {
   buildSongPropsMap,
@@ -810,7 +810,7 @@ type Cache = {
   async function fetchAndAddInternalLvSort() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = window.location.host === "maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl;
-    const songProps = buildSongPropsMap(gameVer, gameRegion, await iWantSomeMagic(gameVer));
+    const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const song = getSongName(row);

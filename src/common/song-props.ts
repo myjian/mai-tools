@@ -114,7 +114,7 @@ export function buildSongPropsMap(gameVer: DxVersion, gameRegion: GameRegion, te
   const lines = text.split("\n");
   // songPropsByName: song name -> array of song properties
   // most arrays have only 1 entry, but some arrays have more than 1 entries
-  // because song name duplicates or it has both DX and Standard charts.
+  // because 1 song can have both DX and Standard charts or 2 songs can have same name.
   const songPropsByName = new Map<string, SongProperties[]>();
   for (const line of lines) {
     const songProps = parseSongProperties(line);
