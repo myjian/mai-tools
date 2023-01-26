@@ -54,7 +54,7 @@ export const OtherTools = ({gameVer}: Props) => {
           </a>
         </li>
         <li className="toolItem">
-          <a href="../bookmarklets/" target="_blank">
+          <a href=".." target="_blank">
             {messages.bookmarketList}
           </a>
         </li>
