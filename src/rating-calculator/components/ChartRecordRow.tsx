@@ -48,13 +48,13 @@ export class ChartRecordRow extends React.PureComponent<Props> {
             : {};
           if (isHeading) {
             return (
-              <th className={className} {...clickProps}>
+              <th key={index} className={className} {...clickProps}>
                 {children}
               </th>
             );
           }
           return (
-            <td className={className} {...clickProps}>
+            <td key={index} className={className} {...clickProps}>
               {children}
             </td>
           );

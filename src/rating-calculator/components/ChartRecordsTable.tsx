@@ -31,6 +31,7 @@ export class ChartRecordsTable extends React.PureComponent<Props> {
                 songPropsByName={songPropsByName}
                 record={r}
                 columns={columns}
+                key={index}
                 index={index}
                 isCandidate={isCandidate}
               />

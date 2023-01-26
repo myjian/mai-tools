@@ -19,9 +19,9 @@ export class RankDistributionRow extends React.PureComponent<Props> {
             className += " " + perColumnClassnames[index];
           }
           if (useTh) {
-            return <th className={className}>{v}</th>;
+            return <th key={index} className={className}>{v}</th>;
           }
-          return <td className={className}>{v}</td>;
+          return <td key={index} className={className}>{v}</td>;
         })}
       </tr>
     );

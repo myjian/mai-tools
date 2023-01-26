@@ -79,7 +79,7 @@ export const RecommendedLevels = ({
           <tr>
             <th className="recLvFirstCol"></th>
             {ranks.map((r) => (
-              <th>
+              <th key={r.title}>
                 <span className="recLvRankTitle">{r.title}</span>
                 <span className="recLvRankAchv">{r.minAchv}%</span>
               </th>
@@ -92,7 +92,12 @@ export const RecommendedLevels = ({
             <tr>
               <th className="recLvFirstCol">{messages.newChartsRecLv}</th>
               {newLvs.map((lv) => (
-                <RecommendedLevelCell gameRegion={gameRegion} gameVer={gameVer} lv={lv} />
+                <RecommendedLevelCell
+                  key={lv}
+                  gameRegion={gameRegion}
+                  gameVer={gameVer}
+                  lv={lv}
+                />
               ))}
               <td>{Math.floor(avgNewChartRating)}↑</td>
             </tr>
@@ -102,6 +107,7 @@ export const RecommendedLevels = ({
               <th className="recLvFirstCol">{messages.oldChartsRecLv}</th>
               {oldLvs.map((lv) => (
                 <RecommendedLevelCell
+                  key={lv}
                   gameRegion={gameRegion}
                   gameVer={gameVer - 1}
                   includeOldVersions
