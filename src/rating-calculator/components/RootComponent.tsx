@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {GameRegion} from "../../common/game-region";
-import {DxVersion, validateGameVersion} from '../../common/game-version';
+import {DxVersion, RATING_CALCULATOR_SUPPORTED_VERSIONS, validateGameVersion} from '../../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
 import {fetchMagic, readMagicFromCache, writeMagicToCache} from '../../common/magic';
@@ -105,7 +105,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(location.search);
     const dxVersionQueryParam = queryParams.get(QueryParam.GameVersion);
-    const gameVer = validateGameVersion(dxVersionQueryParam);
+    const gameVer = validateGameVersion(dxVersionQueryParam, RATING_CALCULATOR_SUPPORTED_VERSIONS[0]);
 
     const friendIdx = queryParams.get(QueryParam.FriendIdx);
     const playerName = queryParams.get(QueryParam.PlayerName);
@@ -228,7 +228,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
           case "gameVersion":
             this.setState({
               gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
-              gameVer: validateGameVersion(evt.data.payload),
+              gameVer: validateGameVersion(evt.data.payload, RATING_CALCULATOR_SUPPORTED_VERSIONS[0]),
             });
             break;
           case "playerGrade":

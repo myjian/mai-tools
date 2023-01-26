@@ -1,27 +1,28 @@
 const VERSION_NAMES = [
-  "maimai",
+  "maimai", // 0
   "maimai PLUS",
-  "GreeN",
+  "GreeN", // 2
   "GreeN PLUS",
-  "ORANGE",
+  "ORANGE", // 4
   "ORANGE PLUS",
-  "PiNK",
+  "PiNK", // 6
   "PiNK PLUS",
-  "MURASAKi",
+  "MURASAKi", // 8
   "MURASAKi PLUS",
-  "MiLK",
+  "MiLK", // 10
   "MiLK PLUS",
-  "FiNALE",
+  "FiNALE", // 12
   "maimaiでらっくす",
   "maimaiでらっくす PLUS",
-  "Splash",
+  "Splash", // 15
   "Splash PLUS",
-  "UNiVERSE",
+  "UNiVERSE", // 17
   "UNiVERSE PLUS",
-  "FESTiVAL",
+  "FESTiVAL", // 19
 ];
 
 export const enum DxVersion {
+  DX = 13,
   UNIVERSE = 17,
   UNIVERSE_PLUS = 18,
   FESTiVAL = 19,
@@ -35,16 +36,14 @@ export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
 
 export function validateGameVersion(
   ver: number | string | null,
-  fallback: DxVersion = DxVersion.UNIVERSE_PLUS
+  minVer: number,
+  fallback: DxVersion = DxVersion.FESTiVAL,
 ): DxVersion {
   const numVer = typeof ver === "string" ? parseInt(ver) : ver;
   if (!ver || isNaN(numVer)) {
     return fallback;
   }
-  if (
-    numVer >= RATING_CALCULATOR_SUPPORTED_VERSIONS[0] &&
-    numVer <= RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1]
-  ) {
+  if (numVer >= minVer && numVer <= DxVersion.FESTiVAL) {
     return numVer;
   }
   return fallback;
