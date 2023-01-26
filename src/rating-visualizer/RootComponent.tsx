@@ -161,15 +161,9 @@ function calculateMaxRating(maxLv: number) {
 }
 
 function updateDocumentTitle(lang: Language) {
-  switch (lang) {
-    case Language.en_US:
-      document.title = "maimai DX Rating Lookup Table & Visualization";
-      break;
-    case Language.zh_TW:
-      document.title = "maimai DX R值圖表";
-      break;
-    case Language.ko_KR:
-      document.title = "maimai DX 레이팅 상수 표 & 시각화";
-      break;
-  }
+  document.title = {
+    [Language.en_US]: "maimai DX Rating Lookup Table & Visualization",
+    [Language.zh_TW]: "maimai DX R值圖表",
+    [Language.ko_KR]: "maimai DX 레이팅 상수 표 & 시각화",
+  }[lang];
 }
