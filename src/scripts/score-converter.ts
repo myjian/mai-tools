@@ -237,7 +237,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
     placeNameSpan.innerText = UIString.analyzeScore;
     const linkElem = d.createElement("a");
     linkElem.href = link;
-    linkElem.target = "_blank";
+    linkElem.target = "classic_layout";
     linkElem.className = "blue d_ib";
     linkElem.style.height = "40px";
     placeNameBlock.append(linkElem);
