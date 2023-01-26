@@ -3,6 +3,7 @@ import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
+import domtoimage from 'dom-to-image';
 
 type ScoreRecord = {
   date: Date;
@@ -18,7 +19,7 @@ type Options = {
   showAll?: boolean;
   olderFirst?: boolean;
 };
-declare var domtoimage: any;
+
 (function (d) {
   const LANG = getInitialLanguage();
   const UIString = {
@@ -480,10 +481,6 @@ declare var domtoimage: any;
     downloadBtn.className = "downloadImgBtn";
     downloadBtn.append(UIString.downloadAsImage);
     downloadBtn.addEventListener("click", () => {
-      if (!domtoimage) {
-        console.warn("domtoimage not available");
-        return;
-      }
       const elem = d.querySelector(".playRecordContainer");
       domtoimage.toPng(elem).then((dataUrl: string) => {
         const dtStr = Array.from(getSelectedDates()).join(",");
@@ -581,14 +578,6 @@ declare var domtoimage: any;
           });
       });
       d.head.append(css);
-    }
-    const d2iId = "d2i";
-    if (!d.getElementById(d2iId)) {
-      const d2i = ce("script");
-      d2i.id = d2iId;
-      d2i.type = "text/javascript";
-      d2i.src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js";
-      d.body.append(d2i);
     }
   }
 })(document);
