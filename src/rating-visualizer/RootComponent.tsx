@@ -10,6 +10,14 @@ import {OptionsInput} from './OptionsInput';
 import {DisplayValue, RatingTable} from './RatingTable';
 import {RatingVisualizer} from './RatingVisualizer';
 
+const enum UserPreference {
+  HeightUnit = "visualizerHeightUnit",
+  MinLv = "visualizerMinLv",
+  MinRank = "visualizerMinRank",
+  MaxLv = "visualizerMaxLv",
+  TableDisplay = "visualizerTableDisplay",
+}
+
 interface State {
   lang: Language;
   width: number;
@@ -26,20 +34,20 @@ interface State {
 export class RootComponent extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
-    const savedHeightUnit = parseInt(window.localStorage.getItem("visualizerHeightUnit"));
+    const savedHeightUnit = parseInt(window.localStorage.getItem(UserPreference.HeightUnit));
     const heightUnit = isNaN(savedHeightUnit) ? 0 : savedHeightUnit; // Hide visualizer by default
     const maxLv = 15;
     const lang = getInitialLanguage();
     updateDocumentTitle(lang);
     this.state = {
       lang,
-      minLv: window.localStorage.getItem("visualizerMinLv") || "10",
-      minRank: window.localStorage.getItem("visualizerMinRank") || "SS",
-      maxLv: window.localStorage.getItem("visualizerMaxLv") || "14",
+      minLv: window.localStorage.getItem(UserPreference.MinLv) || "10",
+      minRank: window.localStorage.getItem(UserPreference.MinRank) || "SS",
+      maxLv: window.localStorage.getItem(UserPreference.MaxLv) || "14",
       width: 30,
       heightUnit,
       maxRating: calculateMaxRating(maxLv),
-      tableDisplay: window.localStorage.getItem("visualizerTableDisplay") as DisplayValue || DisplayValue.RANGE,
+      tableDisplay: window.localStorage.getItem(UserPreference.TableDisplay) as DisplayValue || DisplayValue.RANGE,
       topPadding: heightUnit * 2 + 50,
       axisLabelStep: 5,
     };
@@ -129,14 +137,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   private handleChangeHeightUnit = (unit: number) => {
-    window.localStorage.setItem("visualizerHeightUnit", unit.toFixed(0));
+    window.localStorage.setItem(UserPreference.HeightUnit, unit.toFixed(0));
     this.setState({heightUnit: unit});
   };
 
   private handleSetRange = (minLv: string, maxLv: string) => {
     const maxLvDef = DX_LEVELS.find((lv) => lv.title === maxLv);
-    window.localStorage.setItem("visualizerMinLv", minLv);
-    window.localStorage.setItem("visualizerMaxLv", maxLv);
+    window.localStorage.setItem(UserPreference.MinLv, minLv);
+    window.localStorage.setItem(UserPreference.MaxLv, maxLv);
     this.setState({
       minLv,
       maxLv,
@@ -145,12 +153,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
   };
 
   private handleSetMinRank = (minRank: string) => {
-    window.localStorage.setItem("visualizerMinRank", minRank);
+    window.localStorage.setItem(UserPreference.MinRank, minRank);
     this.setState({minRank});
   }
 
   private handleSetTableDisplay = (tableDisplay: DisplayValue) => {
-    window.localStorage.setItem("visualizerTableDisplay", tableDisplay);
+    window.localStorage.setItem(UserPreference.TableDisplay, tableDisplay);
     this.setState({tableDisplay});
   }
 }
