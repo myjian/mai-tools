@@ -5,7 +5,7 @@ Build
 ----
 
     npm install
-    npm run-script build
+    npm run build
 
 Run
 ----
@@ -16,5 +16,5 @@ Run
 Develop
 ----
 
-    npm run-script watch
+    npm run watch
     npm start
