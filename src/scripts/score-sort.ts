@@ -650,7 +650,7 @@ type Cache = {
         rankCount[RANK_TITLES[i]] += rankCount[RANK_TITLES[i - 1]];
       }
 
-      const columns = summaryTable.querySelectorAll("tr:first-child .f_11");
+      const columns = summaryTable.querySelectorAll("tr:first-child .f_10");
       columns[0].innerHTML = `${rankCount["A"]}/${total}`;
       columns[1].innerHTML = `${rankCount["S"]}/${total}`;
       columns[2].innerHTML = `${rankCount["S+"]}/${total}`;
@@ -674,7 +674,7 @@ type Cache = {
         apfcCount[AP_FC_TYPES[i]] += apfcCount[AP_FC_TYPES[i - 1]];
       }
 
-      const columns = summaryTable.querySelectorAll("tr:nth-child(2) .f_11");
+      const columns = summaryTable.querySelectorAll("tr:nth-child(2) .f_10");
       columns[0].innerHTML = `${apfcCount["FC"]}/${total}`;
       columns[1].innerHTML = `${apfcCount["FC+"]}/${total}`;
       columns[2].innerHTML = `${apfcCount["AP"]}/${total}`;
@@ -695,7 +695,7 @@ type Cache = {
         syncCount[SYNC_TYPES[i]] += syncCount[SYNC_TYPES[i - 1]];
       }
 
-      const columns = summaryTable.querySelectorAll("tr:nth-child(2) .f_11");
+      const columns = summaryTable.querySelectorAll("tr:nth-child(2) .f_10");
       columns[4].innerHTML = `${syncCount["FS"]}/${total}`;
       columns[5].innerHTML = `${syncCount["FS+"]}/${total}`;
       columns[6].innerHTML = `${syncCount["FDX"]}/${total}`;
@@ -715,7 +715,7 @@ type Cache = {
         dxStarCount[DX_STARS[i]] += dxStarCount[DX_STARS[i + 1]];
       }
 
-      const columns = summaryTable.querySelectorAll("tr:last-child .f_11");
+      const columns = summaryTable.querySelectorAll("tr:last-child .f_10");
       columns[0].innerHTML = `${dxStarCount[DX_STARS[1]]}/${total}`;
       columns[1].innerHTML = `${dxStarCount[DX_STARS[2]]}/${total}`;
       columns[2].innerHTML = `${dxStarCount[DX_STARS[3]]}/${total}`;
