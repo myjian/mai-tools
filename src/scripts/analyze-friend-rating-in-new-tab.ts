@@ -45,6 +45,10 @@ type FriendInfo = {
       pleaseLogIn: "Please log in to maimai DX NET.",
       analyze: "Analyze Rating",
     },
+    [Language.ko_KR]: {
+      pleaseLogIn: "maimai DX NET에 로그인 해 주세요.",
+      analyze: "레이팅 분석하기",
+    },
   }[LANG];
   const friends_cache: {[idx: string]: FriendInfo} = {};
 

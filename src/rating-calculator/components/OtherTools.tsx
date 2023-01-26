@@ -22,6 +22,14 @@ const MessagesByLang = {
     otohime: "Otohime - 音 Game 成績單網站 (由 KOINU 製作)",
     mapDistanceCalc: "ちほー道數計算器 (旅伴 & 收藏品) (由 魚丸◎蕾娜 製作)",
   },
+  [Language.ko_KR]: {
+    otherToolsHeading: "다른 도구",
+    ratingVisualizer: "레이팅 상수 표 & 시각화",
+    bookmarketList: "maimai 북마크 (기능 & 사용법)",
+    arcadeSongs: "arcade-songs (노래 검색기) by Raku Zeta",
+    otohime: "Otohime - (개인 레이팅 추적기) by KOINU",
+    mapDistanceCalc: "지방 거리 계산기 (특정 캐릭터, 아이템 소장을 위해서 몇 코인 더 부어야 하는지) by 魚丸◎蕾娜",
+  },
 };
 
 function getMapDistanceCalcLink() {

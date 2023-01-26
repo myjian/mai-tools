@@ -12,6 +12,9 @@ import {ALLOWED_ORIGINS} from '../common/util';
     [Language.zh_TW]: {
       analyzeScore: "🔍 點我分析分數",
     },
+    [Language.ko_KR]: {
+      analyzeScore: "🔍 점수 분석하기",
+    },
   }[getInitialLanguage()];
   const BASE_NEWTAB_URL = getScriptHost("score-converter") + "/classic-layout/";
   const FINALE_RANK_IMG = new Map([

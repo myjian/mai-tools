@@ -24,6 +24,15 @@ const MessagesByLang = {
       'Find and tap the bookmarklet you created earlier. The URL of the bookmarklet should start with "javascript".',
     chrome6: "You should notice the page has changed or new tab is opened (for rating analysis).",
   },
+  [Language.ko_KR]: {
+    title: "핸드폰에서 어떻게 북마크를 실행하나요?",
+    step1: "크롬을 열고 maimai DX NET에 로그인 하세요",
+    step2: "북마크를 사용하고 싶은 페이지로 이동하세요 (디럭스 레이팅을 분석하고 싶으면 Player Data 페이지로 이동하세요)",
+    step3: "URL 칸을 누르세요",
+    chrome4: 'URL을 지우고 "MMBL"을 입력하세요',
+    chrome5: '이전에 만든 북마크를 클릭하세요. URL이 "javascript"로 시작하는 북마크를 찾으면 됩니다.',
+    chrome6: "화면이 바뀌었거나 새로운 탭이 열릴 것입니다.",
+  },
 };
 
 export const MobileUseManual = () => {

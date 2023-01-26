@@ -23,6 +23,13 @@ const MessagesByLang = {
     factor: "係數",
     multiplier: "倍率 (係數 × 達成率)",
   },
+  [Language.ko_KR]: {
+    rankFactorTable: "등급 배율 테이블",
+    rank: "등급",
+    achievement: "정확도",
+    factor: "배수",
+    multiplier: "배율 (배수 × 정확도)",
+  },
 };
 
 interface RankFactorRowProps {

@@ -17,6 +17,12 @@ const MessagesByLang = {
     bookmarketLinkLabel: "maimai 書籤小工具",
     scoreInputDescSuffix: " 中的「分析自己 DX Rating」或「分析好友 DX Rating」填入此欄。",
   },
+  [Language.ko_KR]: {
+    scoreInputHeading: "플레이 기록",
+    scoreInputDescPrefix: '아래 칸은 "',
+    bookmarketLinkLabel: "maimai 북마크",
+    scoreInputDescSuffix: '의 "내 디럭스 레이팅 분석하기" 또는 "친구 디럭스 레이팅 분석하기"를 사용해서 채워주세요.',
+  },
 };
 
 export const ScoreInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef) => {

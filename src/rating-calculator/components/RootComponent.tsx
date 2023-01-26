@@ -31,6 +31,9 @@ const MessagesByLang = {
   [Language.zh_TW]: {
     computeRating: "計算 Rating 值",
   },
+  [Language.ko_KR]: {
+    computeRating: "레이팅 계산하기",
+  },
 };
 
 function getDebugText({action, payload}: {action: string; payload: number | string}) {

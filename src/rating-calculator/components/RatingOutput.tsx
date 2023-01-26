@@ -20,6 +20,9 @@ const MessagesByLang = {
   [Language.zh_TW]: {
     analysisResult: "分析結果",
   },
+  [Language.ko_KR]: {
+    analysisResult: "분석결과",
+  },
 };
 
 const NEW_CANDIDATE_SONGS_POOL_SIZE = 100;

@@ -9,6 +9,7 @@ import {OtherTools} from './OtherTools';
 const UIMessages = {
   [Language.zh_TW]: {pageTitle: "mai-tools 介紹"},
   [Language.en_US]: {pageTitle: "mai-tools index"},
+  [Language.ko_KR]: {pageTitle: "mai-tools 소개"},
 };
 
 export const RootComponent = () => {

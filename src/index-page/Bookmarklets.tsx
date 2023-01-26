@@ -31,6 +31,13 @@ const UIMessages = {
     intro2: " to set up the bookmarklet.",
     features: "Features",
   },
+  [Language.ko_KR]: {
+    title: "maimai 책갈피 (기능 및 사용법)",
+    intro1: "maimai DX NET 에서 해당 기능을 사용하고 싶으면 아래 적힌 ",
+    howto: "사용법",
+    intro2: "을 따라주세요.",
+    features: "기능",
+  },
 };
 
 export const Bookmarklets = () => {

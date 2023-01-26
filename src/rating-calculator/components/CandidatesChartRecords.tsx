@@ -25,6 +25,10 @@ const MessagesByLang = {
     showMore: "顯示更多",
     showLess: "顯示較少",
   },
+  [Language.ko_KR]: {
+    showMore: "자세히 보기",
+    showLess: "간략히",
+  },
 };
 
 const CANDIDATE_SONGS_LIMIT = 20;

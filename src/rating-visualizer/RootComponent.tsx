@@ -168,5 +168,8 @@ function updateDocumentTitle(lang: Language) {
     case Language.zh_TW:
       document.title = "maimai DX R值圖表";
       break;
+    case Language.ko_KR:
+      document.title = "maimai DX 레이팅 상수 표 & 시각화";
+      break;
   }
 }

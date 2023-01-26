@@ -12,6 +12,10 @@ const MessagesByLang = {
     showPlayed: "顯示已玩過的譜面",
     showNotPlayed: "顯示未玩過的譜面",
   },
+  [Language.ko_KR]: {
+    showPlayed: "플레이한 채보 보기",
+    showNotPlayed: "플레이 한 적 없는 채보 보기",
+  },
 };
 
 interface Props {

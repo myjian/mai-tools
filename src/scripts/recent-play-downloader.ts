@@ -57,6 +57,23 @@ type Options = {
       copied: "Copied to clipboard",
       downloadAsImage: "Save as image",
     },
+    [Language.ko_KR]: {
+      date: "날짜",
+      songName: "노래",
+      difficulty: "난이도",
+      achievement: "정확도",
+      stamps: "등급",
+      playDate: "플레이 일:",
+      newRecordToggleHeading: "표시:",
+      sortBy: "정렬 순서:",
+      newRecordsOnly: "새 기록만",
+      allRecords: "전부",
+      olderFirst: "옛날 기록부터",
+      newerFirst: "최근 기록부터",
+      copy: "복사",
+      copied: "클립보드에 복사되었습니다",
+      downloadAsImage: "이미지로 저장하기",
+    },
   }[LANG];
 
   const AP_FC_IMG_NAME_TO_TEXT = new Map([
