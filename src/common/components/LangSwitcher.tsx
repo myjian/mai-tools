@@ -1,6 +1,7 @@
 import React from "react";
 import {Language, saveLanguage, SUPPORTED_LANGUAGES} from "../lang";
 import {useLanguage} from "../lang-react";
+import {QueryParam} from "../query-params";
 
 const UIString = {
   [Language.zh_TW]: "繁體中文",
@@ -20,7 +21,11 @@ export function LangSwitcher() {
     {SUPPORTED_LANGUAGES
       .map(otherLang => (
         otherLang === lang ? <>{UIString[otherLang]}&nbsp;</> : <React.Fragment key={otherLang}>
-          <a href={`?hl=${otherLang}`} data-lang={otherLang} onClick={handleClick}>
+          <a
+            href={`?${QueryParam.HostLanguage}=${otherLang}`}
+            data-lang={otherLang}
+            onClick={handleClick}
+          >
             {UIString[otherLang]}
           </a>
           &nbsp;

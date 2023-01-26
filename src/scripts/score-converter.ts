@@ -1,6 +1,7 @@
 import {calculateDetailedDxStar} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
+import {QueryParam} from '../common/query-params';
 import {getScriptHost} from '../common/script-host';
 import {ALLOWED_ORIGINS} from '../common/util';
 
@@ -246,24 +247,17 @@ import {ALLOWED_ORIGINS} from '../common/util';
 
   function addScoreConverterLink() {
     removeScrollControl(d);
-    let url =
-      BASE_NEWTAB_URL +
-      "?st=" +
-      encodeURIComponent(getSongName(d.body)) +
-      "&ac=" +
-      encodeURIComponent(getAchv(d.body)) +
-      "&nd=" +
-      encodeURIComponent(getNoteDetails(d.body)) +
-      "&df=" +
-      encodeURIComponent(getDifficulty(d.body)) +
-      "&tk=" +
-      encodeURIComponent(getTrack(d.body)) +
-      "&dt=" +
-      encodeURIComponent(getPlayDate(d.body)) +
-      "&hs=" +
-      encodeURIComponent(getIsHighScore(d.body)) +
-      "&cb=" +
-      encodeURIComponent(getCombo(d.body));
+    const queryParams = new URLSearchParams({
+      [QueryParam.Date]: getPlayDate(d.body),
+      [QueryParam.Track]: getTrack(d.body),
+      [QueryParam.SongTitle]: getSongName(d.body),
+      [QueryParam.Difficulty]: getDifficulty(d.body),
+      [QueryParam.Achievement]:getAchv(d.body),
+      [QueryParam.HighScore]: getIsHighScore(d.body).toString(),
+      [QueryParam.NoteDetails]: getNoteDetails(d.body),
+      [QueryParam.Combo]: getCombo(d.body),
+    })
+    let url = BASE_NEWTAB_URL + "?" + queryParams.toString();
     const syncStatus = getSyncResult(d.body);
     if (syncStatus) {
       url += "&sc=" + encodeURIComponent(syncStatus);

@@ -1,4 +1,5 @@
 import React from 'react';
+import {QueryParam} from '../../common/query-params';
 
 import {parseJudgements} from '../parser';
 import {NoteType, StrictJudgementMap} from '../types';
@@ -7,6 +8,17 @@ import {PageFooter} from './PageFooter';
 import {PageTitle} from './PageTitle';
 import {ScorePageContainer} from './ScorePageContainer';
 import {SectionSep} from './SectionSeparator';
+
+const defaultPlayRecord = {
+  date: formatDate(new Date()),
+  track: "TRACK " + (Math.floor(Math.random() * 3) + 1),
+  // difficulty: "MASTER",
+  songTitle: "分からない",
+  achievement: "95.3035%", // finale: "94.87%",
+  highScore: Math.random() > 0.9 ? "1" : "0",
+  // combo: "234/953",
+  noteDetails: "654-96-31-28\n25-0-0-0\n78-0-0-1\n\n37-2-1-0",
+};
 
 type MessageType = {
   action: string;
@@ -34,7 +46,7 @@ function formatDate(dt: Date) {
   );
 }
 
-function getQueryParam(qp: URLSearchParams, key: string, fallback: string) {
+function getQueryParam(qp: URLSearchParams, key: string, fallback?: string) {
   const value = qp.get(key);
   if (!value) {
     console.warn('URL does not contain "' + key + '", using default value "' + fallback + '"');
@@ -43,16 +55,16 @@ function getQueryParam(qp: URLSearchParams, key: string, fallback: string) {
   return value;
 }
 
-function parseQueryParams(qp: URLSearchParams, dft: {[k: string]: string}) {
-  const date = getQueryParam(qp, "dt", dft.date);
-  const track = getQueryParam(qp, "tk", dft.track);
-  const difficulty = getQueryParam(qp, "df", dft.difficulty);
-  const songTitle = getQueryParam(qp, "st", dft.songTitle);
-  const achievement = getQueryParam(qp, "ac", dft.achievement);
-  const highScore = getQueryParam(qp, "hs", dft.highScore);
-  const combo = getQueryParam(qp, "cb", dft.combo);
-  const noteDetails = getQueryParam(qp, "nd", dft.noteDetails);
-  const syncStatus = getQueryParam(qp, "sc", dft.syncStatus);
+function parseQueryParams(qp: URLSearchParams, dft = defaultPlayRecord) {
+  const date = getQueryParam(qp, QueryParam.Date, dft.date);
+  const track = getQueryParam(qp, QueryParam.Track, dft.track);
+  const difficulty = getQueryParam(qp, QueryParam.Difficulty);
+  const songTitle = getQueryParam(qp, QueryParam.SongTitle, dft.songTitle);
+  const achievement = getQueryParam(qp, QueryParam.Achievement, dft.achievement);
+  const highScore = getQueryParam(qp, QueryParam.HighScore, dft.highScore);
+  const combo = getQueryParam(qp, QueryParam.Combo);
+  const noteDetails = getQueryParam(qp, QueryParam.NoteDetails, dft.noteDetails);
+  const syncStatus = getQueryParam(qp, QueryParam.SyncStatus);
   return {
     date,
     track,
@@ -89,27 +101,16 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
   constructor(props: {}) {
     super(props);
     const qp = new URLSearchParams(location.search);
-    const defaultState = {
-      date: formatDate(new Date()),
-      track: "TRACK " + (Math.floor(Math.random() * 3) + 1),
-      //difficulty: "MASTER",
-      songTitle: "分からない",
-      achievement: "95.3035%", // finale: "94.87%",
-      highScore: Math.random() > 0.9 ? "1" : "0",
-      //combo: "234/953",
-      noteDetails: "654-96-31-28\n25-0-0-0\n78-0-0-1\n\n37-2-1-0",
-      //syncStatus: "",
-    };
     try {
       this.state = {
-        ...parseQueryParams(qp, defaultState),
+        ...parseQueryParams(qp),
         rankImg: new Map(),
       };
     } catch (e) {
       console.error((e as Error).message);
       console.error((e as Error).stack);
       this.state = {
-        ...parseQueryParams(new URLSearchParams(""), defaultState),
+        ...parseQueryParams(new URLSearchParams("")),
         rankImg: new Map(),
         showError: true,
       };

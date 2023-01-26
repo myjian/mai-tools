@@ -1,14 +1,8 @@
 import React from 'react';
+import {QueryParam} from '../common/query-params';
 
 import {DxAchvDetails} from './DxAchvDetails';
 import {calculateDxAchvFromFinaleResult} from './finaleBacktracing';
-
-enum QueryParam {
-  TotalScore = "ts",
-  BreakScore = "bs",
-  BreakJudgement = "bj",
-  Achievement = "achv",
-}
 
 interface State {
   initialFinaleAchvInput: string;
@@ -25,7 +19,7 @@ export class DxAchievementCalculator extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
     const queryParams = new URLSearchParams(location.search);
-    const rawAchvArg = queryParams.get(QueryParam.Achievement);
+    const rawAchvArg = queryParams.get(QueryParam.Achievement) || queryParams.get(QueryParam.AchievementOld);
     const rawTotalScoreArg = queryParams.get(QueryParam.TotalScore);
     const rawBreakScoreArg = queryParams.get(QueryParam.BreakScore);
     const rawBreakJudgementsArg = queryParams.get(QueryParam.BreakJudgement);

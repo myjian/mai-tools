@@ -1,3 +1,5 @@
+import {QueryParam} from "./query-params";
+
 export const enum Language {
   en_US = "en_US",
   zh_TW = "zh_TW",
@@ -26,7 +28,7 @@ export function saveLanguage(lang: Language) {
 }
 
 export function getInitialLanguage(): Language {
-  const queryParamsHl = new URLSearchParams(location.search).get("hl");
+  const queryParamsHl = new URLSearchParams(location.search).get(QueryParam.HostLanguage);
   // URL query parameter
   if (queryParamsHl) {
     return queryParamsHl.startsWith("zh") ? Language.zh_TW :

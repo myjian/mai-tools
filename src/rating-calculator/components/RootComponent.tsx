@@ -5,6 +5,7 @@ import {DxVersion, validateGameVersion} from '../../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
 import {fetchMagic, readMagicFromCache, writeMagicToCache} from '../../common/magic';
+import {QueryParam} from '../../common/query-params';
 import {
   buildSongPropsMap,
   filterSongsByVersion,
@@ -103,11 +104,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
     const queryParams = new URLSearchParams(location.search);
-    const dxVersionQueryParam = queryParams.get("gameVersion");
+    const dxVersionQueryParam = queryParams.get(QueryParam.GameVersion);
     const gameVer = validateGameVersion(dxVersionQueryParam);
 
-    const friendIdx = queryParams.get("friendIdx");
-    const playerName = queryParams.get("playerName");
+    const friendIdx = queryParams.get(QueryParam.FriendIdx);
+    const playerName = queryParams.get(QueryParam.PlayerName);
     const lang = getInitialLanguage();
     updateDocumentTitle(lang);
 
