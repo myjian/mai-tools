@@ -14,6 +14,7 @@ fs.readdirSync(SCRIPTS_INPUT_DIR)
 module.exports = (env) => ({
   mode: env.development ? "development" : "production",
   entry: {
+    "chart-info": "./src/chart-info/main.ts",
     "classic-layout": "./src/classic-layout/main.tsx",
     "dx-achievement": "./src/dx-achievement/main.tsx",
     "index-page": "./src/index-page/main.tsx",

@@ -1,5 +1,9 @@
-"use strict";
+import {QueryParam} from "../common/query-params";
+import {performLocalization} from "./localizePage";
+
 (function () {
+  performLocalization();
+
   const BASE_SCORE_PER_TYPE = {
     tap: 500,
     hold: 1000,
@@ -8,9 +12,10 @@
     break: 2500,
   };
   const STD_NOTE_TYPES = ["tap", "hold", "slide", "break"];
-  const DX_NOTE_TYPES = ["tap", "hold", "slide", "touch", "break"];
+  const DX_NOTE_TYPES: Array<keyof typeof BASE_SCORE_PER_TYPE> = ["tap", "hold", "slide", "touch", "break"];
 
-  const inputElem = document.querySelector(".input");
+  const inputElem = document.querySelector(".input") as HTMLTextAreaElement;
+  const analyzeBtn = document.getElementById("analyze");
   const convertBtn = document.getElementById("convert");
 
   const WIKI_URL_PREFIX = "https://maimai.fandom.com/zh/wiki/";
@@ -19,13 +24,15 @@
   const JUDGEMENTS_LEN = 5;
   const ZERO_JUDGEMENT = [0, 0, 0, 0, 0];
 
-  function calculatePctPerNote(countPerType) {
+  function calculatePctPerNote(countPerType: typeof BASE_SCORE_PER_TYPE): [Map<string, number>, number] {
     let totalBaseScore = 0;
-    for (const nt of Object.keys(countPerType)) {
-      totalBaseScore += countPerType[nt] * BASE_SCORE_PER_TYPE[nt];
+    for (const nt of DX_NOTE_TYPES) {
+      if (countPerType[nt]) {
+        totalBaseScore += countPerType[nt] * BASE_SCORE_PER_TYPE[nt];
+      }
     }
 
-    const pctPerNoteType = new Map();
+    const pctPerNoteType = new Map<string, number>();
     const pctPerTap = (100 * 500) / totalBaseScore;
     const bonusPctPerBreak = 1 / countPerType.break;
     pctPerNoteType.set("tap", pctPerTap);
@@ -42,30 +49,30 @@
     return [pctPerNoteType, finaleMaxAchv];
   }
 
-  function trimSpaces(textLine) {
+  function trimSpaces(textLine: string) {
     return textLine.trim().replace(/\s+/g, "-");
   }
 
-  function parseNumArrayFromText(line, fallback) {
+  function parseNumArrayFromText(line: string, fallback: number[]): number[] {
     const textArr = line.match(/\d+/g);
     return textArr ? textArr.map((num) => parseInt(num, 10)) : fallback;
   }
 
-  function performConversion(songTitle, achievement, judgements) {
+  function analyzeNoteDetails(songTitle: string, achievement: number, judgements: number[][]) {
     if (!isNaN(achievement) && judgements.length >= 4) {
       // update song title UI
-      const songTitleElem = document.getElementById("songTitle");
+      const songTitleElem = document.getElementById("songTitle") as HTMLAnchorElement;
       songTitleElem.innerText = songTitle || "";
       songTitleElem.href = WIKI_URL_PREFIX + encodeURIComponent(songTitle) + WIKI_URL_SUFFIX;
 
       const noteTypes = judgements.length === 4 ? STD_NOTE_TYPES : DX_NOTE_TYPES;
-      const judgementsPerType = new Map();
+      const judgementsPerType = new Map<string, number[]>();
       judgements.forEach((j, idx) => {
         judgementsPerType.set(noteTypes[idx], j);
       });
 
       // Update chart info UI
-      const countPerType = {};
+      const countPerType: typeof BASE_SCORE_PER_TYPE = {tap: 0, hold: 0, slide: 0, touch: 0, break: 0};
       const totalNoteCount = DX_NOTE_TYPES.reduce((total, noteType) => {
         const playerJ = judgementsPerType.get(noteType) || [];
         const noteCount = playerJ.reduce((acc, c) => acc + c, 0);
@@ -75,10 +82,10 @@
             .querySelector(".touchRow")
             .classList[noteCount === 0 ? "add" : "remove"]("hidden");
         }
-        document.getElementById(`${noteType}Count`).innerText = noteCount;
+        document.getElementById(`${noteType}Count`).innerText = noteCount.toString();
         return total + noteCount;
       }, 0);
-      document.getElementById("totalNoteCount").innerText = totalNoteCount;
+      document.getElementById("totalNoteCount").innerText = totalNoteCount.toString();
 
       // Do some crazy math
       const [pctPerNoteType, finaleMaxAchv] = calculatePctPerNote(countPerType);
@@ -107,7 +114,7 @@
     }
   }
 
-  function parseJudgement(text) {
+  function parseJudgement(text: string): number[][] {
     let lines = text.split("_");
     if (lines.length < 5) {
       lines = text.split("\n");
@@ -127,9 +134,12 @@
     return judgements;
   }
 
-  convertBtn.addEventListener("click", (evt) => {
+  /**
+   * @param query URLSearchParams to add to the destination URL.
+   */
+  function handleButtonClick(baseUrl: string, query: URLSearchParams) {
     const lines = inputElem.value.split("\n");
-    if (lines < 6) {
+    if (lines.length < 6) {
       return;
     }
     let songTitle;
@@ -158,9 +168,6 @@
       }
     }
     if (songTitle && achievementText && noteDetails.length) {
-      // const baseUrl = document.location.origin + document.location.pathname + 'classic-layout/';
-      const baseUrl = document.location.origin + document.location.pathname;
-      const query = new URLSearchParams();
       query.set("st", songTitle);
       query.set("ac", achievementText);
       query.set("nd", noteDetails.map(trimSpaces).join("_"));
@@ -168,6 +175,23 @@
       console.log(newUrl);
       window.location.assign(newUrl);
     }
+  }
+
+  analyzeBtn.addEventListener("click", () => {
+    handleButtonClick(
+      document.location.origin + document.location.pathname,
+      new URLSearchParams()
+    );
+  });
+
+  convertBtn.addEventListener("click", () => {
+    handleButtonClick(
+      '../classic-layout/',
+      // GameVersion: 10 because
+      // 1) MiLK has the best BGM and waifus (just kidding)
+      // 2) I want to force classic layout to use old score system
+      new URLSearchParams({[QueryParam.GameVersion]: "10"})
+    );
   });
 
   // Handle parameters from URL
@@ -181,10 +205,10 @@
       document.title = `${songTitle} - ${document.title}`;
       const achievement = parseFloat(achievementText);
       const judgements = parseJudgement(noteDetail);
-      performConversion(songTitle, achievement, judgements);
+      analyzeNoteDetails(songTitle, achievement, judgements);
       shouldShowInput = false;
     }
   }
-  document.querySelector(".resetLink").classList[shouldShowInput ? "add" : "remove"]("hidden");
+  document.getElementById("resetLink").classList[shouldShowInput ? "add" : "remove"]("hidden");
   document.getElementById("inputContainer").classList[shouldShowInput ? "remove" : "add"]("hidden");
 })();

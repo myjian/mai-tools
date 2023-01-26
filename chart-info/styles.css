@@ -42,10 +42,11 @@ h4 {
   max-width: 480px;
 }
 
-#convert {
+#analyze, #convert {
 	padding: 6px 14px;
 	font-size: 20px;
 	margin-top: 6px;
+  margin-right: 10px;
 }
 
 /* output styles */
@@ -71,7 +72,7 @@ h4 {
   background-color: #ffefbf;
 }
 
-.resetLink {
+#resetLink {
   display: block;
   padding-top: 6px;
   font-size: 18px;

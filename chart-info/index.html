@@ -10,7 +10,15 @@
     <div id="inputContainer">
       <textarea class="input"></textarea>
       <br />
+      <button id="analyze">Analyze</button>
       <button id="convert">Convert</button>
+      <a
+        href="https://gist.github.com/myjian/a9532e7f8ba0e88b1fc333f02b9810c6"
+        target="_blank"
+        id="sampleInputs"
+      >
+        Sample inputs
+      </a>
     </div>
     <div class="output">
       <h3 class="songTitleHeading">
@@ -74,7 +82,7 @@
           </tr>
         </tbody>
       </table>
-      <a href="." class="resetLink hidden">Reset</a>
+      <a href="." id="resetLink" class="hidden">Reset</a>
     </div>
     <div class="howto">
       <hr />
@@ -90,7 +98,6 @@
       <hr />
       Made by <a href="https://github.com/myjian" target="_blank">myjian</a>.
     </div>
-    <script src="./i18n.js"></script>
-    <script src="./main.js"></script>
+    <script src="./main.bundle.js"></script>
   </body>
 </html>
