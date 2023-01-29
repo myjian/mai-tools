@@ -14,7 +14,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
       analyzeScore: "🔍 點我分析分數",
     },
     [Language.ko_KR]: {
-      analyzeScore: "🔍 점수 분석하기",
+      analyzeScore: "🔍 정확도 분석하기",
     },
   }[getInitialLanguage()];
   const BASE_NEWTAB_URL = getScriptHost("score-converter") + "/classic-layout/";

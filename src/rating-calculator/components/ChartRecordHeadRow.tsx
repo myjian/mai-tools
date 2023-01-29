@@ -33,7 +33,7 @@ const MessagesByLang = {
     rating: "레이팅",
     nextGoal: "다음 목표",
     nextRating: "+레이팅",
-    rank: "등수",
+    rank: "등급",
     achievementAbbr: "정확도",
   },
 };
