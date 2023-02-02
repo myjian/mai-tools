@@ -14,6 +14,6 @@ export const CommonMessages = {
   [Language.ko_KR]: {
     subtotal: "총합",
     difficulty: "난이도",
-    level: "등급",
+    level: "레벨",
   },
 };
