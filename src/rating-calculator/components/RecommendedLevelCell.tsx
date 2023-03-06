@@ -10,7 +10,7 @@ function getMaimaiSongsLink(
   minGameVer: DxVersion,
   maxGameVer: DxVersion
 ) {
-  officialLv = officialLv.replace("+", ".5");
+  officialLv = officialLv.replace("+", ".7");
   const q = new URLSearchParams();
   q.set("maxLevelValue", officialLv);
   q.set("minLevelValue", officialLv);
