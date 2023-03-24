@@ -2,11 +2,7 @@ import {GameRegion} from "./game-region";
 import {DIFFICULTIES} from "./difficulties";
 import {DxVersion} from "./game-version";
 import {getSongNickname, normalizeSongName} from "./song-name-helper";
-
-export const enum ChartType {
-  STANDARD = 0,
-  DX = 1,
-}
+import {ChartType} from "./chart-type";
 
 export interface BasicSongProps {
   dx: ChartType;

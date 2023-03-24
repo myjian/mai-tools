@@ -1,6 +1,6 @@
+import {ChartType, getChartType} from './chart-type';
 import {Difficulty, getDifficultyName} from './difficulties';
-import {getChartLevel, getChartType, getSongName} from './fetch-score-util';
-import {ChartType} from './song-props';
+import {getChartLevel, getSongName} from './fetch-score-util';
 import {fetchPage} from './util';
 
 export const FRIEND_SCORE_URLS = new Map([

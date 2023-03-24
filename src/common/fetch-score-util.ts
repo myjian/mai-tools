@@ -1,5 +1,4 @@
 import {normalizeSongName} from './song-name-helper';
-import {ChartType} from './song-props';
 
 export function getSongName(row: HTMLElement) {
   return normalizeSongName(
@@ -18,15 +17,6 @@ export function getChartDifficulty(row: HTMLElement) {
   }
   const d = row.className.match(/music_([a-z]+)_score_back/)[1].toUpperCase();
   return d.indexOf("RE") === 0 ? "Re:MASTER" : d;
-}
-
-export function getChartType(row: HTMLElement): ChartType {
-  if (row.id) {
-    return row.id.includes("sta_") ? ChartType.STANDARD : ChartType.DX;
-  }
-  return (row.querySelector("img:nth-child(2)") as HTMLImageElement).src.includes("_standard")
-    ? ChartType.STANDARD
-    : ChartType.DX;
 }
 
 export function getPlayerName(n: HTMLElement) {

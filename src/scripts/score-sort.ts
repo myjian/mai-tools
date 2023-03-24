@@ -1,5 +1,6 @@
+import {ChartType, getChartType} from '../common/chart-type';
 import {DIFFICULTIES, Difficulty} from '../common/difficulties';
-import {getChartDifficulty, getChartType, getSongName} from '../common/fetch-score-util';
+import {getChartDifficulty, getSongName} from '../common/fetch-score-util';
 import {SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {GameRegion} from "../common/game-region";
 import {getInitialLanguage, Language} from '../common/lang';
@@ -8,7 +9,6 @@ import {fetchMagic} from '../common/magic';
 import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
 import {
   buildSongPropsMap,
-  ChartType,
   getSongProperties,
   SongProperties,
 } from '../common/song-props';

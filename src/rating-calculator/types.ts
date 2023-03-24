@@ -1,5 +1,5 @@
+import {ChartType} from '../common/chart-type';
 import {RankDef} from '../common/rank-functions';
-import {ChartType} from '../common/song-props';
 
 export interface ChartRecord {
   songName: string;

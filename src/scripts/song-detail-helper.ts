@@ -1,10 +1,11 @@
 import {determineDxStar, getDxStarText} from "../common/dx-star";
 import {fetchGameVersion} from "../common/util";
 import {GameRegion} from "../common/game-region";
-import {buildSongPropsMap, ChartType, getSongProperties, SongProperties} from "../common/song-props";
+import {buildSongPropsMap, getSongProperties, SongProperties} from "../common/song-props";
 import {fetchMagic} from "../common/magic";
 import {normalizeSongName} from "../common/song-name-helper";
 import {getDefaultLevel} from "../common/level-helper";
+import {getChartType} from "../common/chart-type";
 
 type Cache = {
   songProp?: SongProperties;
@@ -41,7 +42,7 @@ type Cache = {
     const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const song = getSongName();
-    const chartType = getChartType();
+    const chartType = getChartType(d.body);
 
     const props = getSongProperties(songProps, song, "", chartType);
     cache.songProp = props;
@@ -101,11 +102,6 @@ type Cache = {
 
   function getSongName(): string {
     return normalizeSongName(document.querySelector('.m_5.f_15.break').textContent);
-  }
-
-  function getChartType(): ChartType {
-    return (d.querySelector('.f_l.h_20') as HTMLImageElement).src.includes('_standard') ?
-      ChartType.STANDARD : ChartType.DX;
   }
 
   function getLevelTable(): NodeList {

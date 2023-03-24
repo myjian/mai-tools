@@ -1,4 +1,4 @@
-import {ChartType} from './song-props';
+import {ChartType} from './chart-type';
 import {fetchPage} from './util';
 
 export const DX_SONG_NAME_SUFFIX = " [DX]";

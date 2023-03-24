@@ -1,5 +1,5 @@
+import {ChartType} from '../common/chart-type';
 import {getDefaultLevel} from '../common/level-helper';
-import {ChartType} from '../common/song-props';
 import {ChartRecord} from './types';
 
 export function parseScoreLine(line: string): ChartRecord | undefined {

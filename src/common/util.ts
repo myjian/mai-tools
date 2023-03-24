@@ -1,5 +1,6 @@
+import {getChartType} from './chart-type';
 import {Difficulty} from './difficulties';
-import {getChartType, getSongName} from './fetch-score-util';
+import {getSongName} from './fetch-score-util';
 import {SELF_SCORE_URLS} from './fetch-self-score';
 import {DxVersion} from './game-version';
 import {getSongIdx, isNicoNicoLink} from './song-name-helper';
