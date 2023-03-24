@@ -19,6 +19,7 @@ import {getScriptHost} from '../common/script-host';
     appendScript("recent-play-downloader.js");
   } else if (path.indexOf("/maimai-mobile/record/playlogDetail/") >= 0) {
     appendScript("score-converter.js");
+    appendScript("play-record-helper.js");
   } else if (path.indexOf("/maimai-mobile/record/musicDetail/") >= 0) {
     removeScrollControl(d);
     appendScript("song-detail-helper.js");

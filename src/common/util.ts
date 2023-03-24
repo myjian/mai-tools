@@ -65,6 +65,11 @@ export async function fetchNewSongs(ver: DxVersion): Promise<BasicSongProps[]> {
   return await parseSongList(dom);
 }
 
+export async function fetchSongDetailPage(idx: string) {
+  const query = new URLSearchParams({idx}).toString();
+  return fetchPage( "/maimai-mobile/record/musicDetail/?" + query);
+}
+
 export function getPostMessageFunc(w: WindowProxy, origin: string) {
   return (action: string, payload: any) => {
     const obj = {action, payload};

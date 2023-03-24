@@ -1,5 +1,5 @@
 import {ChartType} from './chart-type';
-import {fetchPage} from './util';
+import {fetchSongDetailPage} from './util';
 
 export const DX_SONG_NAME_SUFFIX = " [DX]";
 export const RATING_TARGET_SONG_NAME_PREFIX = "▶ ";
@@ -24,16 +24,14 @@ export function getSongNickname(name: string, genre: string, chartType: ChartTyp
 
 let cachedLinkIdx: {nico?: string; original?: string} = {};
 
-export async function isNicoNicoLink(idx: string) {
+export async function isNicoNicoLink(idx: string): Promise<boolean> {
   if (cachedLinkIdx.nico === idx) {
     return true;
   }
   if (cachedLinkIdx.original === idx) {
     return false;
   }
-  const dom = await fetchPage(
-    "/maimai-mobile/record/musicDetail/?" + new URLSearchParams([["idx", idx]]).toString()
-  );
+  const dom = await fetchSongDetailPage(idx);
   const isNico = (dom.body.querySelector(".m_10.m_t_5.t_r.f_12") as HTMLElement).innerText.includes(
     "niconico"
   );
@@ -44,4 +42,8 @@ export async function isNicoNicoLink(idx: string) {
     cachedLinkIdx.original = idx;
   }
   return isNico;
+}
+
+export function isNiconicoLinkImg(imgSrc: string): boolean {
+  return imgSrc.includes("e90f79d9dcff84df");
 }

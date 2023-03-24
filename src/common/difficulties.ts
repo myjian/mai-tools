@@ -26,3 +26,13 @@ export function getDifficultyForRecord(row: HTMLElement): Difficulty {
   const diff = DIFFICULTIES.indexOf(d.toUpperCase());
   return diff < 0 ? Difficulty.ReMASTER : diff;
 }
+
+export function getDifficultyTextColor(diff: Difficulty): string {
+  return [
+    "#45c124", // basic
+    "#ffba01", // advanced
+    "#ff7b7b", // expert
+    "#9f51dc", // master
+    "#dbaaff", // remaster
+  ][diff];
+}
