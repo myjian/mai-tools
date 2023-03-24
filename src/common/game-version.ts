@@ -19,6 +19,7 @@ const VERSION_NAMES = [
   "UNiVERSE", // 17
   "UNiVERSE PLUS",
   "FESTiVAL", // 19
+  "FESTiVAL PLUS",
 ];
 
 export const enum DxVersion {
@@ -26,27 +27,29 @@ export const enum DxVersion {
   UNIVERSE = 17,
   UNIVERSE_PLUS = 18,
   FESTiVAL = 19,
+  FESTiVAL_PLUS = 20,
 }
 
 export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
   DxVersion.UNIVERSE,
   DxVersion.UNIVERSE_PLUS,
   DxVersion.FESTiVAL,
+  DxVersion.FESTiVAL_PLUS,
 ];
 
 export function validateGameVersion(
   ver: number | string | null,
   minVer: number,
-  fallback: DxVersion = DxVersion.FESTiVAL,
+  maxVer: DxVersion = DxVersion.FESTiVAL_PLUS,
 ): DxVersion {
   const numVer = typeof ver === "string" ? parseInt(ver) : ver;
   if (!ver || isNaN(numVer)) {
-    return fallback;
+    return maxVer;
   }
-  if (numVer >= minVer && numVer <= DxVersion.FESTiVAL) {
+  if (numVer >= minVer && numVer <= maxVer) {
     return numVer;
   }
-  return fallback;
+  return maxVer;
 }
 
 export function getVersionName(ver: DxVersion) {

@@ -105,7 +105,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
     super(props);
     const queryParams = new URLSearchParams(location.search);
     const dxVersionQueryParam = queryParams.get(QueryParam.GameVersion);
-    const gameVer = validateGameVersion(dxVersionQueryParam, RATING_CALCULATOR_SUPPORTED_VERSIONS[0]);
+    const gameVer = validateGameVersion(
+      dxVersionQueryParam,
+      RATING_CALCULATOR_SUPPORTED_VERSIONS[0],
+      RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1],
+    );
 
     const friendIdx = queryParams.get(QueryParam.FriendIdx);
     const playerName = queryParams.get(QueryParam.PlayerName);
