@@ -232,7 +232,7 @@ type Cache = {
     map.forEach((subRows, section) => {
       if (subRows.length) {
         const sectionHeading = d.createElement("div");
-        sectionHeading.className = "screw_block m_15 f_15";
+        sectionHeading.className = "screw_block m_15 f_15 p_s";
         sectionHeading.innerText = getSectionTitle(
           headingStyle,
           section,
