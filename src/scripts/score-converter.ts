@@ -6,6 +6,7 @@
  */
 import {getDifficultyForRecord} from '../common/difficulties';
 import {calculateDetailedDxStar} from '../common/dx-star';
+import {getSongName} from '../common/fetch-score-util';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
@@ -88,10 +89,6 @@ import {ALLOWED_ORIGINS} from '../common/util';
           return b;
         });
     }
-  }
-
-  function getSongName(e: HTMLElement) {
-    return e.querySelector(".basic_block.break").childNodes[1].nodeValue;
   }
 
   function getAchv(e: HTMLElement) {

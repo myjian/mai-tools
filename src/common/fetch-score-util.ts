@@ -1,6 +1,15 @@
 import {normalizeSongName} from './song-name-helper';
 
 export function getSongName(row: HTMLElement) {
+  const playRecordSongNameElem = row.querySelector(".basic_block.break") as HTMLElement;
+  if (playRecordSongNameElem) {
+    // There can be 1 or 2 childNodes depending on whether "CLEAR!" image exists.
+    // If "CLEAR!" image exists, it will be the first childNode.
+    // Therefore, we always retrieve song name from the last childNode.
+    return playRecordSongNameElem.childNodes.item(
+      playRecordSongNameElem.childNodes.length - 1
+    ).nodeValue;
+  }
   return normalizeSongName(
     (row.getElementsByClassName("music_name_block")[0] as HTMLElement).innerText
   );

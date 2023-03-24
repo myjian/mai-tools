@@ -287,20 +287,20 @@ type Cache = {
     if (inLvText) {
       return parseFloat(inLvText);
     }
-    const song = getSongName(row);
+    const name = getSongName(row);
     const t = getChartType(row);
     const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
     let props: SongProperties | undefined;
-    if (song === "Link") {
+    if (name === "Link") {
       const idx = isFriendScore ? null : getSongIdx(row);
       if (cache.nicoLinkIdx === idx) {
-        props = getSongProperties(songProps, song, "niconico", t);
+        props = getSongProperties(songProps, name, "niconico", t);
       } else if (cache.originalLinkIdx === idx) {
-        props = getSongProperties(songProps, song, "", t);
+        props = getSongProperties(songProps, name, "", t);
       }
       console.log(props!);
     } else {
-      props = getSongProperties(songProps, song, "", t);
+      props = getSongProperties(songProps, name, "", t);
     }
     return coalesceInLv(row, lvIndex, props);
   }
@@ -813,8 +813,8 @@ type Cache = {
     const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
-      const song = getSongName(row);
-      if (song === "Link") {
+      const name = getSongName(row);
+      if (name === "Link") {
         const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
         try {
           // idx is not available on friend score page and getSongIdx will throw.
@@ -823,10 +823,10 @@ type Cache = {
           let props: SongProperties | null;
           if (isNico) {
             cache.nicoLinkIdx = idx;
-            props = getSongProperties(songProps, song, "niconico", ChartType.STANDARD);
+            props = getSongProperties(songProps, name, "niconico", ChartType.STANDARD);
           } else {
             cache.originalLinkIdx = idx;
-            props = getSongProperties(songProps, song, "", ChartType.STANDARD);
+            props = getSongProperties(songProps, name, "", ChartType.STANDARD);
           }
           saveInLv(row, coalesceInLv(row, lvIndex, props));
         } catch (e) {
