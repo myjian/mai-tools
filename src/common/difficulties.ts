@@ -18,3 +18,11 @@ export const DIFFICULTY_CLASSNAME_MAP = new Map([
 export function getDifficultyName(diff: Difficulty): string {
   return DIFFICULTIES[diff];
 }
+
+export function getDifficultyForRecord(row: HTMLElement): Difficulty {
+  const diffImg = row.querySelector(".playlog_top_container img.playlog_diff") as HTMLImageElement;
+  const src = diffImg.src;
+  const d = src.substring(src.lastIndexOf("_") + 1, src.lastIndexOf("."));
+  const diff = DIFFICULTIES.indexOf(d.toUpperCase());
+  return diff < 0 ? Difficulty.ReMASTER : diff;
+}

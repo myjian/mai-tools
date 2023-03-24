@@ -1,3 +1,10 @@
+/**
+ * Use it on a play record page to
+ * 1) analyze DX score ratio
+ * 2) convert to FiNALE achievement scale
+ * 3) analyze break note judgements
+ */
+import {getDifficultyForRecord} from '../common/difficulties';
 import {calculateDetailedDxStar} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
@@ -98,13 +105,6 @@ import {ALLOWED_ORIGINS} from '../common/util';
       .slice(-5)
       .map(trimSpaces)
       .join("_");
-  }
-
-  function getDifficulty(e: HTMLElement) {
-    const src = (e.querySelector(".playlog_top_container img.playlog_diff") as HTMLImageElement)
-      .src;
-    const d = src.substring(src.lastIndexOf("_") + 1, src.lastIndexOf("."));
-    return d === "remaster" ? "Re:MASTER" : d.toUpperCase();
   }
 
   function getTrack(e: HTMLElement) {
@@ -251,7 +251,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
       [QueryParam.Date]: getPlayDate(d.body),
       [QueryParam.Track]: getTrack(d.body),
       [QueryParam.SongTitle]: getSongName(d.body),
-      [QueryParam.Difficulty]: getDifficulty(d.body),
+      [QueryParam.Difficulty]: getDifficultyForRecord(d.body).toString(),
       [QueryParam.Achievement]:getAchv(d.body),
       [QueryParam.HighScore]: getIsHighScore(d.body).toString(),
       [QueryParam.NoteDetails]: getNoteDetails(d.body),
@@ -262,8 +262,6 @@ import {ALLOWED_ORIGINS} from '../common/util';
     if (syncStatus) {
       url += "&sc=" + encodeURIComponent(syncStatus);
     }
-    console.log(url);
-    console.log("url length: " + url.length);
     addLinkToPlace(url);
     window.addEventListener("message", (evt) => {
       if (ALLOWED_ORIGINS.includes(evt.origin)) {

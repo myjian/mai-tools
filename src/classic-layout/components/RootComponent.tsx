@@ -1,4 +1,5 @@
 import React from 'react';
+import {getDifficultyName} from '../../common/difficulties';
 import {QueryParam} from '../../common/query-params';
 
 import {parseJudgements} from '../parser';
@@ -12,7 +13,7 @@ import {SectionSep} from './SectionSeparator';
 const defaultPlayRecord = {
   date: formatDate(new Date()),
   track: "TRACK " + (Math.floor(Math.random() * 3) + 1),
-  // difficulty: "MASTER",
+  // difficulty: 3,
   songTitle: "分からない",
   achievement: "95.3035%", // finale: "94.87%",
   highScore: Math.random() > 0.9 ? "1" : "0",
@@ -58,13 +59,15 @@ function getQueryParam(qp: URLSearchParams, key: string, fallback?: string) {
 function parseQueryParams(qp: URLSearchParams, dft = defaultPlayRecord) {
   const date = getQueryParam(qp, QueryParam.Date, dft.date);
   const track = getQueryParam(qp, QueryParam.Track, dft.track);
-  const difficulty = getQueryParam(qp, QueryParam.Difficulty);
+  const rawDifficulty = getQueryParam(qp, QueryParam.Difficulty);
   const songTitle = getQueryParam(qp, QueryParam.SongTitle, dft.songTitle);
   const achievement = getQueryParam(qp, QueryParam.Achievement, dft.achievement);
   const highScore = getQueryParam(qp, QueryParam.HighScore, dft.highScore);
   const combo = getQueryParam(qp, QueryParam.Combo);
   const noteDetails = getQueryParam(qp, QueryParam.NoteDetails, dft.noteDetails);
   const syncStatus = getQueryParam(qp, QueryParam.SyncStatus);
+  // TODO: handling NaN for parseInt
+  const difficulty = getDifficultyName(parseInt(rawDifficulty));
   return {
     date,
     track,
