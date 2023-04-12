@@ -90,7 +90,7 @@ td.songTitleCell {
   vertical-align: middle;
 }
 
-.dateCheckbox[type="checkbox"] {
+.dateCheckbox[type="checkbox"]:not(#favorite) {
   position: static;
   opacity: 1;
   margin-right: 6px;
