@@ -1,6 +1,7 @@
 import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {isMaimaiNetOrigin} from '../common/game-region';
 import {DxVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
@@ -94,8 +95,7 @@ declare global {
   }
 
   function main() {
-    const host = location.host;
-    if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
+    if (!isMaimaiNetOrigin(document.location.origin)) {
       handleError(UIString[LANG].pleaseLogIn);
       return;
     }

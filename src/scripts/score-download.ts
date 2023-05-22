@@ -1,4 +1,5 @@
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {isMaimaiNetOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
 import {handleError} from '../common/util';
@@ -88,8 +89,7 @@ import {handleError} from '../common/util';
   }
 
   async function fetchAllScores(onError: (msg: string) => void) {
-    const host = location.host;
-    if (host !== 'maimaidx-eng.com' && host !== 'maimaidx.jp') {
+    if (!isMaimaiNetOrigin(document.location.origin)) {
       onError(UIString.pleaseLogIn);
       return;
     }

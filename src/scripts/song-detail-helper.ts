@@ -1,6 +1,6 @@
 import {getChartType} from '../common/chart-type';
 import {determineDxStar, getDxStarText} from '../common/dx-star';
-import {GameRegion} from '../common/game-region';
+import {getGameRegionFromOrigin} from '../common/game-region';
 import {getDefaultLevel} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
 import {normalizeSongName} from '../common/song-name-helper';
@@ -37,7 +37,7 @@ type Cache = {
 
   async function fetchAndAddInternalLv() {
     const gameVer = await fetchGameVersion(d.body);
-    const gameRegion = window.location.host === 'maimaidx.jp' ? GameRegion.Jp : GameRegion.Intl;
+    const gameRegion = getGameRegionFromOrigin(d.location.origin);
     const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const song = getSongName();

@@ -1,6 +1,11 @@
 import React from 'react';
 
-import {GameRegion} from '../../common/game-region';
+import {
+  GameRegion,
+  getGameRegionFromOrigin,
+  isMaimaiNetOrigin,
+  MAIMAI_NET_ORIGINS,
+} from '../../common/game-region';
 import {
   DxVersion,
   RATING_CALCULATOR_SUPPORTED_VERSIONS,
@@ -221,21 +226,24 @@ export class RootComponent extends React.PureComponent<{}, State> {
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
       } else {
-        window.opener.postMessage(data, 'https://maimaidx-eng.com');
-        window.opener.postMessage(data, 'https://maimaidx.jp');
+        // Unfortunately, document.referrer is not set when mai-tools is run on localhost.
+        // Send message to all maimai net origins and pray that one of them will respond.
+        for (const origin of MAIMAI_NET_ORIGINS) {
+          window.opener.postMessage(data, origin);
+        }
       }
     }
   }
 
   private initWindowCommunication() {
     window.addEventListener('message', (evt) => {
-      if (evt.origin === 'https://maimaidx-eng.com' || evt.origin === 'https://maimaidx.jp') {
+      if (isMaimaiNetOrigin(evt.origin)) {
         console.log(evt.origin, evt.data.action, getDebugText(evt.data));
         let payloadAsInt;
         switch (evt.data.action) {
           case 'gameVersion':
             this.setState({
-              gameRegion: evt.origin === 'https://maimaidx.jp' ? GameRegion.Jp : GameRegion.Intl,
+              gameRegion: getGameRegionFromOrigin(evt.origin),
               gameVer: validateGameVersion(
                 evt.data.payload,
                 RATING_CALCULATOR_SUPPORTED_VERSIONS[0]

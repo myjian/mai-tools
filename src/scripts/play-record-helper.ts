@@ -1,18 +1,18 @@
-import {getChartType} from "../common/chart-type";
-import {Difficulty, getDifficultyForRecord, getDifficultyTextColor} from "../common/difficulties";
-import {getSongName} from "../common/fetch-score-util";
-import {GameRegion} from "../common/game-region";
-import {fetchMagic} from "../common/magic";
-import {isNiconicoLinkImg} from "../common/song-name-helper";
-import {buildSongPropsMap, getSongProperties} from "../common/song-props";
-import {fetchGameVersion, fetchSongDetailPage} from "../common/util";
-import {getDisplayLv} from "../common/level-helper";
+import {getChartType} from '../common/chart-type';
+import {Difficulty, getDifficultyForRecord, getDifficultyTextColor} from '../common/difficulties';
+import {getSongName} from '../common/fetch-score-util';
+import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
+import {getDisplayLv} from '../common/level-helper';
+import {fetchMagic} from '../common/magic';
+import {isNiconicoLinkImg} from '../common/song-name-helper';
+import {buildSongPropsMap, getSongProperties} from '../common/song-props';
+import {fetchGameVersion, fetchSongDetailPage} from '../common/util';
 
 (function (d) {
   async function fetchChartLv(diff: Difficulty): Promise<string> {
     // First, try magic
     const gameVer = await fetchGameVersion(d.body);
-    const gameRegion = window.location.host === "maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl;
+    const gameRegion = getGameRegionFromOrigin(window.location.origin);
     const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const name = getSongName(d.body);
@@ -40,13 +40,13 @@ import {getDisplayLv} from "../common/level-helper";
     }
     const lvElem = d.createElement("div");
     lvElem.className = "f_r"; // float: right
-    lvElem.append("Lv " + chartLv)
+    lvElem.append("Lv " + chartLv);
     lvElem.style.color = getDifficultyTextColor(diff);
     songTitleDiv.append(lvElem);
   }
 
   if (
-    (d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") &&
+    isMaimaiNetOrigin(d.location.origin) &&
     d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")
   ) {
     const diff = getDifficultyForRecord(d.body);

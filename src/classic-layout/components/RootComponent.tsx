@@ -1,7 +1,8 @@
 import React from 'react';
-import {getDifficultyName} from '../../common/difficulties';
-import {QueryParam} from '../../common/query-params';
 
+import {getDifficultyName} from '../../common/difficulties';
+import {isMaimaiNetOrigin, MAIMAI_NET_ORIGINS} from '../../common/game-region';
+import {QueryParam} from '../../common/query-params';
 import {parseJudgements} from '../parser';
 import {NoteType, StrictJudgementMap} from '../types';
 import {CreditInfo} from './CreditInfo';
@@ -184,8 +185,11 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
       } else {
-        window.opener.postMessage(data, "https://maimaidx-eng.com");
-        window.opener.postMessage(data, "https://maimaidx.jp");
+        // Unfortunately, document.referrer is not set when mai-tools is run on localhost.
+        // Send message to all maimai net origins and pray that one of them will respond.
+        for (const origin of MAIMAI_NET_ORIGINS) {
+          window.opener.postMessage(data, origin);
+        }
       }
     }
   }
@@ -197,7 +201,7 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
   };
 
   private handleWindowMessage = (evt: MessageEvent) => {
-    if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+    if (isMaimaiNetOrigin(evt.origin)) {
       switch (evt.data.action) {
         case "songImage":
           this.setState({songImg: evt.data.imgSrc});

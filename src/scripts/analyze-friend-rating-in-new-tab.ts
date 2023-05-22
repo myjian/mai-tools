@@ -1,5 +1,6 @@
 import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
+import {isMaimaiNetOrigin} from '../common/game-region';
 import {DxVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {statusText} from '../common/score-fetch-progress';
@@ -49,7 +50,7 @@ type FriendInfo = {
       pleaseLogIn: "maimai DX NET에 로그인 해 주세요.",
       analyze: "레이팅 분석하기",
     },
-  }[LANG];
+  };
   const friends_cache: {[idx: string]: FriendInfo} = {};
 
   function getFriendIdx(n: HTMLElement) {
@@ -67,7 +68,7 @@ type FriendInfo = {
     analyzeLink.className = "analyzeLink f_14";
     analyzeLink.style.color = "#1477e6";
     analyzeLink.target = "friendRating";
-    analyzeLink.innerText = UIString.analyze;
+    analyzeLink.innerText = UIString[LANG].analyze;
     const queryParams = new URLSearchParams({friendIdx: friend.idx, playerName: friend.name});
     analyzeLink.href = BASE_URL + queryParams.toString();
     if (friend.page === FriendPage.FRIEND_VS) {
@@ -110,9 +111,8 @@ type FriendInfo = {
   }
 
   function main() {
-    const host = location.host;
-    if (host !== "maimaidx-eng.com" && host !== "maimaidx.jp") {
-      handleError(UIString.pleaseLogIn);
+    if (!isMaimaiNetOrigin(document.location.origin)) {
+      handleError(UIString[LANG].pleaseLogIn);
       return;
     }
     if (

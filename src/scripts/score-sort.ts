@@ -2,7 +2,7 @@ import {ChartType, getChartType} from '../common/chart-type';
 import {DIFFICULTIES, Difficulty} from '../common/difficulties';
 import {getChartDifficulty, getSongName} from '../common/fetch-score-util';
 import {SELF_SCORE_URLS} from '../common/fetch-self-score';
-import {GameRegion} from '../common/game-region';
+import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
@@ -805,7 +805,7 @@ type Cache = {
 
   async function fetchAndAddInternalLvSort() {
     const gameVer = await fetchGameVersion(d.body);
-    const gameRegion = window.location.host === 'maimaidx.jp' ? GameRegion.Jp : GameRegion.Intl;
+    const gameRegion = getGameRegionFromOrigin(window.location.origin);
     const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {

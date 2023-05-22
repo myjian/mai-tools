@@ -7,6 +7,7 @@
 import {getDifficultyForRecord} from '../common/difficulties';
 import {calculateDetailedDxStar} from '../common/dx-star';
 import {getSongName} from '../common/fetch-score-util';
+import {isMaimaiNetOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
@@ -249,11 +250,11 @@ import {ALLOWED_ORIGINS} from '../common/util';
       [QueryParam.Track]: getTrack(d.body),
       [QueryParam.SongTitle]: getSongName(d.body),
       [QueryParam.Difficulty]: getDifficultyForRecord(d.body).toString(),
-      [QueryParam.Achievement]:getAchv(d.body),
+      [QueryParam.Achievement]: getAchv(d.body),
       [QueryParam.HighScore]: getIsHighScore(d.body).toString(),
       [QueryParam.NoteDetails]: getNoteDetails(d.body),
       [QueryParam.Combo]: getCombo(d.body),
-    })
+    });
     let url = BASE_NEWTAB_URL + "?" + queryParams.toString();
     const syncStatus = getSyncResult(d.body);
     if (syncStatus) {
@@ -295,7 +296,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
   }
 
   if (
-    (d.location.host === "maimaidx-eng.com" || d.location.host === "maimaidx.jp") &&
+    isMaimaiNetOrigin(d.location.origin) &&
     d.location.pathname.includes("/maimai-mobile/record/playlogDetail/")
   ) {
     addScoreConverterLink();

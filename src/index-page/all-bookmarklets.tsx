@@ -1,12 +1,14 @@
 import React from 'react';
 
-import { Language } from '../common/lang';
+import {MAIMAI_NET_ORIGINS} from '../common/game-region';
+import {Language} from '../common/lang';
+import {getMaiToolsBaseUrl} from '../common/script-host';
 
-const ALL_IN_ONE_SCRIPT = window.location.pathname.startsWith("/mai-tools") ? `${location.origin}/mai-tools/scripts/all-in-one.js` : `${location.origin}/scripts/all-in-one.js`;
+const ALL_IN_ONE_SCRIPT = getMaiToolsBaseUrl() + "/scripts/all-in-one.js";
 
 export const BOOKMARKLET_LINK = `javascript:void (
   function(d) {
-    if (['maimaidx-eng.com','maimaidx.jp'].indexOf(d.location.host) >= 0) {
+    if (${JSON.stringify(MAIMAI_NET_ORIGINS)}.indexOf(d.location.host) >= 0) {
       vars = d.createElement('script');
       s.src='${ALL_IN_ONE_SCRIPT}?t=' + Math.floor(Date.now() / 60000);
       d.body.append(s);
@@ -42,8 +44,7 @@ export const scoreConverter: Bookmarklet = {
       "功能：可轉換 DX 達成率為舊版 (maimai FiNALE) 計分方式，以及分析各指令扣分比例。",
     [Language.en_US]:
       "Feature: Convert DX achievement to old achievement (maimai FiNALE & older), and analyze score penalty by note type.",
-    [Language.ko_KR]:
-      "기능: DX정확도를 옛날 정확도로 바꾸고 노트 타입별 점수를 분석합니다.",
+    [Language.ko_KR]: "기능: DX정확도를 옛날 정확도로 바꾸고 노트 타입별 점수를 분석합니다.",
   },
   howToByLang: {
     [Language.zh_TW]:
@@ -51,7 +52,7 @@ export const scoreConverter: Bookmarklet = {
     [Language.en_US]:
       'Usage: Log in to maimai NET. Open a recent song record and execute the bookmarklet. New tab will open and display score in old achievement system. You can click on "Cafe MiLK" to switch to DX achievement, and click on the achievement % to see how much percentage was lost per note type.',
     [Language.ko_KR]:
-      '사용법: maimai NET에 로그인하고 최근 플레이한 노래 목록을 연 뒤 북마크를 실행시킵니다. 그러면 새 탭에서 점수와 정확도가 표시 될 것입니다. "Cafe MiLK"를 클릭하여 DX정확도로 변경할 수 있고, 정확도%를 클릭하여 노트 타입별 손실률을 확인할 수 있습니다.'
+      '사용법: maimai NET에 로그인하고 최근 플레이한 노래 목록을 연 뒤 북마크를 실행시킵니다. 그러면 새 탭에서 점수와 정확도가 표시 될 것입니다. "Cafe MiLK"를 클릭하여 DX정확도로 변경할 수 있고, 정확도%를 클릭하여 노트 타입별 손실률을 확인할 수 있습니다.',
   },
   screenshotUrl: "./screenshots/convert-to-finale-score-20200718.jpg",
 };
@@ -77,7 +78,6 @@ export const scoreSorter: Bookmarklet = {
       "Usage: For sorting own scores, open historical scores (by genre, level, song title, version, etc.) and execute the bookmarklet. For sorting friend's scores, use Friend VS feature to list scores (by genre or level), and then execute the bookmarklet.",
     [Language.ko_KR]:
       "사용법: 기록을 정렬하려면 플레이 기록 페이지를 열고 북마크를 실행하세요. 친구의 기록을 정렬하기 위해서는 Friend VS 화면에 들어간 후 북마크를 실행하세요.",
-
   },
   screenshotUrl: "./screenshots/score-sort-20200630.png",
 };
@@ -87,7 +87,7 @@ export const recentPlaySummary: Bookmarklet = {
   itemTitleByLang: {
     [Language.zh_TW]: "整理最近遊玩紀錄",
     [Language.en_US]: "Recent play summary",
-    [Language.ko_KR]: "최근 플레이 요약"
+    [Language.ko_KR]: "최근 플레이 요약",
   },
   featureByLang: {
     [Language.zh_TW]: "功能：以表格方式整理最近的遊玩紀錄，並將遊戲時間修正為當地時間。",
@@ -178,7 +178,8 @@ export const scoreDownloader: Bookmarklet = {
   featureByLang: {
     [Language.zh_TW]: "功能：下載所有白譜、紫譜、紅譜、黃譜的成績。可用於個人紀錄或是 R 值分析。",
     [Language.en_US]: "Feature: Download all ADVANCED, EXPERT, MASTER, and Re:MASTER scores.",
-    [Language.ko_KR]: "기능: 모든 ADVANCED, EXPERT, MASTER, Re:MASTER 기록을 다운로드 할 수 있습니다.",
+    [Language.ko_KR]:
+      "기능: 모든 ADVANCED, EXPERT, MASTER, Re:MASTER 기록을 다운로드 할 수 있습니다.",
   },
   howToByLang: (lang: Language) => (
     <React.Fragment>

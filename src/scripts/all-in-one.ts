@@ -1,9 +1,10 @@
+import {isMaimaiNetOrigin} from '../common/game-region';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
 
 (function (d) {
   const SCRIPT_HOST = getScriptHost("all-in-one") + "/scripts/";
-  if (["maimaidx-eng.com", "maimaidx.jp"].indexOf(d.location.host) < 0) {
+  if (!isMaimaiNetOrigin(d.location.origin)) {
     // TODO: tell user to open maimai net
     return;
   }
