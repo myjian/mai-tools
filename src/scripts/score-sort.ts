@@ -806,7 +806,7 @@ type Cache = {
   async function fetchAndAddInternalLvSort() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(window.location.origin);
-    const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songProps = await buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const name = getSongName(row);

@@ -29,6 +29,8 @@ export const enum DxVersion {
   FESTiVAL_PLUS = 20,
 }
 
+export const LATEST_VERSION = DxVersion.FESTiVAL_PLUS;
+
 export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
   DxVersion.UNIVERSE_PLUS,
   DxVersion.FESTiVAL,
@@ -38,7 +40,7 @@ export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
 export function validateGameVersion(
   ver: number | string | null,
   minVer: number,
-  maxVer: DxVersion = DxVersion.FESTiVAL_PLUS
+  maxVer: DxVersion = LATEST_VERSION
 ): DxVersion {
   const numVer = typeof ver === 'string' ? parseInt(ver) : ver;
   if (!ver || isNaN(numVer)) {

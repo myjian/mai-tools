@@ -13,7 +13,7 @@ import {fetchGameVersion, fetchSongDetailPage} from '../common/util';
     // First, try magic
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(window.location.origin);
-    const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songProps = await buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const name = getSongName(d.body);
     const songImg = d.querySelector("img.music_img") as HTMLImageElement;
@@ -27,7 +27,9 @@ import {fetchGameVersion, fetchSongDetailPage} from '../common/util';
     // If magic does not work, load from maimai-NET.
     const songIdxElem = d.querySelector("input[name=idx]") as HTMLInputElement;
     const songDetailPage = await fetchSongDetailPage(songIdxElem.value);
-    const lvElem = songDetailPage.querySelector(`.music_detail_table tr:nth-child(${diff + 1}) .music_lv_back`);
+    const lvElem = songDetailPage.querySelector(
+      `.music_detail_table tr:nth-child(${diff + 1}) .music_lv_back`
+    );
     return lvElem.innerHTML.trim();
   }
 

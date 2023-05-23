@@ -1,8 +1,10 @@
-import {GameRegion} from "./game-region";
-import {DIFFICULTIES} from "./difficulties";
-import {DxVersion} from "./game-version";
-import {getSongNickname, normalizeSongName} from "./song-name-helper";
-import {ChartType} from "./chart-type";
+import {ChartType} from './chart-type';
+import {DIFFICULTIES} from './difficulties';
+import {GameRegion} from './game-region';
+import {DxVersion, LATEST_VERSION} from './game-version';
+import {getRemovedSongs} from './removed-songs';
+import {getMaiToolsBaseUrl} from './script-host';
+import {getSongNickname, normalizeSongName} from './song-name-helper';
 
 export interface BasicSongProps {
   dx: ChartType;
@@ -11,9 +13,14 @@ export interface BasicSongProps {
 }
 
 export interface SongProperties extends BasicSongProps {
-  debut: DxVersion;
+  debut: number; // from 0 to latest version number
   lv: ReadonlyArray<number>;
 }
+
+type SongPropertiesOverride = BasicSongProps & {
+  debut?: number;
+  lv?: ReadonlyArray<number>;
+};
 
 export const enum MatchMode {
   EQUAL,
@@ -26,31 +33,66 @@ const VERSION_REGEX = /\bv\s*:\s*(-?[0-9]+)/;
 const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
 
-// INTL_VER_SONG_PROPS contains songs whose International version is older than
-// JP version.
-const INTL_VER_SONG_PROPS: ReadonlyArray<SongProperties> = [
-  // BREaK! BREaK! BREaK! is debuted at SPLASH (intl), SPLASH PLUS (Jp)
-  {name: "BREaK! BREaK! BREaK!", dx: 1, debut: 15, lv: [-5, -8, 12.8, 14.7, 0]},
-  // 宿星審判 is debuted at SPLASH PLUS (intl), UNiVERSE (Jp)
-  {name: "宿星審判", dx: 1, debut: 16, lv: [-4, -8, -12, 14.4, 0]},
-];
+async function fetchJson(url: string) {
+  let body = '';
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      return {};
+    }
+    body = await response.text();
+    return JSON.parse(body);
+  } catch (e) {
+    // Can be network error or parse error
+    console.warn(e);
+    console.warn('Failed to parse JSON: ' + body);
+  }
+  return {};
+}
 
-const INTL_VER_OVERRIDES: ReadonlyArray<Partial<SongProperties>> = [
-  // 自傷無色 is debuted at Festival (intl), SPLASH (Jp)
-  {name: "自傷無色", dx: 1, debut: 19},
-  // 劣等上等 is debuted at Festival (intl), SPLASH (Jp)
-  {name: "劣等上等", dx: 1, debut: 19},
-];
+async function fetchChartLevelOverrides(gameVer: DxVersion) {
+  const url = getMaiToolsBaseUrl() + `/data/chart-levels/version${gameVer}.json`;
+  const data = await fetchJson(url);
+  const output: Pick<SongProperties, 'name' | 'dx' | 'lv'>[] = [];
+  ['standard', 'dx'].forEach((chartType, index) => {
+    if (!data[chartType]) {
+      return;
+    }
+    for (const name of Object.keys(data[chartType])) {
+      output.push({
+        name: name,
+        dx: index,
+        lv: data[chartType][name],
+      });
+    }
+  });
+  return output;
+}
 
-const OVERRIDES_BY_VERSION = new Map<DxVersion, ReadonlyArray<Partial<SongProperties>>>([
-  [DxVersion.FESTiVAL, [
-    {name: "39", dx: 1, lv: [NaN, NaN, NaN, 12.8]},
-    {name: "ヒステリックナイトガール", dx: 1, lv: [NaN, NaN, NaN, 12.8]},
-    {name: "MOBILYS", dx: 1, lv: [NaN, NaN, NaN, 13.1]},
-    {name: "マトリョシカ", dx: 0, lv: [NaN, NaN, NaN, NaN, 13.2]},
-    {name: "宿星審判", dx: 1, lv: [NaN, NaN, NaN, 14.3]},
-  ]],
-]);
+async function fetchDebutVersionOverrides(): Promise<
+  Pick<SongProperties, 'name' | 'dx' | 'debut'>[]
+> {
+  const url = getMaiToolsBaseUrl() + '/data/song-info/intl.json';
+  const data = await fetchJson(url);
+  const output: Pick<SongProperties, 'name' | 'dx' | 'debut'>[] = [];
+  ['standard', 'dx'].forEach((chartType, index) => {
+    if (!data[chartType]) {
+      return;
+    }
+    for (const version of Object.keys(data[chartType])) {
+      const songList: string[] = data[chartType][version];
+      const versionInt = parseInt(version);
+      for (const name of songList) {
+        output.push({
+          name: name,
+          dx: index,
+          debut: versionInt,
+        });
+      }
+    }
+  });
+  return output;
+}
 
 /**
  * Parse song properties from text.
@@ -84,9 +126,7 @@ function parseSongProperties(line: string): SongProperties | undefined {
 function mergeSongProps(p1: SongProperties, p2: Partial<SongProperties>): SongProperties {
   let levels = p1.lv;
   if (p2.lv instanceof Array) {
-    levels = p1.lv.map(
-      (currentLv, i) => isNaN(p2.lv[i]) ? currentLv : p2.lv[i]
-    );
+    levels = p1.lv.map((currentLv, i) => (isNaN(p2.lv[i]) ? currentLv : p2.lv[i]));
   }
   return {...p1, ...p2, lv: levels};
 }
@@ -94,7 +134,10 @@ function mergeSongProps(p1: SongProperties, p2: Partial<SongProperties>): SongPr
 /**
  * @return true if song prop is successfully updated.
  */
-function updateSongProps(map: Map<string, SongProperties[]>, props: Partial<SongProperties>): boolean {
+function updateSongProps(
+  map: Map<string, SongProperties[]>,
+  props: Partial<SongProperties>
+): boolean {
   if (!map.has(props.name)) {
     return false;
   }
@@ -103,22 +146,39 @@ function updateSongProps(map: Map<string, SongProperties[]>, props: Partial<Song
   if (match < 0) {
     return false;
   }
+  // loose equality is intentional because there can be null != undefined.
+  if (arr[match].nickname != props.nickname) {
+    return false;
+  }
   arr[match] = mergeSongProps(arr[match], props);
   return true;
 }
 
-function insertOrUpdateSongProps(map: Map<string, SongProperties[]>, props: SongProperties) {
+function insertOrUpdateSongProps(
+  map: Map<string, SongProperties[]>,
+  props: SongPropertiesOverride,
+  gameVer: DxVersion
+) {
   if (updateSongProps(map, props)) {
     return;
+  }
+  // If debut is not set, set to current version.
+  // This ensure chart level overrides always associate with a game version.
+  if (!props.debut && props.debut !== 0) {
+    props.debut = gameVer;
   }
   if (!map.has(props.name)) {
     map.set(props.name, []);
   }
-  map.get(props.name).push(props);
+  map.get(props.name).push(props as SongProperties);
 }
 
-export function buildSongPropsMap(gameVer: DxVersion, gameRegion: GameRegion, text: string): Map<string, SongProperties[]> {
-  const lines = text.split("\n");
+export async function buildSongPropsMap(
+  gameVer: DxVersion,
+  gameRegion: GameRegion,
+  text: string
+): Promise<Map<string, SongProperties[]>> {
+  const lines = text.split('\n');
   // songPropsByName: song name -> array of song properties
   // most arrays have only 1 entry, but some arrays have more than 1 entries
   // because 1 song can have both DX and Standard charts or 2 songs can have same name.
@@ -126,23 +186,37 @@ export function buildSongPropsMap(gameVer: DxVersion, gameRegion: GameRegion, te
   for (const line of lines) {
     const songProps = parseSongProperties(line);
     if (songProps) {
-      insertOrUpdateSongProps(songPropsByName, songProps);
+      insertOrUpdateSongProps(songPropsByName, songProps, gameVer);
     }
   }
+
+  const chartLevelOverrides = await fetchChartLevelOverrides(gameVer);
+  console.log('chartLevelOverrides', chartLevelOverrides);
+  for (const songProps of chartLevelOverrides) {
+    insertOrUpdateSongProps(songPropsByName, songProps, gameVer);
+  }
+
   if (gameRegion === GameRegion.Intl) {
-    for (const songProps of INTL_VER_SONG_PROPS) {
-      insertOrUpdateSongProps(songPropsByName, songProps);
-    }
-    for (const songProps of INTL_VER_OVERRIDES) {
+    const debutVersionOverrides = await fetchDebutVersionOverrides();
+    console.log('debutVersionOverrides', debutVersionOverrides);
+    for (const songProps of debutVersionOverrides) {
       updateSongProps(songPropsByName, songProps);
     }
   }
-  const overrides = OVERRIDES_BY_VERSION.get(gameVer);
-  if (overrides) {
-    for (const songProps of overrides) {
-      updateSongProps(songPropsByName, songProps);
-    }
+
+  const removedSongs = getRemovedSongs(gameRegion);
+  for (const songName of removedSongs) {
+    songPropsByName.delete(songName);
   }
+
+  // validation: every song must have debut and lv
+  songPropsByName.forEach((propsArr) => {
+    for (const props of propsArr) {
+      console.assert(props.debut != null);
+      console.assert(props.debut >= 0 && props.debut <= LATEST_VERSION);
+      console.assert(props.lv.length >= 4);
+    }
+  });
   return songPropsByName;
 }
 
@@ -196,7 +270,7 @@ export function filterSongsByVersion(
       }
       if (songPropsArray.length) {
         if (songPropsArray.length > 1) {
-          console.warn(`Found multiple song properties for ${name} ${dx ? "[DX]" : ""}`);
+          console.warn(`Found multiple song properties for ${name} ${dx ? '[DX]' : ''}`);
           console.warn(songPropsArray);
         }
         if (
@@ -208,7 +282,7 @@ export function filterSongsByVersion(
         continue;
       }
     }
-    console.warn(`Could not find song properties for ${name} ${dx ? "[DX]" : ""}`);
+    console.warn(`Could not find song properties for ${name} ${dx ? '[DX]' : ''}`);
   }
   return fullProps;
 }

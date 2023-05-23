@@ -38,7 +38,7 @@ type Cache = {
   async function fetchAndAddInternalLv() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(d.location.origin);
-    const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songProps = await buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const song = getSongName();
     const chartType = getChartType(d.body);
