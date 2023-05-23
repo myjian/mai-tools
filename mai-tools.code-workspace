@@ -1,0 +1,55 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"files.eol": "\n",
+		"files.insertFinalNewline": true,
+		"files.trimFinalNewlines": true,
+		"files.trimTrailingWhitespace": true,
+		"git.confirmSync": false,
+		"javascript.format.enable": false,
+		"prettier.trailingComma": "es5",
+		"typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+		"typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+		"typescript.preferences.importModuleSpecifier": "non-relative",
+		"typescript.preferences.quoteStyle": "single",
+		"typescript.updateImportsOnFileMove.enabled": "always",
+		"importSorter.generalConfiguration.sortOnBeforeSave": true,
+		"importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimitExceptIfOnlyOne",
+		"importSorter.importStringConfiguration.spacingPerImportExpression.afterStartingBracket": 0,
+		"importSorter.importStringConfiguration.spacingPerImportExpression.beforeEndingBracket": 0,
+		"importSorter.importStringConfiguration.tabSize": 2,
+		"importSorter.importStringConfiguration.trailingComma": "multiLine",
+		"importSorter.sortConfiguration.removeUnusedImports": true,
+		"[css]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[html]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[json]": {
+			"editor.tabSize": 2,
+			"editor.defaultFormatter": "vscode.json-language-features"
+		},
+		"[jsonc]": {
+			"editor.defaultFormatter": "vscode.json-language-features"
+		},
+		"[typescript]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+		"[typescriptreact]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode"
+		},
+	},
+	"extensions": {
+		"recommendations": [
+			"esbenp.prettier-vscode",
+			"dbaeumer.vscode-eslint",
+			"mike-co.import-sorter"
+		]
+	}
+}
