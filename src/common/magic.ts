@@ -1,20 +1,25 @@
-import {DxVersion, RATING_CALCULATOR_SUPPORTED_VERSIONS} from "./game-version";
+import {DxVersion, RATING_CALCULATOR_SUPPORTED_VERSIONS} from './game-version';
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 1 day
-const CACHE_KEY_PREFIX = "dxLv";
+const CACHE_KEY_PREFIX = 'dxLv';
 
 const MagicSauce: Record<DxVersion, string> = {
   [DxVersion.DX]: null,
-  [DxVersion.UNIVERSE]: "aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfdW5pdmVyc2UuanM=",
-  [DxVersion.UNIVERSE_PLUS]: "aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZWU1NjlkNzRmNDIyZDRlMjU1MDY1ZDhiMDJlYTI5NGEvcmF3LzkzMmZiMDNhMzgxMjEyMTAwODBkNmY1Mzc5MTNhMDg0MjQ3ZTUzMWMvbWFpZHhfaW5fbHZfdW5pdmVyc2VwbHVzLmpz",
-  [DxVersion.FESTiVAL]: "aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWwuanM=",
-  [DxVersion.FESTiVAL_PLUS]: "aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWxwbHVzLmpz",
+  [DxVersion.UNIVERSE_PLUS]:
+    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZWU1NjlkNzRmNDIyZDRlMjU1MDY1ZDhiMDJlYTI5NGEvcmF3LzkzMmZiMDNhMzgxMjEyMTAwODBkNmY1Mzc5MTNhMDg0MjQ3ZTUzMWMvbWFpZHhfaW5fbHZfdW5pdmVyc2VwbHVzLmpz',
+  [DxVersion.FESTiVAL]:
+    'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWwuanM=',
+  [DxVersion.FESTiVAL_PLUS]:
+    'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWxwbHVzLmpz',
 };
 
 export async function fetchMagic(gameVer: DxVersion): Promise<string> {
   const sauce = MagicSauce[gameVer] || MagicSauce[DxVersion.UNIVERSE_PLUS];
   const res = await fetch(atob(sauce));
-  return await res.text();
+  if (res.ok) {
+    return res.text();
+  }
+  return '';
 }
 
 function getInternalLvCacheKey(gameVer: DxVersion): string {
