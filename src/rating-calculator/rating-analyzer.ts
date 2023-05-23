@@ -33,7 +33,7 @@ export function getNumOfTopOldCharts() {
  * Compute rating value based on the chart level and player achievement.
  * If we don't find the inner level for the chart, use its estimated level and move on.
  */
-export function analyzeSongRating(
+function getRecordWithRating(
   record: ChartRecord,
   songProps?: SongProperties
 ): ChartRecordWithRating {
@@ -41,7 +41,7 @@ export function analyzeSongRating(
     const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
     const lv = songProps.lv[lvIndex];
     if (typeof lv === 'number') {
-      record.levelIsEstimate = lv < 0;
+      record.levelIsPrecise = lv > 0;
       record.level = Math.abs(lv);
     }
   }
@@ -71,7 +71,7 @@ export async function analyzePlayerRating(
       record.chartType
     );
     const isNewChart = songProps ? songProps.debut === gameVer : record.chartType === ChartType.DX;
-    const recordWithRating = analyzeSongRating(record, songProps);
+    const recordWithRating = getRecordWithRating(record, songProps);
     if (isNewChart) {
       newChartRecords.push(recordWithRating);
     } else {

@@ -14,13 +14,9 @@ import {ChartRecordWithRating} from './types';
 
 // const MIN_RATING_ADJUSTMENT = 10; // for sorting order tweak
 
-type NextRatingCandidate = Pick<ChartRecordWithRating, "achievement" | "level">;
+type NextRatingCandidate = Pick<ChartRecordWithRating, 'achievement' | 'level'>;
 
-function getNextRating(
-  record: NextRatingCandidate,
-  ratingRangeMin: number,
-  numOfRanks: number
-) {
+function getNextRating(record: NextRatingCandidate, ratingRangeMin: number, numOfRanks: number) {
   let rankDefIdx = getRankIndexByAchievement(record.achievement);
   if (rankDefIdx === -1) {
     rankDefIdx = getRankIndexByAchievement(94);
@@ -105,9 +101,9 @@ export function getNotPlayedCharts(
     // index 1 means ADVANCED (skip BASIC)
     for (let index = 1; index < s.lv.length; index++) {
       let lv = s.lv[index];
-      const levelIsEstimate = lv < 0;
+      const levelIsPrecise = lv > 0;
       lv = Math.abs(lv);
-      const key = s.name === "Link" ? s.nickname : getSongNickname(s.name, "", s.dx);
+      const key = s.name === 'Link' ? s.nickname : getSongNickname(s.name, '', s.dx);
       // Math.min is hack for newly added Re:MASTER charts.
       // I think the hack is no longer needed as I made parseSongProperties check lv array length,
       // but just want to stay safe.
@@ -119,8 +115,8 @@ export function getNotPlayedCharts(
         songName: s.name,
         difficulty: diff,
         level: lv,
-        levelIsEstimate,
-        genre: "",
+        levelIsPrecise,
+        genre: '',
         chartType: s.dx,
         rating: 0,
         achievement: 0,

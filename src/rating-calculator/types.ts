@@ -6,7 +6,7 @@ export interface ChartRecord {
   genre: string;
   difficulty: string;
   level: number;
-  levelIsEstimate: boolean;
+  levelIsPrecise?: boolean;
   chartType: ChartType;
   achievement: number;
 }

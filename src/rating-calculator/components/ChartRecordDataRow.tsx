@@ -12,7 +12,7 @@ function getSongNameDisplay(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   isCandidate?: boolean
 ): string {
-  const prefix = isCandidate && record.isTarget ? RATING_TARGET_SONG_NAME_PREFIX : "";
+  const prefix = isCandidate && record.isTarget ? RATING_TARGET_SONG_NAME_PREFIX : '';
   const songPropsArray = songPropsByName.get(record.songName);
   if (songPropsArray && songPropsArray.length > 1) {
     return prefix + getSongNickname(record.songName, record.genre, record.chartType);
@@ -40,23 +40,23 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
         return record.difficulty;
       case ColumnType.LEVEL:
         const lvText = record.level.toFixed(1);
-        return record.levelIsEstimate ? "*" + lvText : lvText;
+        return record.levelIsPrecise ? lvText : '*' + lvText;
       case ColumnType.ACHIEVEMENT:
-        return record.achievement.toFixed(4) + "%";
+        return record.achievement.toFixed(4) + '%';
       case ColumnType.RANK:
         return getRankTitle(record.achievement);
       case ColumnType.NEXT_RANK:
         return record.nextRanks
           ? Array.from(record.nextRanks.values())
-            .map((r) => r.rank.minAchv + "%")
-            .join("\n")
-          : "";
+              .map((r) => r.rank.minAchv + '%')
+              .join('\n')
+          : '';
       case ColumnType.NEXT_RATING:
         return record.nextRanks
           ? Array.from(record.nextRanks.values())
-            .map((r) => "+" + r.minRt.toFixed(0))
-            .join("\n")
-          : "";
+              .map((r) => '+' + r.minRt.toFixed(0))
+              .join('\n')
+          : '';
       case ColumnType.RATING:
         return Math.floor(record.rating).toString();
     }
