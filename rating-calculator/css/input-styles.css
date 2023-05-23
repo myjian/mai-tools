@@ -1,5 +1,5 @@
-.gameVersion {
-  margin-left: 5px;
+.inputSelectTable {
+  border-style: none;
 }
 
 .w90 {
@@ -57,4 +57,9 @@ textarea:focus {
   font-size: 28px;
   padding: 8px 20px;
   background-color: #ffc542;
+}
+
+select {
+  display: block;
+  margin-bottom: 4px;
 }

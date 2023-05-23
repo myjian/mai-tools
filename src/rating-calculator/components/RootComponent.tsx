@@ -30,6 +30,7 @@ import {LanguageChooser} from './LanguageChooser';
 import {OtherTools} from './OtherTools';
 import {PageFooter} from './PageFooter';
 import {RatingOutput} from './RatingOutput';
+import {RegionSelect} from './RegionSelect';
 import {ScoreInput} from './ScoreInput';
 import {VersionSelect} from './VersionSelect';
 
@@ -155,10 +156,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const messages = MessagesByLang[lang];
     return (
       <LangContext.Provider value={lang}>
-        <LanguageChooser activeLanguage={lang} changeLanguage={this.changeLanguage} />
-        <br></br>
-        <br></br>
-        <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
+        <table className="inputSelectTable">
+          <LanguageChooser activeLanguage={lang} changeLanguage={this.changeLanguage} />
+          <RegionSelect gameRegion={gameRegion} handleRegionSelect={this.selectRegion} />
+          <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
+        </table>
         <InternalLvInput ref={this.internalLvTextarea} />
         <ScoreInput ref={this.scoreTextarea} />
         <div className="actionArea">
@@ -193,6 +195,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   private selectVersion = (gameVer: DxVersion) => {
     this.setState({gameVer}, this.analyzeRating);
+  };
+
+  private selectRegion = (gameRegion: GameRegion) => {
+    this.setState({gameRegion}, this.analyzeRating);
   };
 
   private analyzeRating = async (evt?: React.SyntheticEvent) => {
