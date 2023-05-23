@@ -1,7 +1,11 @@
 import React from 'react';
 
-import {GameRegion} from "../../common/game-region";
-import {DxVersion, RATING_CALCULATOR_SUPPORTED_VERSIONS, validateGameVersion} from '../../common/game-version';
+import {GameRegion} from '../../common/game-region';
+import {
+  DxVersion,
+  RATING_CALCULATOR_SUPPORTED_VERSIONS,
+  validateGameVersion,
+} from '../../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
 import {fetchMagic, readMagicFromCache, writeMagicToCache} from '../../common/magic';
@@ -26,19 +30,19 @@ import {VersionSelect} from './VersionSelect';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    computeRating: "Calculate Rating",
+    computeRating: 'Calculate Rating',
   },
   [Language.zh_TW]: {
-    computeRating: "計算 Rating 值",
+    computeRating: '計算 Rating 值',
   },
   [Language.ko_KR]: {
-    computeRating: "레이팅 계산하기",
+    computeRating: '레이팅 계산하기',
   },
 };
 
 function getDebugText({action, payload}: {action: string; payload: number | string}) {
-  if (action === "appendPlayerScore") {
-    return "string of length " + (payload as string).length;
+  if (action === 'appendPlayerScore') {
+    return 'string of length ' + (payload as string).length;
   }
   return payload;
 }
@@ -61,9 +65,9 @@ function readSongProperties(
       return;
     }
     // Read from Internet
-    console.log("Magic happening...");
+    console.log('Magic happening...');
     fetchMagic(gameVer).then((responseText) => {
-      if (!responseText.startsWith("<!DOCTYPE html>")) {
+      if (!responseText.startsWith('<!DOCTYPE html>')) {
         writeMagicToCache(gameVer, responseText);
       }
       resolve(buildSongPropsMap(gameVer, gameRegion, responseText));
@@ -72,7 +76,7 @@ function readSongProperties(
 }
 
 async function readPlayerScoreFromText(text: string) {
-  const lines = text.split("\n");
+  const lines = text.split('\n');
   const playerScores = [];
   for (const line of lines) {
     const scoreRecord = parseScoreLine(line);
@@ -108,7 +112,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const gameVer = validateGameVersion(
       dxVersionQueryParam,
       RATING_CALCULATOR_SUPPORTED_VERSIONS[0],
-      RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1],
+      RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1]
     );
 
     const friendIdx = queryParams.get(QueryParam.FriendIdx);
@@ -179,7 +183,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   private changeLanguage = (lang: Language) => {
     this.setState({lang});
     saveLanguage(lang);
-    this.postMessageToOpener({action: "saveLanguage", payload: lang});
+    this.postMessageToOpener({action: 'saveLanguage', payload: lang});
   };
 
   private selectVersion = (gameVer: DxVersion) => {
@@ -193,11 +197,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const songPropsText = this.getInternalLvInput();
     const scoreText = this.getScoreInput();
     const {gameVer, gameRegion} = this.state;
-    console.log("gameVer", gameVer);
+    console.log('gameVer', gameVer);
     const songPropsByName = await readSongProperties(gameVer, gameRegion, songPropsText);
-    console.log("Song properties:", songPropsByName);
+    console.log('Song properties:', songPropsByName);
     const playerScores = await readPlayerScoreFromText(scoreText);
-    console.log("Player scores:", playerScores);
+    console.log('Player scores:', playerScores);
     if (!playerScores.length) {
       this.setState({ratingData: undefined});
       return;
@@ -208,7 +212,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
       gameVer,
       gameRegion
     );
-    console.log("Rating Data:", ratingData);
+    console.log('Rating Data:', ratingData);
     this.setState({ratingData, songPropsByName});
   };
 
@@ -217,40 +221,43 @@ export class RootComponent extends React.PureComponent<{}, State> {
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
       } else {
-        window.opener.postMessage(data, "https://maimaidx-eng.com");
-        window.opener.postMessage(data, "https://maimaidx.jp");
+        window.opener.postMessage(data, 'https://maimaidx-eng.com');
+        window.opener.postMessage(data, 'https://maimaidx.jp');
       }
     }
   }
 
   private initWindowCommunication() {
-    window.addEventListener("message", (evt) => {
-      if (evt.origin === "https://maimaidx-eng.com" || evt.origin === "https://maimaidx.jp") {
+    window.addEventListener('message', (evt) => {
+      if (evt.origin === 'https://maimaidx-eng.com' || evt.origin === 'https://maimaidx.jp') {
         console.log(evt.origin, evt.data.action, getDebugText(evt.data));
         let payloadAsInt;
         switch (evt.data.action) {
-          case "gameVersion":
+          case 'gameVersion':
             this.setState({
-              gameRegion: evt.origin === "https://maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl,
-              gameVer: validateGameVersion(evt.data.payload, RATING_CALCULATOR_SUPPORTED_VERSIONS[0]),
+              gameRegion: evt.origin === 'https://maimaidx.jp' ? GameRegion.Jp : GameRegion.Intl,
+              gameVer: validateGameVersion(
+                evt.data.payload,
+                RATING_CALCULATOR_SUPPORTED_VERSIONS[0]
+              ),
             });
             break;
-          case "playerGrade":
+          case 'playerGrade':
             payloadAsInt = parseInt(evt.data.payload);
             if (payloadAsInt) {
               this.playerGradeIndex = payloadAsInt;
             }
             break;
-          case "replacePlayerScore":
+          case 'replacePlayerScore':
             this.setScoreText(evt.data.payload);
             break;
-          case "appendPlayerScore":
+          case 'appendPlayerScore':
             this.appendScoreText(evt.data.payload);
             break;
-          case "calculateRating":
+          case 'calculateRating':
             this.analyzeRating();
             break;
-          case "allSongs":
+          case 'allSongs':
             this.setState({
               oldSongs: filterSongsByVersion(
                 evt.data.payload,
@@ -260,7 +267,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
               ),
             });
             break;
-          case "newSongs":
+          case 'newSongs':
             if (evt.data.payload.length) {
               this.setState({
                 newSongs: filterSongsByVersion(
@@ -282,30 +289,30 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const {friendIdx, lang} = this.state;
     if (friendIdx) {
       // Analyze friend rating
-      this.postMessageToOpener({action: "getFriendRecords", payload: friendIdx});
+      this.postMessageToOpener({action: 'getFriendRecords', payload: friendIdx});
     } else {
       // Analyze self rating
-      this.postMessageToOpener({action: "ready", payload: lang});
+      this.postMessageToOpener({action: 'ready', payload: lang});
     }
   }
 
   private loadSongLists(gameVer: DxVersion) {
-    this.postMessageToOpener({action: "fetchAllSongs"});
-    this.postMessageToOpener({action: "fetchNewSongs", payload: gameVer});
+    this.postMessageToOpener({action: 'fetchAllSongs'});
+    this.postMessageToOpener({action: 'fetchNewSongs', payload: gameVer});
   }
 
   private getInternalLvInput(): string {
     if (this.internalLvTextarea.current) {
       return this.internalLvTextarea.current.value;
     }
-    return "";
+    return '';
   }
 
   private getScoreInput(): string {
     if (this.scoreTextarea.current) {
       return this.scoreTextarea.current.value;
     }
-    return "";
+    return '';
   }
 
   private setScoreText(text: string): void {
@@ -324,10 +331,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
 function updateDocumentTitle(lang: Language) {
   switch (lang) {
     case Language.en_US:
-      document.title = "maimai DX Rating Analyzer";
+      document.title = 'maimai DX Rating Analyzer';
       break;
     case Language.zh_TW:
-      document.title = "maimai DX R 值分析工具";
+      document.title = 'maimai DX R 值分析工具';
       break;
   }
 }

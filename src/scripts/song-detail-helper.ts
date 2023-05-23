@@ -1,23 +1,22 @@
-import {determineDxStar, getDxStarText} from "../common/dx-star";
-import {fetchGameVersion} from "../common/util";
-import {GameRegion} from "../common/game-region";
-import {buildSongPropsMap, getSongProperties, SongProperties} from "../common/song-props";
-import {fetchMagic} from "../common/magic";
-import {normalizeSongName} from "../common/song-name-helper";
-import {getDefaultLevel} from "../common/level-helper";
-import {getChartType} from "../common/chart-type";
+import {getChartType} from '../common/chart-type';
+import {determineDxStar, getDxStarText} from '../common/dx-star';
+import {GameRegion} from '../common/game-region';
+import {getDefaultLevel} from '../common/level-helper';
+import {fetchMagic} from '../common/magic';
+import {normalizeSongName} from '../common/song-name-helper';
+import {buildSongPropsMap, getSongProperties, SongProperties} from '../common/song-props';
+import {fetchGameVersion} from '../common/util';
 
 type Cache = {
   songProp?: SongProperties;
 };
 
 (function (d) {
-
   const cache: Cache = {};
   const LV_DELTA = 0.02;
 
   function addDxStarDetail(row: HTMLElement) {
-    const label = row.querySelector("img.f_l");
+    const label = row.querySelector('img.f_l');
     if (!label) {
       // do not run this function twice
       return;
@@ -25,26 +24,26 @@ type Cache = {
     label.remove();
 
     const [playerDxScore, maxDxScore] = row.textContent
-      .split("/")
-      .map((t) => parseInt(t.replace(",", "").trim()));
+      .split('/')
+      .map((t) => parseInt(t.replace(',', '').trim()));
     const dxScoreRatio = playerDxScore / maxDxScore;
     const dxStar =
       getDxStarText(determineDxStar(dxScoreRatio), true) + ` (${(dxScoreRatio * 100).toFixed(1)}%)`;
-    const dxStarBlock = d.createElement("div");
-    dxStarBlock.className = "f_l";
+    const dxStarBlock = d.createElement('div');
+    dxStarBlock.className = 'f_l';
     dxStarBlock.append(dxStar);
     row.prepend(dxStarBlock);
   }
 
   async function fetchAndAddInternalLv() {
     const gameVer = await fetchGameVersion(d.body);
-    const gameRegion = window.location.host === "maimaidx.jp" ? GameRegion.Jp : GameRegion.Intl;
+    const gameRegion = window.location.host === 'maimaidx.jp' ? GameRegion.Jp : GameRegion.Intl;
     const songProps = buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const song = getSongName();
     const chartType = getChartType(d.body);
 
-    const props = getSongProperties(songProps, song, "", chartType);
+    const props = getSongProperties(songProps, song, '', chartType);
     cache.songProp = props;
 
     // replace table song level
@@ -65,14 +64,13 @@ type Cache = {
       const levelElement = getLevelElement(row as HTMLElement);
       saveInLv(levelElement, coalesceInLv(levelElement, idx, props));
     });
-
   }
 
   function saveInLv(levelElement: HTMLElement, lv: number) {
-    if (!levelElement.dataset["inlv"]) {
+    if (!levelElement.dataset['inlv']) {
       const isEstimate = isEstimateLv(lv);
-      levelElement.dataset["inlv"] = lv.toFixed(2);
-      levelElement.innerText = (isEstimate ? "*" : "") + lv.toFixed(1);
+      levelElement.dataset['inlv'] = lv.toFixed(2);
+      levelElement.innerText = (isEstimate ? '*' : '') + lv.toFixed(1);
     }
   }
 
@@ -86,7 +84,7 @@ type Cache = {
     let lv = 0;
     if (props) {
       lv = props.lv[lvIndex];
-      if (typeof lv !== "number") {
+      if (typeof lv !== 'number') {
         lv = 0;
       } else if (lv < 0) {
         // console.warn("lv is negative for song " + song, props);
@@ -96,7 +94,7 @@ type Cache = {
     return lv || getDefaultLevel(getChartLv(levelElement)) - LV_DELTA;
   }
 
-  function getChartLv(levelElement: HTMLElement, key: string = "lv"): string | undefined {
+  function getChartLv(levelElement: HTMLElement, key: string = 'lv'): string | undefined {
     return levelElement.dataset[key];
   }
 
@@ -112,7 +110,7 @@ type Cache = {
     return row.querySelector('.music_lv_back');
   }
 
-  const rows = d.querySelectorAll(".music_score_block.w_310") as NodeListOf<HTMLElement>;
+  const rows = d.querySelectorAll('.music_score_block.w_310') as NodeListOf<HTMLElement>;
   rows.forEach(addDxStarDetail);
   fetchAndAddInternalLv();
 })(document);
