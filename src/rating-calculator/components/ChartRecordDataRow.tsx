@@ -40,7 +40,7 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
         return record.difficulty;
       case ColumnType.LEVEL:
         const lvText = record.level.toFixed(1);
-        return record.levelIsPrecise ? lvText : '*' + lvText;
+        return record.levelIsPrecise ? lvText : lvText + '~';
       case ColumnType.ACHIEVEMENT:
         return record.achievement.toFixed(4) + '%';
       case ColumnType.RANK:

@@ -23,7 +23,7 @@ export const LanguageChooser = ({activeLanguage, changeLanguage}: Props) => {
   return (
     <tr>
       <td>
-        <label htmlFor="languageSelect">介面語言 (Language)：</label>
+        <label htmlFor="languageSelect">🌐 介面語言 (Language)：</label>
       </td>
       <td>
         <select id="languageSelect" onChange={handleChange} value={activeLanguage}>

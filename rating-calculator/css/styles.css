@@ -3,8 +3,8 @@ html {
 }
 
 body {
-  font-family: "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo, "Noto Sans CJK TC", "微軟正黑體",
-    "Microsoft Jhenghei", "MS P Gothic", "ＭＳ Ｐゴシック", sans-serif;
+  font-family: 'ヒラギノ角ゴ Pro W3', 'メイリオ', Meiryo, 'Noto Sans CJK TC', '微軟正黑體',
+    'Microsoft Jhenghei', 'MS P Gothic', 'ＭＳ Ｐゴシック', sans-serif;
 }
 
 h2,
@@ -81,6 +81,10 @@ label {
   max-height: 0;
   overflow-y: hidden;
   transition: max-height 0.3s;
+}
+
+.hidden {
+  display: none;
 }
 
 @media only screen and (min-width: 551px) {
