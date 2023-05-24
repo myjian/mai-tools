@@ -31,7 +31,7 @@ Case 2: If a song belongs to a older Japan version but is eventually added to In
 - 自傷無色 is debuted at Festival (intl), SPLASH (Jp)
 - 劣等上等 is debuted at Festival (intl), SPLASH (Jp)
 
-Case 3: If a song is deleted from Japan but still exists in International version, please update only song-info/intl.json and src/common/song-props.ts. Examples:
+Case 3: If a song is deleted from Japan but still exists in International version, please update chart-levels, song-info/intl.json and src/common/removed-songs.ts. Examples:
 
 - 全世界共通リズム感テスト is deleted in Japan, so chart levels are necessary.
 
