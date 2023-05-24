@@ -13,24 +13,24 @@ function calculateRankTitle(
   if (isDxMode) {
     return getRankTitle(dxAchv);
   }
-  if (apFcStatus === "AP+") {
-    return "SSS+";
+  if (apFcStatus === 'AP+') {
+    return 'SSS+';
   }
   return getFinaleRankTitle(finaleAchv);
 }
 
 function getApFcClassName(apFcStatus?: string) {
-  const base = "apfc";
+  const base = 'apfc';
   if (!apFcStatus) {
     return base;
-  } else if (apFcStatus === "FC+") {
-    return base + " fcplus";
+  } else if (apFcStatus === 'FC+') {
+    return base + ' fcplus';
   }
-  return apFcStatus.includes("AP") ? base + " ap" : base;
+  return apFcStatus.includes('AP') ? base + ' ap' : base;
 }
 
 function getSyncClassName(isDxMode: boolean) {
-  return isDxMode ? "sync" : "sync finaleSync";
+  return isDxMode ? 'sync' : 'sync finaleSync';
 }
 
 interface Props {
@@ -106,14 +106,14 @@ export class AchievementInfo extends React.PureComponent<Props, State> {
         <div className={getApFcClassName(apFcStatus)}>{apFcElem}</div>
         <div className={getSyncClassName(isDxMode)}>{syncElem}</div>
         <div className="playerScore">
-          <div className="highScore">{isHighScore ? "HIGH SCORE!!" : " "}</div>
-          <div className="achievement" tabIndex={0} onClick={toggleDisplayMode}>
+          <div className="highScore">{isHighScore ? 'HIGH SCORE!!' : ' '}</div>
+          <button className="achievement" onClick={toggleDisplayMode}>
             達成率：
-            <div className={"achvNum" + (showMaxAchv ? " hasMaxAchv" : "")}>
+            <span className={'achvNum' + (showMaxAchv ? ' hasMaxAchv' : '')}>
               <span className="playerAchv">{achvText}％</span>
               {showMaxAchv && <span className="maxAchv">{maxAchvText}％</span>}
-            </div>
-          </div>
+            </span>
+          </button>
         </div>
       </div>
     );
@@ -122,12 +122,12 @@ export class AchievementInfo extends React.PureComponent<Props, State> {
   private getSyncStatusText(syncStatus?: string, isDxMode?: boolean) {
     if (syncStatus && !isDxMode) {
       switch (syncStatus) {
-        case "FS":
-        case "FS+":
-          return "MAX FEVER";
-        case "FDX":
-        case "FDX+":
-          return "100% SYNC";
+        case 'FS':
+        case 'FS+':
+          return 'MAX FEVER';
+        case 'FDX':
+        case 'FDX+':
+          return '100% SYNC';
       }
     }
     return syncStatus;
