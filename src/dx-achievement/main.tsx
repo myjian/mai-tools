@@ -7,4 +7,4 @@ import ReactDOM from 'react-dom';
 
 import {DxAchievementCalculator} from './DxAchievementCalculator';
 
-ReactDOM.render(<DxAchievementCalculator />, document.getElementById("root"));
+ReactDOM.render(<DxAchievementCalculator />, document.getElementById('root'));

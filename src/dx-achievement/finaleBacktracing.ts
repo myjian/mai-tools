@@ -1,6 +1,6 @@
-import {BREAK_BASE_SCORE_MULTIPLIER, BREAK_BONUS_MULTIPLIER} from "../classic-layout/constants";
-import {BreakScore, BreakScoreMap} from "../classic-layout/types";
-import {roundFloat} from "../common/number-helper";
+import {BREAK_BASE_SCORE_MULTIPLIER, BREAK_BONUS_MULTIPLIER} from '../classic-layout/constants';
+import {BreakScore, BreakScoreMap} from '../classic-layout/types';
+import {roundFloat} from '../common/number-helper';
 
 function backtrace(
   judgements: ReadonlyArray<number>,
@@ -80,7 +80,7 @@ function backtrace(
       validDists
     );
   } else {
-    console.error("Unreachable");
+    console.error('Unreachable');
   }
 }
 
@@ -90,7 +90,7 @@ export function calculateDxAchvFromFinaleResult(
   breakScore: number,
   breakJudgements: ReadonlyArray<number>
 ): Map<string, BreakScoreMap> {
-  const hundredAchvScore = roundFloat((totalScore / achv) * 100, "floor", 50);
+  const hundredAchvScore = roundFloat((totalScore / achv) * 100, 'floor', 50);
   const totalBreakCount = breakJudgements.reduce((a, b) => a + b, 0);
   if (
     achv <= 0 ||
@@ -106,7 +106,7 @@ export function calculateDxAchvFromFinaleResult(
   if (!breakDistributions.length) {
     console.warn(
       `Could not find break distribution for achv=${achv}, totalScore=${totalScore}, breakScore=${breakScore}, breakJudgements=${breakJudgements.join(
-        "-"
+        '-'
       )}`
     );
     return new Map();
@@ -122,7 +122,7 @@ export function calculateDxAchvFromFinaleResult(
       achv += count * BREAK_BASE_SCORE_MULTIPLIER.get(score) * baseAchvPerBreak;
       achv += count * BREAK_BONUS_MULTIPLIER.get(score) * bonusAchvPerBreak;
     });
-    const achvText = roundFloat(achv, "floor", 0.0001).toFixed(4);
+    const achvText = roundFloat(achv, 'floor', 0.0001).toFixed(4);
     possibleDxAchvs.set(achvText, dist);
   }
   console.log(possibleDxAchvs);

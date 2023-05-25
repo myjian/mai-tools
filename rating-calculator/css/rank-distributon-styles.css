@@ -16,7 +16,8 @@
   padding: 4px 10px;
 }
 
-td.levelRankCell, td.diffRankCell {
+td.levelRankCell,
+td.diffRankCell {
   text-align: center;
 }
 

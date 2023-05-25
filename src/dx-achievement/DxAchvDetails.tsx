@@ -1,15 +1,16 @@
-import React from "react";
-import {BREAK_BONUS_MULTIPLIER} from "../classic-layout/constants";
-import {BreakScoreMap} from "../classic-layout/types";
+import React from 'react';
+
+import {BREAK_BONUS_MULTIPLIER} from '../classic-layout/constants';
+import {BreakScoreMap} from '../classic-layout/types';
 
 function getClassNameByBreakScore(score: number) {
   return score > 2000
-    ? "perfectJudgement"
+    ? 'perfectJudgement'
     : score > 1000
-    ? "greatJudgement"
+    ? 'greatJudgement'
     : score > 0
-    ? "goodJudgement"
-    : "missJudgement";
+    ? 'goodJudgement'
+    : 'missJudgement';
 }
 
 interface Props {
