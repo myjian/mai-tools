@@ -71,7 +71,7 @@ export async function fetchSongDetailPage(idx: string) {
 }
 
 export function getPostMessageFunc(w: WindowProxy, origin: string) {
-  return (action: string, payload: any) => {
+  return (action: string, payload: unknown) => {
     const obj = {action, payload};
     w.postMessage(obj, origin);
   };

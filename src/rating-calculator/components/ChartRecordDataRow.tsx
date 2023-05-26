@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DIFFICULTY_CLASSNAME_MAP} from '../../common/difficulties';
+import {DIFFICULTY_CLASSNAME_MAP, getDifficultyName} from '../../common/difficulties';
 import {getRankTitle} from '../../common/rank-functions';
 import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
 import {SongProperties} from '../../common/song-props';
@@ -37,7 +37,7 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
       case ColumnType.SONG_TITLE:
         return getSongNameDisplay(record, songPropsByName, isCandidate);
       case ColumnType.DIFFICULTY:
-        return record.difficulty;
+        return getDifficultyName(record.difficulty);
       case ColumnType.LEVEL:
         const lvText = record.level.toFixed(1);
         return record.levelIsPrecise ? lvText : lvText + '~';

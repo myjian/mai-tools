@@ -1,3 +1,4 @@
+import {FullChartRecord} from '../common/chart-record';
 import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
@@ -41,7 +42,9 @@ declare global {
 
   const isOnFriendPage = location.pathname.includes('friend');
 
-  async function fetchSelfRecords(send: (action: string, payload: any) => void): Promise<Document> {
+  async function fetchSelfRecords(
+    send: (action: string, payload: unknown) => void
+  ): Promise<Document> {
     let allSongsDom: Document;
     // Fetch player grade
     const playerGrade = isOnFriendPage ? null : getPlayerGrade(document.body);
@@ -49,17 +52,15 @@ declare global {
       send('playerGrade', playerGrade);
     }
     // Fetch all scores
-    const scoreList: string[] = [];
+    const domCache = new Map<Difficulty, Document>();
+    let scoreList: FullChartRecord[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
-      send('appendPlayerScore', statusText(LANG, difficulty, false));
-      const dom = await fetchScores(difficulty, scoreList);
-      if (difficulty === Difficulty.MASTER) {
-        allSongsDom = dom;
-      }
-      send('appendPlayerScore', statusText(LANG, difficulty, true));
+      send('showProgress', statusText(LANG, difficulty, false));
+      scoreList = scoreList.concat(await fetchScores(difficulty, domCache, new Map()));
     }
-    send('replacePlayerScore', '');
-    send('appendPlayerScore', scoreList.join('\n'));
+    allSongsDom = domCache.get(Difficulty.MASTER);
+    send('showProgress', '');
+    send('setPlayerScore', scoreList);
     send('calculateRating', '');
     return allSongsDom;
   }

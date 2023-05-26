@@ -1,3 +1,4 @@
+import {FullChartRecord} from '../common/chart-record';
 import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {isMaimaiNetOrigin} from '../common/game-region';
@@ -92,21 +93,20 @@ type FriendInfo = {
 
   async function fetchFriendRecords(
     friend: FriendInfo,
-    send: (action: string, payload: string) => void
+    send: (action: string, payload: unknown) => void
   ) {
     // Send player grade
     if (friend.grade) {
       send('playerGrade', friend.grade);
     }
     // Fetch all scores
-    const scoreList: string[] = [];
+    let scoreList: FullChartRecord[] = [];
     for (const difficulty of FRIEND_SCORE_URLS.keys()) {
-      send('appendPlayerScore', statusText(LANG, difficulty, false));
-      await fetchFriendScores(friend.idx, difficulty, scoreList);
-      send('appendPlayerScore', statusText(LANG, difficulty, true));
+      send('showProgress', statusText(LANG, difficulty, false));
+      scoreList = scoreList.concat(await fetchFriendScores(friend.idx, difficulty, new Map()));
     }
-    send('replacePlayerScore', '');
-    send('appendPlayerScore', scoreList.join('\n'));
+    send('showProgress', '');
+    send('setPlayerScore', scoreList);
     send('calculateRating', '');
   }
 

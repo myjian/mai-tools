@@ -1,12 +1,12 @@
+import {ChartRecord} from '../common/chart-record';
 import {ChartType} from '../common/chart-type';
-import {DIFFICULTIES} from '../common/difficulties';
 import {GameRegion} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getRankByAchievement, SSSPLUS_MIN_ACHIEVEMENT} from '../common/rank-functions';
 import {getRemovedSongs} from '../common/removed-songs';
 import {getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
-import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
+import {ChartRecordWithRating, RatingData} from './types';
 
 export const NUM_TOP_NEW_CHARTS = 15;
 export const NUM_TOP_OLD_CHARTS = 35;
@@ -30,8 +30,7 @@ function getRecordWithRating(
   songProps?: SongProperties
 ): ChartRecordWithRating {
   if (songProps) {
-    const lvIndex = DIFFICULTIES.indexOf(record.difficulty);
-    const lv = songProps.lv[lvIndex];
+    const lv = songProps.lv[record.difficulty];
     if (typeof lv === 'number') {
       record.levelIsPrecise = lv > 0;
       record.level = Math.abs(lv);

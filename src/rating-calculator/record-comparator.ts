@@ -1,9 +1,10 @@
+import {ChartRecord} from '../common/chart-record';
 import {DIFFICULTIES} from '../common/difficulties';
 import {RankDef} from '../common/rank-functions';
-import {ChartRecord, ChartRecordWithRating} from './types';
+import {ChartRecordWithRating} from './types';
 
-type RecordNumberProp = "rating" | "level" | "achievement";
-type RecordStringProp = "songName";
+type RecordNumberProp = 'rating' | 'level' | 'achievement';
+type RecordStringProp = 'songName';
 
 function compareNumbers(x: number, y: number) {
   return x > y ? -1 : Number(x < y);
@@ -26,9 +27,9 @@ export function compareSongsByRating(
   record2: ChartRecordWithRating
 ) {
   return (
-    compareSongsByNumAttr(record1, record2, "rating") ||
-    compareSongsByNumAttr(record1, record2, "level") ||
-    compareSongsByNumAttr(record1, record2, "achievement")
+    compareSongsByNumAttr(record1, record2, 'rating') ||
+    compareSongsByNumAttr(record1, record2, 'level') ||
+    compareSongsByNumAttr(record1, record2, 'achievement')
   );
 }
 
@@ -40,7 +41,7 @@ export function compareCandidate(record1: ChartRecordWithRating, record2: ChartR
   return (
     compareNumbers(costPerformance1, costPerformance2) ||
     compareNumbers(nextRating1.minRt, nextRating2.minRt) ||
-    compareSongsByNumAttr(record1, record2, "level")
+    compareSongsByNumAttr(record1, record2, 'level')
   );
 }
 
@@ -52,7 +53,7 @@ export function compareSongsByNextRating(
   const nextRating2 = record2.nextRanks.values().next().value;
   return (
     compareNumbers(nextRating1.minRt, nextRating2.minRt) ||
-    compareSongsByNumAttr(record1, record2, "level")
+    compareSongsByNumAttr(record1, record2, 'level')
   );
 }
 
@@ -61,15 +62,15 @@ export function compareSongsByLevel(
   record2: ChartRecordWithRating
 ) {
   // smaller first
-  return compareSongsByNumAttr(record2, record1, "level");
+  return compareSongsByNumAttr(record2, record1, 'level');
 }
 
 export function compareSongsByAchv(record1: ChartRecordWithRating, record2: ChartRecordWithRating) {
-  return compareSongsByNumAttr(record1, record2, "achievement");
+  return compareSongsByNumAttr(record1, record2, 'achievement');
 }
 
 export function compareSongsByName(record1: ChartRecord, record2: ChartRecord) {
-  return compareSongsByStrAttr(record1, record2, "songName");
+  return compareSongsByStrAttr(record1, record2, 'songName');
 }
 
 export function compareSongsByNextRank(

@@ -1,14 +1,14 @@
 import React from 'react';
 
+import {ChartRecord} from '../../common/chart-record';
 import {getOfficialLevel} from '../../common/level-helper';
 import {compareNumber} from '../../common/number-helper';
 import {getRankDistribution, getRankMap} from '../rank-distribution';
-import {ChartRecord} from '../types';
 import {RankDistributionDataRow} from './RankDistributionDataRow';
 import {RankDistributionHeadRow} from './RankDistributionHeadRow';
 
-const LEVEL_RANK_CELL_BASE_CLASSNAME = "levelRankCell";
-const LEVEL_RANK_CELL_CLASSNAMES = ["officialLevelCell"];
+const LEVEL_RANK_CELL_BASE_CLASSNAME = 'levelRankCell';
+const LEVEL_RANK_CELL_CLASSNAMES = ['officialLevelCell'];
 
 function getRecordsPerLevel(records: ReadonlyArray<ChartRecord>) {
   const levels = records.map((r) => r.level);

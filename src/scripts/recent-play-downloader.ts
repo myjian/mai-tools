@@ -1,7 +1,7 @@
 import domtoimage from 'dom-to-image';
 
 import {ChartType} from '../common/chart-type';
-import {DIFFICULTY_CLASSNAME_MAP} from '../common/difficulties';
+import {Difficulty, DIFFICULTY_CLASSNAME_MAP, getDifficultyByName} from '../common/difficulties';
 import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
@@ -13,7 +13,7 @@ type ScoreRecord = {
   songName: string;
   songImgSrc: string;
   chartType: ChartType;
-  difficulty: string;
+  difficulty: Difficulty;
   achievement: number;
   rank: string;
   stamps: string;
@@ -155,7 +155,7 @@ type Options = {
     const recordBody = row.children[1];
     const cn = recordBody.className;
     let diff = cn.substring(cn.indexOf('_') + 1, cn.lastIndexOf('_'));
-    return diff === 'remaster' ? 'Re:MASTER' : diff.toUpperCase();
+    return getDifficultyByName(diff);
   }
 
   function getAchievement(row: HTMLElement) {

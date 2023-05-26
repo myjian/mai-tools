@@ -1,5 +1,5 @@
-import {getRankDefinitions, getRankTitle} from "../common/rank-functions";
-import {ChartRecord} from "./types";
+import {ChartRecord} from '../common/chart-record';
+import {getRankDefinitions, getRankTitle} from '../common/rank-functions';
 
 export function getRankDistribution(scoreList: ReadonlyArray<ChartRecord>): Map<string, number> {
   const rankDefs = getRankDefinitions();

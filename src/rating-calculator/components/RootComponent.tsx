@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {ChartRecord} from '../../common/chart-record';
 import {
   GameRegion,
   getGameRegionFromOrigin,
@@ -22,7 +23,6 @@ import {
   MatchMode,
   SongProperties,
 } from '../../common/song-props';
-import {parseScoreLine} from '../player-score-parser';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {RatingData} from '../types';
 import {InternalLvInput} from './InternalLvInput';
@@ -45,13 +45,6 @@ const MessagesByLang = {
     computeRating: '레이팅 계산하기',
   },
 };
-
-function getDebugText({action, payload}: {action: string; payload: number | string}) {
-  if (action === 'appendPlayerScore') {
-    return 'string of length ' + (payload as string).length;
-  }
-  return payload;
-}
 
 function readSongProperties(
   gameVer: GameVersion,
@@ -81,20 +74,9 @@ function readSongProperties(
   });
 }
 
-async function readPlayerScoreFromText(text: string) {
-  const lines = text.split('\n');
-  const playerScores = [];
-  for (const line of lines) {
-    const scoreRecord = parseScoreLine(line);
-    if (scoreRecord) {
-      playerScores.push(scoreRecord);
-    }
-  }
-  return playerScores;
-}
-
 interface State {
   lang: Language;
+  progress: string;
   gameRegion: GameRegion;
   gameVer: GameVersion;
   ratingData?: RatingData;
@@ -108,8 +90,8 @@ interface State {
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
   private internalLvTextarea = React.createRef<HTMLTextAreaElement>();
-  private scoreTextarea = React.createRef<HTMLTextAreaElement>();
   private referrer = document.referrer && new URL(document.referrer).origin;
+  private playerScores: ChartRecord[] = [];
 
   constructor(props: {}) {
     super(props);
@@ -132,6 +114,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
       gameVer,
       friendIdx,
       playerName,
+      progress: '',
     };
     if (window.opener) {
       this.initWindowCommunication();
@@ -151,8 +134,17 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {lang, gameRegion, gameVer, playerName, ratingData, songPropsByName, oldSongs, newSongs} =
-      this.state;
+    const {
+      lang,
+      gameRegion,
+      gameVer,
+      playerName,
+      ratingData,
+      songPropsByName,
+      oldSongs,
+      newSongs,
+      progress,
+    } = this.state;
     const messages = MessagesByLang[lang];
     return (
       <LangContext.Provider value={lang}>
@@ -162,12 +154,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
           <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
         </table>
         <InternalLvInput ref={this.internalLvTextarea} />
-        <ScoreInput ref={this.scoreTextarea} />
+        <ScoreInput />
         <div className="actionArea">
           <button className="analyzeRatingBtn" onClick={this.analyzeRating}>
             {messages.computeRating}
           </button>
         </div>
+        {progress ? <p>{progress}</p> : null}
         <hr className="sectionSep" />
         {ratingData && (
           <RatingOutput
@@ -206,12 +199,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
       evt.preventDefault();
     }
     const songPropsText = this.getInternalLvInput();
-    const scoreText = this.getScoreInput();
     const {gameVer, gameRegion} = this.state;
     console.log('gameVer', gameVer);
     const songPropsByName = await readSongProperties(gameVer, gameRegion, songPropsText);
     console.log('Song properties:', songPropsByName);
-    const playerScores = await readPlayerScoreFromText(scoreText);
+    const playerScores = this.playerScores;
     console.log('Player scores:', playerScores);
     if (!playerScores.length) {
       this.setState({ratingData: undefined});
@@ -244,7 +236,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   private initWindowCommunication() {
     window.addEventListener('message', (evt) => {
       if (isMaimaiNetOrigin(evt.origin)) {
-        console.log(evt.origin, evt.data.action, getDebugText(evt.data));
+        console.log(evt.origin, evt.data);
         let payloadAsInt;
         switch (evt.data.action) {
           case 'gameVersion':
@@ -262,11 +254,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
               this.playerGradeIndex = payloadAsInt;
             }
             break;
-          case 'replacePlayerScore':
-            this.setScoreText(evt.data.payload);
+          case 'showProgress':
+            this.setState({progress: evt.data.payload});
             break;
-          case 'appendPlayerScore':
-            this.appendScoreText(evt.data.payload);
+          case 'setPlayerScore':
+            this.playerScores = evt.data.payload;
             break;
           case 'calculateRating':
             this.analyzeRating();
@@ -320,25 +312,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
       return this.internalLvTextarea.current.value;
     }
     return '';
-  }
-
-  private getScoreInput(): string {
-    if (this.scoreTextarea.current) {
-      return this.scoreTextarea.current.value;
-    }
-    return '';
-  }
-
-  private setScoreText(text: string): void {
-    if (this.scoreTextarea.current) {
-      this.scoreTextarea.current.value = text;
-    }
-  }
-
-  private appendScoreText(text: string): void {
-    if (this.scoreTextarea.current) {
-      this.scoreTextarea.current.value += text;
-    }
   }
 }
 

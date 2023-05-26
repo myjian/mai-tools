@@ -1,17 +1,22 @@
 import React from 'react';
 
-import {DIFFICULTIES, DIFFICULTY_CLASSNAME_MAP} from '../../common/difficulties';
+import {ChartRecord} from '../../common/chart-record';
+import {
+  DIFFICULTIES,
+  Difficulty,
+  DIFFICULTY_CLASSNAME_MAP,
+  getDifficultyName,
+} from '../../common/difficulties';
 import {useLanguage} from '../../common/lang-react';
 import {CommonMessages} from '../common-messages';
-import {ChartRecord} from '../types';
 import {RankDistributionDataRow} from './RankDistributionDataRow';
 import {RankDistributionHeadRow} from './RankDistributionHeadRow';
 
-const DIFF_RANK_CELL_BASE_CLASSNAME = "diffRankCell";
-const DIFF_RANK_TOP_LEFT_CELL_CLASSNAME = "difficultyRankDistHead";
+const DIFF_RANK_CELL_BASE_CLASSNAME = 'diffRankCell';
+const DIFF_RANK_TOP_LEFT_CELL_CLASSNAME = 'difficultyRankDistHead';
 
 function getRecordsPerDifficulty(records: ReadonlyArray<ChartRecord>) {
-  const recordsPerDifficulty = new Map<string, ChartRecord[]>();
+  const recordsPerDifficulty = new Map<Difficulty, ChartRecord[]>();
   for (let i = DIFFICULTIES.length - 1; i >= 0; i--) {
     recordsPerDifficulty.set(DIFFICULTIES[i], []);
   }
@@ -50,7 +55,7 @@ export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) =>
           return (
             <RankDistributionDataRow
               key={d}
-              rowHead={d}
+              rowHead={getDifficultyName(d)}
               columns={keyMap.keys()}
               rankDist={dist}
               rowClassname={DIFFICULTY_CLASSNAME_MAP.get(d)}

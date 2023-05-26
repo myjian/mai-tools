@@ -1,6 +1,10 @@
+import {FullChartRecord} from '../common/chart-record';
+import {getChartTypeName} from '../common/chart-type';
+import {getDifficultyName} from '../common/difficulties';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {isMaimaiNetOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
+import {getOfficialLevel} from '../common/level-helper';
 import {statusText} from '../common/score-fetch-progress';
 import {handleError} from '../common/util';
 
@@ -94,12 +98,23 @@ import {handleError} from '../common/util';
       return;
     }
     const textarea = document.getElementById('outputText') as HTMLTextAreaElement;
-    const scoreList: string[] = [];
+    let scoreList: FullChartRecord[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
       textarea.value += statusText(LANG, difficulty, false) + '\n';
-      await fetchScores(difficulty, scoreList);
+      scoreList = scoreList.concat(await fetchScores(difficulty, new Map(), new Map()));
     }
-    textarea.value = scoreList.join('\n');
+    textarea.value = scoreList
+      .map((score) =>
+        [
+          score.songName,
+          score.genre,
+          getDifficultyName(score.difficulty),
+          getOfficialLevel(score.level),
+          getChartTypeName(score.chartType),
+          score.achievement,
+        ].join('\t')
+      )
+      .join('\n');
     (document.querySelector('.fetchStatus') as HTMLElement).innerText = UIString.allDone;
   }
 

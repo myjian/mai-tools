@@ -1,15 +1,5 @@
-import {ChartType} from '../common/chart-type';
+import {ChartRecord} from '../common/chart-record';
 import {RankDef} from '../common/rank-functions';
-
-export interface ChartRecord {
-  songName: string;
-  genre: string;
-  difficulty: string;
-  level: number;
-  levelIsPrecise?: boolean;
-  chartType: ChartType;
-  achievement: number;
-}
 
 export interface ChartRecordWithRating extends ChartRecord {
   rating: number;

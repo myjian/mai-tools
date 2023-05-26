@@ -9,14 +9,15 @@ const MessagesByLang = {
     scoreInputDescPrefix:
       'Please use "Analyze Self DX Rating" or "Analyze Friend\'s DX Rating" from ',
     bookmarketLinkLabel: 'maimai bookmarklets',
-    scoreInputDescSuffix: ' to fill in this field.',
+    scoreInputDescSuffix: ' to import scores.',
   },
   [Language.zh_TW]: {
     scoreInputHeading: '玩家成績輸入',
     scoreInputDescPrefix: '請用 ',
     bookmarketLinkLabel: 'maimai 書籤小工具',
-    scoreInputDescSuffix: ' 中的「分析自己 DX Rating」或「分析好友 DX Rating」填入此欄。',
+    scoreInputDescSuffix: ' 中的「分析自己 DX Rating」或「分析好友 DX Rating」帶入資料。',
   },
+  // TODO: update Korean translation
   [Language.ko_KR]: {
     scoreInputHeading: '플레이 기록',
     scoreInputDescPrefix: '아래 칸은 "',
@@ -26,7 +27,7 @@ const MessagesByLang = {
   },
 };
 
-export const ScoreInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef) => {
+export const ScoreInput = () => {
   const messages = MessagesByLang[useLanguage()];
   const [isHidden, setHidden] = useState(false);
   const toggleHidden = () => {
@@ -43,8 +44,7 @@ export const ScoreInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef)
           {messages.bookmarketLinkLabel}
         </a>
         {messages.scoreInputDescSuffix}
-        <textarea className="scoreInputArea" ref={textareaRef}></textarea>
       </div>
     </div>
   );
-});
+};
