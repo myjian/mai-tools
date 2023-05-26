@@ -1,5 +1,5 @@
-import {QueryParam} from "../common/query-params";
-import {performLocalization} from "./localizePage";
+import {QueryParam} from '../common/query-params';
+import {performLocalization} from './localizePage';
 
 (function () {
   performLocalization();
@@ -11,20 +11,28 @@ import {performLocalization} from "./localizePage";
     slide: 1500,
     break: 2500,
   };
-  const STD_NOTE_TYPES = ["tap", "hold", "slide", "break"];
-  const DX_NOTE_TYPES: Array<keyof typeof BASE_SCORE_PER_TYPE> = ["tap", "hold", "slide", "touch", "break"];
+  const STD_NOTE_TYPES = ['tap', 'hold', 'slide', 'break'];
+  const DX_NOTE_TYPES: Array<keyof typeof BASE_SCORE_PER_TYPE> = [
+    'tap',
+    'hold',
+    'slide',
+    'touch',
+    'break',
+  ];
 
-  const inputElem = document.querySelector(".input") as HTMLTextAreaElement;
-  const analyzeBtn = document.getElementById("analyze");
-  const convertBtn = document.getElementById("convert");
+  const inputElem = document.querySelector('.input') as HTMLTextAreaElement;
+  const analyzeBtn = document.getElementById('analyze');
+  const convertBtn = document.getElementById('convert');
 
-  const WIKI_URL_PREFIX = "https://maimai.fandom.com/zh/wiki/";
-  const WIKI_URL_SUFFIX = "?variant=zh-hant";
+  const WIKI_URL_PREFIX = 'https://maimai.fandom.com/zh/wiki/';
+  const WIKI_URL_SUFFIX = '?variant=zh-hant';
 
   const JUDGEMENTS_LEN = 5;
   const ZERO_JUDGEMENT = [0, 0, 0, 0, 0];
 
-  function calculatePctPerNote(countPerType: typeof BASE_SCORE_PER_TYPE): [Map<string, number>, number] {
+  function calculatePctPerNote(
+    countPerType: typeof BASE_SCORE_PER_TYPE
+  ): [Map<string, number>, number] {
     let totalBaseScore = 0;
     for (const nt of DX_NOTE_TYPES) {
       if (countPerType[nt]) {
@@ -35,12 +43,12 @@ import {performLocalization} from "./localizePage";
     const pctPerNoteType = new Map<string, number>();
     const pctPerTap = (100 * 500) / totalBaseScore;
     const bonusPctPerBreak = 1 / countPerType.break;
-    pctPerNoteType.set("tap", pctPerTap);
-    pctPerNoteType.set("hold", pctPerTap * 2);
-    pctPerNoteType.set("slide", pctPerTap * 3);
-    pctPerNoteType.set("touch", pctPerTap);
-    pctPerNoteType.set("breakDx", pctPerTap * 5 + bonusPctPerBreak);
-    pctPerNoteType.set("break", pctPerTap * 5.2);
+    pctPerNoteType.set('tap', pctPerTap);
+    pctPerNoteType.set('hold', pctPerTap * 2);
+    pctPerNoteType.set('slide', pctPerTap * 3);
+    pctPerNoteType.set('touch', pctPerTap);
+    pctPerNoteType.set('breakDx', pctPerTap * 5 + bonusPctPerBreak);
+    pctPerNoteType.set('break', pctPerTap * 5.2);
 
     let finaleMaxAchv = (100 * 100 * countPerType.break) / totalBaseScore;
     finaleMaxAchv = Math.floor(finaleMaxAchv * 100) / 100;
@@ -50,7 +58,7 @@ import {performLocalization} from "./localizePage";
   }
 
   function trimSpaces(textLine: string) {
-    return textLine.trim().replace(/\s+/g, "-");
+    return textLine.trim().replace(/\s+/g, '-');
   }
 
   function parseNumArrayFromText(line: string, fallback: number[]): number[] {
@@ -61,8 +69,8 @@ import {performLocalization} from "./localizePage";
   function analyzeNoteDetails(songTitle: string, achievement: number, judgements: number[][]) {
     if (!isNaN(achievement) && judgements.length >= 4) {
       // update song title UI
-      const songTitleElem = document.getElementById("songTitle") as HTMLAnchorElement;
-      songTitleElem.innerText = songTitle || "";
+      const songTitleElem = document.getElementById('songTitle') as HTMLAnchorElement;
+      songTitleElem.innerText = songTitle || '';
       songTitleElem.href = WIKI_URL_PREFIX + encodeURIComponent(songTitle) + WIKI_URL_SUFFIX;
 
       const noteTypes = judgements.length === 4 ? STD_NOTE_TYPES : DX_NOTE_TYPES;
@@ -72,20 +80,26 @@ import {performLocalization} from "./localizePage";
       });
 
       // Update chart info UI
-      const countPerType: typeof BASE_SCORE_PER_TYPE = {tap: 0, hold: 0, slide: 0, touch: 0, break: 0};
+      const countPerType: typeof BASE_SCORE_PER_TYPE = {
+        tap: 0,
+        hold: 0,
+        slide: 0,
+        touch: 0,
+        break: 0,
+      };
       const totalNoteCount = DX_NOTE_TYPES.reduce((total, noteType) => {
         const playerJ = judgementsPerType.get(noteType) || [];
         const noteCount = playerJ.reduce((acc, c) => acc + c, 0);
         countPerType[noteType] = noteCount;
-        if (noteType === "touch") {
+        if (noteType === 'touch') {
           document
-            .querySelector(".touchRow")
-            .classList[noteCount === 0 ? "add" : "remove"]("hidden");
+            .querySelector('.touchRow')
+            .classList[noteCount === 0 ? 'add' : 'remove']('hidden');
         }
         document.getElementById(`${noteType}Count`).innerText = noteCount.toString();
         return total + noteCount;
       }, 0);
-      document.getElementById("totalNoteCount").innerText = totalNoteCount.toString();
+      document.getElementById('totalNoteCount').innerText = totalNoteCount.toString();
 
       // Do some crazy math
       const [pctPerNoteType, finaleMaxAchv] = calculatePctPerNote(countPerType);
@@ -95,29 +109,29 @@ import {performLocalization} from "./localizePage";
         nt = nt.charAt(0).toUpperCase() + nt.substring(1);
         let elem;
         switch (nt) {
-          case "Break":
-            elem = document.getElementById("finalePctPerBreak");
+          case 'Break':
+            elem = document.getElementById('finalePctPerBreak');
             elem.innerText += pct.toFixed(2);
             break;
-          case "BreakDx":
-            elem = document.getElementById("dxPctPerBreak");
+          case 'BreakDx':
+            elem = document.getElementById('dxPctPerBreak');
             elem.innerText = pct.toFixed(4);
             break;
           default:
-            elem = document.getElementById("pctPer" + nt);
+            elem = document.getElementById('pctPer' + nt);
             elem.innerText = pct.toFixed(2);
             break;
         }
-        elem.innerText += "%";
+        elem.innerText += '%';
       });
-      document.getElementById("finaleMaxAchv").innerText = finaleMaxAchv.toFixed(2) + "%";
+      document.getElementById('finaleMaxAchv').innerText = finaleMaxAchv.toFixed(2) + '%';
     }
   }
 
   function parseJudgement(text: string): number[][] {
-    let lines = text.split("_");
+    let lines = text.split('_');
     if (lines.length < 5) {
-      lines = text.split("\n");
+      lines = text.split('\n');
     }
     const breakJ = parseNumArrayFromText(lines.pop(), undefined);
     // zeroJ is a placeholder for non-existent note types
@@ -138,7 +152,7 @@ import {performLocalization} from "./localizePage";
    * @param query URLSearchParams to add to the destination URL.
    */
   function handleButtonClick(baseUrl: string, query: URLSearchParams) {
-    const lines = inputElem.value.split("\n");
+    const lines = inputElem.value.split('\n');
     if (lines.length < 6) {
       return;
     }
@@ -168,39 +182,36 @@ import {performLocalization} from "./localizePage";
       }
     }
     if (songTitle && achievementText && noteDetails.length) {
-      query.set("st", songTitle);
-      query.set("ac", achievementText);
-      query.set("nd", noteDetails.map(trimSpaces).join("_"));
-      const newUrl = baseUrl + "?" + query;
+      query.set('st', songTitle);
+      query.set('ac', achievementText);
+      query.set('nd', noteDetails.map(trimSpaces).join('_'));
+      const newUrl = baseUrl + '?' + query;
       console.log(newUrl);
       window.location.assign(newUrl);
     }
   }
 
-  analyzeBtn.addEventListener("click", () => {
-    handleButtonClick(
-      document.location.origin + document.location.pathname,
-      new URLSearchParams()
-    );
+  analyzeBtn.addEventListener('click', () => {
+    handleButtonClick(document.location.origin + document.location.pathname, new URLSearchParams());
   });
 
-  convertBtn.addEventListener("click", () => {
+  convertBtn.addEventListener('click', () => {
     handleButtonClick(
       '../classic-layout/',
       // GameVersion: 10 because
       // 1) MiLK has the best BGM and waifus (just kidding)
       // 2) I want to force classic layout to use old score system
-      new URLSearchParams({[QueryParam.GameVersion]: "10"})
+      new URLSearchParams({[QueryParam.GameVersion]: '10'})
     );
   });
 
   // Handle parameters from URL
   const searchParams = new URLSearchParams(document.location.search);
   let shouldShowInput = true;
-  if (searchParams.get("st") && searchParams.get("ac") && searchParams.get("nd")) {
-    const songTitle = searchParams.get("st");
-    const achievementText = searchParams.get("ac");
-    const noteDetail = searchParams.get("nd");
+  if (searchParams.get('st') && searchParams.get('ac') && searchParams.get('nd')) {
+    const songTitle = searchParams.get('st');
+    const achievementText = searchParams.get('ac');
+    const noteDetail = searchParams.get('nd');
     if (songTitle && achievementText && noteDetail) {
       document.title = `${songTitle} - ${document.title}`;
       const achievement = parseFloat(achievementText);
@@ -209,6 +220,6 @@ import {performLocalization} from "./localizePage";
       shouldShowInput = false;
     }
   }
-  document.getElementById("resetLink").classList[shouldShowInput ? "add" : "remove"]("hidden");
-  document.getElementById("inputContainer").classList[shouldShowInput ? "remove" : "add"]("hidden");
+  document.getElementById('resetLink').classList[shouldShowInput ? 'add' : 'remove']('hidden');
+  document.getElementById('inputContainer').classList[shouldShowInput ? 'remove' : 'add']('hidden');
 })();

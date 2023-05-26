@@ -13,13 +13,13 @@ import {SectionSep} from './SectionSeparator';
 
 const defaultPlayRecord = {
   date: formatDate(new Date()),
-  track: "TRACK " + (Math.floor(Math.random() * 3) + 1),
+  track: 'TRACK ' + (Math.floor(Math.random() * 3) + 1),
   // difficulty: 3,
-  songTitle: "分からない",
-  achievement: "95.3035%", // finale: "94.87%",
-  highScore: Math.random() > 0.9 ? "1" : "0",
+  songTitle: '分からない',
+  achievement: '95.3035%', // finale: "94.87%",
+  highScore: Math.random() > 0.9 ? '1' : '0',
   // combo: "234/953",
-  noteDetails: "654-96-31-28\n25-0-0-0\n78-0-0-1\n\n37-2-1-0",
+  noteDetails: '654-96-31-28\n25-0-0-0\n78-0-0-1\n\n37-2-1-0',
 };
 
 type MessageType = {
@@ -31,19 +31,19 @@ type MessageType = {
 
 function padNumberWithZeros(n: number, len?: number) {
   len = len || 2;
-  return n.toString().padStart(len, "0");
+  return n.toString().padStart(len, '0');
 }
 
 function formatDate(dt: Date) {
   return (
     dt.getFullYear() +
-    "-" +
+    '-' +
     padNumberWithZeros(dt.getMonth() + 1) +
-    "-" +
+    '-' +
     padNumberWithZeros(dt.getDate()) +
-    " " +
+    ' ' +
     padNumberWithZeros(dt.getHours()) +
-    ":" +
+    ':' +
     padNumberWithZeros(dt.getMinutes())
   );
 }
@@ -76,8 +76,8 @@ function parseQueryParams(qp: URLSearchParams, dft = defaultPlayRecord) {
     difficulty,
     syncStatus,
     noteJudgements: parseJudgements(noteDetails),
-    combo: combo && combo.replace("/", " / "),
-    highScore: highScore === "1",
+    combo: combo && combo.replace('/', ' / '),
+    highScore: highScore === '1',
     achievement: parseFloat(achievement),
   };
 }
@@ -114,7 +114,7 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
       console.error((e as Error).message);
       console.error((e as Error).stack);
       this.state = {
-        ...parseQueryParams(new URLSearchParams("")),
+        ...parseQueryParams(new URLSearchParams('')),
         rankImg: new Map(),
         showError: true,
       };
@@ -122,9 +122,9 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
   }
 
   componentDidMount() {
-    document.title = this.state.songTitle + " - maimai classic score layout";
-    window.addEventListener("message", this.handleWindowMessage);
-    this.sendMessageToOpener({action: "ready"});
+    document.title = this.state.songTitle + ' - maimai classic score layout';
+    window.addEventListener('message', this.handleWindowMessage);
+    this.sendMessageToOpener({action: 'ready'});
   }
 
   render() {
@@ -181,7 +181,7 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
 
   private sendMessageToOpener(data: MessageType) {
     if (window.opener) {
-      console.log("sending message to opener", data);
+      console.log('sending message to opener', data);
       if (this.referrer) {
         window.opener.postMessage(data, this.referrer);
       } else {
@@ -195,24 +195,24 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
   }
 
   private fetchRankImage = (title: string) => {
-    console.log("fetchRankImage " + title);
+    console.log('fetchRankImage ' + title);
     this.state.rankImg.set(title, null);
-    this.sendMessageToOpener({action: "getRankImage", payload: title});
+    this.sendMessageToOpener({action: 'getRankImage', payload: title});
   };
 
   private handleWindowMessage = (evt: MessageEvent) => {
     if (isMaimaiNetOrigin(evt.origin)) {
       switch (evt.data.action) {
-        case "songImage":
+        case 'songImage':
           this.setState({songImg: evt.data.imgSrc});
           break;
-        case "apFcImage":
+        case 'apFcImage':
           this.setState({apFcImg: URL.createObjectURL(evt.data.img)});
           break;
-        case "syncImage":
+        case 'syncImage':
           this.setState({syncImg: URL.createObjectURL(evt.data.img)});
           break;
-        case "rankImage":
+        case 'rankImage':
           this.setState((state) => {
             const existingUrl = state.rankImg.get(evt.data.title);
             if (existingUrl) {
