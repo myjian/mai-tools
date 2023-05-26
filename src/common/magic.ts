@@ -1,20 +1,20 @@
-import {DxVersion, RATING_CALCULATOR_SUPPORTED_VERSIONS} from './game-version';
+import {GameVersion, RATING_CALCULATOR_SUPPORTED_VERSIONS} from './game-version';
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 1 day
 const CACHE_KEY_PREFIX = 'dxLv';
 
-const MagicSauce: Record<DxVersion, string> = {
-  [DxVersion.DX]: null,
-  [DxVersion.UNIVERSE_PLUS]:
+const MagicSauce: Record<GameVersion, string> = {
+  [GameVersion.DX]: null,
+  [GameVersion.UNIVERSE_PLUS]:
     'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZWU1NjlkNzRmNDIyZDRlMjU1MDY1ZDhiMDJlYTI5NGEvcmF3LzkzMmZiMDNhMzgxMjEyMTAwODBkNmY1Mzc5MTNhMDg0MjQ3ZTUzMWMvbWFpZHhfaW5fbHZfdW5pdmVyc2VwbHVzLmpz',
-  [DxVersion.FESTiVAL]:
+  [GameVersion.FESTiVAL]:
     'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWwuanM=',
-  [DxVersion.FESTiVAL_PLUS]:
+  [GameVersion.FESTiVAL_PLUS]:
     'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWxwbHVzLmpz',
 };
 
-export async function fetchMagic(gameVer: DxVersion): Promise<string> {
-  const sauce = MagicSauce[gameVer] || MagicSauce[DxVersion.UNIVERSE_PLUS];
+export async function fetchMagic(gameVer: GameVersion): Promise<string> {
+  const sauce = MagicSauce[gameVer] || MagicSauce[GameVersion.UNIVERSE_PLUS];
   const res = await fetch(atob(sauce));
   if (res.ok) {
     return res.text();
@@ -22,11 +22,11 @@ export async function fetchMagic(gameVer: DxVersion): Promise<string> {
   return '';
 }
 
-function getInternalLvCacheKey(gameVer: DxVersion): string {
+function getInternalLvCacheKey(gameVer: GameVersion): string {
   return CACHE_KEY_PREFIX + gameVer;
 }
 
-export function readMagicFromCache(gameVer: DxVersion) {
+export function readMagicFromCache(gameVer: GameVersion) {
   const key = getInternalLvCacheKey(gameVer);
   const rawItem = window.localStorage.getItem(key);
   console.log('Reading cache for "' + key + '" =>', rawItem);
@@ -46,7 +46,7 @@ export function readMagicFromCache(gameVer: DxVersion) {
   return dataWithMeta.content;
 }
 
-export function writeMagicToCache(gameVer: DxVersion, content: string) {
+export function writeMagicToCache(gameVer: GameVersion, content: string) {
   const key = getInternalLvCacheKey(gameVer);
   console.log('Updating cache for "' + key + '"');
   const item = {date: new Date(), content};

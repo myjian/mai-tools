@@ -7,7 +7,7 @@ import {
   MAIMAI_NET_ORIGINS,
 } from '../../common/game-region';
 import {
-  DxVersion,
+  GameVersion,
   RATING_CALCULATOR_SUPPORTED_VERSIONS,
   validateGameVersion,
 } from '../../common/game-version';
@@ -54,7 +54,7 @@ function getDebugText({action, payload}: {action: string; payload: number | stri
 }
 
 function readSongProperties(
-  gameVer: DxVersion,
+  gameVer: GameVersion,
   gameRegion: GameRegion,
   inputText: string
 ): Promise<Map<string, SongProperties[]>> {
@@ -96,7 +96,7 @@ async function readPlayerScoreFromText(text: string) {
 interface State {
   lang: Language;
   gameRegion: GameRegion;
-  gameVer: DxVersion;
+  gameVer: GameVersion;
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
@@ -193,7 +193,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.postMessageToOpener({action: 'saveLanguage', payload: lang});
   };
 
-  private selectVersion = (gameVer: DxVersion) => {
+  private selectVersion = (gameVer: GameVersion) => {
     this.setState({gameVer}, this.analyzeRating);
   };
 
@@ -310,7 +310,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
   }
 
-  private loadSongLists(gameVer: DxVersion) {
+  private loadSongLists(gameVer: GameVersion) {
     this.postMessageToOpener({action: 'fetchAllSongs'});
     this.postMessageToOpener({action: 'fetchNewSongs', payload: gameVer});
   }

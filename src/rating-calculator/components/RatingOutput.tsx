@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo, useRef} from 'react';
 
-import {GameRegion} from "../../common/game-region";
-import {DxVersion} from '../../common/game-version';
+import {GameRegion} from '../../common/game-region';
+import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
-import {getNumOfTopNewCharts, getNumOfTopOldCharts} from '../rating-analyzer';
+import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {calculateMaxRating} from '../rating-functions';
 import {ChartRecordWithRating, RatingData} from '../types';
 import {RatingDetails} from './RatingDetails';
@@ -15,13 +15,13 @@ import {RecommendedLevels} from './RecommendedLevels';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    analysisResult: "Analysis Result",
+    analysisResult: 'Analysis Result',
   },
   [Language.zh_TW]: {
-    analysisResult: "分析結果",
+    analysisResult: '分析結果',
   },
   [Language.ko_KR]: {
-    analysisResult: "분석결과",
+    analysisResult: '분석결과',
   },
 };
 
@@ -30,7 +30,7 @@ const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
 
 interface Props {
   gameRegion: GameRegion;
-  gameVer: DxVersion;
+  gameVer: GameVersion;
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
   ratingData: RatingData;
   playerGradeIndex: number;
@@ -67,11 +67,11 @@ export const RatingOutput = ({
     );
     const notPlayedNewCharts = newSongs
       ? getNotPlayedCharts(
-        newSongs,
-        newChartRecords,
-        newTopChartsCount,
-        NEW_CANDIDATE_SONGS_POOL_SIZE
-      )
+          newSongs,
+          newChartRecords,
+          newTopChartsCount,
+          NEW_CANDIDATE_SONGS_POOL_SIZE
+        )
       : [];
     const oldCandidateCharts = getCandidateCharts(
       oldChartRecords,
@@ -80,19 +80,15 @@ export const RatingOutput = ({
     );
     const notPlayedOldCharts = oldSongs
       ? getNotPlayedCharts(
-        oldSongs,
-        oldChartRecords,
-        oldTopChartsCount,
-        OLD_CANDIDATE_SONGS_POOL_SIZE
-      )
+          oldSongs,
+          oldChartRecords,
+          oldTopChartsCount,
+          OLD_CANDIDATE_SONGS_POOL_SIZE
+        )
       : [];
 
-    const maxNewChartsRating = newSongs
-      ? calculateMaxRating(newSongs, getNumOfTopNewCharts())
-      : 0;
-    const maxOldChartsRating = oldSongs
-      ? calculateMaxRating(oldSongs, getNumOfTopOldCharts())
-      : 0;
+    const maxNewChartsRating = newSongs ? calculateMaxRating(newSongs, NUM_TOP_NEW_CHARTS) : 0;
+    const maxOldChartsRating = oldSongs ? calculateMaxRating(oldSongs, NUM_TOP_OLD_CHARTS) : 0;
     return {
       newCandidateCharts,
       oldCandidateCharts,
@@ -107,7 +103,7 @@ export const RatingOutput = ({
 
   useEffect(() => {
     if (outputArea.current) {
-      outputArea.current.scrollIntoView({behavior: "smooth"});
+      outputArea.current.scrollIntoView({behavior: 'smooth'});
     }
   }, []);
 

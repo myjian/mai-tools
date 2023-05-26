@@ -1,44 +1,44 @@
 import React from 'react';
 
-import {GameRegion} from "../../common/game-region";
-import {DxVersion} from '../../common/game-version';
+import {GameRegion} from '../../common/game-region';
+import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {roundFloat} from '../../common/number-helper';
 import {getRankDefinitions, RankDef} from '../../common/rank-functions';
 import {RecommendedLevelCell} from './RecommendedLevelCell';
 
-const MIN_RANK = "SS";
+const MIN_RANK = 'SS';
 const MAX_LV = 15;
 
 const MessagesByLang = {
   [Language.en_US]: {
-    recommendedLevels: "Recommended levels",
-    projectedRating: "Potential Rating",
-    newChartsRecLv: "New Charts",
-    oldChartsRecLv: "Old Charts",
+    recommendedLevels: 'Recommended levels',
+    projectedRating: 'Potential Rating',
+    newChartsRecLv: 'New Charts',
+    oldChartsRecLv: 'Old Charts',
     levelComment:
-      "Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+.",
+      'Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+.',
   },
   [Language.zh_TW]: {
-    recommendedLevels: "刷分目標 (推薦等級)",
-    projectedRating: "可獲得 R 值",
-    newChartsRecLv: "新譜面",
-    oldChartsRecLv: "舊譜面",
-    levelComment: "註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。",
+    recommendedLevels: '刷分目標 (推薦等級)',
+    projectedRating: '可獲得 R 值',
+    newChartsRecLv: '新譜面',
+    oldChartsRecLv: '舊譜面',
+    levelComment: '註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。',
   },
   [Language.ko_KR]: {
-    recommendedLevels: "추천 난이도",
-    projectedRating: "잠재적 레이팅",
-    newChartsRecLv: "신곡 채보",
-    oldChartsRecLv: "구곡 채보",
-    levelComment: "참고：X.7 이상은 X+로 표시됩니다. 예를 들면 10.7, 10.8, 10.9는 10+입니다.",
+    recommendedLevels: '추천 난이도',
+    projectedRating: '잠재적 레이팅',
+    newChartsRecLv: '신곡 채보',
+    oldChartsRecLv: '구곡 채보',
+    levelComment: '참고：X.7 이상은 X+로 표시됩니다. 예를 들면 10.7, 10.8, 10.9는 10+입니다.',
   },
 };
 
 interface Props {
   gameRegion: GameRegion;
-  gameVer: DxVersion;
+  gameVer: GameVersion;
   oldChartsRating: number;
   oldTopChartsCount: number;
   newChartsRating: number;
@@ -92,12 +92,7 @@ export const RecommendedLevels = ({
             <tr>
               <th className="recLvFirstCol">{messages.newChartsRecLv}</th>
               {newLvs.map((lv) => (
-                <RecommendedLevelCell
-                  key={lv}
-                  gameRegion={gameRegion}
-                  gameVer={gameVer}
-                  lv={lv}
-                />
+                <RecommendedLevelCell key={lv} gameRegion={gameRegion} gameVer={gameVer} lv={lv} />
               ))}
               <td>{Math.floor(avgNewChartRating)}↑</td>
             </tr>
@@ -125,5 +120,5 @@ export const RecommendedLevels = ({
 };
 
 function calcRecommendedLv(rating: number, r: RankDef): number {
-  return roundFloat((rating / r.factor / r.minAchv) * 100, "ceil", 0.1);
+  return roundFloat((rating / r.factor / r.minAchv) * 100, 'ceil', 0.1);
 }

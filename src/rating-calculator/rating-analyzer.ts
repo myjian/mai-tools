@@ -1,15 +1,15 @@
 import {ChartType} from '../common/chart-type';
 import {DIFFICULTIES} from '../common/difficulties';
 import {GameRegion} from '../common/game-region';
-import {DxVersion} from '../common/game-version';
+import {GameVersion} from '../common/game-version';
 import {getRankByAchievement, SSSPLUS_MIN_ACHIEVEMENT} from '../common/rank-functions';
 import {getRemovedSongs} from '../common/removed-songs';
 import {getSongProperties, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
 import {ChartRecord, ChartRecordWithRating, RatingData} from './types';
 
-const NUM_TOP_NEW_SONGS = 15;
-const NUM_TOP_OLD_SONGS = 35;
+export const NUM_TOP_NEW_CHARTS = 15;
+export const NUM_TOP_OLD_CHARTS = 35;
 
 function getScoreMultiplier(achievement: number) {
   achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
@@ -19,14 +19,6 @@ function getScoreMultiplier(achievement: number) {
   }
   const factor = rank ? rank.factor : 5;
   return (factor * achievement) / 100;
-}
-
-export function getNumOfTopNewCharts() {
-  return NUM_TOP_NEW_SONGS;
-}
-
-export function getNumOfTopOldCharts() {
-  return NUM_TOP_OLD_SONGS;
 }
 
 /**
@@ -54,7 +46,7 @@ function getRecordWithRating(
 export async function analyzePlayerRating(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
   playerScores: ReadonlyArray<ChartRecord>,
-  gameVer: DxVersion,
+  gameVer: GameVersion,
   gameRegion: GameRegion
 ): Promise<RatingData> {
   const newChartRecords = [];
@@ -83,7 +75,7 @@ export async function analyzePlayerRating(
   oldChartRecords.sort(compareSongsByRating);
 
   let newChartsRating = 0;
-  const newTopChartsCount = Math.min(NUM_TOP_NEW_SONGS, newChartRecords.length);
+  const newTopChartsCount = Math.min(NUM_TOP_NEW_CHARTS, newChartRecords.length);
   for (let i = 0; i < newTopChartsCount; i++) {
     const rec = newChartRecords[i];
     rec.isTarget = true;
@@ -91,7 +83,7 @@ export async function analyzePlayerRating(
   }
 
   let oldChartsRating = 0;
-  const oldTopChartsCount = Math.min(getNumOfTopOldCharts(), oldChartRecords.length);
+  const oldTopChartsCount = Math.min(NUM_TOP_OLD_CHARTS, oldChartRecords.length);
   for (let i = 0; i < oldTopChartsCount; i++) {
     const rec = oldChartRecords[i];
     rec.isTarget = true;

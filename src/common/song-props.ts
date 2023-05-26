@@ -1,7 +1,7 @@
 import {ChartType} from './chart-type';
 import {DIFFICULTIES} from './difficulties';
 import {GameRegion} from './game-region';
-import {DxVersion, LATEST_VERSION} from './game-version';
+import {GameVersion, LATEST_VERSION} from './game-version';
 import {getRemovedSongs} from './removed-songs';
 import {getMaiToolsBaseUrl} from './script-host';
 import {getSongNickname, normalizeSongName} from './song-name-helper';
@@ -50,7 +50,7 @@ async function fetchJson(url: string) {
   return {};
 }
 
-async function fetchChartLevelOverrides(gameVer: DxVersion) {
+async function fetchChartLevelOverrides(gameVer: GameVersion) {
   const url = getMaiToolsBaseUrl() + `/data/chart-levels/version${gameVer}.json`;
   const data = await fetchJson(url);
   const output: Pick<SongProperties, 'name' | 'dx' | 'lv'>[] = [];
@@ -157,7 +157,7 @@ function updateSongProps(
 function insertOrUpdateSongProps(
   map: Map<string, SongProperties[]>,
   props: SongPropertiesOverride,
-  gameVer: DxVersion
+  gameVer: GameVersion
 ) {
   if (updateSongProps(map, props)) {
     return;
@@ -174,7 +174,7 @@ function insertOrUpdateSongProps(
 }
 
 export async function buildSongPropsMap(
-  gameVer: DxVersion,
+  gameVer: GameVersion,
   gameRegion: GameRegion,
   text: string
 ): Promise<Map<string, SongProperties[]>> {
@@ -252,7 +252,7 @@ export function getSongProperties(
 export function filterSongsByVersion(
   songs: ReadonlyArray<BasicSongProps>,
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
-  gameVer: DxVersion,
+  gameVer: GameVersion,
   matchMode: MatchMode
 ): SongProperties[] {
   const fullProps: SongProperties[] = [];
@@ -289,7 +289,7 @@ export function filterSongsByVersion(
 
 export function getSongsByVersion(
   songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
-  gameVer: DxVersion
+  gameVer: GameVersion
 ): SongProperties[] {
   const fullProps: SongProperties[] = [];
   songPropsByName.forEach((props) =>

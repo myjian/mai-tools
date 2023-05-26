@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 
 import {
-  DxVersion,
+  GameVersion,
   getVersionName,
   RATING_CALCULATOR_SUPPORTED_VERSIONS,
 } from '../../common/game-version';
@@ -21,8 +21,8 @@ const MessagesByLang = {
 };
 
 interface Props {
-  handleVersionSelect: (ver: DxVersion) => void;
-  gameVer: DxVersion;
+  handleVersionSelect: (ver: GameVersion) => void;
+  gameVer: GameVersion;
 }
 
 export const VersionSelect = ({gameVer, handleVersionSelect}: Props) => {
