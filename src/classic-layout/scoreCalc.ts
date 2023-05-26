@@ -19,10 +19,10 @@ import {
 function calculateBorder(
   totalBaseScore: number,
   breakCount: number,
-  achievement: number | 'AP+',
+  achievement: number | 'SSS+',
   playerNoteScore: number
 ): number {
-  if (achievement === 'AP+') {
+  if (achievement === 'SSS+') {
     return totalBaseScore + breakCount * BREAK_BONUS_POINTS - playerNoteScore;
   }
   const rawBorder = totalBaseScore * achievement - playerNoteScore;
@@ -169,7 +169,7 @@ export function calculateScoreInfo(
     ['SS', calculateBorder(totalBaseScore, totalBreakCount, 0.99, playerTotalNoteScore)],
     ['SS+', calculateBorder(totalBaseScore, totalBreakCount, 0.995, playerTotalNoteScore)],
     ['SSS', calculateBorder(totalBaseScore, totalBreakCount, 1, playerTotalNoteScore)],
-    ['AP+', calculateBorder(totalBaseScore, totalBreakCount, 'AP+', playerTotalNoteScore)],
+    ['SSS+', calculateBorder(totalBaseScore, totalBreakCount, 'SSS+', playerTotalNoteScore)],
   ]);
 
   // Figure out percentage per note

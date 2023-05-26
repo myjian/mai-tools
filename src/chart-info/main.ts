@@ -1,3 +1,4 @@
+import {getEpochTimeFromText} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
 import {performLocalization} from './localizePage';
 
@@ -66,8 +67,8 @@ import {performLocalization} from './localizePage';
     return textArr ? textArr.map((num) => parseInt(num, 10)) : fallback;
   }
 
-  function analyzeNoteDetails(songTitle: string, achievement: number, judgements: number[][]) {
-    if (!isNaN(achievement) && judgements.length >= 4) {
+  function analyzeNoteDetails(songTitle: string, judgements: number[][]) {
+    if (judgements.length >= 4) {
       // update song title UI
       const songTitleElem = document.getElementById('songTitle') as HTMLAnchorElement;
       songTitleElem.innerText = songTitle || '';
@@ -156,35 +157,48 @@ import {performLocalization} from './localizePage';
     if (lines.length < 6) {
       return;
     }
-    let songTitle;
-    let achievementText;
-    let noteDetails = [];
     // Parse from the last line
     while (lines.length) {
       const currentLine = lines.pop();
-      const judgements = currentLine.match(/\d+/g);
-      if (
-        noteDetails.length === 0 &&
-        judgements &&
-        judgements.length >= JUDGEMENTS_LEN - 1 &&
-        judgements.length <= JUDGEMENTS_LEN
-      ) {
-        noteDetails.unshift(currentLine);
-        for (let i = 0; i < DX_NOTE_TYPES.length - 1; i++) {
-          noteDetails.unshift(lines.pop());
+      if (currentLine.includes('✦')) {
+        // Ignore DX star info
+        continue;
+      }
+      if (!query.has(QueryParam.NoteDetails)) {
+        const judgements = currentLine.match(/\d+/g);
+        if (
+          judgements &&
+          judgements.length >= JUDGEMENTS_LEN - 1 &&
+          judgements.length <= JUDGEMENTS_LEN
+        ) {
+          let noteDetails = trimSpaces(currentLine);
+          for (let i = 0; i < DX_NOTE_TYPES.length - 1; i++) {
+            noteDetails = trimSpaces(lines.pop()) + '_' + noteDetails;
+          }
+          query.set(QueryParam.NoteDetails, noteDetails);
+          continue;
         }
       }
       const achievementMatch = currentLine.match(/(\d+\.\d+)%/);
       if (achievementMatch) {
-        achievementText = achievementMatch[1];
-        songTitle = lines.pop();
-        break;
+        query.set(QueryParam.Achievement, achievementMatch[1]);
+        query.set(QueryParam.SongTitle, lines.pop());
+        continue;
+      }
+      const trackIndex = currentLine.indexOf('TRACK 0');
+      if (trackIndex >= 0) {
+        query.set(
+          QueryParam.Track,
+          'TRACK ' + currentLine.substring(trackIndex + 7, trackIndex + 8)
+        );
+        query.set(QueryParam.Date, String(getEpochTimeFromText(currentLine)));
       }
     }
-    if (songTitle && achievementText && noteDetails.length) {
-      query.set('st', songTitle);
-      query.set('ac', achievementText);
-      query.set('nd', noteDetails.map(trimSpaces).join('_'));
+    if (
+      query.has(QueryParam.SongTitle) &&
+      query.has(QueryParam.Achievement) &&
+      query.has(QueryParam.NoteDetails)
+    ) {
       const newUrl = baseUrl + '?' + query;
       console.log(newUrl);
       window.location.assign(newUrl);
@@ -208,17 +222,13 @@ import {performLocalization} from './localizePage';
   // Handle parameters from URL
   const searchParams = new URLSearchParams(document.location.search);
   let shouldShowInput = true;
-  if (searchParams.get('st') && searchParams.get('ac') && searchParams.get('nd')) {
-    const songTitle = searchParams.get('st');
-    const achievementText = searchParams.get('ac');
-    const noteDetail = searchParams.get('nd');
-    if (songTitle && achievementText && noteDetail) {
-      document.title = `${songTitle} - ${document.title}`;
-      const achievement = parseFloat(achievementText);
-      const judgements = parseJudgement(noteDetail);
-      analyzeNoteDetails(songTitle, achievement, judgements);
-      shouldShowInput = false;
-    }
+  const songTitle = searchParams.get(QueryParam.SongTitle);
+  const noteDetail = searchParams.get(QueryParam.NoteDetails);
+  if (songTitle && noteDetail) {
+    document.title = `${songTitle} - ${document.title}`;
+    const judgements = parseJudgement(noteDetail);
+    analyzeNoteDetails(songTitle, judgements);
+    shouldShowInput = false;
   }
   document.getElementById('resetLink').classList[shouldShowInput ? 'add' : 'remove']('hidden');
   document.getElementById('inputContainer').classList[shouldShowInput ? 'remove' : 'add']('hidden');

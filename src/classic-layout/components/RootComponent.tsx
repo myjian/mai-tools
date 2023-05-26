@@ -12,7 +12,7 @@ import {ScorePageContainer} from './ScorePageContainer';
 import {SectionSep} from './SectionSeparator';
 
 const defaultPlayRecord = {
-  date: formatDate(new Date()),
+  date: String(Date.now()),
   track: 'TRACK ' + (Math.floor(Math.random() * 3) + 1),
   // difficulty: 3,
   songTitle: '分からない',
@@ -70,7 +70,7 @@ function parseQueryParams(qp: URLSearchParams, dft = defaultPlayRecord) {
   // TODO: handling NaN for parseInt
   const difficulty = getDifficultyName(parseInt(rawDifficulty));
   return {
-    date,
+    date: formatDate(new Date(parseInt(date))),
     track,
     songTitle,
     difficulty,
@@ -114,7 +114,7 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
       console.error((e as Error).message);
       console.error((e as Error).stack);
       this.state = {
-        ...parseQueryParams(new URLSearchParams('')),
+        ...parseQueryParams(new URLSearchParams()),
         rankImg: new Map(),
         showError: true,
       };

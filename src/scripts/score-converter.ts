@@ -9,7 +9,7 @@ import {calculateDetailedDxStar} from '../common/dx-star';
 import {getSongName} from '../common/fetch-score-util';
 import {isMaimaiNetOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
-import {removeScrollControl} from '../common/net-helpers';
+import {getEpochTimeFromText, removeScrollControl} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
 import {getScriptHost} from '../common/script-host';
 import {ALLOWED_ORIGINS} from '../common/util';
@@ -59,25 +59,6 @@ import {ALLOWED_ORIGINS} from '../common/util';
     return textLine.trim().replace(/\s+/g, '-');
   }
 
-  function padNumberWithZeros(n: number, len?: number) {
-    len = len || 2;
-    return n.toString().padStart(len, '0');
-  }
-
-  function formatDate(dt: Date) {
-    return (
-      dt.getFullYear() +
-      '-' +
-      padNumberWithZeros(dt.getMonth() + 1) +
-      '-' +
-      padNumberWithZeros(dt.getDate()) +
-      ' ' +
-      padNumberWithZeros(dt.getHours()) +
-      ':' +
-      padNumberWithZeros(dt.getMinutes())
-    );
-  }
-
   function fetchAndCacheImg(map: Map<string, Blob | string>, title: string) {
     let img = map.get(title);
     if (img instanceof Blob) {
@@ -115,15 +96,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
     const jpDtText = (
       e.querySelector('.playlog_top_container .sub_title span:last-child') as HTMLElement
     ).innerText;
-    const m = jpDtText.match(/(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/);
-    const jpDt = new Date(
-      parseInt(m[1]),
-      parseInt(m[2]) - 1,
-      parseInt(m[3]),
-      parseInt(m[4]),
-      parseInt(m[5])
-    );
-    return formatDate(new Date(jpDt.valueOf() - 1000 * 60 * 60));
+    return getEpochTimeFromText(jpDtText);
   }
 
   function getIsHighScore(e: HTMLElement) {
@@ -246,7 +219,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
   function addScoreConverterLink() {
     removeScrollControl(d);
     const queryParams = new URLSearchParams({
-      [QueryParam.Date]: getPlayDate(d.body),
+      [QueryParam.Date]: String(getPlayDate(d.body)),
       [QueryParam.Track]: getTrack(d.body),
       [QueryParam.SongTitle]: getSongName(d.body),
       [QueryParam.Difficulty]: getDifficultyForRecord(d.body).toString(),
