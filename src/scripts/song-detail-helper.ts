@@ -3,9 +3,9 @@ import {determineDxStar, getDxStarText} from '../common/dx-star';
 import {getGameRegionFromOrigin} from '../common/game-region';
 import {getDefaultLevel} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
+import {fetchGameVersion} from '../common/net-helpers';
 import {normalizeSongName} from '../common/song-name-helper';
 import {buildSongPropsMap, getSongProperties, SongProperties} from '../common/song-props';
-import {fetchGameVersion} from '../common/util';
 
 type Cache = {
   songProp?: SongProperties;

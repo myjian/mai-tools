@@ -4,9 +4,10 @@ import {getSongName} from '../common/fetch-score-util';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {getDisplayLv} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
+import {fetchGameVersion} from '../common/net-helpers';
 import {isNiconicoLinkImg} from '../common/song-name-helper';
 import {buildSongPropsMap, getSongProperties} from '../common/song-props';
-import {fetchGameVersion, fetchSongDetailPage} from '../common/util';
+import {fetchSongDetailPage} from '../common/util';
 
 (function (d) {
   async function fetchChartLv(diff: Difficulty): Promise<string> {

@@ -5,12 +5,12 @@ import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
+import {fetchGameVersion} from '../common/net-helpers';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
-  fetchGameVersion,
   fetchNewSongs,
   getPostMessageFunc,
   handleError,

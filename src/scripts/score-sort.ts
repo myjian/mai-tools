@@ -6,9 +6,9 @@ import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
+import {fetchGameVersion, fetchPage} from '../common/net-helpers';
 import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
 import {buildSongPropsMap, getSongProperties, SongProperties} from '../common/song-props';
-import {fetchGameVersion, fetchPage} from '../common/util';
 
 const enum SortBy {
   None = 'None',

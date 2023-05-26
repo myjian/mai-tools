@@ -3,8 +3,8 @@ import {getChartType} from './chart-type';
 import {Difficulty} from './difficulties';
 import {getChartLevel, getSongName} from './fetch-score-util';
 import {getDefaultLevel} from './level-helper';
+import {fetchPage} from './net-helpers';
 import {getSongProperties, SongProperties} from './song-props';
-import {fetchPage} from './util';
 
 export const SELF_SCORE_URLS = new Map([
   [Difficulty.ReMASTER, '/maimai-mobile/record/musicGenre/search/?genre=99&diff=4'],
