@@ -1,3 +1,5 @@
+export const MAX_LEVEL = 15;
+
 const MIN_LEVEL = 1;
 const THRESHOLD_TO_PLUS = 0.6;
 const DEFAULT_PLUS_MINOR_LV = THRESHOLD_TO_PLUS + 0.1;
@@ -5,7 +7,7 @@ const DEFAULT_PLUS_MINOR_LV = THRESHOLD_TO_PLUS + 0.1;
 export function getOfficialLevel(level: number): string {
   const baseLevel = Math.floor(level);
   const minorLevel = level - baseLevel;
-  return minorLevel > THRESHOLD_TO_PLUS ? baseLevel + "+" : baseLevel.toString();
+  return minorLevel > THRESHOLD_TO_PLUS ? baseLevel + '+' : baseLevel.toString();
 }
 
 /**
@@ -21,7 +23,7 @@ export function getDefaultLevel(officialLevel: string | undefined): number {
   const baseLevel = parseInt(officialLevel);
   // 9 : 9.0 - 9.6
   // 9+: 9.7 - 9.9
-  return officialLevel.endsWith("+") ? baseLevel + DEFAULT_PLUS_MINOR_LV : baseLevel;
+  return officialLevel.endsWith('+') ? baseLevel + DEFAULT_PLUS_MINOR_LV : baseLevel;
 }
 
 export function getDisplayLv(internalLv: number): string {
@@ -31,5 +33,5 @@ export function getDisplayLv(internalLv: number): string {
   }
   const absLv = Math.abs(internalLv);
   const majorLv = Math.floor(absLv);
-  return (majorLv === absLv) ? majorLv.toFixed(0) : majorLv.toFixed(0) + "+";
+  return majorLv === absLv ? majorLv.toFixed(0) : majorLv.toFixed(0) + '+';
 }

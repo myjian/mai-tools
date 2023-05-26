@@ -1,22 +1,16 @@
 import React from 'react';
-import {LangSwitcher} from '../common/components/LangSwitcher';
 
+import {LangSwitcher} from '../common/components/LangSwitcher';
 import {getInitialLanguage, Language} from '../common/lang';
 import {LangContext} from '../common/lang-react';
 import {getRankDefinitions} from '../common/rank-functions';
+import {loadUserPreference, saveUserPreference, UserPreference} from '../common/user-preference';
 import {DX_LEVELS, getLvIndex, LevelDef} from './levels';
 import {MultiplierTable} from './MultiplierTable';
 import {OptionsInput} from './OptionsInput';
 import {DisplayValue, RatingTable} from './RatingTable';
 import {RatingVisualizer} from './RatingVisualizer';
-
-const enum UserPreference {
-  HeightUnit = "visualizerHeightUnit",
-  MinLv = "visualizerMinLv",
-  MinRank = "visualizerMinRank",
-  MaxLv = "visualizerMaxLv",
-  TableDisplay = "visualizerTableDisplay",
-}
+import {RecommendedLevels} from './RecommendedLevels';
 
 interface State {
   lang: Language;
@@ -34,20 +28,21 @@ interface State {
 export class RootComponent extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
-    const savedHeightUnit = parseInt(window.localStorage.getItem(UserPreference.HeightUnit));
+    const savedHeightUnit = parseInt(loadUserPreference(UserPreference.HeightUnit));
     const heightUnit = isNaN(savedHeightUnit) ? 0 : savedHeightUnit; // Hide visualizer by default
     const maxLv = 15;
     const lang = getInitialLanguage();
     updateDocumentTitle(lang);
     this.state = {
       lang,
-      minLv: window.localStorage.getItem(UserPreference.MinLv) || "10",
-      minRank: window.localStorage.getItem(UserPreference.MinRank) || "SS",
-      maxLv: window.localStorage.getItem(UserPreference.MaxLv) || "14",
+      minLv: loadUserPreference(UserPreference.MinLv) || '10',
+      minRank: loadUserPreference(UserPreference.MinRank) || 'SS',
+      maxLv: loadUserPreference(UserPreference.MaxLv) || '14',
       width: 30,
       heightUnit,
       maxRating: calculateMaxRating(maxLv),
-      tableDisplay: window.localStorage.getItem(UserPreference.TableDisplay) as DisplayValue || DisplayValue.RANGE,
+      tableDisplay:
+        (loadUserPreference(UserPreference.TableDisplay) as DisplayValue) || DisplayValue.RANGE,
       topPadding: heightUnit * 2 + 50,
       axisLabelStep: 5,
     };
@@ -60,12 +55,21 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {lang, heightUnit, maxRating, axisLabelStep, minLv, minRank, maxLv, tableDisplay, topPadding} =
-      this.state;
+    const {
+      lang,
+      heightUnit,
+      maxRating,
+      axisLabelStep,
+      minLv,
+      minRank,
+      maxLv,
+      tableDisplay,
+      topPadding,
+    } = this.state;
     const canZoomIn = maxLv !== minLv;
     const levels = this.getLevels();
     const allRanks = getRankDefinitions();
-    const ranksEndIndex = allRanks.findIndex(rank => rank.title == minRank);
+    const ranksEndIndex = allRanks.findIndex((rank) => rank.title == minRank);
     const ranks = allRanks.slice(0, ranksEndIndex + 1);
     return (
       <LangContext.Provider value={lang}>
@@ -93,6 +97,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
           />
           <div className="container">
             <RatingTable ranks={ranks} levels={levels} displayValue={tableDisplay} />
+            <RecommendedLevels />
             <hr className="sectionSep" />
             <MultiplierTable />
             <footer className="footer">
@@ -137,14 +142,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   private handleChangeHeightUnit = (unit: number) => {
-    window.localStorage.setItem(UserPreference.HeightUnit, unit.toFixed(0));
+    saveUserPreference(UserPreference.HeightUnit, unit.toFixed(0));
     this.setState({heightUnit: unit});
   };
 
   private handleSetRange = (minLv: string, maxLv: string) => {
     const maxLvDef = DX_LEVELS.find((lv) => lv.title === maxLv);
-    window.localStorage.setItem(UserPreference.MinLv, minLv);
-    window.localStorage.setItem(UserPreference.MaxLv, maxLv);
+    saveUserPreference(UserPreference.MinLv, minLv);
+    saveUserPreference(UserPreference.MaxLv, maxLv);
     this.setState({
       minLv,
       maxLv,
@@ -153,14 +158,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
   };
 
   private handleSetMinRank = (minRank: string) => {
-    window.localStorage.setItem(UserPreference.MinRank, minRank);
+    saveUserPreference(UserPreference.MinRank, minRank);
     this.setState({minRank});
-  }
+  };
 
   private handleSetTableDisplay = (tableDisplay: DisplayValue) => {
-    window.localStorage.setItem(UserPreference.TableDisplay, tableDisplay);
+    saveUserPreference(UserPreference.TableDisplay, tableDisplay);
     this.setState({tableDisplay});
-  }
+  };
 }
 
 function calculateMaxRating(maxLv: number) {
@@ -170,8 +175,8 @@ function calculateMaxRating(maxLv: number) {
 
 function updateDocumentTitle(lang: Language) {
   document.title = {
-    [Language.en_US]: "maimai DX Rating Lookup Table & Visualization",
-    [Language.zh_TW]: "maimai DX R值圖表",
-    [Language.ko_KR]: "maimai DX 레이팅 상수 표 & 시각화",
+    [Language.en_US]: 'maimai DX Rating Lookup Table & Visualization',
+    [Language.zh_TW]: 'maimai DX R值圖表',
+    [Language.ko_KR]: 'maimai DX 레이팅 상수 표 & 시각화',
   }[lang];
 }

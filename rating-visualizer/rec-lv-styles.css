@@ -1,0 +1,40 @@
+.recLvTable {
+  table-layout: fixed;
+  margin-top: 6px;
+}
+
+.recLvTable th,
+.recLvTable td {
+  min-width: 64px;
+  padding: 4px 16px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.recLvRankTitle,
+.recLvRankAchv {
+  display: block;
+  margin: 4px;
+}
+
+.suggestLvByRating {
+  margin-top: 1rem;
+}
+
+.targetRatingLabel {
+  margin-left: 6px;
+  font-size: 1.3rem;
+}
+
+.targetRating {
+  font-size: 1.3rem;
+}
+
+td.recLvCell {
+  line-height: 1.3rem;
+  padding-top: 10px;
+}
+
+.recOfficialLv {
+  font-size: 1.3rem;
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {MAIMAI_SONGS_HOME} from '../../common/arcade-songs';
 import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
@@ -9,7 +10,7 @@ const MessagesByLang = {
     otherToolsHeading: 'Other Tools',
     ratingVisualizer: 'Rating Lookup Table & Visualization',
     bookmarketList: 'maimai Bookmarklets (Features & How to use)',
-    arcadeSongs: 'arcade-songs (Chart searching tool) by Raku Zeta',
+    arcadeSongs: 'arcade-songs (Song searching tool) by Raku Zeta',
     otohime: 'Otohime (Personal score tracking) by KOINU',
     mapDistanceCalc:
       'Map Distance Calculator (How many credits to a character/collection item) by 魚丸◎蕾娜',
@@ -18,7 +19,7 @@ const MessagesByLang = {
     otherToolsHeading: '其他工具',
     ratingVisualizer: '單曲 R 值圖表',
     bookmarketList: '書籤小工具介紹與設定教學',
-    arcadeSongs: '音樂遊戲譜面搜尋工具 arcade-songs (由 Raku Zeta 製作)',
+    arcadeSongs: '音樂遊戲歌曲搜尋工具 arcade-songs (由 Raku Zeta 製作)',
     otohime: 'Otohime - 音 Game 成績單網站 (由 KOINU 製作)',
     mapDistanceCalc: 'ちほー道數計算器 (旅伴 & 收藏品) (由 魚丸◎蕾娜 製作)',
   },
@@ -56,7 +57,7 @@ export const OtherTools = ({gameVer}: Props) => {
           </a>
         </li>
         <li className="toolItem">
-          <a href="https://arcade-songs.zetaraku.dev/maimai/" target="_blank">
+          <a href={MAIMAI_SONGS_HOME} target="_blank">
             {messages.arcadeSongs}
           </a>
         </li>

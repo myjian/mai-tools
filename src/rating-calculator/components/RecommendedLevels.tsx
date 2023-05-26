@@ -1,15 +1,17 @@
 import React from 'react';
 
+import {RecommendedLevelCell} from '../../common/components/RecommendedLevelCell';
 import {GameRegion} from '../../common/game-region';
 import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {roundFloat} from '../../common/number-helper';
-import {getRankDefinitions, RankDef} from '../../common/rank-functions';
-import {RecommendedLevelCell} from './RecommendedLevelCell';
+import {
+  calcRecommendedLv,
+  getRankDefinitions,
+  getRankIndexByAchievement,
+} from '../../common/rank-functions';
 
-const MIN_RANK = 'SS';
-const MAX_LV = 15;
+const MIN_ACHIEVEMENT = 99;
 
 const MessagesByLang = {
   [Language.en_US]: {
@@ -54,23 +56,13 @@ export const RecommendedLevels = ({
   oldTopChartsCount,
 }: Props) => {
   const messages = MessagesByLang[useLanguage()];
-  let ranks = getRankDefinitions();
-  const minRankIdx = ranks.findIndex((r) => r.title === MIN_RANK);
-  ranks = ranks
-    .slice(0, minRankIdx + 1)
-    .filter((r, i, arr) => i === arr.length - 1 || r.title !== arr[i + 1].title);
+  const ranks = getRankDefinitions().slice(0, getRankIndexByAchievement(MIN_ACHIEVEMENT) + 1);
   const avgNewChartRating =
     newTopChartsCount > 0 ? Math.floor(newChartsRating / newTopChartsCount) : 0;
   const avgOldChartRating =
     oldTopChartsCount > 0 ? Math.floor(oldChartsRating / oldTopChartsCount) : 0;
-  const newLvs = ranks.map((r) => {
-    const lv = calcRecommendedLv(avgNewChartRating, r);
-    return lv > MAX_LV ? -1 : lv;
-  });
-  const oldLvs = ranks.map((r) => {
-    const lv = calcRecommendedLv(avgOldChartRating, r);
-    return lv > MAX_LV ? -1 : lv;
-  });
+  const newLvs = ranks.map((r) => calcRecommendedLv(avgNewChartRating, r));
+  const oldLvs = ranks.map((r) => calcRecommendedLv(avgOldChartRating, r));
   return (
     <div className="recLvSection">
       <h3 className="recLvTitle">{messages.recommendedLevels}</h3>
@@ -91,8 +83,8 @@ export const RecommendedLevels = ({
           {avgNewChartRating > 0 && (
             <tr>
               <th className="recLvFirstCol">{messages.newChartsRecLv}</th>
-              {newLvs.map((lv) => (
-                <RecommendedLevelCell key={lv} gameRegion={gameRegion} gameVer={gameVer} lv={lv} />
+              {newLvs.map((lv, idx) => (
+                <RecommendedLevelCell key={idx} gameRegion={gameRegion} gameVer={gameVer} lv={lv} />
               ))}
               <td>{Math.floor(avgNewChartRating)}↑</td>
             </tr>
@@ -100,9 +92,9 @@ export const RecommendedLevels = ({
           {avgOldChartRating > 0 && (
             <tr>
               <th className="recLvFirstCol">{messages.oldChartsRecLv}</th>
-              {oldLvs.map((lv) => (
+              {oldLvs.map((lv, idx) => (
                 <RecommendedLevelCell
-                  key={lv}
+                  key={idx}
                   gameRegion={gameRegion}
                   gameVer={gameVer - 1}
                   includeOldVersions
@@ -118,7 +110,3 @@ export const RecommendedLevels = ({
     </div>
   );
 };
-
-function calcRecommendedLv(rating: number, r: RankDef): number {
-  return roundFloat((rating / r.factor / r.minAchv) * 100, 'ceil', 0.1);
-}
