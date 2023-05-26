@@ -31,11 +31,6 @@ td.recordCell {
   width: 78px;
 }
 
-.recordCell.difficultyCell {
-  width: 74px;
-  word-break: break-all;
-}
-
 .recordCell.achievementCell {
   width: 75px;
 }
@@ -90,7 +85,7 @@ td.songTitleCell {
   vertical-align: middle;
 }
 
-.dateCheckbox[type="checkbox"]:not(#favorite) {
+.dateCheckbox[type='checkbox']:not(#favorite) {
   position: static;
   opacity: 1;
   margin-right: 6px;
@@ -98,22 +93,24 @@ td.songTitleCell {
   height: 10px;
 }
 
-.advanced .difficultyCell {
-  color: #fb9c2d;
+.recordRow.basic {
+  background-color: #45c124;
 }
 
-.expert .difficultyCell {
-  color: #f64861;
+.recordRow.advanced {
+  background-color: #ffba01;
 }
 
-.master .difficultyCell {
-  color: #9e45e2;
+.recordRow.expert {
+  background-color: #ff7b7b;
 }
 
-.remaster .difficultyCell {
-  color: white;
-  text-shadow: -1px -1px 2px #9e45e2, -1px 1px 2px #9e45e2, 1px -1px 2px #9e45e2,
-    1px 1px 2px #9e45e2;
+.recordRow.master {
+  background-color: #9f51dc;
+}
+
+.recordRow.remaster {
+  background-color: #dbaaff;
 }
 
 .snackbarContainer {

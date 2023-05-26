@@ -1,17 +1,21 @@
 import domtoimage from 'dom-to-image';
 
+import {ChartType} from '../common/chart-type';
 import {DIFFICULTY_CLASSNAME_MAP} from '../common/difficulties';
 import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
 import {getInitialLanguage, Language} from '../common/lang';
 import {removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
+import {getSongNickname, isNiconicoLinkImg} from '../common/song-name-helper';
 
 type ScoreRecord = {
   date: Date;
   songName: string;
   songImgSrc: string;
+  chartType: ChartType;
   difficulty: string;
   achievement: number;
+  rank: string;
   stamps: string;
   isNewRecord: boolean;
 };
@@ -98,7 +102,6 @@ type Options = {
   const SCORE_RECORD_CELL_CLASSNAMES = [
     'dateCell',
     'songTitleCell',
-    'difficultyCell',
     'achievementCell',
     'stampsCell',
   ];
@@ -141,15 +144,18 @@ type Options = {
     return img ? img.src : '';
   }
 
+  function getChartType(row: HTMLElement) {
+    const isDxChart = (
+      row.querySelector('.playlog_music_kind_icon') as HTMLImageElement
+    ).src.endsWith('music_dx.png');
+    return isDxChart ? ChartType.DX : ChartType.STANDARD;
+  }
+
   function getDifficulty(row: HTMLElement) {
     const recordBody = row.children[1];
     const cn = recordBody.className;
     let diff = cn.substring(cn.indexOf('_') + 1, cn.lastIndexOf('_'));
-    diff = diff === 'remaster' ? 'Re:MASTER' : diff.toUpperCase();
-    const isDxChart = (
-      row.querySelector('.playlog_music_kind_icon') as HTMLImageElement
-    ).src.endsWith('music_dx.png');
-    return isDxChart ? 'DX ' + diff : diff;
+    return diff === 'remaster' ? 'Re:MASTER' : diff.toUpperCase();
   }
 
   function getAchievement(row: HTMLElement) {
@@ -161,16 +167,19 @@ type Options = {
     return getDxStarText(dxStarIndex);
   }
 
-  function getStamps(row: HTMLElement): string {
+  function getRank(row: HTMLElement): string {
     const rankImgSrc = (row.querySelector('img.playlog_scorerank') as HTMLImageElement).src.replace(
       /\?ver=.*$/,
       ''
     );
-    const rank = rankImgSrc
+    return rankImgSrc
       .substring(rankImgSrc.lastIndexOf('/') + 1, rankImgSrc.lastIndexOf('.'))
       .replace('plus', '+')
       .toUpperCase();
-    let result = rank;
+  }
+
+  function getStamps(row: HTMLElement): string {
+    const results = [];
 
     // FC/AP
     const stampImgs = row.querySelectorAll(
@@ -179,7 +188,7 @@ type Options = {
     const fcapSrc = stampImgs[0].src.replace(/\?ver=.*$/, '');
     const fcapImgName = fcapSrc.substring(fcapSrc.lastIndexOf('/') + 1, fcapSrc.lastIndexOf('.'));
     if (AP_FC_IMG_NAME_TO_TEXT.has(fcapImgName)) {
-      result += ' / ' + AP_FC_IMG_NAME_TO_TEXT.get(fcapImgName);
+      results.push(AP_FC_IMG_NAME_TO_TEXT.get(fcapImgName));
     }
 
     // SYNC
@@ -189,15 +198,15 @@ type Options = {
       fullSyncSrc.lastIndexOf('.')
     );
     if (FS_FDX_IMG_NAME_TO_TEXT.has(fullSyncImgName)) {
-      result += ' / ' + FS_FDX_IMG_NAME_TO_TEXT.get(fullSyncImgName);
+      results.push(FS_FDX_IMG_NAME_TO_TEXT.get(fullSyncImgName));
     }
 
     // DX Star
     const dxStar = getDxStar(row);
     if (dxStar) {
-      result += ' / ' + dxStar;
+      results.push(dxStar);
     }
-    return result;
+    return results.join(' / ');
   }
 
   function getIsNewRecord(row: HTMLElement) {
@@ -216,8 +225,10 @@ type Options = {
         date: getPlayDate(row),
         songName: getSongName(row),
         songImgSrc: getSongImgSrc(row),
+        chartType: getChartType(row),
         difficulty: getDifficulty(row),
         achievement: getAchievement(row),
+        rank: getRank(row),
         stamps: getStamps(row),
         isNewRecord: getIsNewRecord(row),
       });
@@ -269,29 +280,23 @@ type Options = {
 
   function renderScoreHeadRow() {
     return _renderScoreRowHelper(
-      [
-        UIString.date,
-        UIString.songName,
-        UIString.difficulty,
-        UIString.achievement,
-        UIString.stamps,
-      ],
+      [UIString.date, UIString.songName, UIString.achievement, UIString.stamps],
       [SCORE_RECORD_ROW_CLASSNAME],
       true
     );
   }
 
   function renderScoreRow(record: ScoreRecord) {
-    const difficultyWithoutDxPrefix = record.difficulty.split(' ').pop();
+    const genre = isNiconicoLinkImg(record.songImgSrc) ? 'niconico' : '';
+    const nickname = getSongNickname(record.songName, genre, record.chartType);
     return _renderScoreRowHelper(
       [
         formatDate(record.date),
-        [record.songName, record.songImgSrc],
-        record.difficulty,
-        record.achievement.toFixed(4) + '%',
+        [nickname, record.songImgSrc],
+        record.rank + ' ' + record.achievement.toFixed(4) + '%',
         record.stamps,
       ],
-      [SCORE_RECORD_ROW_CLASSNAME, DIFFICULTY_CLASSNAME_MAP.get(difficultyWithoutDxPrefix)],
+      [SCORE_RECORD_ROW_CLASSNAME, DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)],
       false
     );
   }
