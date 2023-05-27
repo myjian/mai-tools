@@ -5,7 +5,7 @@ import {getDefaultLevel} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
 import {fetchGameVersion} from '../common/net-helpers';
 import {normalizeSongName} from '../common/song-name-helper';
-import {buildSongPropsMap, getSongProperties, SongProperties} from '../common/song-props';
+import {buildSongDatabase, SongProperties} from '../common/song-props';
 
 type Cache = {
   songProp?: SongProperties;
@@ -38,12 +38,12 @@ type Cache = {
   async function fetchAndAddInternalLv() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(d.location.origin);
-    const songProps = await buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songDb = await buildSongDatabase(gameVer, gameRegion, await fetchMagic(gameVer));
 
-    const song = getSongName();
+    const song = getSongName(); // TODO: handle "Link"
     const chartType = getChartType(d.body);
 
-    const props = getSongProperties(songProps, song, '', chartType);
+    const props = songDb.getSongProperties(song, '', chartType);
     cache.songProp = props;
 
     // replace table song level

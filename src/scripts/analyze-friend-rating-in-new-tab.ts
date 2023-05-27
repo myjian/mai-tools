@@ -7,7 +7,7 @@ import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
-import {BasicSongProps} from '../common/song-props';
+import {BasicSongProps, SongDatabase} from '../common/song-props';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -103,7 +103,9 @@ type FriendInfo = {
     let scoreList: FullChartRecord[] = [];
     for (const difficulty of FRIEND_SCORE_URLS.keys()) {
       send('showProgress', statusText(LANG, difficulty, false));
-      scoreList = scoreList.concat(await fetchFriendScores(friend.idx, difficulty, new Map()));
+      scoreList = scoreList.concat(
+        await fetchFriendScores(friend.idx, difficulty, new SongDatabase(false))
+      );
     }
     send('showProgress', '');
     send('setPlayerScore', scoreList);

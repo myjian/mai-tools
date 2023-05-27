@@ -17,15 +17,14 @@ import {LangContext} from '../../common/lang-react';
 import {fetchMagic, readMagicFromCache, writeMagicToCache} from '../../common/magic';
 import {QueryParam} from '../../common/query-params';
 import {
-  buildSongPropsMap,
+  buildSongDatabase,
   filterSongsByVersion,
-  getSongsByVersion,
   MatchMode,
+  SongDatabase,
   SongProperties,
 } from '../../common/song-props';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {RatingData} from '../types';
-import {InternalLvInput} from './InternalLvInput';
 import {LanguageChooser} from './LanguageChooser';
 import {OtherTools} from './OtherTools';
 import {PageFooter} from './PageFooter';
@@ -46,32 +45,19 @@ const MessagesByLang = {
   },
 };
 
-function readSongProperties(
-  gameVer: GameVersion,
-  gameRegion: GameRegion,
-  inputText: string
-): Promise<Map<string, SongProperties[]>> {
-  return new Promise((resolve) => {
-    // Read from user input
-    if (inputText.length > 0) {
-      resolve(buildSongPropsMap(gameVer, gameRegion, inputText));
-      return;
-    }
-    // Read from cache
-    const cachedGameData = readMagicFromCache(gameVer);
-    if (cachedGameData) {
-      resolve(buildSongPropsMap(gameVer, gameRegion, cachedGameData));
-      return;
-    }
-    // Read from Internet
-    console.log('Magic happening...');
-    fetchMagic(gameVer).then((responseText) => {
-      if (!responseText.startsWith('<!DOCTYPE html>')) {
-        writeMagicToCache(gameVer, responseText);
-      }
-      resolve(buildSongPropsMap(gameVer, gameRegion, responseText));
-    });
-  });
+async function readSongProperties(gameVer: GameVersion): Promise<SongProperties[]> {
+  // Read from cache
+  const cachedGameData = readMagicFromCache(gameVer);
+  if (cachedGameData) {
+    return cachedGameData;
+  }
+  // Read from Internet
+  console.log('Magic happening...');
+  const songs = await fetchMagic(gameVer);
+  if (songs.length) {
+    writeMagicToCache(gameVer, songs);
+  }
+  return songs;
 }
 
 interface State {
@@ -82,16 +68,15 @@ interface State {
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
-  songPropsByName?: Map<string, ReadonlyArray<SongProperties>>;
   oldSongs?: ReadonlyArray<SongProperties>;
   newSongs?: ReadonlyArray<SongProperties>;
 }
 
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
-  private internalLvTextarea = React.createRef<HTMLTextAreaElement>();
   private referrer = document.referrer && new URL(document.referrer).origin;
   private playerScores: ChartRecord[] = [];
+  private songDatabase: SongDatabase;
 
   constructor(props: {}) {
     super(props);
@@ -123,7 +108,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   componentDidUpdate(_prevProps: {}, prevState: State) {
     if (
-      this.state.songPropsByName &&
+      this.songDatabase &&
       ((!this.state.oldSongs && !this.state.newSongs) || prevState.gameVer !== this.state.gameVer)
     ) {
       this.loadSongLists(this.state.gameVer);
@@ -134,17 +119,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {
-      lang,
-      gameRegion,
-      gameVer,
-      playerName,
-      ratingData,
-      songPropsByName,
-      oldSongs,
-      newSongs,
-      progress,
-    } = this.state;
+    const {lang, gameRegion, gameVer, playerName, ratingData, oldSongs, newSongs, progress} =
+      this.state;
     const messages = MessagesByLang[lang];
     return (
       <LangContext.Provider value={lang}>
@@ -153,7 +129,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
           <RegionSelect gameRegion={gameRegion} handleRegionSelect={this.selectRegion} />
           <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
         </table>
-        <InternalLvInput ref={this.internalLvTextarea} />
         <ScoreInput />
         <div className="actionArea">
           <button className="analyzeRatingBtn" onClick={this.analyzeRating}>
@@ -166,7 +141,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
           <RatingOutput
             gameRegion={gameRegion}
             gameVer={gameVer}
-            songPropsByName={songPropsByName}
+            songDatabase={this.songDatabase}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
             playerName={playerName}
@@ -198,11 +173,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
     if (evt) {
       evt.preventDefault();
     }
-    const songPropsText = this.getInternalLvInput();
     const {gameVer, gameRegion} = this.state;
     console.log('gameVer', gameVer);
-    const songPropsByName = await readSongProperties(gameVer, gameRegion, songPropsText);
-    console.log('Song properties:', songPropsByName);
+    const songs = await readSongProperties(gameVer);
+    // TODO: support overrides by user
+    this.songDatabase = await buildSongDatabase(gameVer, gameRegion, songs);
+    console.log('Song database:', this.songDatabase);
     const playerScores = this.playerScores;
     console.log('Player scores:', playerScores);
     if (!playerScores.length) {
@@ -210,13 +186,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
       return;
     }
     const ratingData = await analyzePlayerRating(
-      songPropsByName,
+      this.songDatabase,
       playerScores,
       gameVer,
       gameRegion
     );
     console.log('Rating Data:', ratingData);
-    this.setState({ratingData, songPropsByName});
+    this.setState({ratingData});
   };
 
   private postMessageToOpener(data: {action: string; payload?: string | number}) {
@@ -267,7 +243,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
             this.setState({
               oldSongs: filterSongsByVersion(
                 evt.data.payload,
-                this.state.songPropsByName,
+                this.songDatabase,
                 this.state.gameVer,
                 MatchMode.OLDER
               ),
@@ -278,14 +254,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
               this.setState({
                 newSongs: filterSongsByVersion(
                   evt.data.payload,
-                  this.state.songPropsByName,
+                  this.songDatabase,
                   this.state.gameVer,
                   MatchMode.EQUAL
                 ),
               });
             } else {
               this.setState({
-                newSongs: getSongsByVersion(this.state.songPropsByName, this.state.gameVer),
+                newSongs: this.songDatabase.getSongsByVersion(this.state.gameVer),
               });
             }
             break;
@@ -305,13 +281,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
   private loadSongLists(gameVer: GameVersion) {
     this.postMessageToOpener({action: 'fetchAllSongs'});
     this.postMessageToOpener({action: 'fetchNewSongs', payload: gameVer});
-  }
-
-  private getInternalLvInput(): string {
-    if (this.internalLvTextarea.current) {
-      return this.internalLvTextarea.current.value;
-    }
-    return '';
   }
 }
 

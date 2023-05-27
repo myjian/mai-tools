@@ -4,7 +4,7 @@ import {Difficulty} from './difficulties';
 import {getChartLevel, getSongName} from './fetch-score-util';
 import {getDefaultLevel} from './level-helper';
 import {fetchPage} from './net-helpers';
-import {getSongProperties, SongProperties} from './song-props';
+import {SongDatabase} from './song-props';
 
 export const SELF_SCORE_URLS = new Map([
   [Difficulty.ReMASTER, '/maimai-mobile/record/musicGenre/search/?genre=99&diff=4'],
@@ -22,7 +22,7 @@ function getAchievement(row: HTMLElement) {
 function processRow(
   row: HTMLElement,
   difficulty: Difficulty,
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  songDb: SongDatabase,
   state: {genre: string}
 ): FullChartRecord {
   const isGenreRow = row.classList.contains('screw_block');
@@ -41,7 +41,7 @@ function processRow(
     }
     const songName = getSongName(row);
     const chartType = getChartType(row);
-    const props = getSongProperties(songPropsByName, songName, state.genre, chartType);
+    const props = songDb.getSongProperties(songName, state.genre, chartType);
     let level = props ? props.lv[difficulty] : 0;
     const levelIsPrecise = level > 0;
     if (!level) {
@@ -62,7 +62,7 @@ function processRow(
 export async function fetchScores(
   difficulty: Difficulty,
   domCache: Map<Difficulty, Document>,
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>
+  songDb: SongDatabase
 ): Promise<FullChartRecord[]> {
   let dom = domCache.get(difficulty);
   if (!dom) {
@@ -75,8 +75,6 @@ export async function fetchScores(
   }
   const rows = dom.querySelectorAll('.main_wrapper.t_c .m_15') as NodeListOf<HTMLElement>;
   const state = {genre: ''};
-  const recordsWithNull = Array.from(rows).map((row) =>
-    processRow(row, difficulty, songPropsByName, state)
-  );
+  const recordsWithNull = Array.from(rows).map((row) => processRow(row, difficulty, songDb, state));
   return recordsWithNull.filter((record) => record != null);
 }

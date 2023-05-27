@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {SongProperties} from '../../common/song-props';
+import {SongDatabase} from '../../common/song-props';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {ChartRecordWithRating, RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
@@ -31,7 +31,7 @@ const MessagesByLang = {
 };
 
 interface Props {
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
+  songDatabase: SongDatabase;
   ratingData: RatingData;
   newCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
   oldCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
@@ -44,7 +44,7 @@ export const RatingDetails = ({
   notPlayedNewCharts,
   oldCandidateCharts,
   notPlayedOldCharts,
-  songPropsByName,
+  songDatabase,
   ratingData,
 }: Props) => {
   const [hideNewTopSongs, setHideNewTopSongs] = useState(false);
@@ -79,7 +79,7 @@ export const RatingDetails = ({
           onClick={toggleNewTopChartsDisplay}
         />
         <TopChartRecords
-          songPropsByName={songPropsByName}
+          songDatabase={songDatabase}
           records={newChartRecords}
           limit={newTopChartsCount}
           hidden={hideNewTopSongs}
@@ -92,7 +92,7 @@ export const RatingDetails = ({
           onClick={toggleOldTopChartsDisplay}
         />
         <TopChartRecords
-          songPropsByName={songPropsByName}
+          songDatabase={songDatabase}
           records={oldChartRecords}
           limit={oldTopChartsCount}
           hidden={hideOldTopSongs}
@@ -107,7 +107,7 @@ export const RatingDetails = ({
         />
         <CandidateChartRecords
           name="new"
-          songPropsByName={songPropsByName}
+          songDatabase={songDatabase}
           hidden={hideNewCandidates}
           played={newCandidateCharts}
           notPlayed={notPlayedNewCharts}
@@ -122,7 +122,7 @@ export const RatingDetails = ({
         />
         <CandidateChartRecords
           name="old"
-          songPropsByName={songPropsByName}
+          songDatabase={songDatabase}
           hidden={hideOldCandidates}
           played={oldCandidateCharts}
           notPlayed={notPlayedOldCharts}

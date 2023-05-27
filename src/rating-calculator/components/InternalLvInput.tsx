@@ -5,27 +5,27 @@ import {useLanguage} from '../../common/lang-react';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    internalLvHeading: "Chart Internal Level Data",
-    manualLv: "Manual input",
-    autoLv: "Automatic",
+    internalLvHeading: 'Chart Internal Level Data',
+    manualLv: 'Manual input',
+    autoLv: 'Automatic',
   },
   [Language.zh_TW]: {
-    internalLvHeading: "譜面定數",
-    manualLv: "手動輸入",
-    autoLv: "自動代入",
+    internalLvHeading: '譜面定數',
+    manualLv: '手動輸入',
+    autoLv: '自動代入',
   },
   [Language.ko_KR]: {
-    internalLvHeading: "채보 상수 데이터",
-    manualLv: "직접입력",
-    autoLv: "자동입력",
+    internalLvHeading: '채보 상수 데이터',
+    manualLv: '직접입력',
+    autoLv: '자동입력',
   },
 };
 
-export const InternalLvInput = React.forwardRef<HTMLTextAreaElement>((_, textareaRef) => {
+export const InternalLvInput = () => {
   const [showTextarea, setShowTextarea] = useState(false);
 
   const handleRadioChange = useCallback((evt: React.FormEvent<HTMLInputElement>) => {
-    setShowTextarea(evt.currentTarget.value === "1");
+    setShowTextarea(evt.currentTarget.value === '1');
   }, []);
 
   const messages = MessagesByLang[useLanguage()];
@@ -56,7 +56,7 @@ export const InternalLvInput = React.forwardRef<HTMLTextAreaElement>((_, textare
           {messages.manualLv}
         </label>
       </form>
-      {showTextarea && <textarea className="lvInput" ref={textareaRef} />}
+      {showTextarea && <textarea className="lvInput" />}
     </div>
   );
-});
+};

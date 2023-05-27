@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {SongProperties} from '../../common/song-props';
+import {SongDatabase} from '../../common/song-props';
 import {
   compareSongsByAchv,
   compareSongsByDifficulty,
@@ -18,16 +18,16 @@ import {CollapsibleContainer} from './CollapsibleContainer';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    showMore: "Show more",
-    showLess: "Show less",
+    showMore: 'Show more',
+    showLess: 'Show less',
   },
   [Language.zh_TW]: {
-    showMore: "顯示更多",
-    showLess: "顯示較少",
+    showMore: '顯示更多',
+    showLess: '顯示較少',
   },
   [Language.ko_KR]: {
-    showMore: "자세히 보기",
-    showLess: "간략히",
+    showMore: '자세히 보기',
+    showLess: '간략히',
   },
 };
 
@@ -55,19 +55,13 @@ const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithR
 
 interface Props {
   name: string;
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
+  songDatabase: SongDatabase;
   played: ReadonlyArray<ChartRecordWithRating>;
   notPlayed?: ReadonlyArray<ChartRecordWithRating>;
   hidden?: boolean;
 }
 
-export const CandidateChartRecords = ({
-  hidden,
-  played,
-  notPlayed,
-  songPropsByName,
-  name,
-}: Props) => {
+export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, name}: Props) => {
   const [showPlayed, setShowPlayed] = useState<boolean>(true);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<ColumnType | undefined>();
@@ -129,7 +123,7 @@ export const CandidateChartRecords = ({
       )}
       {/* TODO: filter by level or game version */}
       <ChartRecordsTable
-        songPropsByName={songPropsByName}
+        songDatabase={songDatabase}
         tableClassname="candidateTable"
         records={recordsToShow}
         sortBy={handleSortBy}

@@ -6,7 +6,7 @@ import {getDisplayLv} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
 import {fetchGameVersion} from '../common/net-helpers';
 import {isNiconicoLinkImg} from '../common/song-name-helper';
-import {buildSongPropsMap, getSongProperties} from '../common/song-props';
+import {buildSongDatabase} from '../common/song-props';
 import {fetchSongDetailPage} from '../common/util';
 
 (function (d) {
@@ -14,13 +14,13 @@ import {fetchSongDetailPage} from '../common/util';
     // First, try magic
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(window.location.origin);
-    const songProps = await buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songDb = await buildSongDatabase(gameVer, gameRegion, await fetchMagic(gameVer));
 
     const name = getSongName(d.body);
     const songImg = d.querySelector('img.music_img') as HTMLImageElement;
     const genre = name === 'Link' && isNiconicoLinkImg(songImg.src) ? 'niconico' : '';
     const chartType = getChartType(d.body);
-    const props = getSongProperties(songProps, name, genre, chartType);
+    const props = songDb.getSongProperties(name, genre, chartType);
     if (props) {
       return getDisplayLv(props.lv[diff]);
     }

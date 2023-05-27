@@ -4,7 +4,7 @@ import {GameRegion} from '../../common/game-region';
 import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {SongProperties} from '../../common/song-props';
+import {SongDatabase, SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {calculateMaxRating} from '../rating-functions';
@@ -31,7 +31,7 @@ const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
 interface Props {
   gameRegion: GameRegion;
   gameVer: GameVersion;
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
+  songDatabase: SongDatabase;
   ratingData: RatingData;
   playerGradeIndex: number;
   playerName: string | null;
@@ -55,7 +55,7 @@ export const RatingOutput = ({
   ratingData,
   gameRegion,
   playerName,
-  songPropsByName,
+  songDatabase,
 }: Props) => {
   const state = useMemo<State>(() => {
     const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
@@ -141,7 +141,7 @@ export const RatingOutput = ({
         oldTopChartsCount={oldTopChartsCount}
       />
       <RatingDetails
-        songPropsByName={songPropsByName}
+        songDatabase={songDatabase}
         newCandidateCharts={newCandidateCharts}
         oldCandidateCharts={oldCandidateCharts}
         notPlayedNewCharts={notPlayedNewCharts}

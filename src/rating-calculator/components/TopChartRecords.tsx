@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import {useLanguage} from '../../common/lang-react';
-import {SongProperties} from '../../common/song-props';
+import {SongDatabase} from '../../common/song-props';
 import {CommonMessages} from '../common-messages';
 import {
   compareSongsByAchv,
@@ -37,13 +37,13 @@ const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithR
   ]);
 
 interface Props {
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>;
+  songDatabase: SongDatabase;
   records: ReadonlyArray<ChartRecordWithRating>;
   limit: number;
   hidden?: boolean;
 }
 
-export const TopChartRecords = ({hidden, records: allRecords, limit, songPropsByName}: Props) => {
+export const TopChartRecords = ({hidden, records: allRecords, limit, songDatabase}: Props) => {
   const [sortBy, setSortBy] = useState(ColumnType.RATING);
   const [reverse, setReverse] = useState(false);
 
@@ -82,7 +82,7 @@ export const TopChartRecords = ({hidden, records: allRecords, limit, songPropsBy
         <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
       </div>
       <ChartRecordsTable
-        songPropsByName={songPropsByName}
+        songDatabase={songDatabase}
         columns={COLUMNS}
         tableClassname="topRecordTable"
         records={records}

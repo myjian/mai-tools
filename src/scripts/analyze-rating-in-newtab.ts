@@ -8,6 +8,7 @@ import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
+import {SongDatabase} from '../common/song-props';
 import {
   ALLOWED_ORIGINS,
   fetchAllSongs,
@@ -56,7 +57,9 @@ declare global {
     let scoreList: FullChartRecord[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
       send('showProgress', statusText(LANG, difficulty, false));
-      scoreList = scoreList.concat(await fetchScores(difficulty, domCache, new Map()));
+      scoreList = scoreList.concat(
+        await fetchScores(difficulty, domCache, new SongDatabase(false))
+      );
     }
     allSongsDom = domCache.get(Difficulty.MASTER);
     send('showProgress', '');

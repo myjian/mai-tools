@@ -18,7 +18,10 @@ export async function fetchPage(url: string) {
 export async function fetchGameVersion(dom: Document | HTMLElement): Promise<GameVersion> {
   const cacheExpiration = parseInt(window.localStorage.getItem(EXPIRATION_KEY));
   if (!isNaN(cacheExpiration) && cacheExpiration >= Date.now()) {
-    return parseInt(window.localStorage.getItem(CACHE_KEY)) as GameVersion;
+    const cachedGameVer = parseInt(window.localStorage.getItem(CACHE_KEY));
+    if (!isNaN(cachedGameVer)) {
+      return cachedGameVer;
+    }
   }
   const gameVerOption = dom.querySelector('select[name=version] option:last-of-type');
   if (gameVerOption instanceof HTMLOptionElement) {

@@ -8,7 +8,7 @@ import {getDefaultLevel} from '../common/level-helper';
 import {fetchMagic} from '../common/magic';
 import {fetchGameVersion, fetchPage} from '../common/net-helpers';
 import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
-import {buildSongPropsMap, getSongProperties, SongProperties} from '../common/song-props';
+import {buildSongDatabase, SongDatabase, SongProperties} from '../common/song-props';
 
 const enum SortBy {
   None = 'None',
@@ -36,7 +36,7 @@ const enum SectionHeadStyle {
 }
 
 type Cache = {
-  songProps?: Map<string, SongProperties[]>;
+  songDb?: SongDatabase;
   nicoLinkIdx?: string;
   originalLinkIdx?: string;
 };
@@ -278,7 +278,7 @@ type Cache = {
     return lv || getDefaultLevel(getChartLv(row)) - LV_DELTA;
   }
 
-  function getChartInLv(row: HTMLElement, songProps: Map<string, SongProperties[]>) {
+  function getChartInLv(row: HTMLElement, songDb: SongDatabase) {
     const inLvText = getChartLv(row, 'inlv');
     if (inLvText) {
       return parseFloat(inLvText);
@@ -290,20 +290,20 @@ type Cache = {
     if (name === 'Link') {
       const idx = isFriendScore ? null : getSongIdx(row);
       if (cache.nicoLinkIdx === idx) {
-        props = getSongProperties(songProps, name, 'niconico', t);
+        props = songDb.getSongProperties(name, 'niconico', t);
       } else if (cache.originalLinkIdx === idx) {
-        props = getSongProperties(songProps, name, '', t);
+        props = songDb.getSongProperties(name, '', t);
       }
-      console.log(props!);
+      console.log(props);
     } else {
-      props = getSongProperties(songProps, name, '', t);
+      props = songDb.getSongProperties(name, '', t);
     }
     return coalesceInLv(row, lvIndex, props);
   }
 
   function compareInLv(row1: HTMLElement, row2: HTMLElement) {
-    const lv1 = getChartInLv(row1, cache.songProps!);
-    const lv2 = getChartInLv(row2, cache.songProps!);
+    const lv1 = getChartInLv(row1, cache.songDb!);
+    const lv2 = getChartInLv(row2, cache.songDb!);
     return lv1 < lv2 ? -1 : lv2 < lv1 ? 1 : 0;
   }
 
@@ -313,7 +313,7 @@ type Cache = {
       const lv = getChartLv(row);
       map.get(lv)!.push(row);
     });
-    if (cache.songProps) {
+    if (cache.songDb) {
       map.forEach((subRows) => {
         subRows.sort(compareInLv);
         if (reverse) {
@@ -533,7 +533,7 @@ type Cache = {
     const inLvSet = new Map<number, boolean>();
     const inLvs: number[] = [];
     for (const row of Array.from(rows)) {
-      const lv = getChartInLv(row, cache.songProps!);
+      const lv = getChartInLv(row, cache.songDb!);
       inLvSet.set(lv, true);
       inLvs.push(lv);
     }
@@ -806,7 +806,8 @@ type Cache = {
   async function fetchAndAddInternalLvSort() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(window.location.origin);
-    const songProps = await buildSongPropsMap(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songDb = await buildSongDatabase(gameVer, gameRegion, await fetchMagic(gameVer));
+    console.log(songDb);
     const rows = Array.from(getScoreRows());
     for (const row of rows) {
       const name = getSongName(row);
@@ -819,24 +820,24 @@ type Cache = {
           let props: SongProperties | null;
           if (isNico) {
             cache.nicoLinkIdx = idx;
-            props = getSongProperties(songProps, name, 'niconico', ChartType.STANDARD);
+            props = songDb.getSongProperties(name, 'niconico', ChartType.STANDARD);
           } else {
             cache.originalLinkIdx = idx;
-            props = getSongProperties(songProps, name, '', ChartType.STANDARD);
+            props = songDb.getSongProperties(name, '', ChartType.STANDARD);
           }
           saveInLv(row, coalesceInLv(row, lvIndex, props));
         } catch (e) {
           saveInLv(row, coalesceInLv(row, lvIndex));
         }
       } else {
-        const lv = getChartInLv(row, songProps);
+        const lv = getChartInLv(row, songDb);
         saveInLv(row, lv);
       }
     }
     console.log('enabling internal level sort');
     createOption(SortBy.InLvAsc, false);
     createOption(SortBy.InLvDes, false);
-    cache.songProps = songProps;
+    cache.songDb = songDb;
   }
 
   // main

@@ -6,6 +6,7 @@ import {isMaimaiNetOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getOfficialLevel} from '../common/level-helper';
 import {statusText} from '../common/score-fetch-progress';
+import {SongDatabase} from '../common/song-props';
 import {handleError} from '../common/util';
 
 (function () {
@@ -101,7 +102,9 @@ import {handleError} from '../common/util';
     let scoreList: FullChartRecord[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
       textarea.value += statusText(LANG, difficulty, false) + '\n';
-      scoreList = scoreList.concat(await fetchScores(difficulty, new Map(), new Map()));
+      scoreList = scoreList.concat(
+        await fetchScores(difficulty, new Map(), new SongDatabase(false))
+      );
     }
     textarea.value = scoreList
       .map((score) =>

@@ -4,7 +4,7 @@ import {GameRegion} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getRankByAchievement, SSSPLUS_MIN_ACHIEVEMENT} from '../common/rank-functions';
 import {getRemovedSongs} from '../common/removed-songs';
-import {getSongProperties, SongProperties} from '../common/song-props';
+import {SongDatabase, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
 import {ChartRecordWithRating, RatingData} from './types';
 
@@ -43,7 +43,7 @@ function getRecordWithRating(
 }
 
 export async function analyzePlayerRating(
-  songPropsByName: Map<string, ReadonlyArray<SongProperties>>,
+  songDb: SongDatabase,
   playerScores: ReadonlyArray<ChartRecord>,
   gameVer: GameVersion,
   gameRegion: GameRegion
@@ -55,12 +55,7 @@ export async function analyzePlayerRating(
     if (removedSongs.includes(record.songName)) {
       continue;
     }
-    const songProps = getSongProperties(
-      songPropsByName,
-      record.songName,
-      record.genre,
-      record.chartType
-    );
+    const songProps = songDb.getSongProperties(record.songName, record.genre, record.chartType);
     const isNewChart = songProps ? songProps.debut === gameVer : record.chartType === ChartType.DX;
     const recordWithRating = getRecordWithRating(record, songProps);
     if (isNewChart) {
