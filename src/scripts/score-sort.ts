@@ -5,10 +5,9 @@ import {SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel} from '../common/level-helper';
-import {fetchMagic} from '../common/magic';
 import {fetchGameVersion, fetchPage} from '../common/net-helpers';
 import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
-import {buildSongDatabase, SongDatabase, SongProperties} from '../common/song-props';
+import {loadSongDatabase, SongDatabase, SongProperties} from '../common/song-props';
 
 const enum SortBy {
   None = 'None',
@@ -806,7 +805,7 @@ type Cache = {
   async function fetchAndAddInternalLvSort() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(window.location.origin);
-    const songDb = await buildSongDatabase(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songDb = await loadSongDatabase(gameVer, gameRegion);
     console.log(songDb);
     const rows = Array.from(getScoreRows());
     for (const row of rows) {

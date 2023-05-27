@@ -3,10 +3,9 @@ import {Difficulty, getDifficultyForRecord, getDifficultyTextColor} from '../com
 import {getSongName} from '../common/fetch-score-util';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {getDisplayLv} from '../common/level-helper';
-import {fetchMagic} from '../common/magic';
 import {fetchGameVersion} from '../common/net-helpers';
 import {isNiconicoLinkImg} from '../common/song-name-helper';
-import {buildSongDatabase} from '../common/song-props';
+import {loadSongDatabase} from '../common/song-props';
 import {fetchSongDetailPage} from '../common/util';
 
 (function (d) {
@@ -14,7 +13,7 @@ import {fetchSongDetailPage} from '../common/util';
     // First, try magic
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(window.location.origin);
-    const songDb = await buildSongDatabase(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songDb = await loadSongDatabase(gameVer, gameRegion);
 
     const name = getSongName(d.body);
     const songImg = d.querySelector('img.music_img') as HTMLImageElement;

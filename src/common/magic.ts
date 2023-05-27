@@ -54,7 +54,7 @@ function parseLine(line: string): SongProperties | undefined {
   }
 }
 
-export async function fetchMagic(gameVer: GameVersion): Promise<SongProperties[]> {
+async function fetchMagic(gameVer: GameVersion): Promise<SongProperties[]> {
   const sauce = MagicSauce[gameVer] || MagicSauce[GameVersion.UNIVERSE_PLUS];
   const res = await fetch(atob(sauce));
   if (res.ok) {
@@ -71,7 +71,7 @@ function getInternalLvCacheKey(gameVer: GameVersion): string {
   return CACHE_KEY_PREFIX + gameVer;
 }
 
-export function readMagicFromCache(gameVer: GameVersion): SongProperties[] {
+function readMagicFromCache(gameVer: GameVersion): SongProperties[] {
   const expiration = parseInt(window.localStorage.getItem(EXPIRATION_KEY));
   if (isNaN(expiration) || Date.now() > expiration) {
     for (const oldKey of OLD_KEYS_TO_CLEANUP) {
@@ -88,9 +88,24 @@ export function readMagicFromCache(gameVer: GameVersion): SongProperties[] {
   return JSON.parse(magic);
 }
 
-export function writeMagicToCache(gameVer: GameVersion, magic: SongProperties[]) {
+function writeMagicToCache(gameVer: GameVersion, magic: SongProperties[]) {
   const key = getInternalLvCacheKey(gameVer);
   window.localStorage.setItem(key, JSON.stringify(magic));
   window.localStorage.setItem(EXPIRATION_KEY, String(Date.now() + CACHE_DURATION));
   console.log(`Updated cache for ${key}`);
+}
+
+export async function loadMagic(gameVer: GameVersion): Promise<SongProperties[]> {
+  // Read from cache
+  const cachedGameData = readMagicFromCache(gameVer);
+  if (cachedGameData) {
+    return cachedGameData;
+  }
+  // Read from Internet
+  console.log('Magic happening...');
+  const songs = await fetchMagic(gameVer);
+  if (songs.length) {
+    writeMagicToCache(gameVer, songs);
+  }
+  return songs;
 }

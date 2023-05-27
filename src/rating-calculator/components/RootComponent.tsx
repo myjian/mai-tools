@@ -14,11 +14,10 @@ import {
 } from '../../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
-import {fetchMagic, readMagicFromCache, writeMagicToCache} from '../../common/magic';
 import {QueryParam} from '../../common/query-params';
 import {
-  buildSongDatabase,
   filterSongsByVersion,
+  loadSongDatabase,
   MatchMode,
   SongDatabase,
   SongProperties,
@@ -44,21 +43,6 @@ const MessagesByLang = {
     computeRating: '레이팅 계산하기',
   },
 };
-
-async function readSongProperties(gameVer: GameVersion): Promise<SongProperties[]> {
-  // Read from cache
-  const cachedGameData = readMagicFromCache(gameVer);
-  if (cachedGameData) {
-    return cachedGameData;
-  }
-  // Read from Internet
-  console.log('Magic happening...');
-  const songs = await fetchMagic(gameVer);
-  if (songs.length) {
-    writeMagicToCache(gameVer, songs);
-  }
-  return songs;
-}
 
 interface State {
   lang: Language;
@@ -174,10 +158,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
       evt.preventDefault();
     }
     const {gameVer, gameRegion} = this.state;
-    console.log('gameVer', gameVer);
-    const songs = await readSongProperties(gameVer);
     // TODO: support overrides by user
-    this.songDatabase = await buildSongDatabase(gameVer, gameRegion, songs);
+    this.songDatabase = await loadSongDatabase(gameVer, gameRegion);
     console.log('Song database:', this.songDatabase);
     const playerScores = this.playerScores;
     console.log('Player scores:', playerScores);

@@ -2,10 +2,9 @@ import {getChartType} from '../common/chart-type';
 import {determineDxStar, getDxStarText} from '../common/dx-star';
 import {getGameRegionFromOrigin} from '../common/game-region';
 import {getDefaultLevel} from '../common/level-helper';
-import {fetchMagic} from '../common/magic';
 import {fetchGameVersion} from '../common/net-helpers';
 import {normalizeSongName} from '../common/song-name-helper';
-import {buildSongDatabase, SongProperties} from '../common/song-props';
+import {loadSongDatabase, SongProperties} from '../common/song-props';
 
 type Cache = {
   songProp?: SongProperties;
@@ -38,7 +37,7 @@ type Cache = {
   async function fetchAndAddInternalLv() {
     const gameVer = await fetchGameVersion(d.body);
     const gameRegion = getGameRegionFromOrigin(d.location.origin);
-    const songDb = await buildSongDatabase(gameVer, gameRegion, await fetchMagic(gameVer));
+    const songDb = await loadSongDatabase(gameVer, gameRegion);
 
     const song = getSongName(); // TODO: handle "Link"
     const chartType = getChartType(d.body);

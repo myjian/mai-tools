@@ -1,6 +1,7 @@
 import {ChartType} from './chart-type';
 import {GameRegion} from './game-region';
 import {GameVersion, LATEST_VERSION} from './game-version';
+import {loadMagic} from './magic';
 import {getRemovedSongs} from './removed-songs';
 import {getMaiToolsBaseUrl} from './script-host';
 import {getSongNickname} from './song-name-helper';
@@ -209,11 +210,11 @@ async function fetchDebutVersionOverrides(): Promise<
 }
 
 // TODO: accept overrides from rating calculator
-export async function buildSongDatabase(
+export async function loadSongDatabase(
   gameVer: GameVersion,
-  gameRegion: GameRegion,
-  songs: SongProperties[]
+  gameRegion: GameRegion
 ): Promise<SongDatabase> {
+  const songs = await loadMagic(gameVer);
   const songDatabase = new SongDatabase();
   for (const song of songs) {
     songDatabase.insertOrUpdateSong(song, gameVer);
