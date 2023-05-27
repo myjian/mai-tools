@@ -1,4 +1,6 @@
-import {GameVersion} from './game-version';
+import {Difficulty, getDifficultyTextColor} from './difficulties';
+
+import type {GameVersion} from './game-version';
 
 const CACHE_DURATION = 1000 * 60 * 60 * 24; // 1 day
 const CACHE_KEY = 'MaiToolsGameVer';
@@ -52,4 +54,21 @@ export function removeScrollControl(dom: Document) {
 
   button = dom.getElementById('page-bottom');
   if (button) button.remove();
+}
+
+/**
+ * Add level information to play record. This would be displayed at where the "CLEAR!"
+ * image is. Only supported on play record list page and single play record page.
+ */
+export async function addLvToSongTitle(row: HTMLElement, diff: Difficulty, chartLv: string) {
+  const songTitleDiv = row.querySelector('.basic_block.break') as HTMLElement;
+  const clearImg = songTitleDiv.querySelector('img');
+  if (clearImg) {
+    clearImg.remove();
+  }
+  const lvElem = document.createElement('div');
+  lvElem.className = 'f_r'; // float: right
+  lvElem.append('Lv ' + chartLv);
+  lvElem.style.color = getDifficultyTextColor(diff);
+  songTitleDiv.append(lvElem);
 }

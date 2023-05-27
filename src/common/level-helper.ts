@@ -26,12 +26,11 @@ export function getDefaultLevel(officialLevel: string | undefined): number {
   return officialLevel.endsWith('+') ? baseLevel + DEFAULT_PLUS_MINOR_LV : baseLevel;
 }
 
-export function getDisplayLv(internalLv: number): string {
-  const lvIsEstimate = internalLv < 0;
-  if (!lvIsEstimate) {
-    return internalLv.toFixed(1);
+export function getDisplayLv(internalLv: number, lvIsEstimate = false): string {
+  // If internalLv is negative, we also consider it estimate.
+  lvIsEstimate = lvIsEstimate || internalLv < 0;
+  if (lvIsEstimate) {
+    return Math.abs(internalLv).toFixed(1) + '~';
   }
-  const absLv = Math.abs(internalLv);
-  const majorLv = Math.floor(absLv);
-  return majorLv === absLv ? majorLv.toFixed(0) : majorLv.toFixed(0) + '+';
+  return internalLv.toFixed(1);
 }

@@ -4,7 +4,7 @@ import {getChartDifficulty, getSongName} from '../common/fetch-score-util';
 import {SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
-import {getDefaultLevel} from '../common/level-helper';
+import {getDefaultLevel, getDisplayLv} from '../common/level-helper';
 import {fetchGameVersion, fetchPage} from '../common/net-helpers';
 import {getSongIdx, isNiconicoLink} from '../common/song-name-helper';
 import {loadSongDatabase, SongDatabase, SongProperties} from '../common/song-props';
@@ -164,6 +164,9 @@ type Cache = {
     );
   }
 
+  /**
+   * @returns if lv is estimate, 1 or 0.7. if lv is accurate, 0.
+   */
   function isEstimateLv(lv: number) {
     const majorLv = Math.floor(lv);
     const minorLv = lv - majorLv;
@@ -254,7 +257,7 @@ type Cache = {
     if (!elem.dataset['inlv']) {
       const isEstimate = isEstimateLv(lv);
       elem.dataset['inlv'] = lv.toFixed(2);
-      const t = (isEstimate ? '*' : '') + lv.toFixed(1);
+      const t = getDisplayLv(lv, isEstimate !== 0);
       if (t.length > 4) {
         elem.classList.remove('f_14');
         elem.classList.add('f_13');
@@ -804,7 +807,7 @@ type Cache = {
 
   async function fetchAndAddInternalLvSort() {
     const gameVer = await fetchGameVersion(d.body);
-    const gameRegion = getGameRegionFromOrigin(window.location.origin);
+    const gameRegion = getGameRegionFromOrigin(d.location.origin);
     const songDb = await loadSongDatabase(gameVer, gameRegion);
     console.log(songDb);
     const rows = Array.from(getScoreRows());

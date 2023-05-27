@@ -3,10 +3,13 @@ import domtoimage from 'dom-to-image';
 import {ChartType} from '../common/chart-type';
 import {Difficulty, DIFFICULTY_CLASSNAME_MAP, getDifficultyByName} from '../common/difficulties';
 import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
+import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
-import {removeScrollControl} from '../common/net-helpers';
+import {getDisplayLv} from '../common/level-helper';
+import {addLvToSongTitle, fetchGameVersion, removeScrollControl} from '../common/net-helpers';
 import {getScriptHost} from '../common/script-host';
 import {getSongNickname, isNiconicoLinkImg} from '../common/song-name-helper';
+import {loadSongDatabase, SongDatabase} from '../common/song-props';
 
 type ScoreRecord = {
   date: Date;
@@ -215,28 +218,6 @@ type Options = {
     );
   }
 
-  async function collectRecentPlays(): Promise<ScoreRecord[]> {
-    const scoreList = Array.from(
-      d.querySelectorAll('.main_wrapper .p_10.t_l.f_0.v_b')
-    ) as HTMLElement[];
-    const results: ScoreRecord[] = [];
-    for (const row of scoreList) {
-      results.push({
-        date: getPlayDate(row),
-        songName: getSongName(row),
-        songImgSrc: getSongImgSrc(row),
-        chartType: getChartType(row),
-        difficulty: getDifficulty(row),
-        achievement: getAchievement(row),
-        rank: getRank(row),
-        stamps: getStamps(row),
-        isNewRecord: getIsNewRecord(row),
-      });
-    }
-    results.reverse();
-    return results;
-  }
-
   function formatDate(dt: Date) {
     return (
       dt.getFullYear() +
@@ -350,8 +331,8 @@ type Options = {
     return {dates: selectedDates, showAll: showAllRecords, olderFirst};
   }
 
-  function filterRecords(allRecords: ReadonlyArray<ScoreRecord>, options: Options) {
-    let records = [].concat(allRecords);
+  function filterRecords(allRecords: ReadonlyArray<ScoreRecord>, options: Options): ScoreRecord[] {
+    let records = allRecords.slice();
     console.log(options);
     if (options.dates) {
       records = records.filter((r) => {
@@ -372,7 +353,7 @@ type Options = {
         records.push(r);
       });
     }
-    if (!options.olderFirst) {
+    if (options.olderFirst) {
       records.reverse();
     }
     return records;
@@ -562,6 +543,16 @@ type Options = {
     insertBefore.insertAdjacentElement('beforebegin', dv);
   }
 
+  async function addLvToRow(row: HTMLElement, record: ScoreRecord, songDb: SongDatabase) {
+    const genre =
+      record.songName === 'Link' && isNiconicoLinkImg(record.songImgSrc) ? 'niconico' : '';
+    const props = songDb.getSongProperties(record.songName, genre, record.chartType);
+    const lv = props ? getDisplayLv(props.lv[record.difficulty]) : '';
+    if (lv) {
+      addLvToSongTitle(row, record.difficulty, lv);
+    }
+  }
+
   const titleImg = d.querySelector('.main_wrapper > img.title') as HTMLImageElement;
   if (titleImg) {
     const cssId = 'recentPlayStyles';
@@ -570,18 +561,37 @@ type Options = {
       css.id = cssId;
       css.rel = 'stylesheet';
       css.href = SCRIPT_HOST + '/scripts/recent-play-downloader.css';
-      css.addEventListener('load', () => {
+      css.addEventListener('load', async () => {
         removeScrollControl(d);
-        collectRecentPlays()
-          .then((plays) => {
-            createOutputElement(plays, titleImg);
-          })
-          .catch((e: Error) => {
-            const footer = d.getElementsByTagName('footer')[0];
-            const textarea = ce('textarea');
-            footer.append(textarea);
-            textarea.value = e.message + '\n' + e.stack;
+        const rows = Array.from(
+          d.querySelectorAll('.main_wrapper .p_10.t_l.f_0.v_b')
+        ) as HTMLElement[];
+        try {
+          const records = rows.map((row) => ({
+            date: getPlayDate(row),
+            songName: getSongName(row),
+            songImgSrc: getSongImgSrc(row),
+            chartType: getChartType(row),
+            difficulty: getDifficulty(row),
+            achievement: getAchievement(row),
+            rank: getRank(row),
+            stamps: getStamps(row),
+            isNewRecord: getIsNewRecord(row),
+          }));
+          createOutputElement(records, titleImg);
+          const gameVer = await fetchGameVersion(d.body);
+          const gameRegion = getGameRegionFromOrigin(d.location.origin);
+          const songDb = await loadSongDatabase(gameVer, gameRegion);
+          rows.forEach((row, idx) => {
+            const record = records[idx];
+            addLvToRow(row, record, songDb);
           });
+        } catch (e) {
+          const footer = d.getElementsByTagName('footer')[0];
+          const textarea = ce('textarea');
+          footer.append(textarea);
+          textarea.value = e instanceof Error ? e.message + '\n' + e.stack : String(e);
+        }
       });
       d.head.append(css);
     }

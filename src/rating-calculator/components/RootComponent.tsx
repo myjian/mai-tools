@@ -194,6 +194,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   private initWindowCommunication() {
     window.addEventListener('message', (evt) => {
       if (isMaimaiNetOrigin(evt.origin)) {
+        this.referrer = evt.origin;
         console.log(evt.origin, evt.data);
         let payloadAsInt;
         switch (evt.data.action) {

@@ -1,7 +1,7 @@
 import {getChartType} from '../common/chart-type';
 import {determineDxStar, getDxStarText} from '../common/dx-star';
 import {getGameRegionFromOrigin} from '../common/game-region';
-import {getDefaultLevel} from '../common/level-helper';
+import {getDefaultLevel, getDisplayLv} from '../common/level-helper';
 import {fetchGameVersion} from '../common/net-helpers';
 import {normalizeSongName} from '../common/song-name-helper';
 import {loadSongDatabase, SongProperties} from '../common/song-props';
@@ -70,7 +70,7 @@ type Cache = {
     if (!levelElement.dataset['inlv']) {
       const isEstimate = isEstimateLv(lv);
       levelElement.dataset['inlv'] = lv.toFixed(2);
-      levelElement.innerText = (isEstimate ? '*' : '') + lv.toFixed(1);
+      levelElement.innerText = getDisplayLv(lv, isEstimate !== 0);
     }
   }
 

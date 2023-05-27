@@ -202,6 +202,7 @@ export class RootComponent extends React.PureComponent<{}, RootComponentState> {
 
   private handleWindowMessage = (evt: MessageEvent) => {
     if (isMaimaiNetOrigin(evt.origin)) {
+      this.referrer = evt.origin;
       switch (evt.data.action) {
         case 'songImage':
           this.setState({songImg: evt.data.imgSrc});
