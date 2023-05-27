@@ -1,4 +1,4 @@
-import {FullChartRecord} from './chart-record';
+import {ChartRecord} from './chart-record';
 import {getChartType} from './chart-type';
 import {Difficulty} from './difficulties';
 import {getChartLevel, getSongName} from './fetch-score-util';
@@ -40,7 +40,7 @@ function processRow(
   difficulty: Difficulty,
   songDb: SongDatabase,
   state: {genre: string}
-): FullChartRecord {
+): ChartRecord {
   const isGenreRow = row.classList.contains('screw_block');
   const isScoreRow =
     row.classList.contains('w_450') &&
@@ -79,7 +79,7 @@ export async function fetchFriendScores(
   friendIdx: string,
   difficulty: Difficulty,
   songDb: SongDatabase
-): Promise<FullChartRecord[]> {
+): Promise<ChartRecord[]> {
   let url = FRIEND_SCORE_URLS.get(difficulty);
   if (!url) {
     return;

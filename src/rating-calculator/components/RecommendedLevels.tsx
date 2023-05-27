@@ -30,7 +30,7 @@ const MessagesByLang = {
     levelComment: '註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。',
   },
   [Language.ko_KR]: {
-    recommendedLevels: '추천 난이도',
+    recommendedLevels: '추천 레벨',
     projectedRating: '잠재적 레이팅',
     newChartsRecLv: '신곡 채보',
     oldChartsRecLv: '구곡 채보',

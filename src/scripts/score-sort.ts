@@ -1,7 +1,13 @@
 import {ChartType, getChartType} from '../common/chart-type';
 import {DIFFICULTIES, Difficulty} from '../common/difficulties';
-import {getChartDifficulty, getSongName} from '../common/fetch-score-util';
-import {SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {
+  getAchievement,
+  getApFcStatus,
+  getChartDifficulty,
+  getSongName,
+  getSyncStatus,
+} from '../common/fetch-score-util';
+import {getMyDxScoreInfo, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel, getDisplayLv} from '../common/level-helper';
@@ -344,16 +350,9 @@ type Cache = {
     return lowercaseRank.replace('p', '+').toUpperCase();
   }
 
-  function getAchievement(row: HTMLElement) {
-    const elem = isFriendScore
-      ? row.querySelector('tr:first-child td:last-child')
-      : row.querySelector('.music_score_block.w_120');
-    return elem ? parseFloat((elem as HTMLElement).innerText) : elem;
-  }
-
   function compareAchievement(row1: HTMLElement, row2: HTMLElement) {
-    const ach1 = getAchievement(row1),
-      ach2 = getAchievement(row2);
+    const ach1 = getAchievement(row1, isFriendScore),
+      ach2 = getAchievement(row2, isFriendScore);
     if (ach1 === null && ach2 === null) {
       return 0;
     } else if (ach2 === null) {
@@ -386,53 +385,19 @@ type Cache = {
     return createRowsWithSection(map, SectionHeadStyle.Rank, rows.length);
   }
 
-  function getApFcStatus(row: HTMLElement) {
-    const img = isFriendScore
-      ? row.querySelector('tr:last-child td:last-child img:nth-child(2)')
-      : row.children[0].querySelector('img.f_r:nth-last-of-type(2)');
-    if (!img) {
-      return null;
-    }
-    const statusImgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, '');
-    const lastUnderscoreIdx = statusImgSrc.lastIndexOf('_');
-    const lastDotIdx = statusImgSrc.lastIndexOf('.');
-    const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
-    if (lowercaseStatus === 'back') {
-      return null;
-    }
-    return lowercaseStatus.replace('ap', 'AP').replace('p', '+').toUpperCase();
-  }
-
   function sortRowsByApFc(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(AP_FC_TYPES, reverse);
     rows.forEach((row) => {
-      const status = getApFcStatus(row);
+      const status = getApFcStatus(row, isFriendScore);
       map.get(status).push(row);
     });
     return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
   }
 
-  function getSyncStatus(row: HTMLElement) {
-    const img = isFriendScore
-      ? row.querySelector('tr:last-child td:last-child img:first-child')
-      : row.children[0].querySelector('img.f_r:nth-last-of-type(3)');
-    if (!img) {
-      return null;
-    }
-    const statusImgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, '');
-    const lastUnderscoreIdx = statusImgSrc.lastIndexOf('_');
-    const lastDotIdx = statusImgSrc.lastIndexOf('.');
-    const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
-    if (lowercaseStatus === 'back') {
-      return null;
-    }
-    return lowercaseStatus.replace('sd', 'DX').replace('p', '+').toUpperCase();
-  }
-
   function sortRowsBySync(rows: NodeListOf<HTMLElement>, reverse: boolean) {
     const map = createMap(SYNC_TYPES, reverse);
     rows.forEach((row) => {
-      const sync = getSyncStatus(row);
+      const sync = getSyncStatus(row, isFriendScore);
       map.get(sync).push(row);
     });
     return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
@@ -455,45 +420,6 @@ type Cache = {
     return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
   }
 
-  function getMyDxStar(row: HTMLElement) {
-    const scoreBlocks = row.querySelectorAll('.music_score_block');
-    if (scoreBlocks.length !== 2) {
-      return null;
-    }
-    const dxScoreNodes = scoreBlocks[1].childNodes;
-    const textNode = dxScoreNodes[dxScoreNodes.length - 1] as Text;
-    if (!textNode.wholeText) {
-      return null;
-    }
-    const scoreSegments = textNode.wholeText.split('/');
-    if (scoreSegments.length !== 2) {
-      return null;
-    }
-    try {
-      const playerScore = parseInt(scoreSegments[0].replace(',', '').trim());
-      const maxScore = parseInt(scoreSegments[1].replace(',', '').trim());
-      const dxScoreRatio = playerScore / maxScore;
-      if (playerScore === maxScore) {
-        return DX_STARS[7];
-      } else if (dxScoreRatio >= 0.99) {
-        return DX_STARS[6];
-      } else if (dxScoreRatio >= 0.97) {
-        return DX_STARS[5];
-      } else if (dxScoreRatio >= 0.95) {
-        return DX_STARS[4];
-      } else if (dxScoreRatio >= 0.93) {
-        return DX_STARS[3];
-      } else if (dxScoreRatio >= 0.9) {
-        return DX_STARS[2];
-      } else if (dxScoreRatio >= 0.85) {
-        return DX_STARS[1];
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-    return null;
-  }
-
   function getDxStar(row: HTMLElement) {
     if (isFriendScore) {
       const img = row.querySelector('tr:first-child td:last-child img') as HTMLImageElement;
@@ -504,8 +430,9 @@ type Cache = {
       const dxStar = imgPath.substring(imgPath.lastIndexOf('_') + 1, imgPath.lastIndexOf('.'));
       try {
         const dxStarInt = parseInt(dxStar);
-        if (dxStarInt < 0 || dxStarInt >= DX_STARS.length) {
+        if (isNaN(dxStarInt) || dxStarInt < 0 || dxStarInt >= DX_STARS.length) {
           console.warn('invalid dx star ' + dxStar);
+          return DX_STARS[0];
         }
         return DX_STARS[dxStarInt];
       } catch (err) {
@@ -517,7 +444,7 @@ type Cache = {
     if (row.dataset.dxStar) {
       return row.dataset.dxStar === 'null' ? null : row.dataset.dxStar;
     }
-    const dxStar = getMyDxStar(row);
+    const dxStar = DX_STARS[getMyDxScoreInfo(row).star];
     row.dataset.dxStar = dxStar;
     return dxStar;
   }

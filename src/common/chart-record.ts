@@ -12,11 +12,8 @@ export interface ChartRecord {
 }
 
 export interface FullChartRecord extends ChartRecord {
-  // TODO
-  version?: number; // GameVersion
-  // rank: string; // AAA, S, SS, etc.
-  // fcap: string; // FC, AP, etc.
-  // sync: string; // FS, FSD, etc.
-  // dxscore: string; // score/full score. Example: 920/1002
-  // dxratio: number; // Example: 0.918
+  version: number; // GameVersion. -1 if unknown
+  fcap: string; // FC, AP, etc.
+  sync: string; // FS, FSD, etc.
+  dxscore: {max: number; player: number; ratio: number; star: number};
 }

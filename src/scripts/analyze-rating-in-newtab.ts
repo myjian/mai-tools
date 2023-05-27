@@ -1,4 +1,4 @@
-import {FullChartRecord} from '../common/chart-record';
+import {ChartRecord} from '../common/chart-record';
 import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
@@ -54,7 +54,7 @@ declare global {
     }
     // Fetch all scores
     const domCache = new Map<Difficulty, Document>();
-    let scoreList: FullChartRecord[] = [];
+    let scoreList: ChartRecord[] = [];
     for (const difficulty of SELF_SCORE_URLS.keys()) {
       send('showProgress', statusText(LANG, difficulty, false));
       scoreList = scoreList.concat(

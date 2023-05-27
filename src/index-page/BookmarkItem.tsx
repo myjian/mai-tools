@@ -12,7 +12,7 @@ export const BookmarkItem = (props: Bookmarklet) => {
         <h3 className="bookmarkletTitle">{itemTitleByLang[lang]}</h3>
         <ul>
           <li>{featureByLang[lang]}</li>
-          <li>{typeof howToByLang === "function" ? howToByLang(lang) : howToByLang[lang]}</li>
+          <li>{howToByLang[lang]}</li>
         </ul>
       </div>
       <div className="bookmarkletImage">

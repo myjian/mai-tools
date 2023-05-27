@@ -43,3 +43,44 @@ export function getPlayerGrade(n: Document | HTMLElement) {
   }
   return null;
 }
+
+export function getAchievement(row: HTMLElement, isFriendScore = false): number {
+  const elem = isFriendScore
+    ? row.querySelector('tr:first-child td:last-child')
+    : row.querySelector('.music_score_block.w_120');
+  return elem instanceof HTMLElement ? parseFloat(elem.innerText) : 0;
+}
+
+export function getApFcStatus(row: HTMLElement, isFriendScore = false) {
+  const img = isFriendScore
+    ? row.querySelector('tr:last-child td:last-child img:nth-child(2)')
+    : row.children[0].querySelector('img.f_r:nth-last-of-type(2)');
+  if (!img) {
+    return null;
+  }
+  const statusImgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, '');
+  const lastUnderscoreIdx = statusImgSrc.lastIndexOf('_');
+  const lastDotIdx = statusImgSrc.lastIndexOf('.');
+  const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
+  if (lowercaseStatus === 'back') {
+    return null;
+  }
+  return lowercaseStatus.replace('ap', 'AP').replace('p', '+').toUpperCase();
+}
+
+export function getSyncStatus(row: HTMLElement, isFriendScore = false) {
+  const img = isFriendScore
+    ? row.querySelector('tr:last-child td:last-child img:first-child')
+    : row.children[0].querySelector('img.f_r:nth-last-of-type(3)');
+  if (!img) {
+    return null;
+  }
+  const statusImgSrc = (img as HTMLImageElement).src.replace(/\?ver=.*$/, '');
+  const lastUnderscoreIdx = statusImgSrc.lastIndexOf('_');
+  const lastDotIdx = statusImgSrc.lastIndexOf('.');
+  const lowercaseStatus = statusImgSrc.substring(lastUnderscoreIdx + 1, lastDotIdx);
+  if (lowercaseStatus === 'back') {
+    return null;
+  }
+  return lowercaseStatus.replace('sd', 'DX').replace('p', '+').toUpperCase();
+}

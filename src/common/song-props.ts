@@ -46,7 +46,6 @@ export class SongDatabase {
       console.warn(
         `Found existing song properties for ${key} ${song.dx}: ${JSON.stringify(map.get(key))}`
       );
-      // TODO: merge instead of ignore
       console.warn(`Will ignore ${song}`);
       return;
     }

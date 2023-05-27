@@ -1,4 +1,4 @@
-import {FullChartRecord} from '../common/chart-record';
+import {ChartRecord} from '../common/chart-record';
 import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {isMaimaiNetOrigin} from '../common/game-region';
@@ -100,7 +100,7 @@ type FriendInfo = {
       send('playerGrade', friend.grade);
     }
     // Fetch all scores
-    let scoreList: FullChartRecord[] = [];
+    let scoreList: ChartRecord[] = [];
     for (const difficulty of FRIEND_SCORE_URLS.keys()) {
       send('showProgress', statusText(LANG, difficulty, false));
       scoreList = scoreList.concat(
