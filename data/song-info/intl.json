@@ -1,9 +1,12 @@
 {
-  "standard": {},
+  "standard": {
+    "15": [
+      "全世界共通リズム感テスト"
+    ]
+  },
   "dx": {
     "15": [
-      "BREaK! BREaK! BREaK!",
-      "全世界共通リズム感テスト"
+      "BREaK! BREaK! BREaK!"
     ],
     "16": [
       "宿星審判"
