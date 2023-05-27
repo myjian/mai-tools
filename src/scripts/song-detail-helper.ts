@@ -39,10 +39,11 @@ type Cache = {
     const gameRegion = getGameRegionFromOrigin(d.location.origin);
     const songDb = await loadSongDatabase(gameVer, gameRegion);
 
-    const song = getSongName(); // TODO: handle "Link"
+    const song = getSongName();
+    const genre = getSongGenre();
     const chartType = getChartType(d.body);
 
-    const props = songDb.getSongProperties(song, '', chartType);
+    const props = songDb.getSongProperties(song, genre, chartType);
     cache.songProp = props;
 
     // replace table song level
@@ -99,6 +100,11 @@ type Cache = {
 
   function getSongName(): string {
     return normalizeSongName(document.querySelector('.m_5.f_15.break').textContent);
+  }
+
+  function getSongGenre(): string {
+    const elem = document.querySelector('.blue');
+    return elem instanceof HTMLElement ? elem.innerText : '';
   }
 
   function getLevelTable(): NodeList {

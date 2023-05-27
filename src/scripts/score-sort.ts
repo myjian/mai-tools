@@ -6,7 +6,7 @@ import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDefaultLevel} from '../common/level-helper';
 import {fetchGameVersion, fetchPage} from '../common/net-helpers';
-import {getSongIdx, isNicoNicoLink} from '../common/song-name-helper';
+import {getSongIdx, isNiconicoLink} from '../common/song-name-helper';
 import {loadSongDatabase, SongDatabase, SongProperties} from '../common/song-props';
 
 const enum SortBy {
@@ -815,7 +815,7 @@ type Cache = {
         try {
           // idx is not available on friend score page and getSongIdx will throw.
           const idx = getSongIdx(row);
-          const isNico = await isNicoNicoLink(idx);
+          const isNico = await isNiconicoLink(idx);
           let props: SongProperties | null;
           if (isNico) {
             cache.nicoLinkIdx = idx;
