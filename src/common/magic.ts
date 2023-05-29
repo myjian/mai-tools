@@ -44,13 +44,16 @@ function parseLine(line: string): SongProperties | undefined {
       const newReMasterLv = lvList.pop()!;
       lvList[DIFFICULTIES.length - 1] = newReMasterLv;
     }
-    return {
+    const props: SongProperties = {
       dx: parseInt(dxMatch[1]) as 0 | 1,
       lv: lvList,
       debut: Math.abs(parseInt(debutVerMatch[1])),
       name: normalizeSongName(songNameMatch[1]),
-      nickname: nicknameMatch && nicknameMatch[1],
     };
+    if (nicknameMatch) {
+      props.nickname = nicknameMatch[1];
+    }
+    return props;
   }
 }
 
