@@ -1,11 +1,10 @@
-import {ChartRecord} from '../common/chart-record';
-import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
+import {fetchFriendScores} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
-import {statusText} from '../common/score-fetch-progress';
+import {loadChartRecords} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {BasicSongProps, SongDatabase} from '../common/song-props';
 import {
@@ -100,13 +99,12 @@ type FriendInfo = {
       send('playerGrade', friend.grade);
     }
     // Fetch all scores
-    let scoreList: ChartRecord[] = [];
-    for (const difficulty of FRIEND_SCORE_URLS.keys()) {
-      send('showProgress', statusText(LANG, difficulty, false));
-      scoreList = scoreList.concat(
-        await fetchFriendScores(friend.idx, difficulty, new SongDatabase(false))
-      );
-    }
+    const [_, scoreList] = await loadChartRecords(
+      LANG,
+      difficulty => fetchFriendScores(friend.idx, difficulty, new SongDatabase(false)),
+      message => send('showProgress', message)
+    );
+
     send('showProgress', '');
     send('setPlayerScore', scoreList);
     send('calculateRating', '');

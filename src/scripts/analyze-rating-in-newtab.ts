@@ -1,12 +1,11 @@
-import {ChartRecord} from '../common/chart-record';
 import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
-import {fetchScores, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {fetchScores} from '../common/fetch-self-score';
 import {isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
-import {statusText} from '../common/score-fetch-progress';
+import {loadChartRecords} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {SongDatabase} from '../common/song-props';
 import {
@@ -16,6 +15,7 @@ import {
   getPostMessageFunc,
   handleError,
 } from '../common/util';
+import {ChartRecord} from '../common/chart-record';
 
 declare global {
   interface Window {
@@ -53,14 +53,12 @@ declare global {
       send('playerGrade', playerGrade);
     }
     // Fetch all scores
-    const domCache = new Map<Difficulty, Document>();
-    let scoreList: ChartRecord[] = [];
-    for (const difficulty of SELF_SCORE_URLS.keys()) {
-      send('showProgress', statusText(LANG, difficulty, false));
-      scoreList = scoreList.concat(
-        await fetchScores(difficulty, domCache, new SongDatabase(false))
-      );
-    }
+    const [domCache, scoreList] = await loadChartRecords<ChartRecord>(
+      LANG,
+      difficulty => fetchScores(difficulty, domCache, new SongDatabase(false)),
+      message => send('showProgress', message)
+    );
+
     allSongsDom = domCache.get(Difficulty.MASTER);
     send('showProgress', '');
     send('setPlayerScore', scoreList);

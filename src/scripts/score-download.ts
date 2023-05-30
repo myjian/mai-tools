@@ -1,14 +1,14 @@
 import {FullChartRecord} from '../common/chart-record';
 import {getChartTypeName} from '../common/chart-type';
 import {getDifficultyName} from '../common/difficulties';
-import {fetchScoresFull, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {fetchScoresFull} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {getVersionName} from '../common/game-version';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getOfficialLevel} from '../common/level-helper';
 import {fetchGameVersion} from '../common/net-helpers';
 import {getRankByAchievement} from '../common/rank-functions';
-import {statusText} from '../common/score-fetch-progress';
+import {loadChartRecords} from '../common/score-fetch-progress';
 import {loadSongDatabase} from '../common/song-props';
 
 (function (d) {
@@ -262,10 +262,14 @@ import {loadSongDatabase} from '../common/song-props';
     if (cache.scores == null) {
       textarea.value = '';
       cache.scores = [];
-      for (const difficulty of SELF_SCORE_URLS.keys()) {
-        textarea.value += statusText(LANG, difficulty, false) + '\n';
-        cache.scores = cache.scores.concat(await fetchScoresFull(difficulty, new Map(), songDb));
-      }
+
+      const [_, scoreList] = await loadChartRecords(
+        LANG,
+        difficulty => fetchScoresFull(difficulty, new Map(), songDb),
+        message => textarea.value += message + '\n'
+      );
+
+      cache.scores = scoreList;
     }
     const fields = getSelectedFields();
     textarea.value =

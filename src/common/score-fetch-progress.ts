@@ -1,58 +1,53 @@
-import {Difficulty} from './difficulties';
+import {DIFFICULTIES, Difficulty} from './difficulties';
 import {Language} from './lang';
 
 const MessagesByLang = {
   [Language.zh_TW]: {
-    bscStart: "匯入綠譜成績中…",
-    bscDone: "✔",
-    advStart: "匯入黃譜成績中…",
-    advDone: "✔",
-    expStart: "匯入紅譜成績中…",
-    expDone: "✔",
-    masStart: "匯入紫譜成績中…",
-    masDone: "✔",
-    remStart: "匯入白譜成績中…",
-    remDone: "✔",
+    start: "匯入成績中…",
+    done: "✔",
   },
   [Language.en_US]: {
-    bscStart: "Loading Basic scores…",
-    bscDone: "✔",
-    advStart: "Loading Advanced scores…",
-    advDone: "✔",
-    expStart: "Loading Expert scores…",
-    expDone: "✔",
-    masStart: "Loading Master scores…",
-    masDone: "✔",
-    remStart: "Loading Re:Master scores…",
-    remDone: "✔",
+    start: "Loading scores…",
+    done: "✔",
   },
   [Language.ko_KR]: {
-    bscStart: "Basic 정확도 불러오는 중…",
-    bscDone: "✔",
-    advStart: "Advanced 정확도 불러오는 중…",
-    advDone: "✔",
-    expStart: "Expert 정확도 불러오는 중…",
-    expDone: "✔",
-    masStart: "Master 정확도 불러오는 중…",
-    masDone: "✔",
-    remStart: "Re:Master 정확도 불러오는 중…",
-    remDone: "✔",
+    start: "정확도 불러오는 중…",
+    done: "✔",
   },
 };
 
-export function statusText(lang: Language, difficulty: Difficulty, end?: boolean): string {
-  const UIString = MessagesByLang[lang];
-  switch (difficulty) {
-    case Difficulty.ReMASTER:
-      return end ? UIString.remDone + "\n" : UIString.remStart;
-    case Difficulty.MASTER:
-      return end ? UIString.masDone + "\n" : UIString.masStart;
-    case Difficulty.EXPERT:
-      return end ? UIString.expDone + "\n" : UIString.expStart;
-    case Difficulty.ADVANCED:
-      return end ? UIString.advDone + "\n" : UIString.advStart;
-    case Difficulty.BASIC:
-      return end ? UIString.bscDone + "\n" : UIString.bscStart;
-  }
-  return "";
+/**
+ * load multiple score list asynchronously.
+ * returns domCache, ChartRecord Array
+ *
+ * @param lang current user's language
+ * @param chartRecordLoader loads chartRecords with given difficulty
+ * @param messageReceiver current loading status message receiver
+ */
+export async function loadChartRecords<T>(
+  lang: Language,
+  chartRecordLoader: (difficulty: Difficulty) => Promise<T[]>,
+  messageReceiver: (message: String) => void = _ => {},
+): Promise<[Map<Difficulty, Document>, T[]]> {
+  const domCache = new Map<Difficulty, Document>();
+  let scoreList: T[][] = [];
+
+  let count = 0;
+  messageReceiver(`${loadingText(lang, false)} (${count}/${DIFFICULTIES.length})`);
+
+  await Promise.all(DIFFICULTIES
+    .map(difficulty =>
+      chartRecordLoader(difficulty)
+        .then(it => scoreList.push(it))
+        .then(_ => {
+          messageReceiver(`${loadingText(lang, false)} (${++count}/${DIFFICULTIES.length})`);
+        })
+    )
+  );
+
+  return [domCache, [].concat(scoreList)];
+}
+
+function loadingText(lang: Language, done: boolean = false): string {
+  return done ? MessagesByLang[lang].done + "\n" : MessagesByLang[lang].start;
 }
