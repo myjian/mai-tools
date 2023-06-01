@@ -1,18 +1,1 @@
-(function(w, d, n){
-  const BASEW = 700;
-  const CW = 550;
-  function updateMetaViewport() {
-    const viewport = d.querySelector("meta[name='viewport']");
-		const ua = n.userAgent.toLowerCase();
-		const iOS = ua.includes("iphone") || ua.includes("ipod") || ua.includes("ipad");
-    const w = iOS ? d.documentElement.clientWidth : window.outerWidth;
-    const vpc = w < BASEW
-      ? "width=" + CW + ",initial-scale=" + w/CW
-      : "width=device-width,initial-scale=1.0";
-    console.log("adjustViewport " + w + " => " + vpc);
-    viewport.setAttribute("content", vpc + ",user-scalable=yes,shrink-to-fit=no");
-  }
-  updateMetaViewport();
-  w.addEventListener("resize", updateMetaViewport);
-  w.addEventListener("orientationchange", updateMetaViewport);
-})(window, document, navigator);
+!function(e,t,i){function n(){const e=t.querySelector("meta[name='viewport']"),n=i.userAgent.toLowerCase(),o=n.includes("iphone")||n.includes("ipod")||n.includes("ipad")?t.documentElement.clientWidth:window.outerWidth,d=o<700?"width=550,initial-scale="+o/550:"width=device-width,initial-scale=1.0";console.log("adjustViewport "+o+" => "+d),e.setAttribute("content",d+",user-scalable=yes,shrink-to-fit=no")}n(),e.addEventListener("resize",n),e.addEventListener("orientationchange",n)}(window,document,navigator);

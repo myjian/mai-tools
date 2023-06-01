@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const SCRIPTS_INPUT_DIR = "./src/scripts";
 const SCRIPTS_OUTPUT_DIR = "./scripts";
@@ -52,4 +53,11 @@ module.exports = (env) => ({
     react: "React",
     "react-dom": "ReactDOM",
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "public/", to: "./" },
+      ],
+    }),
+  ],
 });

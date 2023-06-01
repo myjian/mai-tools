@@ -2,7 +2,7 @@
   "name": "mai-tools",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html",
+  "main": "public/index.html",
   "scripts": {
     "build": "webpack",
     "watch": "webpack --env development --watch",
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.3.1",

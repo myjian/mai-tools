@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chart info</title>
+  </head>
+  <body>
+    <div id="inputContainer">
+      <textarea class="input"></textarea>
+      <br />
+      <button id="analyze">Analyze</button>
+      <button id="convert">Convert</button>
+      <a
+        href="https://gist.github.com/myjian/a9532e7f8ba0e88b1fc333f02b9810c6"
+        target="_blank"
+        id="sampleInputs"
+      >
+        Sample inputs
+      </a>
+    </div>
+    <div class="output">
+      <h3 class="songTitleHeading">
+        <span id="chartInfoHeading">Chart info</span>
+        <span>&nbsp;</span>-<span>&nbsp;</span>
+        <a
+          id="songTitle"
+          title="開啟中文維基"
+          target="_blank"
+          href="https://maimai.fandom.com/zh/wiki/"
+        ></a>
+      </h3>
+      <table class="infoTable">
+        <thead>
+          <tr class="infoHeadRow">
+            <th>&nbsp;</th>
+            <th>#</th>
+            <th colspan="2">%</th>
+          </tr>
+        </thead>
+        <tbody class="textAlignCenter">
+          <tr>
+            <th class="tap">TAP</th>
+            <td id="tapCount"></td>
+            <td id="pctPerTap" colspan="2"></td>
+          </tr>
+          <tr>
+            <th class="hold">HOLD</th>
+            <td id="holdCount"></td>
+            <td id="pctPerHold" colspan="2"></td>
+          </tr>
+          <tr>
+            <th class="slide">SLIDE</th>
+            <td id="slideCount"></td>
+            <td id="pctPerSlide" colspan="2"></td>
+          </tr>
+          <tr class="touchRow">
+            <th class="touch touchCell">TOUCH</th>
+            <td id="touchCount"></td>
+            <td id="pctPerTouch" colspan="2"></td>
+          </tr>
+          <tr>
+            <th class="break" rowspan="2">BREAK</th>
+            <td id="breakCount" rowspan="2"></td>
+            <td>maimai:</td>
+            <td>DX:</td>
+          </tr>
+          <tr>
+            <td id="finalePctPerBreak">&nbsp;</td>
+            <td id="dxPctPerBreak"></td>
+          </tr>
+          <tr class="totalRow">
+            <th class="totalNoteCount" rowspan="2">TOTAL</th>
+            <td id="totalNoteCount" rowspan="2"></td>
+            <td>maimai:</td>
+            <td>DX:</td>
+          </tr>
+          <tr class="totalRow">
+            <td id="finaleMaxAchv"></td>
+            <td>101.0000%</td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="." id="resetLink" class="hidden">Reset</a>
+    </div>
+    <div class="howto">
+      <hr />
+      <h3 id="howtoHeading">How to use</h3>
+      <div id="description"></div>
+      <a
+        id="bookmarklet"
+        href="javascript:(function(d){if(d.location.host==='maimaidx-eng.com' || d.location.host==='maimaidx.jp'){var s=d.createElement('script'); s.type='text/javascript'; s.src='https://myjian.github.io/mai-tools/scripts/score-converter.js?t='+Math.floor(Date.now()/60000); d.body.append(s);}})(document);"
+        >Convert maimai DX score to FiNALE score</a
+      >
+    </div>
+    <div class="footer credit">
+      <hr />
+      Made by <a href="https://github.com/myjian" target="_blank">myjian</a>.
+    </div>
+    <script src="./main.bundle.js"></script>
+  </body>
+</html>
