@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const SCRIPTS_INPUT_DIR = "./src/scripts";
 const SCRIPTS_OUTPUT_DIR = "./scripts";
@@ -23,7 +24,7 @@ module.exports = (env) => ({
     ...scriptEntryPoints,
   },
   output: {
-    path: __dirname,
+    path: `${__dirname}/build`,
     filename: (pathData) => {
       const chunkName = pathData.chunk.name;
       if (scriptEntryPoints[chunkName]) {
@@ -39,6 +40,10 @@ module.exports = (env) => ({
         exclude: /node_modules/,
         use: "ts-loader",
       },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   resolve: {
@@ -48,4 +53,11 @@ module.exports = (env) => ({
     react: "React",
     "react-dom": "ReactDOM",
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: "public/", to: "./" },
+      ],
+    }),
+  ],
 });
