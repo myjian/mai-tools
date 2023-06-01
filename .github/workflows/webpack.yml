@@ -1,0 +1,49 @@
+name: Build with webpack and deploy
+
+on:
+  push:
+    branches: [ "gh-pages" ]
+  pull_request:
+    branches: [ "gh-pages" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: build/
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2 # or the latest "vX.X.X" version tag for this action
