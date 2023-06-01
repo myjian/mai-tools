@@ -24,7 +24,7 @@ module.exports = (env) => ({
     ...scriptEntryPoints,
   },
   output: {
-    path: __dirname,
+    path: `${__dirname}/build`,
     filename: (pathData) => {
       const chunkName = pathData.chunk.name;
       if (scriptEntryPoints[chunkName]) {
