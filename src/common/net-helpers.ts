@@ -10,6 +10,10 @@ const EXPIRATION_KEY = 'MaiToolsGameVerExpire';
 // 1 minute = 60 seconds = 60000 millisecond
 const TIMEZONE_OFFSET = (new Date().getTimezoneOffset() + 540) * 60000;
 
+// 1x1 PNG with transparent background
+const TRANSPARENT_PNG_DATA_URL =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
+
 export async function fetchPage(url: string) {
   const response = await fetch(url);
   const html = await response.text();
@@ -49,11 +53,18 @@ export function getEpochTimeFromText(datetimeStr: string): number {
 }
 
 export function removeScrollControl(dom: Document) {
-  let button = dom.getElementById('page-top');
-  if (button) button.remove();
+  for (const btnSelector of ['#page-top', '#page-bottom']) {
+    const button = dom.querySelector(btnSelector);
+    if (button instanceof HTMLImageElement) {
+      button.src = TRANSPARENT_PNG_DATA_URL;
+      button.style.pointerEvents = 'none';
+    }
+  }
 
-  button = dom.getElementById('page-bottom');
-  if (button) button.remove();
+  const menuToggle = dom.querySelector('.spmenu_toggle');
+  if (menuToggle instanceof HTMLElement) {
+    menuToggle.style.backgroundImage = `url(${TRANSPARENT_PNG_DATA_URL})`;
+  }
 }
 
 /**
