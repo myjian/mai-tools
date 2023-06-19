@@ -42,22 +42,16 @@ module.exports = (env) => ({
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  externals: {
-    react: "React",
-    "react-dom": "ReactDOM",
-  },
   plugins: [
     new CopyPlugin({
-      patterns: [
-        { from: "public/", to: "./" },
-      ],
+      patterns: [{from: "public/", to: "./"}],
     }),
   ],
 });

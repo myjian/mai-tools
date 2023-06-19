@@ -7,16 +7,19 @@
   </head>
   <body>
     <div id="root"></div>
-    <script
-      crossorigin
-      src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"
-    ></script>
-    <!-- <script src="./node_modules/react/umd/react.development.js"></script> -->
-    <!-- <script src="./node_modules/react-dom/umd/react-dom.development.js"></script> -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LZF2D7HZT3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-LZF2D7HZT3');
+    </script>
+
     <script src="./index-page/main.bundle.js"></script>
   </body>
 </html>
