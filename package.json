@@ -20,12 +20,12 @@
   },
   "homepage": "https://myjian.github.com/mai-tools",
   "dependencies": {
-    "@types/dom-to-image": "^2.6.4",
     "dom-to-image": "^2.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/dom-to-image": "^2.6.4",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "copy-webpack-plugin": "^11.0.0",
