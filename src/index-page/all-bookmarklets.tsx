@@ -4,7 +4,7 @@ import {getMaiToolsBaseUrl} from '../common/script-host';
 
 const ALL_IN_ONE_SCRIPT = getMaiToolsBaseUrl() + '/scripts/all-in-one.js';
 
-export const BOOKMARKLET_LINK = `javascript:void (
+export const BOOKMARKLET_LINK = `javascript:(
   function(d) {
     if (${JSON.stringify(MAIMAI_NET_ORIGINS)}.indexOf(d.location.origin) >= 0) {
       vars = d.createElement("script");
