@@ -7,8 +7,8 @@ const ALL_IN_ONE_SCRIPT = getMaiToolsBaseUrl() + '/scripts/all-in-one.js';
 export const BOOKMARKLET_LINK = `javascript:void (
   function(d) {
     if (${JSON.stringify(MAIMAI_NET_ORIGINS)}.indexOf(d.location.origin) >= 0) {
-      vars = d.createElement('script');
-      s.src='${ALL_IN_ONE_SCRIPT}?t=' + Math.floor(Date.now() / 60000);
+      vars = d.createElement("script");
+      s.src="${ALL_IN_ONE_SCRIPT}?t=" + Math.floor(Date.now() / 60000);
       d.body.append(s);
     }
   }
