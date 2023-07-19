@@ -23,6 +23,7 @@ const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
   {minAchv: 70.0, factor: 11.2, title: 'BB'},
   {minAchv: 60.0, factor: 9.6, title: 'B'},
   {minAchv: 50.0, factor: 8, title: 'C'},
+  {minAchv: 0.0, factor: 1, title: 'D'},
 ];
 
 export function getRankDefinitions() {
