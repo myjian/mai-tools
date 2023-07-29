@@ -23,6 +23,7 @@ const VERSION_NAMES = [
 ];
 
 export const enum GameVersion {
+  FiNALE = 12,
   DX = 13,
   UNIVERSE_PLUS = 18,
   FESTiVAL = 19,

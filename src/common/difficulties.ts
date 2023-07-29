@@ -14,6 +14,7 @@ export const DIFFICULTIES = [
   Difficulty.ReMASTER,
 ];
 const DIFFICULTY_TEXT = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER', 'Re:MASTER'];
+const DIFFICULTY_SHORT_TEXT = ['BAS', 'ADV', 'EXP', 'MAS', 'ReM'];
 
 export const DIFFICULTY_CLASSNAME_MAP = new Map<Difficulty, string>([
   [Difficulty.BASIC, 'basic'],
@@ -25,6 +26,10 @@ export const DIFFICULTY_CLASSNAME_MAP = new Map<Difficulty, string>([
 
 export function getDifficultyName(diff: Difficulty): string {
   return DIFFICULTY_TEXT[diff];
+}
+
+export function getDifficultyShortName(diff: Difficulty): string {
+  return DIFFICULTY_SHORT_TEXT[diff];
 }
 
 export function getDifficultyByName(cn: string): Difficulty {

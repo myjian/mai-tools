@@ -109,7 +109,6 @@ type FriendInfo = {
     }
     send('showProgress', '');
     send('setPlayerScore', scoreList);
-    send('calculateRating', '');
   }
 
   function main() {

@@ -1,0 +1,73 @@
+html {
+  background-color: #eee;
+}
+
+body {
+  font-family: 'ヒラギノ角ゴ Pro W3', 'メイリオ', Meiryo, 'Noto Sans CJK TC', '微軟正黑體',
+    'Microsoft Jhenghei', 'MS P Gothic', 'ＭＳ Ｐゴシック', sans-serif;
+}
+
+select {
+  width: 300px;
+  font-size: 20px;
+  margin: 5px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+tbody tr {
+  border-top: 1px solid black;
+}
+
+td,
+th {
+  padding: 4px 8px;
+}
+
+td[tabIndex],
+th[tabIndex] {
+  cursor: pointer;
+}
+
+tbody tr td:first-child {
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+td.achv {
+  text-align: right;
+}
+
+.basic {
+  color: #49b63e;
+}
+
+.advanced {
+  color: #fb9c2d;
+}
+
+.expert {
+  color: #f64861;
+}
+
+.master {
+  color: #9e45e2;
+}
+
+.remaster {
+  color: white;
+  text-shadow: -1px -1px 2px #9e45e2, -1px 1px 2px #9e45e2, 1px -1px 2px #9e45e2,
+    1px 1px 2px #9e45e2;
+}
+
+.done {
+  color: #2673dd;
+}
+
+.undone {
+  color: #404040;
+}
