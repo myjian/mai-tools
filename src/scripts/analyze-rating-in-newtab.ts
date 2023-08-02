@@ -144,13 +144,11 @@ declare global {
         if (typeof evt.data === 'string') {
           // this branch is deprecated!
           if (evt.data === 'ready') {
-            // Fetch DX version
             send('gameVersion', await gameVerPromise);
             allSongsDom = fetchSelfRecords(send);
           }
         } else if (typeof evt.data === 'object') {
           if (evt.data.action === 'ready') {
-            // Fetch DX version
             send('gameVersion', await gameVerPromise);
             if (typeof evt.data.payload === 'string') {
               LANG = evt.data.payload as Language;

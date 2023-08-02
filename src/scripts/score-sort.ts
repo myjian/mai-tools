@@ -55,8 +55,8 @@ type Cache = {
       [SortBy.RankDes]: 'Rank (high \u2192 low)',
       [SortBy.ApFcAsc]: 'AP/FC (FC \u2192 AP+)',
       [SortBy.ApFcDes]: 'AP/FC (AP+ \u2192 FC)',
-      [SortBy.SyncAsc]: 'Sync (FS \u2192 FDX+)',
-      [SortBy.SyncDes]: 'Sync (FDX+ \u2192 FS)',
+      [SortBy.SyncAsc]: 'Sync (FS \u2192 FSD+)',
+      [SortBy.SyncDes]: 'Sync (FSD+ \u2192 FS)',
       [SortBy.VsResultAsc]: 'VS Result (Lose \u2192 Win)',
       [SortBy.VsResultDes]: 'VS Result (Win \u2192 Lose)',
       [SortBy.LvAsc]: 'Level (low \u2192 high)',
@@ -72,8 +72,8 @@ type Cache = {
       [SortBy.RankDes]: '達成率 (由高至低)',
       [SortBy.ApFcAsc]: 'AP/FC (由 FC 到 AP+)',
       [SortBy.ApFcDes]: 'AP/FC (由 AP+ 到 FC)',
-      [SortBy.SyncAsc]: 'Sync (由 FS 到 FDX+)',
-      [SortBy.SyncDes]: 'Sync (由 FDX+ 到 FS)',
+      [SortBy.SyncAsc]: 'Sync (由 FS 到 FSD+)',
+      [SortBy.SyncDes]: 'Sync (由 FSD+ 到 FS)',
       [SortBy.VsResultAsc]: '對戰結果 (由敗北到勝利)',
       [SortBy.VsResultDes]: '對戰結果 (由勝利到敗北)',
       [SortBy.LvAsc]: '譜面等級 (由低至高)',
@@ -89,8 +89,8 @@ type Cache = {
       [SortBy.RankDes]: '정확도 내림차순 (높음 \u2192 낮음)',
       [SortBy.ApFcAsc]: 'AP/FC 오름차순 (FC \u2192 AP+)',
       [SortBy.ApFcDes]: 'AP/FC 내림차순 (AP+ \u2192 FC)',
-      [SortBy.SyncAsc]: 'Sync 오름차순 (FS \u2192 FDX+)',
-      [SortBy.SyncDes]: 'Sync 내림차순 (FDX+ \u2192 FS)',
+      [SortBy.SyncAsc]: 'Sync 오름차순 (FS \u2192 FSD+)',
+      [SortBy.SyncDes]: 'Sync 내림차순 (FSD+ \u2192 FS)',
       [SortBy.VsResultAsc]: 'VS 결과 오름차순 (Lose \u2192 Win)',
       [SortBy.VsResultDes]: 'VS 결과 내림차순 (Win \u2192 Lose)',
       [SortBy.LvAsc]: '난이도 오름차순 (낮음 \u2192 높음)',
@@ -144,7 +144,7 @@ type Cache = {
     null,
   ];
   const AP_FC_TYPES = ['AP+', 'AP', 'FC+', 'FC', null];
-  const SYNC_TYPES = ['FDX+', 'FDX', 'FS+', 'FS', null];
+  const SYNC_TYPES = ['FSD+', 'FSD', 'FS+', 'FS', null];
   const VS_RESULTS = ['WIN', 'DRAW', 'LOSE'];
   const DX_STARS = [
     null,
@@ -623,8 +623,8 @@ type Cache = {
       const columns = summaryTable.querySelectorAll('tr:nth-child(2) .f_10');
       columns[4].innerHTML = `${syncCount['FS']}/${total}`;
       columns[5].innerHTML = `${syncCount['FS+']}/${total}`;
-      columns[6].innerHTML = `${syncCount['FDX']}/${total}`;
-      columns[7].innerHTML = `${syncCount['FDX+']}/${total}`;
+      columns[6].innerHTML = `${syncCount['FSD']}/${total}`;
+      columns[7].innerHTML = `${syncCount['FSD+']}/${total}`;
     }
 
     function updateDxStarSummary() {
