@@ -80,7 +80,7 @@ type FriendInfo = {
       analyzeSpan.remove();
     }
     analyzeSpan = document.createElement('span');
-    analyzeSpan.className = 'analyzeSpan d_b';
+    analyzeSpan.className = 'analyzeSpan';
 
     const analyzeRatingLink = d.createElement('a');
     analyzeRatingLink.className = 'f_14';
@@ -99,13 +99,11 @@ type FriendInfo = {
     analyzeSpan.append(analyzeRatingLink, ' / ', analyzePlatesLink);
 
     if (friend.page === FriendPage.FRIEND_VS) {
-      analyzeRatingLink.className += ' d_ib friend_comment_block t_c';
-      analyzeRatingLink.style.borderRadius = '5px';
-      analyzeRatingLink.style.width = '184px';
-      analyzeRatingLink.style.marginRight = '15px';
-      analyzeSpan.className += 'm_l_10 m_r_10 t_r';
+      analyzeSpan.className += ' d_ib friend_comment_block f_r';
+      analyzeSpan.style.transform = 'translate(-25px, -20px)';
       container.parentElement.insertAdjacentElement('afterend', analyzeSpan);
     } else {
+      analyzeSpan.className += ' d_b';
       container
         .querySelector(
           friend.page === FriendPage.FRIEND_LIST ? '.friend_comment_block' : '.comment_block'
