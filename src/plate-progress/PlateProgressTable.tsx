@@ -41,6 +41,7 @@ export function PlateProgressTable(props: Props) {
               {activeDifficulties.map((d, idx) => (
                 <PlateProgressTableCell
                   key={idx}
+                  className={songCount[d] === progressByDifficulty[d][1].length ? 'done' : 'undone'}
                   plateType={plateType as PlateType}
                   value={progressByDifficulty[d][1].length}
                   d={d}

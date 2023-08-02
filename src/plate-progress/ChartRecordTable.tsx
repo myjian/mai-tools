@@ -14,8 +14,7 @@ interface Props {
 }
 
 export function ChartRecordTable(props: Props) {
-  const {d} = props;
-  console.log(d, props.plateType);
+  const {d, versionInfo, plateType} = props;
   if (typeof d !== 'number') {
     return null;
   }
@@ -57,29 +56,32 @@ export function ChartRecordTable(props: Props) {
   // Highlight sort column based on plateType
   return (
     <>
-      <h2>
-        <span className={DIFFICULTY_CLASSNAME_MAP.get(d)}>{getDifficultyName(d)}</span> scores
-      </h2>
+      <h3>
+        <span className={DIFFICULTY_CLASSNAME_MAP.get(d)}>{getDifficultyName(d)}</span> scores for{' '}
+        {versionInfo.plate_name[plateType]}
+      </h3>
       <table>
         <thead>
           <tr>
             <th>Song</th>
-            <th>Achv</th>
-            <th>FC</th>
-            <th>AP</th>
-            <th>Sync</th>
+            <th>{plateType === 'CLEAR' || plateType === 'SSS' ? '▸ ' : ''}Achv</th>
+            <th>{plateType === 'FC' ? '▸ ' : ''}FC</th>
+            <th>{plateType === 'AP' ? '▸ ' : ''}AP</th>
+            <th>{plateType === 'FSD' ? '▸ ' : ''}Sync</th>
           </tr>
         </thead>
         <tbody>
-          {doneRecords.map((r) => (
-            <ChartRecordTableRow key={r.songName} done r={r} />
-          ))}
+          {doneRecords.map((r) => {
+            const nickname = getSongNickname(r.songName, r.genre, r.chartType);
+            return <ChartRecordTableRow key={nickname} done r={r} />;
+          })}
           <tr>
             <th colSpan={5}>- - - - - - - -</th>
           </tr>
-          {undoneRecords.map((r) => (
-            <ChartRecordTableRow key={r.songName} r={r} />
-          ))}
+          {undoneRecords.map((r) => {
+            const nickname = getSongNickname(r.songName, r.genre, r.chartType);
+            return <ChartRecordTableRow key={nickname} r={r} />;
+          })}
           {unplayedStdSongs.map((s) => {
             const nickname = getSongNickname(s, '', ChartType.STANDARD);
             return <ChartRecordTableRow key={nickname} songName={nickname} />;

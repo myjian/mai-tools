@@ -20,9 +20,6 @@ export function PlateProgress(props: Props) {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    if (version === '0') {
-      return;
-    }
     const regionPrefix = region === GameRegion.Jp ? 'jp' : 'intl';
     fetch(`${BASE_URL}/${regionPrefix}${version}.json`).then(async (res) => {
       if (res.ok) {
@@ -39,7 +36,6 @@ export function PlateProgress(props: Props) {
 
   return (
     <div>
-      <br />
       <div className="error">{error}</div>
       {versionInfo && (
         <PlateProgressDetail versionInfo={versionInfo} playerScores={props.playerScores} />

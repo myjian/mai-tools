@@ -1,7 +1,7 @@
-import {ChartRecord} from './chart-record';
+import {ChartRecord, FullChartRecord} from './chart-record';
 import {getChartType} from './chart-type';
 import {Difficulty} from './difficulties';
-import {getChartLevel, getSongName} from './fetch-score-util';
+import {getApFcStatus, getChartLevel, getSongName, getSyncStatus} from './fetch-score-util';
 import {getDefaultLevel} from './level-helper';
 import {fetchPage} from './net-helpers';
 import {SongDatabase} from './song-props';
@@ -75,6 +75,26 @@ function processRow(
   }
 }
 
+function processRowFull(
+  row: HTMLElement,
+  difficulty: Difficulty,
+  songDb: SongDatabase,
+  state: {genre: string}
+): FullChartRecord {
+  const baseRecord = processRow(row, difficulty, songDb, state);
+  if (baseRecord == null) {
+    return null;
+  }
+  const props = songDb.getSongProperties(baseRecord.songName, state.genre, baseRecord.chartType);
+  return {
+    ...baseRecord,
+    fcap: getApFcStatus(row, true),
+    sync: getSyncStatus(row, true),
+    version: props ? props.debut : -1,
+    dxscore: {max: 0, player: 0, ratio: 0, star: 0}, // TODO
+  };
+}
+
 export async function fetchFriendScores(
   friendIdx: string,
   difficulty: Difficulty,
@@ -89,5 +109,24 @@ export async function fetchFriendScores(
   const rows = dom.querySelectorAll('.main_wrapper.t_c .m_15') as NodeListOf<HTMLElement>;
   const state = {genre: ''};
   const recordsWithNull = Array.from(rows).map((row) => processRow(row, difficulty, songDb, state));
+  return recordsWithNull.filter((record) => record != null);
+}
+
+export async function fetchFriendScoresFull(
+  friendIdx: string,
+  difficulty: Difficulty,
+  songDb: SongDatabase
+): Promise<FullChartRecord[]> {
+  let url = FRIEND_SCORE_URLS.get(difficulty);
+  if (!url) {
+    return;
+  }
+  url += friendIdx;
+  const dom = await fetchPage(url);
+  const rows = dom.querySelectorAll('.main_wrapper.t_c .m_15') as NodeListOf<HTMLElement>;
+  const state = {genre: ''};
+  const recordsWithNull = Array.from(rows).map((row) =>
+    processRowFull(row, difficulty, songDb, state)
+  );
   return recordsWithNull.filter((record) => record != null);
 }

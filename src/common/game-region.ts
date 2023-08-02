@@ -12,3 +12,8 @@ export function isMaimaiNetOrigin(origin: string) {
 export function getGameRegionFromOrigin(origin: string): GameRegion {
   return origin === GameRegion.Jp ? GameRegion.Jp : GameRegion.Intl;
 }
+
+export function getGameRegionFromShortString(region: string): GameRegion {
+  region = region.toLowerCase();
+  return region === 'jp' ? GameRegion.Jp : GameRegion.Intl;
+}

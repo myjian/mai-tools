@@ -75,7 +75,7 @@ export function PlateProgressDetail(props: Props) {
 
   return (
     <>
-      <h2>Completion status of {versionInfo.version_name}</h2>
+      <h3>Completion status of {versionInfo.version_name}</h3>
       <PlateProgressTable
         activeDifficulties={activeDifficulties}
         songCount={songCount}

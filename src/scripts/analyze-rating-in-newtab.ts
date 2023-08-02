@@ -2,10 +2,11 @@ import {ChartRecord} from '../common/chart-record';
 import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, fetchScoresFull, SELF_SCORE_URLS} from '../common/fetch-self-score';
-import {isMaimaiNetOrigin} from '../common/game-region';
+import {GameRegion, getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
+import {QueryParam} from '../common/query-params';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {SongDatabase} from '../common/song-props';
@@ -76,7 +77,13 @@ declare global {
   }
 
   function insertAnalyzeButton(playerName: string) {
-    const urlSearch = playerName ? '?' + new URLSearchParams({playerName: playerName}) : '';
+    const region = getGameRegionFromOrigin(window.location.origin);
+    const urlSearch = new URLSearchParams({
+      [QueryParam.GameRegion]: region === GameRegion.Jp ? 'jp' : 'intl',
+    });
+    if (playerName) {
+      urlSearch.set(QueryParam.PlayerName, playerName);
+    }
     const profileBlock = document.body.querySelector('.basic_block.p_10.f_0');
     if (!profileBlock) {
       return;
@@ -93,14 +100,14 @@ declare global {
     analyzeRatingLink.style.color = '#1477e6';
     analyzeRatingLink.target = 'selfRating';
     analyzeRatingLink.append(UIString[LANG].analyze);
-    analyzeRatingLink.href = BASE_URL + '/rating-calculator/' + urlSearch;
+    analyzeRatingLink.href = BASE_URL + '/rating-calculator/?' + urlSearch;
 
     const analyzePlatesLink = document.createElement('a');
     analyzePlatesLink.className = 'f_14';
     analyzePlatesLink.style.color = '#1477e6';
     analyzePlatesLink.target = 'plateProgress';
     analyzePlatesLink.append(UIString[LANG].plateProgress);
-    analyzePlatesLink.href = BASE_URL + '/plate-progress/' + urlSearch;
+    analyzePlatesLink.href = BASE_URL + '/plate-progress/?' + urlSearch;
 
     analyzeSpan.append(analyzeRatingLink, ' / ', analyzePlatesLink, document.createElement('br'));
 

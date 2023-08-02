@@ -6,6 +6,7 @@ import {PlateType} from './plate_info';
 interface Props {
   useTh?: boolean;
   d: Difficulty;
+  className?: string;
   plateType?: PlateType;
   value: string | number;
   onClick?: (plate: PlateType, d: Difficulty) => void;
@@ -39,6 +40,8 @@ export function PlateProgressTableCell(props: Props) {
       {props.value}
     </th>
   ) : (
-    <td {...clickableProps}>{props.value}</td>
+    <td className={props.className} {...clickableProps}>
+      {props.value}
+    </td>
   );
 }

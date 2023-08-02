@@ -15,13 +15,13 @@ const VERSIONS = (function () {
 })();
 
 interface Props {
+  version: string;
   onChange: (evt: React.SyntheticEvent<HTMLSelectElement>) => void;
 }
 
 export function VersionSelect(props: Props) {
   return (
-    <select onChange={props.onChange}>
-      <option value="0">== Game Version ===</option>
+    <select onChange={props.onChange} value={props.version}>
       {VERSIONS.map((ver, idx) => {
         const label = ver
           .split('-')

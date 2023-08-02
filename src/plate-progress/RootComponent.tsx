@@ -4,9 +4,11 @@ import {FullChartRecord} from '../common/chart-record';
 import {
   GameRegion,
   getGameRegionFromOrigin,
+  getGameRegionFromShortString,
   isMaimaiNetOrigin,
   MAIMAI_NET_ORIGINS,
 } from '../common/game-region';
+import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language} from '../common/lang';
 import {QueryParam} from '../common/query-params';
 import {PlateProgress} from './PlateProgress';
@@ -19,27 +21,29 @@ interface State {
   version: string;
   playerName: string | null;
   friendIdx: string | null;
+  playerScores: FullChartRecord[];
 }
 
 export class RootComponent extends React.PureComponent<{}, State> {
   private referrer = document.referrer && new URL(document.referrer).origin;
-  private playerScores: FullChartRecord[] = [];
 
   constructor(props: {}) {
     super(props);
     const queryParams = new URLSearchParams(location.search);
     const friendIdx = queryParams.get(QueryParam.FriendIdx);
     const playerName = queryParams.get(QueryParam.PlayerName);
+    const region = getGameRegionFromShortString(queryParams.get(QueryParam.GameRegion));
     const lang = getInitialLanguage();
     updateDocumentTitle(lang);
 
     this.state = {
       lang,
-      region: GameRegion.Jp,
-      version: '0',
+      region,
+      version: GameVersion.FESTiVAL.toString(),
       friendIdx,
       playerName,
       progress: '',
+      playerScores: [],
     };
     if (window.opener) {
       this.initWindowCommunication();
@@ -47,28 +51,30 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {playerName, region, version, progress} = this.state;
+    const {playerName, region, version, progress, playerScores} = this.state;
     return (
       <div>
-        <h3>{progress || playerName}</h3>
-        <select onChange={this.handleSelectRegion}>
+        <select onChange={this.handleSelectRegion} value={region}>
           <option value="" disabled>
             == Game Region ==
           </option>
-          <option value="jp">Japan</option>
-          <option value="intl">International</option>
+          <option value={GameRegion.Jp}>Japan</option>
+          <option value={GameRegion.Intl}>International</option>
         </select>
         <br />
-        <VersionSelect onChange={this.handleSelectVersion} />
+        <VersionSelect version={version} onChange={this.handleSelectVersion} />
         <br />
-        <PlateProgress region={region} version={version} playerScores={this.playerScores} />
+        <h2>Player: {playerName}</h2>
+        {progress ? <div>{progress}</div> : null}
+        <PlateProgress region={region} version={version} playerScores={playerScores} />
       </div>
     );
   }
 
   private handleSelectRegion = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    this.setState({region: evt.currentTarget.value === 'intl' ? GameRegion.Intl : GameRegion.Jp});
+    this.setState({region: evt.currentTarget.value as GameRegion});
   };
+
   private handleSelectVersion = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
     this.setState({version: evt.currentTarget.value});
   };
@@ -99,8 +105,8 @@ export class RootComponent extends React.PureComponent<{}, State> {
             });
             break;
           case 'setPlayerScore':
-            this.playerScores = evt.data.payload;
             this.setState({
+              playerScores: evt.data.payload,
               region: getGameRegionFromOrigin(evt.origin),
             });
             break;
@@ -110,7 +116,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const {friendIdx, lang} = this.state;
     if (friendIdx) {
       // Analyze friend rating
-      this.postMessageToOpener({action: 'getFriendRecords', payload: friendIdx});
+      this.postMessageToOpener({action: 'getFriendFullRecords', payload: friendIdx});
     } else {
       // Analyze self rating
       this.postMessageToOpener({action: 'fetchFullRecords', payload: lang});
