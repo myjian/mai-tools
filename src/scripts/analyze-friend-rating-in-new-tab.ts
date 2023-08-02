@@ -179,7 +179,6 @@ type FriendInfo = {
       });
     }
     let allSongs: BasicSongProps[];
-    // Fetch DX version
     const gameVerPromise = fetchGameVersion(document.body);
     if (window.ratingCalcMsgListener) {
       window.removeEventListener('message', window.ratingCalcMsgListener);

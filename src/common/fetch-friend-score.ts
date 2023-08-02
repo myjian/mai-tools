@@ -86,6 +86,9 @@ function processRowFull(
     return null;
   }
   const props = songDb.getSongProperties(baseRecord.songName, state.genre, baseRecord.chartType);
+  if (baseRecord.songName === 'おとせサンダー' && difficulty === Difficulty.EXPERT) {
+    debugger;
+  }
   return {
     ...baseRecord,
     fcap: getApFcStatus(row, true),
@@ -95,17 +98,21 @@ function processRowFull(
   };
 }
 
-export async function fetchFriendScores(
-  friendIdx: string,
-  difficulty: Difficulty,
-  songDb: SongDatabase
-): Promise<ChartRecord[]> {
+function fetchFriendScoresPage(friendIdx: string, difficulty: Difficulty): Promise<Document> {
   let url = FRIEND_SCORE_URLS.get(difficulty);
   if (!url) {
     return;
   }
   url += friendIdx;
-  const dom = await fetchPage(url);
+  return fetchPage(url);
+}
+
+export async function fetchFriendScores(
+  friendIdx: string,
+  difficulty: Difficulty,
+  songDb: SongDatabase
+): Promise<ChartRecord[]> {
+  const dom = await fetchFriendScoresPage(friendIdx, difficulty);
   const rows = dom.querySelectorAll('.main_wrapper.t_c .m_15') as NodeListOf<HTMLElement>;
   const state = {genre: ''};
   const recordsWithNull = Array.from(rows).map((row) => processRow(row, difficulty, songDb, state));
@@ -117,12 +124,7 @@ export async function fetchFriendScoresFull(
   difficulty: Difficulty,
   songDb: SongDatabase
 ): Promise<FullChartRecord[]> {
-  let url = FRIEND_SCORE_URLS.get(difficulty);
-  if (!url) {
-    return;
-  }
-  url += friendIdx;
-  const dom = await fetchPage(url);
+  const dom = await fetchFriendScoresPage(friendIdx, difficulty);
   const rows = dom.querySelectorAll('.main_wrapper.t_c .m_15') as NodeListOf<HTMLElement>;
   const state = {genre: ''};
   const recordsWithNull = Array.from(rows).map((row) =>

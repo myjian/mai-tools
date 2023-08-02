@@ -82,5 +82,5 @@ export function getSyncStatus(row: HTMLElement, isFriendScore = false) {
   if (lowercaseStatus === 'back') {
     return null;
   }
-  return lowercaseStatus.replace('sd', 'DX').replace('p', '+').toUpperCase();
+  return lowercaseStatus.replace('p', '+').toUpperCase();
 }

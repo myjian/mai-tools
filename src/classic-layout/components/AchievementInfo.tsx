@@ -125,8 +125,8 @@ export class AchievementInfo extends React.PureComponent<Props, State> {
         case 'FS':
         case 'FS+':
           return 'MAX FEVER';
-        case 'FDX':
-        case 'FDX+':
+        case 'FSD':
+        case 'FSD+':
           return '100% SYNC';
       }
     }

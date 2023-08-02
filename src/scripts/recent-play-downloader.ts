@@ -1,5 +1,6 @@
-import domtoimage from 'dom-to-image';
 import './recent-play-downloader.css';
+
+import domtoimage from 'dom-to-image';
 
 import {ChartType} from '../common/chart-type';
 import {Difficulty, DIFFICULTY_CLASSNAME_MAP, getDifficultyByName} from '../common/difficulties';
@@ -91,7 +92,7 @@ type Options = {
     ['applus', 'AP+'],
   ]);
 
-  const FS_FDX_IMG_NAME_TO_TEXT = new Map([
+  const SYNC_IMG_NAME_TO_TEXT = new Map([
     ['fs', 'FS'],
     ['fsplus', 'FS+'],
     ['fsd', 'FSD'],
@@ -199,8 +200,8 @@ type Options = {
       fullSyncSrc.lastIndexOf('/') + 1,
       fullSyncSrc.lastIndexOf('.')
     );
-    if (FS_FDX_IMG_NAME_TO_TEXT.has(fullSyncImgName)) {
-      results.push(FS_FDX_IMG_NAME_TO_TEXT.get(fullSyncImgName));
+    if (SYNC_IMG_NAME_TO_TEXT.has(fullSyncImgName)) {
+      results.push(SYNC_IMG_NAME_TO_TEXT.get(fullSyncImgName));
     }
 
     // DX Star
@@ -585,6 +586,6 @@ type Options = {
         footer.append(textarea);
         textarea.value = e instanceof Error ? e.message + '\n' + e.stack : String(e);
       }
-    })().then(_ => {});
+    })().then((_) => {});
   }
 })(document);

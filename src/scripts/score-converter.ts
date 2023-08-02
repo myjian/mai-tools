@@ -51,8 +51,8 @@ import {ALLOWED_ORIGINS} from '../common/util';
     ['FS+', '/maimai-mobile/maimai-img/icon_maxfever_gold.png'],
   ]);
   const DX_SYNC_IMG = new Map([
-    ['FDX', '/maimai-mobile/img/music_icon_fsd.png'],
-    ['FDX+', '/maimai-mobile/img/music_icon_fsdp.png'],
+    ['FSD', '/maimai-mobile/img/music_icon_fsd.png'],
+    ['FSD+', '/maimai-mobile/img/music_icon_fsdp.png'],
   ]);
 
   function trimSpaces(textLine: string) {
@@ -161,9 +161,9 @@ import {ALLOWED_ORIGINS} from '../common/util';
       case 'fsplus':
         return 'FS+';
       case 'fsd':
-        return 'FDX';
+        return 'FSD';
       case 'fsdplus':
-        return 'FDX+';
+        return 'FSD+';
     }
     return null;
   }
