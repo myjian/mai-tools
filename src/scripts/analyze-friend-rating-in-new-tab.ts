@@ -1,10 +1,15 @@
-import {ChartRecord} from '../common/chart-record';
-import {fetchFriendScores, FRIEND_SCORE_URLS} from '../common/fetch-friend-score';
+import {ChartRecord, FullChartRecord} from '../common/chart-record';
+import {
+  fetchFriendScores,
+  fetchFriendScoresFull,
+  FRIEND_SCORE_URLS,
+} from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
-import {isMaimaiNetOrigin} from '../common/game-region';
+import {GameRegion, getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
+import {QueryParam} from '../common/query-params';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {BasicSongProps, SongDatabase} from '../common/song-props';
@@ -36,20 +41,23 @@ type FriendInfo = {
 };
 
 (function (d) {
-  const BASE_URL = getScriptHost('analyze-friend-rating-in-new-tab') + '/rating-calculator/?';
+  const BASE_URL = getScriptHost('analyze-friend-rating-in-new-tab');
   let LANG = getInitialLanguage();
   const UIString = {
     [Language.zh_TW]: {
       pleaseLogIn: '請登入 maimai NET',
       analyze: '分析 Rating',
+      plateProgress: '名牌板',
     },
     [Language.en_US]: {
       pleaseLogIn: 'Please log in to maimai DX NET.',
       analyze: 'Analyze Rating',
+      plateProgress: 'Plates',
     },
     [Language.ko_KR]: {
       pleaseLogIn: 'maimai DX NET에 로그인 해 주세요.',
       analyze: '레이팅 분석하기',
+      plateProgress: 'Plates', // TODO
     },
   };
   const friends_cache: {[idx: string]: FriendInfo} = {};
@@ -59,40 +67,54 @@ type FriendInfo = {
   }
 
   function insertAnalyzeButton(friend: FriendInfo, container: HTMLElement) {
-    let analyzeLink = (friend.page === FriendPage.FRIEND_VS ? document : container).querySelector(
-      '.analyzeLink'
-    ) as HTMLAnchorElement;
-    if (analyzeLink) {
-      (friend.page === FriendPage.FRIEND_VS ? analyzeLink.parentElement : analyzeLink).remove();
+    const region = getGameRegionFromOrigin(window.location.origin);
+    const queryParams = new URLSearchParams({
+      [QueryParam.GameRegion]: region === GameRegion.Jp ? 'jp' : 'intl',
+      [QueryParam.FriendIdx]: friend.idx,
+      [QueryParam.PlayerName]: friend.name,
+    });
+    let analyzeSpan = (friend.page === FriendPage.FRIEND_VS ? document : container).querySelector(
+      '.analyzeSpan'
+    ) as HTMLSpanElement;
+    if (analyzeSpan) {
+      analyzeSpan.remove();
     }
-    analyzeLink = d.createElement('a');
-    analyzeLink.className = 'analyzeLink f_14';
-    analyzeLink.style.color = '#1477e6';
-    analyzeLink.target = 'friendRating';
-    analyzeLink.innerText = UIString[LANG].analyze;
-    const queryParams = new URLSearchParams({friendIdx: friend.idx, playerName: friend.name});
-    analyzeLink.href = BASE_URL + queryParams.toString();
+    analyzeSpan = document.createElement('span');
+    analyzeSpan.className = 'analyzeSpan';
+
+    const analyzeRatingLink = d.createElement('a');
+    analyzeRatingLink.className = 'f_14';
+    analyzeRatingLink.style.color = '#1477e6';
+    analyzeRatingLink.target = 'friendRating';
+    analyzeRatingLink.innerText = UIString[LANG].analyze;
+    analyzeRatingLink.href = BASE_URL + '/rating-calculator/?' + queryParams;
+
+    const analyzePlatesLink = document.createElement('a');
+    analyzePlatesLink.className = 'f_14';
+    analyzePlatesLink.style.color = '#1477e6';
+    analyzePlatesLink.target = 'plateProgress';
+    analyzePlatesLink.append(UIString[LANG].plateProgress);
+    analyzePlatesLink.href = BASE_URL + '/plate-progress/?' + queryParams;
+
+    analyzeSpan.append(analyzeRatingLink, ' / ', analyzePlatesLink);
+
     if (friend.page === FriendPage.FRIEND_VS) {
-      analyzeLink.className += ' d_ib friend_comment_block t_c';
-      analyzeLink.style.borderRadius = '5px';
-      analyzeLink.style.width = '184px';
-      analyzeLink.style.marginRight = '15px';
-      const div = document.createElement('div');
-      div.className = 'm_l_10 m_r_10 t_r';
-      div.append(analyzeLink);
-      container.parentElement.insertAdjacentElement('afterend', div);
+      analyzeSpan.className += ' d_ib friend_comment_block f_r';
+      analyzeSpan.style.transform = 'translate(-25px, -20px)';
+      container.parentElement.insertAdjacentElement('afterend', analyzeSpan);
     } else {
-      analyzeLink.className += ' d_b';
+      analyzeSpan.className += ' d_b';
       container
         .querySelector(
           friend.page === FriendPage.FRIEND_LIST ? '.friend_comment_block' : '.comment_block'
         )
-        .insertAdjacentElement('afterbegin', analyzeLink);
+        .insertAdjacentElement('afterbegin', analyzeSpan);
     }
   }
 
   async function fetchFriendRecords(
     friend: FriendInfo,
+    full: boolean,
     send: (action: string, payload: unknown) => void
   ) {
     // Send player grade
@@ -100,16 +122,19 @@ type FriendInfo = {
       send('playerGrade', friend.grade);
     }
     // Fetch all scores
-    let scoreList: ChartRecord[] = [];
+    let scoreList: (FullChartRecord | ChartRecord)[] = [];
     for (const difficulty of FRIEND_SCORE_URLS.keys()) {
       send('showProgress', statusText(LANG, difficulty, false));
       scoreList = scoreList.concat(
-        await fetchFriendScores(friend.idx, difficulty, new SongDatabase(false))
+        await (full ? fetchFriendScoresFull : fetchFriendScores)(
+          friend.idx,
+          difficulty,
+          new SongDatabase(false)
+        )
       );
     }
     send('showProgress', '');
     send('setPlayerScore', scoreList);
-    send('calculateRating', '');
   }
 
   function main() {
@@ -173,7 +198,12 @@ type FriendInfo = {
           send('gameVersion', await gameVerPromise);
           const friend = friends_cache[evt.data.payload];
           if (friend) {
-            fetchFriendRecords(friend, send);
+            fetchFriendRecords(friend, false, send);
+          }
+        } else if (evt.data.action === 'fetchFriendScoresFull') {
+          const friend = friends_cache[evt.data.payload];
+          if (friend) {
+            fetchFriendRecords(friend, true, send);
           }
         } else if (evt.data.action === 'fetchNewSongs') {
           const gameVer = await gameVerPromise;

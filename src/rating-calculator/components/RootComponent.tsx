@@ -218,8 +218,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
             break;
           case 'setPlayerScore':
             this.playerScores = evt.data.payload;
-            break;
-          case 'calculateRating':
             this.analyzeRating();
             break;
           case 'allSongs':

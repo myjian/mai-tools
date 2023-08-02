@@ -10,6 +10,7 @@ const EXPIRATION_KEY = 'magicExpire';
 const OLD_KEYS_TO_CLEANUP = ['dxLv15', 'dxLv16', 'dxLv17', 'dxLv18', 'dxLv19', 'dxLv20'];
 
 const MagicSauce: Record<GameVersion, string> = {
+  [GameVersion.FiNALE]: null,
   [GameVersion.DX]: null,
   [GameVersion.UNIVERSE_PLUS]:
     'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZWU1NjlkNzRmNDIyZDRlMjU1MDY1ZDhiMDJlYTI5NGEvcmF3LzkzMmZiMDNhMzgxMjEyMTAwODBkNmY1Mzc5MTNhMDg0MjQ3ZTUzMWMvbWFpZHhfaW5fbHZfdW5pdmVyc2VwbHVzLmpz',
