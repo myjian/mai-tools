@@ -156,8 +156,7 @@ declare global {
               LANG = evt.data.payload as Language;
             }
             allSongsDom = fetchSelfRecords(send);
-          } else if (evt.data.action === 'fetchFullRecords') {
-            // Plate progress will request full records.
+          } else if (evt.data.action === 'fetchScoresFull') {
             if (typeof evt.data.payload === 'string') {
               LANG = evt.data.payload as Language;
             }

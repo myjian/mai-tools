@@ -125,15 +125,13 @@ type FriendInfo = {
     let scoreList: (FullChartRecord | ChartRecord)[] = [];
     for (const difficulty of FRIEND_SCORE_URLS.keys()) {
       send('showProgress', statusText(LANG, difficulty, false));
-      if (full) {
-        scoreList = scoreList.concat(
-          await fetchFriendScoresFull(friend.idx, difficulty, new SongDatabase(false))
-        );
-      } else {
-        scoreList = scoreList.concat(
-          await fetchFriendScores(friend.idx, difficulty, new SongDatabase(false))
-        );
-      }
+      scoreList = scoreList.concat(
+        await (full ? fetchFriendScoresFull : fetchFriendScores)(
+          friend.idx,
+          difficulty,
+          new SongDatabase(false)
+        )
+      );
     }
     send('showProgress', '');
     send('setPlayerScore', scoreList);
@@ -202,7 +200,7 @@ type FriendInfo = {
           if (friend) {
             fetchFriendRecords(friend, false, send);
           }
-        } else if (evt.data.action === 'getFriendFullRecords') {
+        } else if (evt.data.action === 'fetchFriendScoresFull') {
           const friend = friends_cache[evt.data.payload];
           if (friend) {
             fetchFriendRecords(friend, true, send);

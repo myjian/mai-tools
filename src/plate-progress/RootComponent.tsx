@@ -116,10 +116,10 @@ export class RootComponent extends React.PureComponent<{}, State> {
     const {friendIdx, lang} = this.state;
     if (friendIdx) {
       // Analyze friend rating
-      this.postMessageToOpener({action: 'getFriendFullRecords', payload: friendIdx});
+      this.postMessageToOpener({action: 'fetchFriendScoresFull', payload: friendIdx});
     } else {
       // Analyze self rating
-      this.postMessageToOpener({action: 'fetchFullRecords', payload: lang});
+      this.postMessageToOpener({action: 'fetchScoresFull', payload: lang});
     }
   };
 }
