@@ -134,7 +134,9 @@ type Options = {
 
   function getSongName(row: HTMLElement) {
     try {
-      return (row.querySelector('.m_5.p_5.f_13') as HTMLElement).textContent;
+      return Array.from((row.querySelector('.m_5.p_5.f_13') as HTMLElement).childNodes).find(
+        (node) => node instanceof Text
+      ).textContent;
     } catch (e) {
       console.log(e);
       console.log(row);
@@ -233,7 +235,7 @@ type Options = {
   }
 
   function _renderScoreRowHelper(
-    columnValues: ReadonlyArray<string | ReadonlyArray<string>>,
+    columnValues: ReadonlyArray<string | DocumentFragment | ReadonlyArray<string>>,
     rowClassnames: ReadonlyArray<string>,
     isHeading: boolean
   ) {
@@ -243,7 +245,7 @@ type Options = {
     }
     columnValues.forEach((v, index) => {
       const cell = ce(isHeading ? 'th' : 'td');
-      if (typeof v === 'string') {
+      if (typeof v === 'string' || v instanceof DocumentFragment) {
         cell.append(v);
       } else {
         if (v[1]) {
@@ -267,16 +269,18 @@ type Options = {
     );
   }
 
-  function renderScoreRow(record: ScoreRecord) {
+  function renderScoreRow(record: ScoreRecord, songDb: SongDatabase) {
     const genre = isNiconicoLinkImg(record.songImgSrc) ? 'niconico' : '';
-    const nickname = getSongNickname(record.songName, genre, record.chartType);
+    const nickname = songDb.hasDualCharts(record.songName, genre)
+      ? getSongNickname(record.songName, genre, record.chartType)
+      : record.songName;
+    const achvFragment = document.createDocumentFragment();
+    const rankSpan = document.createElement('span');
+    rankSpan.className = 'd_b';
+    rankSpan.append(record.rank);
+    achvFragment.append(rankSpan, '\t', record.achievement.toFixed(4) + '%');
     return _renderScoreRowHelper(
-      [
-        formatDate(record.date),
-        [nickname, record.songImgSrc],
-        record.rank + ' ' + record.achievement.toFixed(4) + '%',
-        record.stamps,
-      ],
+      [formatDate(record.date), [nickname, record.songImgSrc], achvFragment, record.stamps],
       [SCORE_RECORD_ROW_CLASSNAME, DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)],
       false
     );
@@ -284,6 +288,7 @@ type Options = {
 
   function renderTopScores(
     records: ReadonlyArray<ScoreRecord>,
+    songDb: SongDatabase,
     container: HTMLElement,
     thead: HTMLTableSectionElement,
     tbody: HTMLTableSectionElement
@@ -292,7 +297,7 @@ type Options = {
     tbody.innerHTML = '';
     thead.append(renderScoreHeadRow());
     records.forEach((r) => {
-      tbody.append(renderScoreRow(r));
+      tbody.append(renderScoreRow(r, songDb));
     });
     container.style.paddingBottom = Math.floor(records.length / 2) + 2 + 'px';
   }
@@ -340,6 +345,7 @@ type Options = {
       });
     }
     if (!options.showAll) {
+      records.reverse(); // oldest -> newest. This is necessary for newer new records to overwrite older ones.
       const nameRecordMap = new Map();
       records.forEach((r) => {
         if (r.isNewRecord) {
@@ -352,9 +358,11 @@ type Options = {
       nameRecordMap.forEach((r) => {
         records.push(r);
       });
-    }
-    if (options.olderFirst) {
-      records.reverse();
+      if (!options.olderFirst) {
+        records.reverse(); // newest -> oldest
+      }
+    } else if (options.olderFirst) {
+      records.reverse(); // oldest -> newest
     }
     return records;
   }
@@ -489,7 +497,11 @@ type Options = {
     return div;
   }
 
-  function createOutputElement(allRecords: ReadonlyArray<ScoreRecord>, insertBefore: HTMLElement) {
+  function createOutputElement(
+    allRecords: ReadonlyArray<ScoreRecord>,
+    songDb: SongDatabase,
+    insertBefore: HTMLElement
+  ) {
     const playDates = allRecords.reduce((s, r) => {
       s.add(formatDate(r.date).split(' ')[0]);
       return s;
@@ -515,6 +527,7 @@ type Options = {
     const handleOptionChange = () => {
       renderTopScores(
         filterRecords(allRecords, getFilterAndOptions()),
+        songDb,
         playRecordContainer,
         thead,
         tbody
@@ -535,6 +548,7 @@ type Options = {
 
     renderTopScores(
       filterRecords(allRecords, {olderFirst: false}),
+      songDb,
       playRecordContainer,
       thead,
       tbody
@@ -572,10 +586,10 @@ type Options = {
           stamps: getStamps(row),
           isNewRecord: getIsNewRecord(row),
         }));
-        createOutputElement(records, titleImg);
         const gameVer = await fetchGameVersion(d.body);
         const gameRegion = getGameRegionFromOrigin(d.location.origin);
         const songDb = await loadSongDatabase(gameVer, gameRegion);
+        createOutputElement(records, songDb, titleImg);
         rows.forEach((row, idx) => {
           const record = records[idx];
           addLvToRow(row, record, songDb);
