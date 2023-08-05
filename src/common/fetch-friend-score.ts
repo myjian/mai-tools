@@ -86,9 +86,6 @@ function processRowFull(
     return null;
   }
   const props = songDb.getSongProperties(baseRecord.songName, state.genre, baseRecord.chartType);
-  if (baseRecord.songName === 'おとせサンダー' && difficulty === Difficulty.EXPERT) {
-    debugger;
-  }
   return {
     ...baseRecord,
     fcap: getApFcStatus(row, true),
