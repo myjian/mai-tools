@@ -2,23 +2,30 @@
   margin-bottom: 22px;
 }
 
-.rankDistributionTable:first-child {
-  margin-right: 40px;
+@media only screen and (min-width: 551px) {
+  .rankDistributionTable:first-child {
+    margin-right: 40px;
+  }
 }
 
 .levelRankCell {
   padding: 4px;
   width: 60px;
-  box-sizing: border-box;
 }
 
 .diffRankCell {
   padding: 4px 10px;
 }
 
+td.diffRankCell {
+  width: 60px;
+}
+
 td.levelRankCell,
 td.diffRankCell {
   text-align: center;
+  color: initial;
+  text-shadow: initial;
 }
 
 .officialLevelCell {

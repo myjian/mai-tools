@@ -4,7 +4,7 @@ import {RankDistributionRow} from './RankDistributionRow';
 
 interface Props {
   rowHead: string;
-  columns: IterableIterator<string>;
+  columns: Iterable<string>;
   rankDist: Map<string, number>;
   rowClassname?: string;
   baseCellClassname: string;
@@ -15,7 +15,7 @@ export const RankDistributionDataRow = React.memo((props: Props) => {
   const values: (string | number)[] = [props.rowHead];
   for (const key of props.columns) {
     const count = props.rankDist.get(key);
-    values.push(count || "-");
+    values.push(count || '-');
   }
   return (
     <RankDistributionRow

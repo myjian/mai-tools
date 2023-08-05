@@ -109,9 +109,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
     return (
       <LangContext.Provider value={lang}>
         <table className="inputSelectTable">
-          <LanguageChooser activeLanguage={lang} changeLanguage={this.changeLanguage} />
-          <RegionSelect gameRegion={gameRegion} handleRegionSelect={this.selectRegion} />
-          <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
+          <tbody>
+            <LanguageChooser activeLanguage={lang} changeLanguage={this.changeLanguage} />
+            <RegionSelect gameRegion={gameRegion} handleRegionSelect={this.selectRegion} />
+            <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
+          </tbody>
         </table>
         <ScoreInput />
         <div className="actionArea">

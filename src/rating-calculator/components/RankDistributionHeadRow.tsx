@@ -6,7 +6,7 @@ interface Props {
   firstCell: string;
   baseCellClassname: string | undefined;
   perColumnClassnames: ReadonlyArray<string>;
-  columns: IterableIterator<string>;
+  columns: Iterable<string>;
 }
 
 export const RankDistributionHeadRow = ({

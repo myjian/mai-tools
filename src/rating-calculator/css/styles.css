@@ -35,6 +35,11 @@ thead {
   color: #eee;
 }
 
+th,
+td {
+  box-sizing: border-box;
+}
+
 select,
 label {
   font-size: 18px;
@@ -49,6 +54,10 @@ label {
 .responsiveFlexBox {
   display: flex;
   flex-direction: column;
+}
+
+.basic {
+  color: #49b63e;
 }
 
 .advanced {

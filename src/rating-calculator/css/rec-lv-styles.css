@@ -19,7 +19,6 @@
 .recLvTable td {
   min-width: 64px;
   padding: 4px 16px;
-  box-sizing: border-box;
   text-align: center;
 }
 

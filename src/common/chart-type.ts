@@ -21,5 +21,5 @@ export function getChartType(row: HTMLElement): ChartType {
 }
 
 export function getChartTypeName(ct: ChartType): string {
-  return ct === ChartType.DX ? 'DX' : 'STANDARD';
+  return ct === ChartType.DX ? 'DX' : 'STD';
 }

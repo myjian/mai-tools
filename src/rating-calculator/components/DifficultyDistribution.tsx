@@ -35,26 +35,15 @@ interface Props {
 export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) => {
   const lang = useLanguage();
   const topRecords = chartRecords.slice(0, topChartsCount);
+  const chartTypeNames = Array.from(
+    topRecords
+      .reduce((chartTypes, r) => {
+        chartTypes.add(r.chartType);
+        return chartTypes;
+      }, new Set<ChartType>())
+      .values()
+  ).map(getChartTypeName);
   const recordsPerDiff = getRecordsPerDifficulty(topRecords);
-  const keyMap = new Map<string, boolean>([[CommonMessages[lang].subtotal, true]]);
-  const rows: JSX.Element[] = [];
-  recordsPerDiff.forEach((countByChartType, d) => {
-    for (const chartType of [ChartType.DX, ChartType.STANDARD]) {
-      if (!countByChartType[chartType]) continue;
-      const dist = new Map([[CommonMessages[lang].subtotal, countByChartType[chartType]]]);
-      rows.push(
-        <RankDistributionDataRow
-          key={'' + d + chartType}
-          rowHead={`${getDifficultyName(d)} (${getChartTypeName(chartType)})`}
-          columns={keyMap.keys()}
-          rankDist={dist}
-          rowClassname={DIFFICULTY_CLASSNAME_MAP.get(d)}
-          baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
-          perColumnClassnames={[]}
-        />
-      );
-    }
-  });
   return (
     <table className="rankDistributionTable">
       <thead>
@@ -62,10 +51,33 @@ export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) =>
           firstCell={CommonMessages[lang].difficulty}
           baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
           perColumnClassnames={[DIFF_RANK_TOP_LEFT_CELL_CLASSNAME]}
-          columns={keyMap.keys()}
+          columns={chartTypeNames}
         />
       </thead>
-      <tbody>{rows}</tbody>
+      <tbody>
+        {Array.from(recordsPerDiff.entries())
+          .filter(
+            ([_, countByChartType]) =>
+              countByChartType[ChartType.DX] + countByChartType[ChartType.STANDARD] > 0
+          )
+          .map(([d, countByChartType]) => {
+            const dist = new Map([
+              [getChartTypeName(ChartType.STANDARD), countByChartType[ChartType.STANDARD]],
+              [getChartTypeName(ChartType.DX), countByChartType[ChartType.DX]],
+            ]);
+            return (
+              <RankDistributionDataRow
+                key={d}
+                rowHead={getDifficultyName(d)}
+                columns={chartTypeNames}
+                rankDist={dist}
+                rowClassname={DIFFICULTY_CLASSNAME_MAP.get(d)}
+                baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
+                perColumnClassnames={[]}
+              />
+            );
+          })}
+      </tbody>
     </table>
   );
 };
