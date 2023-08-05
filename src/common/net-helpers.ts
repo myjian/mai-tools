@@ -15,7 +15,7 @@ const TRANSPARENT_PNG_DATA_URL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
 
 export async function fetchPage(url: string) {
-  const response = await fetch(url);
+  const response = await fetch(url, {redirect: 'error'});
   const html = await response.text();
   const parser = new DOMParser();
   return parser.parseFromString(html, 'text/html');

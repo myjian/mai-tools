@@ -4,6 +4,7 @@ import {
   getAchievement,
   getApFcStatus,
   getChartDifficulty,
+  getFriendDxStar,
   getSongName,
   getSyncStatus,
 } from '../common/fetch-score-util';
@@ -422,23 +423,12 @@ type Cache = {
 
   function getDxStar(row: HTMLElement) {
     if (isFriendScore) {
-      const img = row.querySelector('tr:first-child td:last-child img') as HTMLImageElement;
-      if (!img) {
-        return null;
+      const dxStarInt = getFriendDxStar(row);
+      if (dxStarInt >= DX_STARS.length) {
+        console.warn('invalid dx star ' + dxStarInt);
+        return DX_STARS[DX_STARS.length - 1];
       }
-      const imgPath = new URL(img.src).pathname;
-      const dxStar = imgPath.substring(imgPath.lastIndexOf('_') + 1, imgPath.lastIndexOf('.'));
-      try {
-        const dxStarInt = parseInt(dxStar);
-        if (isNaN(dxStarInt) || dxStarInt < 0 || dxStarInt >= DX_STARS.length) {
-          console.warn('invalid dx star ' + dxStar);
-          return DX_STARS[0];
-        }
-        return DX_STARS[dxStarInt];
-      } catch (err) {
-        console.warn('invalid dx star ' + dxStar);
-      }
-      return null;
+      return DX_STARS[dxStarInt];
     }
     // my score
     if (row.dataset.dxStar) {

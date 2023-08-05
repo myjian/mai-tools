@@ -48,16 +48,19 @@ type FriendInfo = {
       pleaseLogIn: '請登入 maimai NET',
       analyze: '分析 Rating',
       plateProgress: '名牌板',
+      pleaseFavoriteFriend: '無法讀取分數。請先將好友加入最愛',
     },
     [Language.en_US]: {
       pleaseLogIn: 'Please log in to maimai DX NET.',
       analyze: 'Analyze Rating',
       plateProgress: 'Plates',
+      pleaseFavoriteFriend: 'Failed to load scores. Please add friend to favorite.',
     },
     [Language.ko_KR]: {
       pleaseLogIn: 'maimai DX NET에 로그인 해 주세요.',
       analyze: '레이팅 분석하기',
-      plateProgress: 'Plates', // TODO
+      plateProgress: 'Plates', // TODO: translation
+      pleaseFavoriteFriend: 'Failed to load scores. Please add friend to favorite.', // TODO: translation
     },
   };
   const friends_cache: {[idx: string]: FriendInfo} = {};
@@ -122,19 +125,24 @@ type FriendInfo = {
       send('playerGrade', friend.grade);
     }
     // Fetch all scores
-    let scoreList: (FullChartRecord | ChartRecord)[] = [];
-    for (const difficulty of FRIEND_SCORE_URLS.keys()) {
-      send('showProgress', statusText(LANG, difficulty, false));
-      scoreList = scoreList.concat(
-        await (full ? fetchFriendScoresFull : fetchFriendScores)(
-          friend.idx,
-          difficulty,
-          new SongDatabase(false)
-        )
-      );
+    try {
+      let scoreList: (FullChartRecord | ChartRecord)[] = [];
+      for (const difficulty of FRIEND_SCORE_URLS.keys()) {
+        send('showProgress', statusText(LANG, difficulty, false));
+        scoreList = scoreList.concat(
+          await (full ? fetchFriendScoresFull : fetchFriendScores)(
+            friend.idx,
+            difficulty,
+            new SongDatabase(false)
+          )
+        );
+      }
+      send('showProgress', '');
+      send('setPlayerScore', scoreList);
+    } catch (err) {
+      console.warn(err);
+      handleError(UIString[LANG].pleaseFavoriteFriend);
     }
-    send('showProgress', '');
-    send('setPlayerScore', scoreList);
   }
 
   function main() {

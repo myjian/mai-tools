@@ -59,3 +59,7 @@ export function getPostMessageFunc(w: WindowProxy, origin: string) {
     w.postMessage(obj, origin);
   };
 }
+
+export function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}

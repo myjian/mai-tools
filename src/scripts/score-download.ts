@@ -1,7 +1,8 @@
 import {FullChartRecord} from '../common/chart-record';
 import {getChartTypeName} from '../common/chart-type';
-import {getDifficultyName} from '../common/difficulties';
-import {fetchScoresFull, SELF_SCORE_URLS} from '../common/fetch-self-score';
+import {DIFFICULTIES, getDifficultyName} from '../common/difficulties';
+import {fetchFriendScoresFull} from '../common/fetch-friend-score';
+import {fetchScoresFull} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {getVersionName} from '../common/game-version';
 import {getInitialLanguage, Language} from '../common/lang';
@@ -32,6 +33,7 @@ import {loadSongDatabase} from '../common/song-props';
       version: '版本',
       allDone:
         '✅ 已匯入全部成績到文字框，請按「複製成績」把資料複製到剪貼簿。複製後可於 Excel 或 Google 試算表內貼上。',
+      pleaseFavoriteFriend: '無法讀取分數。請先將好友加入最愛',
     },
     [Language.en_US]: {
       achievement: 'Achv',
@@ -51,6 +53,7 @@ import {loadSongDatabase} from '../common/song-props';
       version: 'Version',
       allDone:
         '✅ All scores are loaded into text box. Click "Copy" to copy scores to clipboard. You can paste it in Excel or Google Sheets.',
+      pleaseFavoriteFriend: 'Failed to load scores. Please add friend to favorite.',
     },
     // TODO: verify Korean translation
     [Language.ko_KR]: {
@@ -71,8 +74,13 @@ import {loadSongDatabase} from '../common/song-props';
       version: '버전',
       allDone:
         '✅ 모든 기록이 로드되었습니다. "복사"를 눌러 클립보드로 복사하고 엑셀이나 구글 시트에 붙여 넣으세요.',
+      pleaseFavoriteFriend: 'Failed to load scores. Please add friend to favorite.', // TODO: translation
     },
   }[LANG];
+
+  const friendIdx = location.pathname.includes('/friend/friendDetail/')
+    ? new URLSearchParams(location.search).get('idx')
+    : '';
 
   const cache: {div: HTMLElement; scores: FullChartRecord[]} = {
     div: null,
@@ -96,7 +104,7 @@ import {loadSongDatabase} from '../common/song-props';
     DxStar = 'DxStar',
   }
 
-  const FIELD_NAME: Record<Field, string> = {
+  const FRIEND_SCORE_FIELD_NAME = {
     [Field.SongName]: UIString.songName,
     [Field.Genre]: UIString.genre,
     [Field.Version]: UIString.version,
@@ -108,9 +116,14 @@ import {loadSongDatabase} from '../common/song-props';
     [Field.Rank]: UIString.rank,
     [Field.FcAp]: 'FC/AP',
     [Field.Sync]: 'Sync',
+    [Field.DxStar]: 'DX ✦',
+  };
+
+  // DX score is only supported for self score, as Friend VS does not show max DX score.
+  const ALL_FIELD_NAME: Record<Field, string> = {
+    ...FRIEND_SCORE_FIELD_NAME,
     [Field.DxScore]: UIString.dxScore,
     [Field.DxRatio]: 'DX %',
-    [Field.DxStar]: 'DX ✦',
   };
 
   const FIELD_GETTER: Record<Field, (r: FullChartRecord) => string> = {
@@ -131,8 +144,8 @@ import {loadSongDatabase} from '../common/song-props';
   };
 
   // TODO: Save and load included fields set by user
-  const EXCLUDED_FIELDS = [Field.DxScore, Field.InternalLevel];
-  const INCLUDED_FIELDS = Object.keys(FIELD_NAME).filter(
+  const EXCLUDED_FIELDS = friendIdx ? [Field.InternalLevel] : [Field.DxScore, Field.InternalLevel];
+  const INCLUDED_FIELDS = Object.keys(friendIdx ? FRIEND_SCORE_FIELD_NAME : ALL_FIELD_NAME).filter(
     (f) => !EXCLUDED_FIELDS.includes(f as Field)
   ) as Field[];
 
@@ -153,7 +166,7 @@ import {loadSongDatabase} from '../common/song-props';
         cache.div.querySelector(`.excluded`).append(label);
       }
     });
-    label.append(input, FIELD_NAME[field]);
+    label.append(input, ALL_FIELD_NAME[field]);
     return label;
   }
 
@@ -245,7 +258,7 @@ import {loadSongDatabase} from '../common/song-props';
   }
 
   function getTableHead(fields: Field[]): string {
-    return fields.map((f) => FIELD_NAME[f]).join('\t');
+    return fields.map((f) => ALL_FIELD_NAME[f]).join('\t');
   }
 
   function formatRecord(r: FullChartRecord, fields: Field[]): string {
@@ -262,9 +275,19 @@ import {loadSongDatabase} from '../common/song-props';
     if (cache.scores == null) {
       textarea.value = '';
       cache.scores = [];
-      for (const difficulty of SELF_SCORE_URLS.keys()) {
-        textarea.value += statusText(LANG, difficulty, false) + '\n';
-        cache.scores = cache.scores.concat(await fetchScoresFull(difficulty, new Map(), songDb));
+      try {
+        for (const difficulty of DIFFICULTIES) {
+          textarea.value += statusText(LANG, difficulty, false) + '\n';
+          cache.scores = cache.scores.concat(
+            await (friendIdx
+              ? fetchFriendScoresFull(friendIdx, difficulty, songDb, true)
+              : fetchScoresFull(difficulty, new Map(), songDb))
+          );
+        }
+      } catch (err) {
+        console.warn(err);
+        textarea.value += friendIdx ? UIString.pleaseFavoriteFriend : err;
+        return;
       }
     }
     const fields = getSelectedFields();

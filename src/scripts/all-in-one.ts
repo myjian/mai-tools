@@ -43,6 +43,9 @@ import {handleError} from '../common/util';
     appendScript('score-sort.js');
   } else if (path.indexOf('/maimai-mobile/friend/') >= 0) {
     appendScript('analyze-friend-rating-in-new-tab.js');
+    if (path.indexOf('/maimai-mobile/friend/friendDetail/') >= 0) {
+      appendScript('score-download.js');
+    }
     if (
       path.indexOf('/maimai-mobile/friend/friendGenreVs/battleStart/') >= 0 ||
       path.indexOf('/maimai-mobile/friend/friendLevelVs/battleStart/') >= 0

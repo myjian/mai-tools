@@ -84,3 +84,26 @@ export function getSyncStatus(row: HTMLElement, isFriendScore = false) {
   }
   return lowercaseStatus.replace('p', '+').toUpperCase();
 }
+
+/**
+ * Get DX Star on Friend VS page (DX score VS)
+ */
+export function getFriendDxStar(row: HTMLElement): number {
+  const img = row.querySelector('tr:first-child td:last-child img') as HTMLImageElement;
+  if (!img) {
+    return 0;
+  }
+  const imgPath = new URL(img.src).pathname;
+  const dxStar = imgPath.substring(imgPath.lastIndexOf('_') + 1, imgPath.lastIndexOf('.'));
+  try {
+    const dxStarInt = parseInt(dxStar);
+    if (isNaN(dxStarInt) || dxStarInt < 0) {
+      console.warn('invalid dx star ' + dxStar);
+      return 0;
+    }
+    return dxStarInt;
+  } catch (err) {
+    console.warn('invalid dx star ' + dxStar);
+  }
+  return 0;
+}
