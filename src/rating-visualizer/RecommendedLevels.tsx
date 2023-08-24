@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 
-import {RecommendedLevelCell} from '../common/components/RecommendedLevelCell';
+import {RecommendedLevelRow} from '../common/components/RecommendedLevelRow';
 import {
-  calcRecommendedLv,
+  calcRecommendedLevels,
   getRankDefinitions,
   getRankIndexByAchievement,
 } from '../common/rank-functions';
@@ -27,7 +27,7 @@ export const RecommendedLevels = () => {
 
   const targetRatingPerSong = Math.ceil(targetRating / (NUM_TOP_NEW_CHARTS + NUM_TOP_OLD_CHARTS));
   const ranks = getRankDefinitions().slice(0, getRankIndexByAchievement(MIN_ACHIEVEMENT) + 1);
-  const recommendLvs = ranks.map((r) => calcRecommendedLv(targetRatingPerSong, r));
+  const recLvsByRank = calcRecommendedLevels(targetRatingPerSong, ranks);
   return (
     <div className="suggestLvByRating">
       <label className="targetRatingLabel">
@@ -42,24 +42,18 @@ export const RecommendedLevels = () => {
       <table className="lookupTable recLvTable">
         <thead className="lookupTableHead">
           <tr>
-            <th></th>
-            {ranks.map((r) => (
-              <th key={r.title}>
-                <span className="recLvRankTitle">{r.title}</span>
-                <span className="recLvRankAchv">{r.minAchv}%</span>
-              </th>
-            ))}
-            <th>Rating per record</th>
+            <th>Level</th>
+            <th>Rank</th>
+            <th>Achv</th>
+            <th>Rating</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th>Lv</th>
-            {recommendLvs.map((lv, idx) => (
-              <RecommendedLevelCell key={idx} lv={lv} />
-            ))}
-            <td>{targetRatingPerSong}↑</td>
-          </tr>
+          {ranks.map((rank) =>
+            recLvsByRank[rank.title].map((recLv, idx) => (
+              <RecommendedLevelRow key={idx} rankTitle={rank.title} recLv={recLv} />
+            ))
+          )}
         </tbody>
       </table>
     </div>

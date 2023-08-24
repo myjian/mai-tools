@@ -6,7 +6,7 @@ import {SongDatabase} from '../../common/song-props';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {ChartRecordWithRating, RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
-import {ChartRecordSectionTitle} from './ChartRecordSectionTitle';
+import {CollapsibleSectionTitle} from './CollapsibleSectionTitle';
 import {TopChartRecords} from './TopChartRecords';
 
 const MessagesByLang = {
@@ -73,7 +73,7 @@ export const RatingDetails = ({
   return (
     <>
       <div className="songRecordsContainer">
-        <ChartRecordSectionTitle
+        <CollapsibleSectionTitle
           title={messages.newChartsRatingTargets.replace('{count}', NUM_TOP_NEW_CHARTS.toFixed(0))}
           contentHidden={hideNewTopSongs}
           onClick={toggleNewTopChartsDisplay}
@@ -86,7 +86,7 @@ export const RatingDetails = ({
         />
       </div>
       <div className="songRecordsContainer">
-        <ChartRecordSectionTitle
+        <CollapsibleSectionTitle
           title={messages.oldChartsRatingTargets.replace('{count}', NUM_TOP_OLD_CHARTS.toFixed(0))}
           contentHidden={hideOldTopSongs}
           onClick={toggleOldTopChartsDisplay}
@@ -99,7 +99,7 @@ export const RatingDetails = ({
         />
       </div>
       <div className="songRecordsContainer">
-        <ChartRecordSectionTitle
+        <CollapsibleSectionTitle
           title={messages.newChartsRatingCandidates}
           contentHidden={hideNewCandidates}
           onClick={toggleNewCandidateChartsDisplay}
@@ -114,7 +114,7 @@ export const RatingDetails = ({
         />
       </div>
       <div className="songRecordsContainer">
-        <ChartRecordSectionTitle
+        <CollapsibleSectionTitle
           title={messages.oldChartsRatingCandidates}
           contentHidden={hideOldCandidates}
           onClick={toggleOldCandidateChartsDisplay}

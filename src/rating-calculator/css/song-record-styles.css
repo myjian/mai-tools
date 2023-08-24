@@ -19,26 +19,26 @@
   margin-top: 0;
 }
 
-.crSecTitleContainer {
+.cSecTitleContainer {
   margin: 4px 0 16px;
   padding: 0;
 }
 
-.crSecTitle {
+.cSecTitle {
   cursor: pointer;
   padding: 0 4px;
   display: inline-block;
 }
 
-.crSecTitle:focus {
+.cSecTitle:focus {
   color: inherit;
 }
 
-.crSecTitle:active {
+.cSecTitle:active {
   background-color: transparent;
 }
 
-.crSecTitleSymbol {
+.cSecTitleSymbol {
   display: inline-block;
   position: relative;
   transform: rotate(0.25turn);
@@ -49,14 +49,14 @@
   bottom: 2px;
 }
 
-.crSecTitleSymbol.crSecHidden {
+.cSecTitleSymbol.cSecHidden {
   transform: rotate(0);
   bottom: 1px;
   animation-name: rotationCollapse;
   animation-duration: 0.3s;
 }
 
-.crSecTitleSymbol.crSecShow {
+.cSecTitleSymbol.cSecShow {
   animation-name: rotationExpand;
   animation-duration: 0.3s;
 }
