@@ -165,7 +165,7 @@ body {
 }
 
 .axisLabel::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: calc(40px - 3px);
@@ -264,8 +264,8 @@ body {
   padding-bottom: 5px;
 }
 
-.lookupTableBody tr:nth-child(2n) {
-  background-color: rgba(0, 0, 0, 0.08);
+tbody tr:nth-child(2n) {
+  background-color: white;
 }
 
 .footer {

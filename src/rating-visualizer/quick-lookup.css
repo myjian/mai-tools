@@ -9,7 +9,6 @@
 .qlRankFactorCell {
   min-width: 76px;
   padding: 4px;
-  border: 1px solid #aaa;
   text-align: center;
 }
 
@@ -19,5 +18,5 @@ th.qlRankFactorCell {
 }
 
 td.qlThresholdCell::after {
-  content: "%";
+  content: '%';
 }
