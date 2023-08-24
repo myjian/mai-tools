@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    needs: ./webpack-build.yml
+    uses: ./.github/workflows/webpack-build.yml
 
   deploy:
     needs: build
