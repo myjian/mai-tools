@@ -85,6 +85,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
       playerName,
       progress: '',
     };
+    loadSongDatabase(gameVer, this.state.gameRegion).then((songDb) => (this.songDatabase = songDb));
     if (window.opener) {
       this.initWindowCommunication();
     }
@@ -147,31 +148,31 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.postMessageToOpener({action: 'saveLanguage', payload: lang});
   };
 
-  private selectVersion = (gameVer: GameVersion) => {
+  private selectVersion = async (gameVer: GameVersion) => {
+    this.songDatabase = await loadSongDatabase(gameVer, this.state.gameRegion);
     this.setState({gameVer}, this.analyzeRating);
   };
 
-  private selectRegion = (gameRegion: GameRegion) => {
+  private selectRegion = async (gameRegion: GameRegion) => {
+    this.songDatabase = await loadSongDatabase(this.state.gameVer, gameRegion);
     this.setState({gameRegion}, this.analyzeRating);
   };
 
-  private analyzeRating = async (evt?: React.SyntheticEvent) => {
+  private analyzeRating = (evt?: React.SyntheticEvent) => {
     if (evt) {
       evt.preventDefault();
     }
     const {gameVer, gameRegion} = this.state;
     // TODO: support overrides by user
-    this.songDatabase = await loadSongDatabase(gameVer, gameRegion);
     console.log('Song database:', this.songDatabase);
-    const playerScores = this.playerScores;
-    console.log('Player scores:', playerScores);
-    if (!playerScores.length) {
+    console.log('Player scores:', this.playerScores);
+    if (!this.playerScores.length) {
       this.setState({ratingData: undefined});
       return;
     }
-    const ratingData = await analyzePlayerRating(
+    const ratingData = analyzePlayerRating(
       this.songDatabase,
-      playerScores,
+      this.playerScores,
       gameVer,
       gameRegion
     );

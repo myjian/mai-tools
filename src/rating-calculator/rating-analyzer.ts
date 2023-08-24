@@ -42,12 +42,12 @@ function getRecordWithRating(
   };
 }
 
-export async function analyzePlayerRating(
+export function analyzePlayerRating(
   songDb: SongDatabase,
   playerScores: ReadonlyArray<ChartRecord>,
   gameVer: GameVersion,
   gameRegion: GameRegion
-): Promise<RatingData> {
+): RatingData {
   const newChartRecords = [];
   const oldChartRecords = [];
   const removedSongs = getRemovedSongs(gameRegion);
