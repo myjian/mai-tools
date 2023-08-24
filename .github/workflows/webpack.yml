@@ -3,31 +3,10 @@ name: Build with webpack and deploy
 on:
   push:
     branches: [ "gh-pages" ]
-  pull_request:
-    branches: [ "gh-pages" ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-
-      - name: Build
-        run: |
-          npm install
-          npm run build
-
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: build/
+    needs: ./webpack-build.yml
 
   deploy:
     needs: build
