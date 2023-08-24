@@ -9,33 +9,34 @@ interface Props {
 interface State {
   symbolClassName: string;
 }
-export class ChartRecordSectionTitle extends React.PureComponent<Props, State> {
-  state: State = {symbolClassName: ""};
+export class CollapsibleSectionTitle extends React.PureComponent<Props, State> {
+  state: State = {symbolClassName: ''};
   componentDidUpdate(prevProps: Props) {
     if (prevProps.contentHidden && !this.props.contentHidden) {
-      this.setState({symbolClassName: "crSecShow"})
+      this.setState({symbolClassName: 'cSecShow'});
       window.setTimeout(() => {
-        this.setState({symbolClassName: ""});
+        this.setState({symbolClassName: ''});
       }, 300);
     }
   }
   render() {
     const {isCandidateList, contentHidden, title} = this.props;
     let {symbolClassName} = this.state;
-    const symbol = isCandidateList ? "▷" : "▶";
-    symbolClassName += " crSecTitleSymbol";
+    const symbol = isCandidateList ? '▷' : '▶';
+    symbolClassName += ' cSecTitleSymbol';
     if (contentHidden) {
-      symbolClassName += " crSecHidden";
+      symbolClassName += ' cSecHidden';
     }
     return (
-      <h3 className="crSecTitleContainer">
+      <h3 className="cSecTitleContainer">
         <span
-          className="crSecTitle"
+          className="cSecTitle"
           tabIndex={0}
           onClick={this.handleClick}
-          onKeyPress={this.handleKeyPress}
+          onKeyDown={this.handleKeyPress}
         >
-          <span className={symbolClassName}>{symbol}</span>{title}
+          <span className={symbolClassName}>{symbol}</span>
+          {title}
         </span>
       </h3>
     );
@@ -48,9 +49,7 @@ export class ChartRecordSectionTitle extends React.PureComponent<Props, State> {
 
   private handleKeyPress = (evt: React.KeyboardEvent<HTMLElement>) => {
     evt.preventDefault();
-    console.log(evt.key);
-    console.log(evt.keyCode);
-    if (evt.key === "Enter") {
+    if (evt.key === 'Enter') {
       this.props.onClick(evt);
     }
   };

@@ -1,5 +1,5 @@
 .recLvTable {
-  table-layout: fixed;
+  table-layout: unset;
   margin-top: 6px;
 }
 
@@ -27,14 +27,5 @@
 }
 
 .targetRating {
-  font-size: 1.3rem;
-}
-
-td.recLvCell {
-  line-height: 1.3rem;
-  padding-top: 10px;
-}
-
-.recOfficialLv {
   font-size: 1.3rem;
 }

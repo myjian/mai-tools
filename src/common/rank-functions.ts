@@ -7,6 +7,12 @@ export interface RankDef {
   title: string;
 }
 
+export interface RecommendedLevel {
+  lv: number;
+  minAchv: number;
+  rating: number;
+}
+
 export const SSSPLUS_MIN_ACHIEVEMENT = 100.5;
 
 const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
@@ -50,7 +56,45 @@ export function getFinaleRankTitle(achievement: number) {
   return getRankTitle(achievement).replace('SSS+', 'SSS');
 }
 
-export function calcRecommendedLv(rating: number, r: RankDef): number {
-  const lv = roundFloat((100 * rating) / r.factor / r.minAchv, 'ceil', 0.1);
-  return lv > MAX_LEVEL ? -1 : lv;
+/** Returns recommended levels by rank title */
+export function calcRecommendedLevels(
+  rating: number,
+  ranks: RankDef[]
+): Record<string, RecommendedLevel[]> {
+  rating = Math.floor(rating);
+  const ranksLowToHigh = ranks.slice();
+  ranksLowToHigh.sort((r1, r2) => {
+    return r1.minAchv < r2.minAchv ? -1 : 1;
+  });
+  const levelsByRank: Record<string, RecommendedLevel[]> = {};
+  for (let rankIdx = 0; rankIdx < ranksLowToHigh.length; rankIdx++) {
+    const r = ranksLowToHigh[rankIdx];
+    levelsByRank[r.title] = [];
+    const levels = levelsByRank[r.title];
+    const maxAchv =
+      rankIdx + 1 < ranksLowToHigh.length
+        ? ranksLowToHigh[rankIdx + 1].minAchv - 0.0001
+        : r.minAchv;
+    let maxLv = roundFloat((100 * rating) / r.factor / r.minAchv, 'ceil', 0.1);
+    if (maxLv > MAX_LEVEL) continue;
+    /* Show another 0.1 level. This is too verbose so disable it for now */
+    // const previousLevels = rankIdx > 0 ? levelsByRank[ranksLowToHigh[rankIdx - 1].title] : [];
+    // if (previousLevels.length && maxLv + 0.1 < previousLevels[previousLevels.length - 1].lv) {
+    //   maxLv += 0.1;
+    // }
+    while (Math.floor((maxLv * r.factor * maxAchv) / 100) >= rating) {
+      const minAchv = Math.max(
+        roundFloat((100 * rating) / r.factor / maxLv, 'ceil', 0.0001),
+        r.minAchv
+      );
+      levels.push({
+        lv: maxLv,
+        minAchv,
+        rating: Math.floor((maxLv * r.factor * minAchv) / 100),
+      });
+      maxLv -= 0.1;
+    }
+    levels.reverse();
+  }
+  return levelsByRank;
 }

@@ -135,10 +135,12 @@ export const RatingOutput = ({
       <RecommendedLevels
         gameRegion={gameRegion}
         gameVer={gameVer}
-        newChartsRating={newChartsRating}
-        newTopChartsCount={newTopChartsCount}
-        oldChartsRating={oldChartsRating}
-        oldTopChartsCount={oldTopChartsCount}
+        lowestNewChartRating={
+          newTopChartsCount > 0 ? ratingData.newChartRecords[newTopChartsCount - 1].rating : 0
+        }
+        lowestOldChartRating={
+          oldTopChartsCount > 0 ? ratingData.oldChartRecords[oldTopChartsCount - 1].rating : 0
+        }
       />
       <RatingDetails
         songDatabase={songDatabase}

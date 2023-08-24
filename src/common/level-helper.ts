@@ -6,8 +6,8 @@ const DEFAULT_PLUS_MINOR_LV = THRESHOLD_TO_PLUS + 0.1;
 
 export function getOfficialLevel(level: number): string {
   const baseLevel = Math.floor(level);
-  const minorLevel = level - baseLevel;
-  return minorLevel > THRESHOLD_TO_PLUS ? baseLevel + '+' : baseLevel.toString();
+  const levelX10 = Math.floor(level * 10);
+  return levelX10 % 10 > 6 ? baseLevel + '+' : baseLevel.toString();
 }
 
 /**
