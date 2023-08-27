@@ -4,6 +4,7 @@ import {ChartRecord} from '../../common/chart-record';
 import {
   GameRegion,
   getGameRegionFromOrigin,
+  getGameRegionFromShortString,
   isMaimaiNetOrigin,
   MAIMAI_NET_ORIGINS,
 } from '../../common/game-region';
@@ -47,7 +48,7 @@ const MessagesByLang = {
 interface State {
   lang: Language;
   progress: string;
-  gameRegion: GameRegion;
+  region: GameRegion;
   gameVer: GameVersion;
   ratingData?: RatingData;
   playerName: string | null;
@@ -71,6 +72,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
       RATING_CALCULATOR_SUPPORTED_VERSIONS[0],
       RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1]
     );
+    const region = getGameRegionFromShortString(queryParams.get(QueryParam.GameRegion));
 
     const friendIdx = queryParams.get(QueryParam.FriendIdx);
     const playerName = queryParams.get(QueryParam.PlayerName);
@@ -79,13 +81,13 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
     this.state = {
       lang,
-      gameRegion: GameRegion.Jp,
+      region,
       gameVer,
       friendIdx,
       playerName,
       progress: '',
     };
-    loadSongDatabase(gameVer, this.state.gameRegion).then((songDb) => (this.songDatabase = songDb));
+    loadSongDatabase(gameVer, region).then((songDb) => (this.songDatabase = songDb));
     if (window.opener) {
       this.initWindowCommunication();
     }
@@ -104,7 +106,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {lang, gameRegion, gameVer, playerName, ratingData, oldSongs, newSongs, progress} =
+    const {lang, region, gameVer, playerName, ratingData, oldSongs, newSongs, progress} =
       this.state;
     const messages = MessagesByLang[lang];
     return (
@@ -112,7 +114,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         <table className="inputSelectTable">
           <tbody>
             <LanguageChooser activeLanguage={lang} changeLanguage={this.changeLanguage} />
-            <RegionSelect gameRegion={gameRegion} handleRegionSelect={this.selectRegion} />
+            <RegionSelect gameRegion={region} handleRegionSelect={this.selectRegion} />
             <VersionSelect gameVer={gameVer} handleVersionSelect={this.selectVersion} />
           </tbody>
         </table>
@@ -126,7 +128,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         <hr className="sectionSep" />
         {ratingData && (
           <RatingOutput
-            gameRegion={gameRegion}
+            gameRegion={region}
             gameVer={gameVer}
             songDatabase={this.songDatabase}
             ratingData={ratingData}
@@ -149,20 +151,20 @@ export class RootComponent extends React.PureComponent<{}, State> {
   };
 
   private selectVersion = async (gameVer: GameVersion) => {
-    this.songDatabase = await loadSongDatabase(gameVer, this.state.gameRegion);
+    this.songDatabase = await loadSongDatabase(gameVer, this.state.region);
     this.setState({gameVer}, this.analyzeRating);
   };
 
-  private selectRegion = async (gameRegion: GameRegion) => {
-    this.songDatabase = await loadSongDatabase(this.state.gameVer, gameRegion);
-    this.setState({gameRegion}, this.analyzeRating);
+  private selectRegion = async (region: GameRegion) => {
+    this.songDatabase = await loadSongDatabase(this.state.gameVer, region);
+    this.setState({region}, this.analyzeRating);
   };
 
   private analyzeRating = (evt?: React.SyntheticEvent) => {
     if (evt) {
       evt.preventDefault();
     }
-    const {gameVer, gameRegion} = this.state;
+    const {gameVer, region} = this.state;
     // TODO: support overrides by user
     console.log('Song database:', this.songDatabase);
     console.log('Player scores:', this.playerScores);
@@ -170,12 +172,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
       this.setState({ratingData: undefined});
       return;
     }
-    const ratingData = analyzePlayerRating(
-      this.songDatabase,
-      this.playerScores,
-      gameVer,
-      gameRegion
-    );
+    const ratingData = analyzePlayerRating(this.songDatabase, this.playerScores, gameVer, region);
     console.log('Rating Data:', ratingData);
     this.setState({ratingData});
   };
@@ -203,7 +200,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
         switch (evt.data.action) {
           case 'gameVersion':
             this.setState({
-              gameRegion: getGameRegionFromOrigin(evt.origin),
+              region: getGameRegionFromOrigin(evt.origin),
               gameVer: validateGameVersion(
                 evt.data.payload,
                 RATING_CALCULATOR_SUPPORTED_VERSIONS[0]
@@ -278,3 +275,4 @@ function updateDocumentTitle(lang: Language) {
       break;
   }
 }
+``;
