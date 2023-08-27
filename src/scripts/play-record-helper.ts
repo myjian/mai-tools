@@ -37,7 +37,7 @@ import {fetchSongDetailPage} from '../common/util';
     isMaimaiNetOrigin(d.location.origin) &&
     d.location.pathname.includes('/maimai-mobile/record/playlogDetail/')
   ) {
-    const diff = await getDifficultyForRecord(d.body);
+    const diff = getDifficultyForRecord(d.body);
     const lv = await fetchChartLv(diff);
     addLvToSongTitle(d.body, diff, lv);
   }
