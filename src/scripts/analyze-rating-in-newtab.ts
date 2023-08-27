@@ -66,7 +66,7 @@ declare global {
         await (fullRecords ? fetchScoresFull : fetchScores)(
           difficulty,
           domCache,
-          new SongDatabase(false)
+          new SongDatabase(null, null, false)
         )
       );
     }

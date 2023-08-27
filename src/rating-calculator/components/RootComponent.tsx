@@ -151,20 +151,25 @@ export class RootComponent extends React.PureComponent<{}, State> {
   };
 
   private selectVersion = async (gameVer: GameVersion) => {
-    this.songDatabase = await loadSongDatabase(gameVer, this.state.region);
     this.setState({gameVer}, this.analyzeRating);
   };
 
   private selectRegion = async (region: GameRegion) => {
-    this.songDatabase = await loadSongDatabase(this.state.gameVer, region);
     this.setState({region}, this.analyzeRating);
   };
 
-  private analyzeRating = (evt?: React.SyntheticEvent) => {
+  private analyzeRating = async (evt?: React.SyntheticEvent) => {
     if (evt) {
       evt.preventDefault();
     }
     const {gameVer, region} = this.state;
+    if (
+      !this.songDatabase ||
+      this.songDatabase.gameVer !== gameVer ||
+      this.songDatabase.region !== region
+    ) {
+      this.songDatabase = await loadSongDatabase(gameVer, region);
+    }
     // TODO: support overrides by user
     console.log('Song database:', this.songDatabase);
     console.log('Player scores:', this.playerScores);
@@ -199,13 +204,16 @@ export class RootComponent extends React.PureComponent<{}, State> {
         let payloadAsInt;
         switch (evt.data.action) {
           case 'gameVersion':
-            this.setState({
-              region: getGameRegionFromOrigin(evt.origin),
-              gameVer: validateGameVersion(
-                evt.data.payload,
-                RATING_CALCULATOR_SUPPORTED_VERSIONS[0]
-              ),
-            });
+            this.setState(
+              {
+                region: getGameRegionFromOrigin(evt.origin),
+                gameVer: validateGameVersion(
+                  evt.data.payload,
+                  RATING_CALCULATOR_SUPPORTED_VERSIONS[0]
+                ),
+              },
+              this.analyzeRating
+            );
             break;
           case 'playerGrade':
             payloadAsInt = parseInt(evt.data.payload);
@@ -275,4 +283,3 @@ function updateDocumentTitle(lang: Language) {
       break;
   }
 }
-``;

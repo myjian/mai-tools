@@ -133,7 +133,7 @@ type FriendInfo = {
           await (full ? fetchFriendScoresFull : fetchFriendScores)(
             friend.idx,
             difficulty,
-            new SongDatabase(false)
+            new SongDatabase(null, null, false)
           )
         );
       }

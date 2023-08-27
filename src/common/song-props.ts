@@ -23,11 +23,16 @@ type SongPropertiesOverride = BasicSongProps & {
 };
 
 export class SongDatabase {
+  readonly gameVer: GameVersion | null;
+  readonly region: GameRegion | null;
+
   private dxMap = new Map<string, SongProperties>();
   private standardMap = new Map<string, SongProperties>();
   private verbose = true;
 
-  constructor(verbose = true) {
+  constructor(gameVer: GameVersion = null, region: GameRegion = null, verbose = true) {
+    this.gameVer = gameVer;
+    this.region = region;
     this.verbose = verbose;
   }
 
@@ -214,7 +219,7 @@ export async function loadSongDatabase(
   gameRegion: GameRegion
 ): Promise<SongDatabase> {
   const songs = await loadMagic(gameVer);
-  const songDatabase = new SongDatabase();
+  const songDatabase = new SongDatabase(gameVer, gameRegion);
   for (const song of songs) {
     songDatabase.insertOrUpdateSong(song, gameVer);
   }
