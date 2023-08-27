@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {formatDate} from '../../common/date-util';
 import {getDifficultyName} from '../../common/difficulties';
 import {isMaimaiNetOrigin, MAIMAI_NET_ORIGINS} from '../../common/game-region';
 import {QueryParam} from '../../common/query-params';
@@ -28,25 +29,6 @@ type MessageType = {
   img?: Blob;
   imgSrc?: string;
 };
-
-function padNumberWithZeros(n: number, len?: number) {
-  len = len || 2;
-  return n.toString().padStart(len, '0');
-}
-
-function formatDate(dt: Date) {
-  return (
-    dt.getFullYear() +
-    '-' +
-    padNumberWithZeros(dt.getMonth() + 1) +
-    '-' +
-    padNumberWithZeros(dt.getDate()) +
-    ' ' +
-    padNumberWithZeros(dt.getHours()) +
-    ':' +
-    padNumberWithZeros(dt.getMinutes())
-  );
-}
 
 function getQueryParam(qp: URLSearchParams, key: string, fallback?: string) {
   const value = qp.get(key);

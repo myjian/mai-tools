@@ -3,6 +3,7 @@ import './recent-play-downloader.css';
 import domtoimage from 'dom-to-image';
 
 import {ChartType} from '../common/chart-type';
+import {fixTimezone, formatDate} from '../common/date-util';
 import {Difficulty, DIFFICULTY_CLASSNAME_MAP, getDifficultyByName} from '../common/difficulties';
 import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
 import {getGameRegionFromOrigin} from '../common/game-region';
@@ -111,13 +112,6 @@ type Options = {
   ];
 
   const ce = d.createElement.bind(d);
-  // 540 = 9 * 60 minutes = UTC+9 (Japan Time), 1 minute = 60000 milliseconds
-  const timezoneOffset = (540 + new Date().getTimezoneOffset()) * 60000;
-
-  function padNumberWithZeros(n: number, len?: number) {
-    len = len || 2;
-    return n.toString().padStart(len, '0');
-  }
 
   function getPlayDate(row: HTMLElement) {
     const playDateText = (row.querySelector('.sub_title').children[1] as HTMLElement).innerText;
@@ -129,7 +123,7 @@ type Options = {
       parseInt(m[4]),
       parseInt(m[5])
     );
-    return new Date(japanDt.valueOf() - timezoneOffset);
+    return fixTimezone(japanDt);
   }
 
   function getSongName(row: HTMLElement) {
@@ -217,20 +211,6 @@ type Options = {
   function getIsNewRecord(row: HTMLElement) {
     return !!row.querySelector(
       '.playlog_achievement_label_block + img.playlog_achievement_newrecord'
-    );
-  }
-
-  function formatDate(dt: Date) {
-    return (
-      dt.getFullYear() +
-      '-' +
-      padNumberWithZeros(dt.getMonth() + 1) +
-      '-' +
-      padNumberWithZeros(dt.getDate()) +
-      ' ' +
-      padNumberWithZeros(dt.getHours()) +
-      ':' +
-      padNumberWithZeros(dt.getMinutes())
     );
   }
 

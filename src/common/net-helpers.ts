@@ -1,3 +1,4 @@
+import {fixTimezone} from './date-util';
 import {Difficulty, getDifficultyTextColor} from './difficulties';
 
 import type {GameVersion} from './game-version';
@@ -5,10 +6,6 @@ import type {GameVersion} from './game-version';
 const CACHE_DURATION = 1000 * 60 * 60 * 24; // 1 day
 const CACHE_KEY = 'MaiToolsGameVer';
 const EXPIRATION_KEY = 'MaiToolsGameVerExpire';
-
-// 540 (60 mins * 9) = Japan Timezone (UTC+9)
-// 1 minute = 60 seconds = 60000 millisecond
-const TIMEZONE_OFFSET = (new Date().getTimezoneOffset() + 540) * 60000;
 
 // 1x1 PNG with transparent background
 const TRANSPARENT_PNG_DATA_URL =
@@ -49,7 +46,7 @@ export function getEpochTimeFromText(datetimeStr: string): number {
     parseInt(m[4]),
     parseInt(m[5])
   );
-  return date.getTime() - TIMEZONE_OFFSET;
+  return fixTimezone(date).getTime();
 }
 
 export function removeScrollControl(dom: Document) {
