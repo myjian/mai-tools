@@ -16,6 +16,10 @@
   margin-right: 12px;
 }
 
+.expandRatingOverview {
+  font-size: 0.7rem;
+}
+
 .ratingOverviewTable {
   border-style: none;
 }
