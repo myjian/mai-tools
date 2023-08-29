@@ -48,8 +48,8 @@ export class CollapsibleSectionTitle extends React.PureComponent<Props, State> {
   };
 
   private handleKeyPress = (evt: React.KeyboardEvent<HTMLElement>) => {
-    evt.preventDefault();
-    if (evt.key === 'Enter') {
+    if (evt.key === 'Enter' || evt.key === ' ') {
+      evt.preventDefault();
       this.props.onClick(evt);
     }
   };
