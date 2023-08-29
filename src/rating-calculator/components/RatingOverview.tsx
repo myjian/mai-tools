@@ -80,7 +80,7 @@ export const RatingOverview = ({
           {showMore ? `${totalRating} / ${fullNewChartsRating + fullOldChartsRating}` : totalRating}
         </span>
         <button className="expandRatingOverview" onClick={toggleShowMore}>
-          {showMore ? '+' : '-'}
+          {showMore ? '-' : '+'}
         </button>
       </div>
       <table className="ratingOverviewTable">
