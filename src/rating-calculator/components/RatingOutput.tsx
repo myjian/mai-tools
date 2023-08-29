@@ -7,7 +7,7 @@ import {useLanguage} from '../../common/lang-react';
 import {SongDatabase, SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
-import {calculateMaxRating} from '../rating-functions';
+import {calculateFullRating} from '../rating-functions';
 import {ChartRecordWithRating, RatingData} from '../types';
 import {RatingDetails} from './RatingDetails';
 import {RatingOverview} from './RatingOverview';
@@ -44,8 +44,8 @@ interface State {
   oldCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
   notPlayedNewCharts?: ReadonlyArray<ChartRecordWithRating>;
   notPlayedOldCharts?: ReadonlyArray<ChartRecordWithRating>;
-  maxNewChartsRating?: number;
-  maxOldChartsRating?: number;
+  fullNewChartsRating?: number;
+  fullOldChartsRating?: number;
 }
 
 export const RatingOutput = ({
@@ -55,6 +55,7 @@ export const RatingOutput = ({
   ratingData,
   gameRegion,
   playerName,
+  playerGradeIndex,
   songDatabase,
 }: Props) => {
   const state = useMemo<State>(() => {
@@ -87,15 +88,15 @@ export const RatingOutput = ({
         )
       : [];
 
-    const maxNewChartsRating = newSongs ? calculateMaxRating(newSongs, NUM_TOP_NEW_CHARTS) : 0;
-    const maxOldChartsRating = oldSongs ? calculateMaxRating(oldSongs, NUM_TOP_OLD_CHARTS) : 0;
+    const fullNewChartsRating = newSongs ? calculateFullRating(newSongs, NUM_TOP_NEW_CHARTS) : 0;
+    const fullOldChartsRating = oldSongs ? calculateFullRating(oldSongs, NUM_TOP_OLD_CHARTS) : 0;
     return {
       newCandidateCharts,
       oldCandidateCharts,
       notPlayedNewCharts,
       notPlayedOldCharts,
-      maxNewChartsRating,
-      maxOldChartsRating,
+      fullNewChartsRating,
+      fullOldChartsRating,
     };
   }, [newSongs, oldSongs, ratingData]);
 
@@ -107,14 +108,14 @@ export const RatingOutput = ({
     }
   }, []);
 
-  const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
+  const {newTopChartsCount, oldTopChartsCount} = ratingData;
   const {
     newCandidateCharts,
     oldCandidateCharts,
     notPlayedNewCharts,
     notPlayedOldCharts,
-    maxNewChartsRating,
-    maxOldChartsRating,
+    fullNewChartsRating,
+    fullOldChartsRating,
   } = state;
   const messages = MessagesByLang[useLanguage()];
   return (
@@ -124,13 +125,10 @@ export const RatingOutput = ({
         {playerName ? ` - ${playerName}` : null}
       </h2>
       <RatingOverview
-        newChartsRating={newChartsRating}
-        newChartsMaxRating={maxNewChartsRating}
-        newTopChartsCount={newTopChartsCount}
-        oldChartsRating={oldChartsRating}
-        oldChartsMaxRating={maxOldChartsRating}
-        oldTopChartsCount={oldTopChartsCount}
-        playerGradeIndex={0}
+        fullNewChartsRating={fullNewChartsRating}
+        fullOldChartsRating={fullOldChartsRating}
+        ratingData={ratingData}
+        playerGradeIndex={playerGradeIndex}
       />
       <RecommendedLevels
         gameRegion={gameRegion}

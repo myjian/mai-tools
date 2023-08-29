@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from 'react';
 
-import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {SongDatabase} from '../../common/song-props';
+import {CommonMessages} from '../common-messages';
 import {
   compareSongsByAchv,
   compareSongsByDifficulty,
@@ -15,21 +15,6 @@ import {ChartRecordWithRating, ColumnType} from '../types';
 import {CandidatesPlayedToggle} from './CandidatesPlayedToggle';
 import {ChartRecordsTable} from './ChartRecordsTable';
 import {CollapsibleContainer} from './CollapsibleContainer';
-
-const MessagesByLang = {
-  [Language.en_US]: {
-    showMore: 'Show more',
-    showLess: 'Show less',
-  },
-  [Language.zh_TW]: {
-    showMore: '顯示更多',
-    showLess: '顯示較少',
-  },
-  [Language.ko_KR]: {
-    showMore: '자세히 보기',
-    showLess: '간략히',
-  },
-};
 
 const CANDIDATE_SONGS_LIMIT = 20;
 
@@ -111,7 +96,7 @@ export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, 
   }
   const hasMore = records.length > CANDIDATE_SONGS_LIMIT;
 
-  const messages = MessagesByLang[useLanguage()];
+  const messages = CommonMessages[useLanguage()];
   return (
     <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
       {notPlayed && (

@@ -4,13 +4,16 @@
 }
 
 .totalRatingRow {
+  margin-bottom: 6px;
+}
+
+.totalRating {
   font-size: 20px;
   background-color: #111;
   display: inline-block;
   color: #eee;
   padding: 5px 20px;
-  margin-bottom: 6px;
-  cursor: pointer;
+  margin-right: 12px;
 }
 
 .ratingOverviewTable {
