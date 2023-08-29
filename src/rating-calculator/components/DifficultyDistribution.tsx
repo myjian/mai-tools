@@ -35,14 +35,16 @@ interface Props {
 export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) => {
   const lang = useLanguage();
   const topRecords = chartRecords.slice(0, topChartsCount);
-  const chartTypeNames = Array.from(
-    topRecords
-      .reduce((chartTypes, r) => {
-        chartTypes.add(r.chartType);
-        return chartTypes;
-      }, new Set<ChartType>())
-      .values()
-  ).map(getChartTypeName);
+  const hasChartType = topRecords.reduce(
+    (has, r) => {
+      has[r.chartType] = true;
+      return has;
+    },
+    {[ChartType.STANDARD]: false, [ChartType.DX]: false}
+  );
+  const chartTypeNames = [ChartType.DX, ChartType.STANDARD]
+    .filter((chartType) => hasChartType[chartType])
+    .map(getChartTypeName);
   const recordsPerDiff = getRecordsPerDifficulty(topRecords);
   return (
     <table className="rankDistributionTable">
