@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {CommonMessages} from '../common-messages';
 import {getGradeByIndex} from '../grade';
 import {RatingData} from '../types';
 
@@ -61,7 +60,6 @@ export const RatingOverview = ({
 
   const lang = useLanguage();
   const messages = MessagesByLang[lang];
-  const commonMessages = CommonMessages[lang];
   const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
   const totalRating = newChartsRating + oldChartsRating;
   const minNewChartRating =
@@ -82,7 +80,7 @@ export const RatingOverview = ({
           {showMore ? `${totalRating} / ${fullNewChartsRating + fullOldChartsRating}` : totalRating}
         </span>
         <button className="expandRatingOverview" onClick={toggleShowMore}>
-          {showMore ? commonMessages.showLess : commonMessages.showMore}
+          {showMore ? '+' : '-'}
         </button>
       </div>
       <table className="ratingOverviewTable">
