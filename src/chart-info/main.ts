@@ -1,3 +1,5 @@
+import './styles.css';
+
 import {getEpochTimeFromText} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
 import {performLocalization} from './localizePage';
