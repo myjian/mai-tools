@@ -18,13 +18,15 @@ const MagicSauce: Record<GameVersion, string> = {
     'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vMDg1NWM4OTQ3YjU0N2Q3YjliODg4MTU4NTEyZGRlNjkvcmF3LzFlZWIwNzRkMzkzNjc3NDhhZjQwZmIxYTlkZDRhMTZiNDJmOTliNmIvbWFpZHhfaW5fbHZfZmVzdGl2YWwuanM=',
   [GameVersion.FESTiVAL_PLUS]:
     'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfZmVzdGl2YWxwbHVzLmpz',
+  [GameVersion.BUDDIES]:
+    'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfYnVkZGllcy5qcw==',
 };
 
 const DX_REGEX = /\bdx\s*:\s*([0-9]+)/;
 const LV_REGEX = /\blv\s*:\s*(\[.+?\])/;
 const VERSION_REGEX = /\bv\s*:\s*(-?[0-9]+)/;
-const SONGNAME_REGEX = /\bn\s*:\s*["'](.+?)['"]\s*[,\}]/;
-const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'](.+?)['"]\s*[,\}]/;
+const SONGNAME_REGEX = /\bn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
+const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
 
 /**
  * Parse song properties from text.

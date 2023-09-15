@@ -113,7 +113,7 @@ declare global {
 
     if (location.pathname.indexOf('/maimai-mobile/playerData/') >= 0) {
       analyzeSpan.className += ' f_l';
-      const playCountDiv = document.querySelector('.m_5.m_t_10.t_r.f_12');
+      const playCountDiv = document.querySelector('.m_5.t_r.f_12');
       playCountDiv.insertAdjacentElement('afterbegin', analyzeSpan);
     } else if (location.pathname.indexOf('/maimai-mobile/home/') >= 0) {
       const playCommentDiv = document.querySelector('.comment_block.f_l.f_12');

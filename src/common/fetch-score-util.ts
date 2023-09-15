@@ -47,7 +47,7 @@ export function getPlayerGrade(n: Document | HTMLElement) {
 export function getAchievement(row: HTMLElement, isFriendScore = false): number {
   const elem = isFriendScore
     ? row.querySelector('tr:first-child td:last-child')
-    : row.querySelector('.music_score_block.w_120');
+    : row.querySelectorAll('.music_score_block')[0];
   return elem instanceof HTMLElement ? parseFloat(elem.innerText) : 0;
 }
 

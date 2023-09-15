@@ -20,6 +20,7 @@ const VERSION_NAMES = [
   'UNiVERSE PLUS',
   'FESTiVAL', // 19
   'FESTiVAL PLUS',
+  'BUDDiES', // 21
 ];
 
 export const enum GameVersion {
@@ -28,14 +29,16 @@ export const enum GameVersion {
   UNIVERSE_PLUS = 18,
   FESTiVAL = 19,
   FESTiVAL_PLUS = 20,
+  BUDDIES = 21,
 }
 
-export const LATEST_VERSION = GameVersion.FESTiVAL_PLUS;
+export const LATEST_VERSION = GameVersion.BUDDIES;
 
 export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
   GameVersion.UNIVERSE_PLUS,
   GameVersion.FESTiVAL,
   GameVersion.FESTiVAL_PLUS,
+  GameVersion.BUDDIES,
 ];
 
 export function validateGameVersion(
