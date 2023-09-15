@@ -14,6 +14,6 @@ export function getGameRegionFromOrigin(origin: string): GameRegion {
 }
 
 export function getGameRegionFromShortString(region: string): GameRegion {
-  region = region.toLowerCase();
+  region = (region || '').toLowerCase();
   return region === 'jp' ? GameRegion.Jp : GameRegion.Intl;
 }
