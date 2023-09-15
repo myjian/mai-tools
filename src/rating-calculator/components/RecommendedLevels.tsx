@@ -86,9 +86,9 @@ export const RecommendedLevels = ({
                 </tr>
                 {ranks
                   .map((rank) =>
-                    newLvsByRank[rank.title].map((recLv) => (
+                    newLvsByRank[rank.title].map((recLv, idx) => (
                       <RecommendedLevelRow
-                        key={recLv.lv}
+                        key={idx}
                         gameRegion={gameRegion}
                         gameVer={gameVer}
                         rankTitle={rank.title}
@@ -106,9 +106,9 @@ export const RecommendedLevels = ({
                 </tr>
                 {ranks
                   .map((rank) =>
-                    oldLvsByRank[rank.title].map((recLv) => (
+                    oldLvsByRank[rank.title].map((recLv, idx) => (
                       <RecommendedLevelRow
-                        key={recLv.lv}
+                        key={idx}
                         gameRegion={gameRegion}
                         gameVer={gameVer - 1}
                         rankTitle={rank.title}

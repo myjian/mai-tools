@@ -1,5 +1,11 @@
 {
   "version_name": "FESTiVAL",
+  "plate_name": {
+    "FC": "祭極",
+    "SSS": "祭將",
+    "AP": "祭神",
+    "FSD": "祭舞舞"
+  },
   "dx_songs": [
     "踊",
     "残響散歌",
@@ -82,11 +88,5 @@
   ],
   "std_songs": [
     "VIIIbit Explorer"
-  ],
-  "plate_name": {
-    "FC": "祭極",
-    "SSS": "祭將",
-    "AP": "祭神",
-    "FSD": "祭舞舞"
-  }
+  ]
 }
