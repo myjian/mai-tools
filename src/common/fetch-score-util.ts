@@ -82,7 +82,9 @@ export function getSyncStatus(row: HTMLElement, isFriendScore = false) {
   if (lowercaseStatus === 'back') {
     return null;
   }
-  return lowercaseStatus.replace('p', '+').toUpperCase();
+  // FSD was renamed back to FDX in maimai BUDDiES.
+  // To keep terminology consistense, we choose to say FSD and FSD+.
+  return lowercaseStatus.toUpperCase().replace('P', '+').replace('FDX', 'FSD');
 }
 
 /**

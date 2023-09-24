@@ -399,7 +399,11 @@ type Cache = {
     const map = createMap(SYNC_TYPES, reverse);
     rows.forEach((row) => {
       const sync = getSyncStatus(row, isFriendScore);
-      map.get(sync).push(row);
+      try {
+        map.get(sync).push(row);
+      } catch (ex) {
+        console.error(`Unknown sync status: ${sync}`, row);
+      }
     });
     return createRowsWithSection(map, SectionHeadStyle.Default, rows.length);
   }
