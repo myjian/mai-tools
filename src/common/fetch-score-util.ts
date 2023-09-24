@@ -83,7 +83,7 @@ export function getSyncStatus(row: HTMLElement, isFriendScore = false) {
     return null;
   }
   // FSD was renamed back to FDX in maimai BUDDiES.
-  // To keep terminology consistense, we choose to say FSD and FSD+.
+  // To keep terminology consistent, we choose to say FSD and FSD+.
   return lowercaseStatus.toUpperCase().replace('P', '+').replace('FDX', 'FSD');
 }
 
