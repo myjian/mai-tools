@@ -1,3 +1,5 @@
+import {roundFloat} from './number-helper';
+
 /*
   ✦ - 85%
   ✦✦ - 90%
@@ -19,29 +21,29 @@ export function determineDxStar(dxScoreRatio: number): number {
 }
 
 export function getDxStarText(index: number, displayZero = false): string {
-  return displayZero ? `✦${index}` : index ? `✦${index}` : "";
+  return displayZero ? `✦${index}` : index ? `✦${index}` : '';
 }
 
 // This function is only functional on recent play records page and single play record page!
 export function calculateDetailedDxStar(row: HTMLElement) {
-  const block = row.querySelector(".playlog_result_innerblock .playlog_score_block");
+  const block = row.querySelector('.playlog_result_innerblock .playlog_score_block');
   if (!block) {
     return 0;
   }
-  const dxScoreLabel = block.querySelector(".w_80");
+  const dxScoreLabel = block.querySelector('.w_80');
   if (!dxScoreLabel) {
     // do nothing if this function is run more than once
     return;
   }
   dxScoreLabel.remove();
   const [playerDxScore, maxDxScore] = block.textContent
-    .split("/")
-    .map((t) => parseInt(t.replace(",", "").trim()));
+    .split('/')
+    .map((t) => parseInt(t.replace(',', '').trim()));
   const dxScoreRatio = playerDxScore / maxDxScore;
   const dxStarIndex = determineDxStar(dxScoreRatio);
-  const dxStar = `✦${dxStarIndex} (${(dxScoreRatio * 100).toFixed(1)}%)`;
-  const dxStarBlock = document.createElement("div");
-  dxStarBlock.className = "white p_r_5 f_15 f_l";
+  const dxStar = `✦${dxStarIndex} (${roundFloat(dxScoreRatio * 100, 'floor', 0.1).toFixed(1)}%)`;
+  const dxStarBlock = document.createElement('div');
+  dxStarBlock.className = 'white p_r_5 f_15 f_l';
   dxStarBlock.append(dxStar);
   block.prepend(dxStarBlock);
   return dxStarIndex;
