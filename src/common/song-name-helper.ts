@@ -1,7 +1,6 @@
-import {ChartType} from './chart-type';
+import {ChartType, getChartTypeName} from './chart-type';
 import {fetchSongDetailPage} from './util';
 
-export const DX_SONG_NAME_SUFFIX = ' [DX]';
 export const RATING_TARGET_SONG_NAME_PREFIX = '▶ ';
 
 export function normalizeSongName(name: string) {
@@ -15,11 +14,19 @@ export function getSongIdx(row: HTMLElement) {
   return (row.getElementsByTagName('form')[0].elements.namedItem('idx') as HTMLInputElement).value;
 }
 
-export function getSongNickname(name: string, genre: string, chartType: ChartType) {
+export function getSongNickname(name: string, genre: string) {
   if (name === 'Link') {
     name = genre.includes('niconico') ? 'Link(nico)' : 'Link(org)';
   }
-  return chartType === ChartType.DX ? name + DX_SONG_NAME_SUFFIX : name;
+  return name;
+}
+
+export function getSongNicknameWithChartType(
+  name: string,
+  genre: string,
+  chartType: ChartType
+): string {
+  return getSongNickname(name, genre) + ' [' + getChartTypeName(chartType) + ']';
 }
 
 let cachedLinkIdx: {nico?: string; original?: string} = {};

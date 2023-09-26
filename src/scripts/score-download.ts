@@ -59,7 +59,7 @@ import {loadSongDatabase} from '../common/song-props';
     [Language.ko_KR]: {
       achievement: '정확도',
       chartConstant: '상수',
-      chartType: '사양',
+      chartType: '유형',
       copied: '클립보드에 복사되었습니다',
       copy: '복사',
       difficulty: '난이도',

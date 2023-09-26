@@ -34,13 +34,13 @@ export function ChartRecordTable(props: Props) {
     progress[0]
       .concat(progress[1])
       .filter((r) => r.chartType === ChartType.DX)
-      .map((r) => getSongNickname(r.songName, r.genre, ChartType.STANDARD))
+      .map((r) => getSongNickname(r.songName, r.genre))
   );
   const playedStdSongs = new Set(
     progress[0]
       .concat(progress[1])
       .filter((r) => r.chartType === ChartType.STANDARD)
-      .map((r) => getSongNickname(r.songName, r.genre, ChartType.STANDARD))
+      .map((r) => getSongNickname(r.songName, r.genre))
   );
   const unplayedDxSongs = (
     props.d === Difficulty.ReMASTER
@@ -64,6 +64,7 @@ export function ChartRecordTable(props: Props) {
         <thead>
           <tr>
             <th>Song</th>
+            <th>Chart</th>
             <th>{plateType === 'CLEAR' || plateType === 'SSS' ? '▸ ' : ''}Achv</th>
             <th>{plateType === 'FC' ? '▸ ' : ''}FC</th>
             <th>{plateType === 'AP' ? '▸ ' : ''}AP</th>
@@ -72,23 +73,48 @@ export function ChartRecordTable(props: Props) {
         </thead>
         <tbody>
           {doneRecords.map((r) => {
-            const nickname = getSongNickname(r.songName, r.genre, r.chartType);
-            return <ChartRecordTableRow key={nickname} done r={r} />;
+            const nickname = getSongNickname(r.songName, r.genre);
+            return (
+              <ChartRecordTableRow
+                key={nickname}
+                songNickname={nickname}
+                chartType={r.chartType}
+                done
+                r={r}
+              />
+            );
           })}
           <tr>
             <th colSpan={5}>- - - - - - - -</th>
           </tr>
           {undoneRecords.map((r) => {
-            const nickname = getSongNickname(r.songName, r.genre, r.chartType);
-            return <ChartRecordTableRow key={nickname} r={r} />;
+            const nickname = getSongNickname(r.songName, r.genre);
+            return (
+              <ChartRecordTableRow
+                key={nickname}
+                songNickname={nickname}
+                chartType={r.chartType}
+                r={r}
+              />
+            );
           })}
-          {unplayedStdSongs.map((s) => {
-            const nickname = getSongNickname(s, '', ChartType.STANDARD);
-            return <ChartRecordTableRow key={nickname} songName={nickname} />;
+          {unplayedStdSongs.map((songName) => {
+            return (
+              <ChartRecordTableRow
+                key={songName}
+                songNickname={songName}
+                chartType={ChartType.STANDARD}
+              />
+            );
           })}
-          {unplayedDxSongs.map((s) => {
-            const nickname = getSongNickname(s, '', ChartType.DX);
-            return <ChartRecordTableRow key={nickname} songName={nickname} />;
+          {unplayedDxSongs.map((songName) => {
+            return (
+              <ChartRecordTableRow
+                key={songName}
+                songNickname={songName}
+                chartType={ChartType.DX}
+              />
+            );
           })}
         </tbody>
       </table>

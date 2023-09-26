@@ -1,6 +1,7 @@
 import React from 'react';
 
-import {DIFFICULTY_CLASSNAME_MAP, getDifficultyName} from '../../common/difficulties';
+import {getChartTypeName} from '../../common/chart-type';
+import {DIFFICULTY_CLASSNAME_MAP} from '../../common/difficulties';
 import {getDisplayLv} from '../../common/level-helper';
 import {getRankTitle} from '../../common/rank-functions';
 import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
@@ -16,7 +17,7 @@ function getSongNameDisplay(
   const prefix = isCandidate && record.isTarget ? RATING_TARGET_SONG_NAME_PREFIX : '';
   const hasDualCharts = songDatabase.hasDualCharts(record.songName, record.genre);
   if (hasDualCharts) {
-    return prefix + getSongNickname(record.songName, record.genre, record.chartType);
+    return prefix + getSongNickname(record.songName, record.genre);
   }
   return prefix + record.songName;
 }
@@ -37,8 +38,8 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
         return index;
       case ColumnType.SONG_TITLE:
         return getSongNameDisplay(record, songDatabase, isCandidate);
-      case ColumnType.DIFFICULTY:
-        return getDifficultyName(record.difficulty);
+      case ColumnType.CHART_TYPE:
+        return getChartTypeName(record.chartType);
       case ColumnType.LEVEL:
         return getDisplayLv(record.level, !record.levelIsPrecise);
       case ColumnType.ACHIEVEMENT:

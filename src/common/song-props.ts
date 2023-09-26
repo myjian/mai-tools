@@ -100,8 +100,7 @@ export class SongDatabase {
     if (this.dxMap.has(songName) && this.standardMap.has(songName)) {
       return true;
     }
-    // Intentionally use ChartType.STANDARD to avoid [DX] suffix.
-    const nickname = getSongNickname(songName, genre, ChartType.STANDARD);
+    const nickname = getSongNickname(songName, genre);
     if (nickname) {
       return this.dxMap.has(nickname) && this.standardMap.has(nickname);
     }
@@ -121,8 +120,7 @@ export class SongDatabase {
     if (songProps) {
       return songProps;
     }
-    // Intentionally use ChartType.STANDARD to avoid [DX] suffix.
-    const nickname = getSongNickname(songName, genre, ChartType.STANDARD);
+    const nickname = getSongNickname(songName, genre);
     songProps = map.get(nickname);
     if (songProps) {
       return songProps;

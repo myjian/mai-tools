@@ -1,5 +1,4 @@
 import {ChartRecord} from '../common/chart-record';
-import {DIFFICULTIES} from '../common/difficulties';
 import {RankDef} from '../common/rank-functions';
 import {ChartRecordWithRating} from './types';
 
@@ -82,11 +81,11 @@ export function compareSongsByNextRank(
   return compareNumbers(nextRank1.minAchv, nextRank2.minAchv);
 }
 
-export function compareSongsByDifficulty(
+export function compareSongsByChartType(
   record1: ChartRecordWithRating,
   record2: ChartRecordWithRating
 ) {
-  const dIdx1 = DIFFICULTIES.indexOf(record1.difficulty);
-  const dIdx2 = DIFFICULTIES.indexOf(record2.difficulty);
-  return compareNumbers(dIdx1, dIdx2);
+  const type1 = record1.chartType;
+  const type2 = record2.chartType;
+  return compareNumbers(type1, type2);
 }

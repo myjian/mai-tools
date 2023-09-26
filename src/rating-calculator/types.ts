@@ -20,7 +20,7 @@ export interface RatingData {
 export const enum ColumnType {
   NO,
   SONG_TITLE,
-  DIFFICULTY,
+  CHART_TYPE,
   LEVEL,
   ACHIEVEMENT,
   RANK,

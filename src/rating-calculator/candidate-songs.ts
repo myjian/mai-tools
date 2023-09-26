@@ -6,7 +6,7 @@ import {
   getRankIndexByAchievement,
   SSSPLUS_MIN_ACHIEVEMENT,
 } from '../common/rank-functions';
-import {getSongNickname} from '../common/song-name-helper';
+import {getSongNicknameWithChartType} from '../common/song-name-helper';
 import {SongProperties} from '../common/song-props';
 import {calculateRatingRange} from './rating-functions';
 import {compareCandidate, compareSongsByLevel} from './record-comparator';
@@ -86,7 +86,7 @@ export function getNotPlayedCharts(
 ) {
   const playedCharts = new Set<string>();
   for (const r of records) {
-    const key = getSongNickname(r.songName, r.genre, r.chartType);
+    const key = getSongNicknameWithChartType(r.songName, r.genre, r.chartType);
     playedCharts.add(key + r.difficulty);
   }
   const maxRating = records.length ? Math.ceil(records[0].rating) : 0;
@@ -103,7 +103,7 @@ export function getNotPlayedCharts(
       let lv = s.lv[index];
       const levelIsPrecise = lv > 0;
       lv = Math.abs(lv);
-      const key = s.name === 'Link' ? s.nickname : getSongNickname(s.name, '', s.dx);
+      const key = s.name === 'Link' ? s.nickname : getSongNicknameWithChartType(s.name, '', s.dx);
       // Math.min is hack for newly added Re:MASTER charts.
       // I think the hack is no longer needed as I made parseSongProperties check lv array length,
       // but just want to stay safe.

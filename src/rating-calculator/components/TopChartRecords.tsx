@@ -5,7 +5,7 @@ import {SongDatabase} from '../../common/song-props';
 import {CommonMessages} from '../common-messages';
 import {
   compareSongsByAchv,
-  compareSongsByDifficulty,
+  compareSongsByChartType,
   compareSongsByLevel,
   compareSongsByName,
   compareSongsByRating,
@@ -19,7 +19,7 @@ import {LevelRankDistribution} from './LevelRankDistribution';
 const COLUMNS: ReadonlyArray<ColumnType> = [
   ColumnType.NO,
   ColumnType.SONG_TITLE,
-  ColumnType.DIFFICULTY,
+  ColumnType.CHART_TYPE,
   ColumnType.LEVEL,
   ColumnType.ACHIEVEMENT,
   ColumnType.RANK,
@@ -29,7 +29,7 @@ const COLUMNS: ReadonlyArray<ColumnType> = [
 const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithRating) => number> =
   new Map([
     [ColumnType.SONG_TITLE, compareSongsByName],
-    [ColumnType.DIFFICULTY, compareSongsByDifficulty],
+    [ColumnType.CHART_TYPE, compareSongsByChartType],
     [ColumnType.LEVEL, compareSongsByLevel],
     [ColumnType.ACHIEVEMENT, compareSongsByAchv],
     [ColumnType.RANK, compareSongsByAchv],

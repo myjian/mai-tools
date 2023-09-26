@@ -10,7 +10,7 @@ import {
 } from './fetch-score-util';
 import {getDefaultLevel} from './level-helper';
 import {fetchPage} from './net-helpers';
-import {getSongNickname} from './song-name-helper';
+import {getSongNicknameWithChartType} from './song-name-helper';
 import {SongDatabase} from './song-props';
 import {sleep} from './util';
 
@@ -184,16 +184,14 @@ function addDxStarInfoToRecords(
       r.genre !== dxScoreRecord.genre ||
       r.chartType !== dxScoreRecord.chartType
     ) {
+      const nickname1 = getSongNicknameWithChartType(r.songName, r.genre, r.chartType);
+      const nickname2 = getSongNicknameWithChartType(
+        dxScoreRecord.songName,
+        dxScoreRecord.genre,
+        dxScoreRecord.chartType
+      );
       console.warn(
-        `Achievement VS song order is different from DX Score VS song order. Expected ${getSongNickname(
-          r.songName,
-          r.genre,
-          r.chartType
-        )} got ${getSongNickname(
-          dxScoreRecord.songName,
-          dxScoreRecord.genre,
-          dxScoreRecord.chartType
-        )}`
+        `Achievement VS song order is different from DX Score VS song order. Expected ${nickname1} got ${nickname2}`
       );
       return;
     }

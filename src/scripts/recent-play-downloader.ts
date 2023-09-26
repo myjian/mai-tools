@@ -10,7 +10,7 @@ import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
 import {getDisplayLv} from '../common/level-helper';
 import {addLvToSongTitle, fetchGameVersion, removeScrollControl} from '../common/net-helpers';
-import {getSongNickname, isNiconicoLinkImg} from '../common/song-name-helper';
+import {getSongNicknameWithChartType, isNiconicoLinkImg} from '../common/song-name-helper';
 import {loadSongDatabase, SongDatabase} from '../common/song-props';
 
 type ScoreRecord = {
@@ -252,7 +252,7 @@ type Options = {
   function renderScoreRow(record: ScoreRecord, songDb: SongDatabase) {
     const genre = isNiconicoLinkImg(record.songImgSrc) ? 'niconico' : '';
     const nickname = songDb.hasDualCharts(record.songName, genre)
-      ? getSongNickname(record.songName, genre, record.chartType)
+      ? getSongNicknameWithChartType(record.songName, genre, record.chartType)
       : record.songName;
     const achvFragment = document.createDocumentFragment();
     const rankSpan = document.createElement('span');

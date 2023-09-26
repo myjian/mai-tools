@@ -93,8 +93,8 @@
   .songTitleCell {
     width: 300px;
   }
-  .difficultyCell {
-    width: 110px;
+  .chartTypeCell {
+    width: 70px;
   }
   .levelCell {
     width: 70px;
@@ -115,7 +115,7 @@ td.achievementCell {
   text-align: right;
 }
 
-td.difficultyCell,
+td.chartTypeCell,
 td.levelCell,
 td.ratingCell,
 .rankCell,

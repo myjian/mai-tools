@@ -1,22 +1,23 @@
 import React from 'react';
 
 import {FullChartRecord} from '../common/chart-record';
-import {ChartType} from '../common/chart-type';
-import {getSongNickname} from '../common/song-name-helper';
+import {ChartType, getChartTypeName} from '../common/chart-type';
 
 interface Props {
   done?: boolean;
-  songName?: string;
+  songNickname: string;
+  chartType: ChartType;
   r?: FullChartRecord;
 }
 
-export function ChartRecordTableRow({done, r, songName}: Props) {
+export function ChartRecordTableRow({done, r, songNickname, chartType}: Props) {
   if (!r) {
     return (
       <tr>
-        <td className={'songName ' + (done ? 'done' : 'undone')} title={songName}>
-          {songName}
+        <td className={'songName ' + (done ? 'done' : 'undone')} title={songNickname}>
+          {songNickname}
         </td>
+        <td>{getChartTypeName(chartType)}</td>
         <td className="achv">0.0000%</td>
         <td></td>
         <td></td>
@@ -26,9 +27,10 @@ export function ChartRecordTableRow({done, r, songName}: Props) {
   }
   return (
     <tr>
-      <td className={'songName ' + (done ? 'done' : 'undone')} title={r.songName}>
-        {getSongNickname(r.songName, r.genre, ChartType.STANDARD)}
+      <td className={'songName ' + (done ? 'done' : 'undone')} title={songNickname}>
+        {songNickname}
       </td>
+      <td>{getChartTypeName(chartType)}</td>
       <td className="achv">{r.achievement.toFixed(4) + '%'}</td>
       <td>{hasFullCombo(r.fcap) && '✓'}</td>
       <td>{hasAllPerfect(r.fcap) && '✓'}</td>

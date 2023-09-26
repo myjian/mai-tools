@@ -47,8 +47,7 @@ export function PlateProgressDetail(props: Props) {
     }, {} as Record<PlateType, ProgressByDifficulty>);
     playerScores
       .filter((record) => {
-        // I don't want to have [DX] suffix, so always pass ChartType.STANDARD
-        const nickname = getSongNickname(record.songName, record.genre, ChartType.STANDARD);
+        const nickname = getSongNickname(record.songName, record.genre);
         if (record.difficulty === Difficulty.ReMASTER) {
           return record.chartType === ChartType.STANDARD
             ? remasterSongs.std.has(nickname)

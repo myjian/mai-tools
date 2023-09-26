@@ -3,6 +3,7 @@ import {Language} from '../common/lang';
 export const CommonMessages = {
   [Language.en_US]: {
     subtotal: 'Subtotal',
+    chartType: 'Chart',
     difficulty: 'Difficulty',
     level: 'Level',
     rating: 'Rating',
@@ -14,6 +15,7 @@ export const CommonMessages = {
   [Language.zh_TW]: {
     subtotal: '小計',
     difficulty: '難度',
+    chartType: '譜面',
     level: '等級',
     rating: 'R 值',
     rank: 'Rank',
@@ -24,6 +26,7 @@ export const CommonMessages = {
   [Language.ko_KR]: {
     subtotal: '총합',
     difficulty: '난이도',
+    chartType: '유형',
     level: '레벨',
     rating: '레이팅',
     rank: '등급',
