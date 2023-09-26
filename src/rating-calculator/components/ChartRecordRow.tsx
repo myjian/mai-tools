@@ -4,6 +4,7 @@ import {RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
 import {getZhWikiLink} from '../../common/wiki-link';
 
 const SCORE_RECORD_ROW_CLASSNAME = 'scoreRecordRow';
+const SCORE_RECORD_COMPACT_ROW_CLASSNAME = 'scoreRecordCompactRow';
 const SCORE_RECORD_CELL_BASE_CLASSNAME = 'scoreRecordCell';
 const ACHV_CELL_CLASSNAME = 'achievementCell';
 const SCORE_RECORD_CELL_CLASSNAMES = [
@@ -19,6 +20,7 @@ const SCORE_RECORD_CELL_CLASSNAMES = [
 interface Props {
   className?: string;
   columnValues: ReadonlyArray<string | number>;
+  compactMode?: boolean;
   isHeading?: boolean;
   onClickCell?: (index: number) => void;
 }
@@ -28,6 +30,9 @@ export class ChartRecordRow extends React.PureComponent<Props> {
     let className = SCORE_RECORD_ROW_CLASSNAME;
     if (this.props.className) {
       className += ' ' + this.props.className;
+    }
+    if (this.props.compactMode) {
+      className += ' ' + SCORE_RECORD_COMPACT_ROW_CLASSNAME;
     }
     return (
       <tr className={className}>

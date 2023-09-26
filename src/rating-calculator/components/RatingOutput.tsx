@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {GameRegion} from '../../common/game-region';
 import {GameVersion} from '../../common/game-version';
@@ -101,6 +101,11 @@ export const RatingOutput = ({
   }, [newSongs, oldSongs, ratingData]);
 
   const outputArea = useRef<HTMLDivElement>();
+  const [compactMode, setCompactMode] = useState(false);
+
+  const toggleCompactMode = useCallback((evt: React.SyntheticEvent<HTMLInputElement>) => {
+    setCompactMode(evt.currentTarget.checked);
+  }, []);
 
   useEffect(() => {
     if (outputArea.current) {
@@ -120,6 +125,11 @@ export const RatingOutput = ({
   const messages = MessagesByLang[useLanguage()];
   return (
     <div className="outputArea" ref={outputArea}>
+      <div>
+        <label>
+          <input type="checkbox" checked={compactMode} onChange={toggleCompactMode} /> Compact mode
+        </label>
+      </div>
       <h2 id="outputHeading">
         {messages.analysisResult}
         {playerName ? ` - ${playerName}` : null}
@@ -130,16 +140,18 @@ export const RatingOutput = ({
         ratingData={ratingData}
         playerGradeIndex={playerGradeIndex}
       />
-      <RecommendedLevels
-        gameRegion={gameRegion}
-        gameVer={gameVer}
-        lowestNewChartRating={
-          newTopChartsCount > 0 ? ratingData.newChartRecords[newTopChartsCount - 1].rating : 0
-        }
-        lowestOldChartRating={
-          oldTopChartsCount > 0 ? ratingData.oldChartRecords[oldTopChartsCount - 1].rating : 0
-        }
-      />
+      {!compactMode && (
+        <RecommendedLevels
+          gameRegion={gameRegion}
+          gameVer={gameVer}
+          lowestNewChartRating={
+            newTopChartsCount > 0 ? ratingData.newChartRecords[newTopChartsCount - 1].rating : 0
+          }
+          lowestOldChartRating={
+            oldTopChartsCount > 0 ? ratingData.oldChartRecords[oldTopChartsCount - 1].rating : 0
+          }
+        />
+      )}
       <RatingDetails
         songDatabase={songDatabase}
         newCandidateCharts={newCandidateCharts}
@@ -147,6 +159,7 @@ export const RatingOutput = ({
         notPlayedNewCharts={notPlayedNewCharts}
         notPlayedOldCharts={notPlayedOldCharts}
         ratingData={ratingData}
+        compactMode={compactMode}
       />
       <hr className="sectionSep" />
     </div>

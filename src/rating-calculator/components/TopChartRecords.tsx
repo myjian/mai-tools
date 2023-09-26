@@ -41,9 +41,16 @@ interface Props {
   records: ReadonlyArray<ChartRecordWithRating>;
   limit: number;
   hidden?: boolean;
+  compactMode: boolean;
 }
 
-export const TopChartRecords = ({hidden, records: allRecords, limit, songDatabase}: Props) => {
+export const TopChartRecords = ({
+  compactMode,
+  hidden,
+  records: allRecords,
+  limit,
+  songDatabase,
+}: Props) => {
   const [sortBy, setSortBy] = useState(ColumnType.RATING);
   const [reverse, setReverse] = useState(false);
 
@@ -73,20 +80,23 @@ export const TopChartRecords = ({hidden, records: allRecords, limit, songDatabas
   const lang = useLanguage();
   return (
     <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
-      <div className="responsiveFlexBox">
-        <LevelRankDistribution
-          topLeftCell={CommonMessages[lang].level}
-          chartRecords={records}
-          topChartsCount={limit}
-        />
-        <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
-      </div>
+      {!compactMode && (
+        <div className="responsiveFlexBox">
+          <LevelRankDistribution
+            topLeftCell={CommonMessages[lang].level}
+            chartRecords={records}
+            topChartsCount={limit}
+          />
+          <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
+        </div>
+      )}
       <ChartRecordsTable
         songDatabase={songDatabase}
         columns={COLUMNS}
         tableClassname="topRecordTable"
         records={records}
         sortBy={handleSortBy}
+        compactMode={compactMode}
       />
     </CollapsibleContainer>
   );

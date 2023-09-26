@@ -45,11 +45,19 @@ function getColumnTitle(lang: Language, col: ColumnType): string {
 interface Props {
   columns?: ReadonlyArray<ColumnType>;
   sortBy?: (col: ColumnType) => void;
+  compactMode?: boolean;
 }
 
-export const ChartRecordHeadRow = React.memo(({columns, sortBy}: Props) => {
+export const ChartRecordHeadRow = React.memo(({columns, sortBy, compactMode}: Props) => {
   const lang = useLanguage();
   const columnTitles = columns.map((c) => getColumnTitle(lang, c));
   const handleClick = sortBy && ((index: number) => sortBy(columns[index]));
-  return <ChartRecordRow columnValues={columnTitles} onClickCell={handleClick} isHeading />;
+  return (
+    <ChartRecordRow
+      columnValues={columnTitles}
+      onClickCell={handleClick}
+      isHeading
+      compactMode={compactMode}
+    />
+  );
 });

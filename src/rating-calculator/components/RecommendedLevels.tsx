@@ -85,10 +85,10 @@ export const RecommendedLevels = ({
                   <th colSpan={4}>{messages.newChartsRecLv}</th>
                 </tr>
                 {ranks
-                  .map((rank) =>
+                  .map((rank, rowIdx) =>
                     newLvsByRank[rank.title].map((recLv, idx) => (
                       <RecommendedLevelRow
-                        key={idx}
+                        key={rowIdx.toString() + idx}
                         gameRegion={gameRegion}
                         gameVer={gameVer}
                         rankTitle={rank.title}
@@ -105,10 +105,10 @@ export const RecommendedLevels = ({
                   <th colSpan={4}>{messages.oldChartsRecLv}</th>
                 </tr>
                 {ranks
-                  .map((rank) =>
+                  .map((rank, rowIdx) =>
                     oldLvsByRank[rank.title].map((recLv, idx) => (
                       <RecommendedLevelRow
-                        key={idx}
+                        key={rowIdx.toString() + idx}
                         gameRegion={gameRegion}
                         gameVer={gameVer - 1}
                         rankTitle={rank.title}

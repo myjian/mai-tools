@@ -37,9 +37,11 @@ interface Props {
   oldCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
   notPlayedNewCharts?: ReadonlyArray<ChartRecordWithRating>;
   notPlayedOldCharts?: ReadonlyArray<ChartRecordWithRating>;
+  compactMode: boolean;
 }
 
 export const RatingDetails = ({
+  compactMode,
   newCandidateCharts,
   notPlayedNewCharts,
   oldCandidateCharts,
@@ -83,6 +85,7 @@ export const RatingDetails = ({
           records={newChartRecords}
           limit={newTopChartsCount}
           hidden={hideNewTopSongs}
+          compactMode={compactMode}
         />
       </div>
       <div className="songRecordsContainer">
@@ -96,38 +99,43 @@ export const RatingDetails = ({
           records={oldChartRecords}
           limit={oldTopChartsCount}
           hidden={hideOldTopSongs}
+          compactMode={compactMode}
         />
       </div>
-      <div className="songRecordsContainer">
-        <CollapsibleSectionTitle
-          title={messages.newChartsRatingCandidates}
-          contentHidden={hideNewCandidates}
-          onClick={toggleNewCandidateChartsDisplay}
-          isCandidateList
-        />
-        <CandidateChartRecords
-          name="new"
-          songDatabase={songDatabase}
-          hidden={hideNewCandidates}
-          played={newCandidateCharts}
-          notPlayed={notPlayedNewCharts}
-        />
-      </div>
-      <div className="songRecordsContainer">
-        <CollapsibleSectionTitle
-          title={messages.oldChartsRatingCandidates}
-          contentHidden={hideOldCandidates}
-          onClick={toggleOldCandidateChartsDisplay}
-          isCandidateList
-        />
-        <CandidateChartRecords
-          name="old"
-          songDatabase={songDatabase}
-          hidden={hideOldCandidates}
-          played={oldCandidateCharts}
-          notPlayed={notPlayedOldCharts}
-        />
-      </div>
+      {!compactMode && (
+        <div className="songRecordsContainer">
+          <CollapsibleSectionTitle
+            title={messages.newChartsRatingCandidates}
+            contentHidden={hideNewCandidates}
+            onClick={toggleNewCandidateChartsDisplay}
+            isCandidateList
+          />
+          <CandidateChartRecords
+            name="new"
+            songDatabase={songDatabase}
+            hidden={hideNewCandidates}
+            played={newCandidateCharts}
+            notPlayed={notPlayedNewCharts}
+          />
+        </div>
+      )}
+      {!compactMode && (
+        <div className="songRecordsContainer">
+          <CollapsibleSectionTitle
+            title={messages.oldChartsRatingCandidates}
+            contentHidden={hideOldCandidates}
+            onClick={toggleOldCandidateChartsDisplay}
+            isCandidateList
+          />
+          <CandidateChartRecords
+            name="old"
+            songDatabase={songDatabase}
+            hidden={hideOldCandidates}
+            played={oldCandidateCharts}
+            notPlayed={notPlayedOldCharts}
+          />
+        </div>
+      )}
     </>
   );
 };
