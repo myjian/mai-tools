@@ -172,12 +172,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
     }
     // TODO: support overrides by user
     console.log('Song database:', this.songDatabase);
-    console.log('Player scores:', this.playerScores);
-    if (!this.playerScores.length) {
+    const playerScoresFromInput = readPlayerScoresFromManualInput();
+    const playerScores = playerScoresFromInput.length ? playerScoresFromInput : this.playerScores;
+    console.log('Player scores:', playerScores);
+    if (!playerScores.length) {
       this.setState({ratingData: undefined});
       return;
     }
-    const ratingData = analyzePlayerRating(this.songDatabase, this.playerScores, gameVer, region);
+    const ratingData = analyzePlayerRating(this.songDatabase, playerScores, gameVer, region);
     console.log('Rating Data:', ratingData);
     this.setState({ratingData});
   };
@@ -282,4 +284,10 @@ function updateDocumentTitle(lang: Language) {
       document.title = 'maimai DX R 值分析工具';
       break;
   }
+}
+
+function readPlayerScoresFromManualInput(): ChartRecord[] {
+  const textarea = document.getElementById('playerScoresTextarea');
+  const rawText = textarea instanceof HTMLTextAreaElement ? textarea.value : '';
+  return rawText ? JSON.parse(rawText) : [];
 }
