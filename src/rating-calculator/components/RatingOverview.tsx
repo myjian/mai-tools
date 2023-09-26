@@ -63,13 +63,13 @@ export const RatingOverview = ({
   const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
   const totalRating = newChartsRating + oldChartsRating;
   const minNewChartRating =
-    newTopChartsCount > 0 ? ratingData.newChartRecords[newTopChartsCount - 1].rating.toFixed(0) : 0;
+    newTopChartsCount > 0 ? Math.floor(ratingData.newChartRecords[newTopChartsCount - 1].rating) : 0;
   const minOldChartRating =
-    oldTopChartsCount > 0 ? ratingData.oldChartRecords[oldTopChartsCount - 1].rating.toFixed(0) : 0;
+    oldTopChartsCount > 0 ? Math.floor(ratingData.oldChartRecords[oldTopChartsCount - 1].rating) : 0;
   const maxNewChartRating =
-    newTopChartsCount > 0 ? ratingData.newChartRecords[0].rating.toFixed(0) : 0;
+    newTopChartsCount > 0 ? Math.floor(ratingData.newChartRecords[0].rating) : 0;
   const maxOldChartRating =
-    oldTopChartsCount > 0 ? ratingData.oldChartRecords[0].rating.toFixed(0) : 0;
+    oldTopChartsCount > 0 ? Math.floor(ratingData.oldChartRecords[0].rating) : 0;
   const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex) : null;
 
   return (
