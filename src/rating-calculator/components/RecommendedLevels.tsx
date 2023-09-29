@@ -23,19 +23,19 @@ const MessagesByLang = {
     newChartsRecLv: 'New Charts',
     oldChartsRecLv: 'Old Charts',
     levelComment:
-      'Note: X.7 and above is classified under X+. For example, 10.7, 10.8, and 10.9 are 10+.',
+      'Note: X.7 and above is classified under X+. For example, 12.7, 12.8, and 12.9 are 12+.',
   },
   [Language.zh_TW]: {
     recommendedLevels: '刷分目標 (推薦等級)',
     newChartsRecLv: '新譜面',
     oldChartsRecLv: '舊譜面',
-    levelComment: '註：X.7 以上是歸類在官方的 X+。舉例來說：10.7, 10.8, 10.9 都算是 10+。',
+    levelComment: '註：X.7 以上是歸類在官方的 X+。舉例來說：12.7, 12.8, 12.9 都算是 12+。',
   },
   [Language.ko_KR]: {
     recommendedLevels: '추천 레벨',
     newChartsRecLv: '신곡 채보',
     oldChartsRecLv: '구곡 채보',
-    levelComment: '참고：X.7 이상은 X+로 표시됩니다. 예를 들면 10.7, 10.8, 10.9는 10+입니다.',
+    levelComment: '참고：X.7 이상은 X+로 표시됩니다. 예를 들면 12.7, 12.8, 12.9는 12+입니다.',
   },
 };
 

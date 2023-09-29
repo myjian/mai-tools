@@ -28,11 +28,10 @@ interface Props {
   columns: ReadonlyArray<ColumnType>;
   index: number;
   isCandidate?: boolean;
-  compactMode?: boolean;
 }
 
 export const ChartRecordDataRow = React.memo((props: Props) => {
-  const {record, index, columns, songDatabase, isCandidate, compactMode} = props;
+  const {record, index, columns, songDatabase, isCandidate} = props;
   const columnValues = columns.map<string | number>((c) => {
     switch (c) {
       case ColumnType.NO:
@@ -67,7 +66,6 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
     <ChartRecordRow
       className={DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)}
       columnValues={columnValues}
-      compactMode={compactMode}
     />
   );
 });

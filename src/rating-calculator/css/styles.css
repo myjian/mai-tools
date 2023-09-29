@@ -51,11 +51,6 @@ label {
   padding-top: 12px;
 }
 
-.responsiveFlexBox {
-  display: flex;
-  flex-direction: column;
-}
-
 .basic {
   color: #49b63e;
 }
@@ -79,7 +74,11 @@ label {
 }
 
 .sectionSep {
-  margin-top: 35px;
+  margin-top: 30px;
+}
+
+.marginBottom30 {
+  margin-bottom: 30px;
 }
 
 .collapsibleContainer {
@@ -96,11 +95,13 @@ label {
   display: none;
 }
 
+.inlineBlock {
+  display: inline-block;
+  vertical-align: top;
+}
+
 @media only screen and (min-width: 551px) {
   body {
     margin: 20px;
-  }
-  .responsiveFlexBox {
-    flex-direction: row;
   }
 }

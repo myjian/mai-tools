@@ -1,0 +1,72 @@
+.ratingOverview {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.totalRatingRow {
+  margin-bottom: 6px;
+}
+
+.totalRating {
+  font-size: 20px;
+  background-color: #111;
+  display: inline-block;
+  color: #eee;
+  padding: 5px 20px;
+  margin-right: 12px;
+}
+
+.expandRatingOverview {
+  font-size: 0.7rem;
+}
+
+.ratingOverviewTable {
+  border-style: none;
+}
+
+.columnColumn {
+  padding-right: 4px;
+}
+
+.subRatingColumn {
+  text-align: right;
+}
+
+.avgRatingColumn {
+  padding-left: 16px;
+}
+
+.ratingSubjects,
+.ratingCandidates {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.ratingSubjects.contentHidden,
+.ratingCandidates.contentHidden {
+  display: block;
+}
+
+@media only screen and (min-width: 1000px) {
+  .maybeFlexRow {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .compactRatingColumn,
+  .ratingSubjects,
+  .ratingCandidates {
+    margin-right: 16px;
+  }
+
+  /* In maybeFlexRow, right margin will be set by compactRatingColumn. */
+  .maybeFlexRow .ratingSubjects {
+    margin-right: 0;
+  }
+
+  .compactRatingColumn {
+    display: flex;
+    flex-direction: column-reverse;
+    align-self: flex-start;
+  }
+}

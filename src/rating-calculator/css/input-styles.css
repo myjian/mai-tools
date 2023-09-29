@@ -27,6 +27,10 @@ textarea:focus {
   margin-bottom: 10px;
 }
 
+.scoreInputSelector {
+  margin-bottom: 5px;
+}
+
 .lvInput {
   margin-top: 14px;
 }

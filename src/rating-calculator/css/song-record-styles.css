@@ -15,54 +15,9 @@
   }
 }
 
-.songRecordsContainer {
-  margin-top: 0;
-}
-
-.cSecTitleContainer {
-  margin: 4px 0 16px;
-  padding: 0;
-}
-
-.cSecTitle {
-  cursor: pointer;
-  padding: 0 4px;
-  display: inline-block;
-}
-
-.cSecTitle:focus {
-  color: inherit;
-}
-
-.cSecTitle:active {
-  background-color: transparent;
-}
-
-.cSecTitleSymbol {
-  display: inline-block;
-  position: relative;
-  transform: rotate(0.25turn);
-  line-height: 32px;
-  width: 32px;
-  text-align: center;
-  transition: bottom 0.3s;
-  bottom: 2px;
-}
-
-.cSecTitleSymbol.cSecHidden {
-  transform: rotate(0);
-  bottom: 1px;
-  animation-name: rotationCollapse;
-  animation-duration: 0.3s;
-}
-
-.cSecTitleSymbol.cSecShow {
-  animation-name: rotationExpand;
-  animation-duration: 0.3s;
-}
-
-.songRecordTableContainer {
-  margin-bottom: 35px;
+.ratingSubjectsMiniHeading {
+  margin-top: 8px;
+  font-weight: bold;
 }
 
 .songRecordTableContainer.hidden {
@@ -74,12 +29,12 @@
 }
 
 .scoreRecordCell {
-  padding: 4px;
+  padding: 2px 4px;
   font-weight: bold;
   font-size: 1rem;
 }
 
-.scoreRecordCompactRow .scoreRecordCell {
+.songRecordCompactTableContainer .scoreRecordCell {
   padding: 0 3px;
   font-size: 0.7rem;
 }
@@ -112,6 +67,15 @@
   }
   .ratingCell {
     width: 70px;
+  }
+
+  .songRecordCompactTableContainer .songTitleCell,
+  .songRecordCompactTableContainer .chartTypeCell,
+  .songRecordCompactTableContainer .levelCell,
+  .songRecordCompactTableContainer .achievementCell,
+  .songRecordCompactTableContainer .rankCell,
+  .songRecordCompactTableContainer .ratingCell {
+    width: unset;
   }
 }
 

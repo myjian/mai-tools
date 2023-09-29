@@ -7,6 +7,7 @@ import {RatingData} from '../types';
 
 const MessagesByLang = {
   [Language.en_US]: {
+    analysisResult: 'Analysis Result',
     average: 'Avg',
     maximum: 'Max',
     minimum: 'Min',
@@ -16,6 +17,7 @@ const MessagesByLang = {
     grade: 'Grade',
   },
   [Language.zh_TW]: {
+    analysisResult: '分析結果',
     average: '平均',
     maximum: '最大',
     minimum: '最小',
@@ -25,6 +27,7 @@ const MessagesByLang = {
     grade: '段位',
   },
   [Language.ko_KR]: {
+    analysisResult: '분석결과',
     average: '평균',
     maximum: '최대',
     minimum: '최소',
@@ -36,17 +39,21 @@ const MessagesByLang = {
 };
 
 interface Props {
+  playerName: string;
+  playerGradeIndex: number;
   fullNewChartsRating?: number;
   fullOldChartsRating?: number;
   ratingData: RatingData;
-  playerGradeIndex: number;
+  totalRating: number;
 }
 
 export const RatingOverview = ({
+  playerName,
+  playerGradeIndex,
   fullNewChartsRating,
   fullOldChartsRating,
   ratingData,
-  playerGradeIndex,
+  totalRating,
 }: Props) => {
   const [showMore, setShowMore] = useState<boolean>();
 
@@ -61,11 +68,14 @@ export const RatingOverview = ({
   const lang = useLanguage();
   const messages = MessagesByLang[lang];
   const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
-  const totalRating = newChartsRating + oldChartsRating;
   const minNewChartRating =
-    newTopChartsCount > 0 ? Math.floor(ratingData.newChartRecords[newTopChartsCount - 1].rating) : 0;
+    newTopChartsCount > 0
+      ? Math.floor(ratingData.newChartRecords[newTopChartsCount - 1].rating)
+      : 0;
   const minOldChartRating =
-    oldTopChartsCount > 0 ? Math.floor(ratingData.oldChartRecords[oldTopChartsCount - 1].rating) : 0;
+    oldTopChartsCount > 0
+      ? Math.floor(ratingData.oldChartRecords[oldTopChartsCount - 1].rating)
+      : 0;
   const maxNewChartRating =
     newTopChartsCount > 0 ? Math.floor(ratingData.newChartRecords[0].rating) : 0;
   const maxOldChartRating =
@@ -74,13 +84,16 @@ export const RatingOverview = ({
 
   return (
     <div className="ratingOverview">
+      <h2 id="outputHeading">{playerName || messages.analysisResult}</h2>
       <div className="totalRatingRow">
         <span className="totalRating">
           Rating：{' '}
-          {showMore ? `${totalRating} / ${fullNewChartsRating + fullOldChartsRating}` : totalRating}
+          {showMore
+            ? `${totalRating} / ${getDenominatorText(fullNewChartsRating + fullOldChartsRating)}`
+            : totalRating}
         </span>
         <button className="expandRatingOverview" onClick={toggleShowMore}>
-          {showMore ? '-' : '+'}
+          {showMore ? '－' : '＋'}
         </button>
       </div>
       <table className="ratingOverviewTable">
@@ -89,7 +102,9 @@ export const RatingOverview = ({
             <td>{messages.newChartsRating}</td>
             <td className="columnColumn">{messages.column}</td>
             <td className="subRatingColumn">
-              {showMore ? `${newChartsRating} / ${fullNewChartsRating}` : newChartsRating}
+              {showMore
+                ? `${newChartsRating} / ${getDenominatorText(fullNewChartsRating)}`
+                : newChartsRating}
             </td>
             <td className="avgRatingColumn">
               ({`${messages.average} ${getAvg(newChartsRating, newTopChartsCount)}`}
@@ -103,7 +118,9 @@ export const RatingOverview = ({
             <td>{messages.oldChartsRating}</td>
             <td>{messages.column}</td>
             <td className="subRatingColumn">
-              {showMore ? `${oldChartsRating} / ${fullOldChartsRating}` : oldChartsRating}
+              {showMore
+                ? `${oldChartsRating} / ${getDenominatorText(fullOldChartsRating)}`
+                : oldChartsRating}
             </td>
             <td className="avgRatingColumn">
               ({`${messages.average} ${getAvg(oldChartsRating, oldTopChartsCount)}`}
@@ -130,4 +147,8 @@ export const RatingOverview = ({
 
 function getAvg(sum: number, count: number) {
   return count ? (sum / count).toFixed(0) : 0;
+}
+
+function getDenominatorText(denom: number): string {
+  return denom ? denom.toFixed(0) : '?';
 }

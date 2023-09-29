@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
+import {CommonMessages} from '../common-messages';
 
 const MessagesByLang = {
   [Language.en_US]: {
@@ -31,16 +32,40 @@ const MessagesByLang = {
 };
 
 export const ScoreInput = () => {
-  const messages = MessagesByLang[useLanguage()];
+  const lang = useLanguage();
+  const commonMessages = CommonMessages[lang];
+  const messages = MessagesByLang[lang];
   const [showInput, setShowInput] = useState(false);
-  const toggleShowInput = () => {
-    setShowInput(!showInput);
-  };
+  const handleRadioChange = useCallback((evt: React.FormEvent<HTMLInputElement>) => {
+    setShowInput(evt.currentTarget.value === '1');
+  }, []);
   return (
     <div className="w90">
-      <h2 className="scoreInputHeading" tabIndex={0} onClick={toggleShowInput}>
-        {messages.scoreInputHeading}
-      </h2>
+      <h2 className="scoreInputHeading">{messages.scoreInputHeading}</h2>
+      <form className="scoreInputSelector">
+        <label className="radioLabel">
+          <input
+            className="radioInput"
+            name="showScoreInput"
+            value="0"
+            type="radio"
+            checked={!showInput}
+            onChange={handleRadioChange}
+          />
+          {commonMessages.autofill}
+        </label>
+        <label className="radioLabel">
+          <input
+            className="radioInput"
+            name="showScoreInput"
+            value="1"
+            type="radio"
+            checked={showInput}
+            onChange={handleRadioChange}
+          />
+          {commonMessages.manualInput}
+        </label>
+      </form>
       <div className={showInput ? 'hidden' : ''}>
         {messages.scoreInputDescPrefix}
         <a href="../#bookmarklets" target="_blank">

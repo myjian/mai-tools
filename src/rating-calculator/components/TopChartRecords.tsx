@@ -1,3 +1,5 @@
+import '../css/song-record-styles.css';
+
 import React, {useCallback, useState} from 'react';
 
 import {useLanguage} from '../../common/lang-react';
@@ -44,13 +46,10 @@ interface Props {
   compactMode: boolean;
 }
 
-export const TopChartRecords = ({
-  compactMode,
-  hidden,
-  records: allRecords,
-  limit,
-  songDatabase,
-}: Props) => {
+export const TopChartRecords = (props: Props) => {
+  const {compactMode, limit, songDatabase} = props;
+  // Force visible if compact mode is enabled
+  const hidden = compactMode ? false : props.hidden;
   const [sortBy, setSortBy] = useState(ColumnType.RATING);
   const [reverse, setReverse] = useState(false);
 
@@ -68,7 +67,7 @@ export const TopChartRecords = ({
     [sortBy, reverse]
   );
 
-  let records = allRecords.slice(0, limit);
+  let records = props.records.slice(0, limit);
   records.forEach((r, i) => (r.order = i + 1));
   if (sortBy) {
     records.sort(COMPARATOR.get(sortBy));
@@ -79,15 +78,24 @@ export const TopChartRecords = ({
 
   const lang = useLanguage();
   return (
-    <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
+    <CollapsibleContainer
+      className={
+        'songRecordTableContainer ' + (compactMode ? 'songRecordCompactTableContainer' : '')
+      }
+      hidden={hidden}
+    >
       {!compactMode && (
-        <div className="responsiveFlexBox">
-          <LevelRankDistribution
-            topLeftCell={CommonMessages[lang].level}
-            chartRecords={records}
-            topChartsCount={limit}
-          />
-          <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
+        <div>
+          <div className="inlineBlock">
+            <LevelRankDistribution
+              topLeftCell={CommonMessages[lang].level}
+              chartRecords={records}
+              topChartsCount={limit}
+            />
+          </div>
+          <div className="inlineBlock">
+            <DifficultyDistribution chartRecords={records} topChartsCount={limit} />
+          </div>
         </div>
       )}
       <ChartRecordsTable
@@ -96,8 +104,8 @@ export const TopChartRecords = ({
         tableClassname="topRecordTable"
         records={records}
         sortBy={handleSortBy}
-        compactMode={compactMode}
       />
+      {!compactMode && <div className="marginBottom30"></div>}
     </CollapsibleContainer>
   );
 };

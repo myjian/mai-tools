@@ -106,7 +106,7 @@ export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, 
           toggleShowPlayed={toggleShowPlayed}
         />
       )}
-      {/* TODO: filter by level or game version */}
+      {/* TODO: filter by level */}
       <ChartRecordsTable
         songDatabase={songDatabase}
         tableClassname="candidateTable"
@@ -120,6 +120,7 @@ export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, 
           {showAll ? messages.showLess : messages.showMore}
         </a>
       )}
+      <div className="marginBottom30"></div>
     </CollapsibleContainer>
   );
 };

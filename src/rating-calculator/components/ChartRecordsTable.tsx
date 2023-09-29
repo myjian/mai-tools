@@ -12,17 +12,16 @@ interface Props {
   tableClassname: string;
   sortBy?: (col: ColumnType) => void;
   isCandidate?: boolean;
-  compactMode?: boolean;
 }
 export class ChartRecordsTable extends React.PureComponent<Props> {
   render() {
-    const {columns, sortBy, records, songDatabase, isCandidate, compactMode} = this.props;
+    const {columns, sortBy, records, songDatabase, isCandidate} = this.props;
     let {tableClassname} = this.props;
     tableClassname += ' songRecordTable';
     return (
       <table className={tableClassname}>
         <thead>
-          <ChartRecordHeadRow sortBy={sortBy} columns={columns} compactMode={compactMode} />
+          <ChartRecordHeadRow sortBy={sortBy} columns={columns} />
         </thead>
         <tbody>
           {records.map((r, index) => {
@@ -35,7 +34,6 @@ export class ChartRecordsTable extends React.PureComponent<Props> {
                 key={index}
                 index={index}
                 isCandidate={isCandidate}
-                compactMode={compactMode}
               />
             );
           })}

@@ -1,3 +1,5 @@
+import '../css/rating-output.css';
+
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {GameRegion} from '../../common/game-region';
@@ -9,19 +11,20 @@ import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {calculateFullRating} from '../rating-functions';
 import {ChartRecordWithRating, RatingData} from '../types';
-import {RatingDetails} from './RatingDetails';
+import {RatingCandidates} from './RatingCandidates';
 import {RatingOverview} from './RatingOverview';
+import {RatingSubjects} from './RatingSubjects';
 import {RecommendedLevels} from './RecommendedLevels';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    analysisResult: 'Analysis Result',
+    compactMode: 'Compact mode',
   },
   [Language.zh_TW]: {
-    analysisResult: '分析結果',
+    compactMode: '精簡版',
   },
   [Language.ko_KR]: {
-    analysisResult: '분석결과',
+    compactMode: '간결한 모드',
   },
 };
 
@@ -100,7 +103,7 @@ export const RatingOutput = ({
     };
   }, [newSongs, oldSongs, ratingData]);
 
-  const outputArea = useRef<HTMLDivElement>();
+  const outputRef = useRef<HTMLDivElement>();
   const [compactMode, setCompactMode] = useState(false);
 
   const toggleCompactMode = useCallback((evt: React.SyntheticEvent<HTMLInputElement>) => {
@@ -108,8 +111,8 @@ export const RatingOutput = ({
   }, []);
 
   useEffect(() => {
-    if (outputArea.current) {
-      outputArea.current.scrollIntoView({behavior: 'smooth'});
+    if (outputRef.current) {
+      outputRef.current.scrollIntoView({behavior: 'smooth'});
     }
   }, []);
 
@@ -122,45 +125,83 @@ export const RatingOutput = ({
     fullNewChartsRating,
     fullOldChartsRating,
   } = state;
+  const totalRating = ratingData.newChartsRating + ratingData.oldChartsRating;
   const messages = MessagesByLang[useLanguage()];
+
+  const ratingOverview = (
+    <RatingOverview
+      fullNewChartsRating={fullNewChartsRating}
+      fullOldChartsRating={fullOldChartsRating}
+      ratingData={ratingData}
+      totalRating={totalRating}
+      playerName={playerName}
+      playerGradeIndex={playerGradeIndex}
+    />
+  );
+
+  const ratingSubjectsNew = (
+    <RatingSubjects
+      songDatabase={songDatabase}
+      ratingData={ratingData}
+      compactMode={compactMode}
+      isCurrentVersion
+    />
+  );
+
+  const ratingSubjectsOld = (
+    <RatingSubjects songDatabase={songDatabase} ratingData={ratingData} compactMode={compactMode} />
+  );
+
   return (
-    <div className="outputArea" ref={outputArea}>
+    <div ref={outputRef}>
       <div>
         <label>
-          <input type="checkbox" checked={compactMode} onChange={toggleCompactMode} /> Compact mode
+          <input type="checkbox" checked={compactMode} onChange={toggleCompactMode} />{' '}
+          {messages.compactMode}
         </label>
       </div>
-      <h2 id="outputHeading">
-        {messages.analysisResult}
-        {playerName ? ` - ${playerName}` : null}
-      </h2>
-      <RatingOverview
-        fullNewChartsRating={fullNewChartsRating}
-        fullOldChartsRating={fullOldChartsRating}
-        ratingData={ratingData}
-        playerGradeIndex={playerGradeIndex}
-      />
-      {!compactMode && (
-        <RecommendedLevels
-          gameRegion={gameRegion}
-          gameVer={gameVer}
-          lowestNewChartRating={
-            newTopChartsCount > 0 ? ratingData.newChartRecords[newTopChartsCount - 1].rating : 0
-          }
-          lowestOldChartRating={
-            oldTopChartsCount > 0 ? ratingData.oldChartRecords[oldTopChartsCount - 1].rating : 0
-          }
-        />
+      {compactMode ? (
+        <div className="maybeFlexRow">
+          <div className="compactRatingColumn">
+            {ratingOverview}
+            {ratingSubjectsNew}
+          </div>
+          {ratingSubjectsOld}
+        </div>
+      ) : (
+        <>
+          {ratingOverview}
+          <RecommendedLevels
+            gameRegion={gameRegion}
+            gameVer={gameVer}
+            lowestNewChartRating={
+              newTopChartsCount > 0 ? ratingData.newChartRecords[newTopChartsCount - 1].rating : 0
+            }
+            lowestOldChartRating={
+              oldTopChartsCount > 0 ? ratingData.oldChartRecords[oldTopChartsCount - 1].rating : 0
+            }
+          />
+          <div>
+            {ratingSubjectsNew}
+            {ratingSubjectsOld}
+          </div>
+        </>
       )}
-      <RatingDetails
-        songDatabase={songDatabase}
-        newCandidateCharts={newCandidateCharts}
-        oldCandidateCharts={oldCandidateCharts}
-        notPlayedNewCharts={notPlayedNewCharts}
-        notPlayedOldCharts={notPlayedOldCharts}
-        ratingData={ratingData}
-        compactMode={compactMode}
-      />
+      {!compactMode && (
+        <div>
+          <RatingCandidates
+            songDatabase={songDatabase}
+            isCurrentVersion
+            candidateCharts={newCandidateCharts}
+            notPlayedCharts={notPlayedNewCharts}
+          />
+          <RatingCandidates
+            songDatabase={songDatabase}
+            candidateCharts={oldCandidateCharts}
+            notPlayedCharts={notPlayedOldCharts}
+          />
+        </div>
+      )}
       <hr className="sectionSep" />
     </div>
   );

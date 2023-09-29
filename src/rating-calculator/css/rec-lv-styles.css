@@ -1,9 +1,9 @@
-.recLvTitle {
-  margin-bottom: 12px;
+.recLvSection {
+  margin-top: 16px;
 }
 
 .recLvDesc {
-  margin: 10px 0 35px 4px;
+  margin: 10px 0 30px 4px;
   max-height: 999px;
 }
 

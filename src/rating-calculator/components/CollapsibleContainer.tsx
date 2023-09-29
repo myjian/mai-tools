@@ -1,3 +1,5 @@
+import '../css/collapsible-container.css';
+
 import React from 'react';
 
 interface Props {
@@ -7,15 +9,13 @@ interface Props {
 }
 export class CollapsibleContainer extends React.PureComponent<Props> {
   render() {
-    let className = "collapsibleContainer";
+    let className = 'collapsibleContainer';
     if (this.props.className) {
-      className += " " + this.props.className;
+      className += ' ' + this.props.className;
     }
     if (this.props.hidden) {
-      className += " hidden";
+      className += ' hidden';
     }
-    return (
-      <div className={className}>{this.props.children}</div>
-    )
+    return <div className={className}>{this.props.children}</div>;
   }
 }
