@@ -92,7 +92,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
     if (!isNaN(date)) {
       this.date = new Date(date);
     }
-    loadSongDatabase(gameVer, region).then((songDb) => (this.songDatabase = songDb));
+    loadSongDatabase(gameVer, region).then((songDb) => {
+      this.songDatabase = songDb;
+      this.playerScores = readPlayerScoresFromQueryParams(queryParams, songDb);
+      console.log('Loaded ', songDb, this.playerScores);
+      this.analyzeRating();
+    });
     if (window.opener) {
       this.initWindowCommunication();
     }
@@ -304,4 +309,60 @@ function readPlayerScoresFromManualInput(): ChartRecord[] {
   const textarea = document.getElementById('playerScoresTextarea');
   const rawText = textarea instanceof HTMLTextAreaElement ? textarea.value : '';
   return rawText ? JSON.parse(rawText) : [];
+}
+
+function readPlayerScoresFromQueryParams(qp: URLSearchParams, songDb: SongDatabase): ChartRecord[] {
+  // Query params must exist
+  const rawImages = qp.get(QueryParam.SongImage);
+  const rawChartTypes = qp.get(QueryParam.ChartType);
+  const rawDifficulties = qp.get(QueryParam.Difficulty);
+  const rawAchievements = qp.get(QueryParam.Achievement);
+  if (!rawImages || !rawChartTypes || !rawDifficulties || !rawAchievements) {
+    return [];
+  }
+
+  // Query params must have valid values
+  const images = rawImages.split('_');
+  const chartTypes = Array.from(rawChartTypes)
+    .map((ct) => parseInt(ct))
+    .filter((ct) => !isNaN(ct));
+  const difficulties = Array.from(rawDifficulties)
+    .map((df) => parseInt(df))
+    .filter((df) => !isNaN(df));
+  const achievements = rawAchievements
+    .split('_')
+    .map((ac) => parseFloat(ac))
+    .filter((ac) => !isNaN(ac));
+  if (
+    images.length !== chartTypes.length ||
+    images.length !== difficulties.length ||
+    images.length !== achievements.length
+  ) {
+    return [];
+  }
+
+  // All records must exist in SongDatabase
+  let failed = false;
+  const records = images.map<ChartRecord>((ico, i) => {
+    const chartType = chartTypes[i];
+    const difficulty = difficulties[i];
+    const achievement = achievements[i];
+    const props = songDb.getSongPropsByIco(ico, chartType);
+    if (!props) {
+      console.warn('Could not find song for ', ico, chartType, difficulty, achievement);
+      failed = true;
+      return;
+    }
+    const lv = props.lv[difficulty];
+    return {
+      songName: props.name,
+      genre: props.nickname === 'Link(nico)' ? 'niconico' : '',
+      difficulty,
+      chartType,
+      level: lv,
+      levelIsPrecise: lv > 0,
+      achievement,
+    };
+  });
+  return failed ? [] : records;
 }

@@ -15,6 +15,7 @@ import {RatingCandidates} from './RatingCandidates';
 import {RatingOverview} from './RatingOverview';
 import {RatingSubjects} from './RatingSubjects';
 import {RecommendedLevels} from './RecommendedLevels';
+import {ShareRating} from './ShareRating';
 
 const MessagesByLang = {
   [Language.en_US]: {
@@ -150,6 +151,12 @@ export const RatingOutput = ({
           {messages.compactMode}
         </label>
       </div>
+      <ShareRating
+        gameRegion={gameRegion}
+        gameVer={gameVer}
+        ratingData={ratingData}
+        songDb={songDatabase}
+      />
       {compactMode ? (
         <div className="maybeFlexRow">
           <div className="compactRatingColumn">

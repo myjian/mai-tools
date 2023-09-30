@@ -23,4 +23,6 @@ export const enum QueryParam {
   GameVersion = 'gameVersion',
   PlayerName = 'playerName',
   FriendIdx = 'friendIdx',
+  ChartType = 'ct',
+  SongImage = 'si',
 }

@@ -29,6 +29,7 @@ export class SongDatabase {
 
   private dxMap = new Map<string, SongProperties>();
   private standardMap = new Map<string, SongProperties>();
+  private nameByIco = new Map<string, string>();
   private verbose = true;
 
   constructor(gameVer: GameVersion = null, region: GameRegion = null, verbose = true) {
@@ -48,6 +49,9 @@ export class SongDatabase {
       song.debut = gameVer;
     }
     const key = song.name === 'Link' ? song.nickname : song.name;
+    if (song.ico) {
+      this.nameByIco.set(song.ico, key);
+    }
     if (map.has(key)) {
       console.warn(
         `Found existing song properties for ${key} ${song.dx}: ${JSON.stringify(map.get(key))}`
@@ -75,6 +79,9 @@ export class SongDatabase {
         const newLevel = update.lv[i];
         return !isNaN(newLevel) && newLevel > 0 ? newLevel : oldLevel;
       });
+    }
+    if (update.ico) {
+      this.nameByIco.set(update.ico, key);
     }
     map.set(key, {...existing, ...update, lv: levels});
     return true;
@@ -106,6 +113,11 @@ export class SongDatabase {
       return this.dxMap.has(nickname) && this.standardMap.has(nickname);
     }
     return false;
+  }
+
+  getSongPropsByIco(ico: string, chartType: ChartType) {
+    const name = this.nameByIco.get(ico);
+    return this.getSongProperties(name, '', chartType);
   }
 
   getSongProperties(
@@ -206,15 +218,15 @@ async function fetchRegionOverrides(): Promise<
         i < icoList.length
           ? {
               name: song,
-          dx: index,
-          debut: versionInt,
+              dx: index,
+              debut: versionInt,
               ico: icoList[i],
-      }
+            }
           : {
               name: song,
               dx: index,
               debut: versionInt,
-    }
+            }
       );
     });
   });

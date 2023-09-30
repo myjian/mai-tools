@@ -76,7 +76,7 @@ export const ScoreInput = () => {
       <div className={showInput ? '' : 'hidden'}>
         <div>
           {messages.scoreInputHeading}:{' '}
-          <a href="https://gist.github.com/myjian/a978fda8821beca682ec3a726e17b780">
+          <a href="https://gist.github.com/myjian/a978fda8821beca682ec3a726e17b780" target="_blank">
             {messages.example}
           </a>
         </div>
