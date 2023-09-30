@@ -1,6 +1,6 @@
 import '../css/rating-output.css';
 
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {GameRegion} from '../../common/game-region';
 import {GameVersion} from '../../common/game-version';
@@ -101,17 +101,10 @@ export const RatingOutput = ({
     };
   }, [newSongs, oldSongs, ratingData]);
 
-  const outputRef = useRef<HTMLDivElement>();
   const [compactMode, setCompactMode] = useState(false);
 
   const toggleCompactMode = useCallback((evt: React.SyntheticEvent<HTMLInputElement>) => {
     setCompactMode(evt.currentTarget.checked);
-  }, []);
-
-  useEffect(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollIntoView({behavior: 'smooth'});
-    }
   }, []);
 
   const {newTopChartsCount, oldTopChartsCount} = ratingData;
@@ -150,7 +143,7 @@ export const RatingOutput = ({
   );
 
   return (
-    <div ref={outputRef}>
+    <div id="ratingOutput">
       <div>
         <label>
           <input type="checkbox" checked={compactMode} onChange={toggleCompactMode} />{' '}

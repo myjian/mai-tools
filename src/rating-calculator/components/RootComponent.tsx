@@ -191,7 +191,11 @@ export class RootComponent extends React.PureComponent<{}, State> {
       region
     );
     console.log('Rating Data:', ratingData);
-    this.setState({ratingData});
+    this.setState({ratingData}, () =>
+      setTimeout(() => {
+        location.assign('#ratingOutput');
+      }, 0)
+    );
   };
 
   private postMessageToOpener(data: {action: string; payload?: string | number}) {
