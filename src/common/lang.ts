@@ -2,9 +2,9 @@ import {QueryParam} from './query-params';
 import {loadUserPreference, saveUserPreference, UserPreference} from './user-preference';
 
 export const enum Language {
-  en_US = 'en_US',
-  zh_TW = 'zh_TW',
-  ko_KR = 'ko_KR',
+  en_US = 'en-US',
+  zh_TW = 'zh-TW',
+  ko_KR = 'ko-KR',
 }
 
 export const SUPPORTED_LANGUAGES = [Language.en_US, Language.zh_TW, Language.ko_KR];
