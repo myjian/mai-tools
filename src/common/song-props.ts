@@ -10,6 +10,7 @@ export interface BasicSongProps {
   dx: ChartType;
   name: string;
   nickname?: string | null;
+  ico?: string;
 }
 
 export interface SongProperties extends BasicSongProps {
@@ -186,29 +187,37 @@ async function fetchChartLevelOverrides(gameVer: GameVersion) {
   return output;
 }
 
-async function fetchDebutVersionOverrides(): Promise<
-  Pick<SongProperties, 'name' | 'dx' | 'debut'>[]
+async function fetchRegionOverrides(): Promise<
+  Pick<SongProperties, 'name' | 'dx' | 'debut' | 'dx'>[]
 > {
   const url = getMaiToolsBaseUrl() + '/data/song-info/intl.json';
   const data = await fetchJson(url);
-  const output: Pick<SongProperties, 'name' | 'dx' | 'debut'>[] = [];
-  ['standard', 'dx'].forEach((chartType, index) => {
-    if (!data[chartType]) {
+  return ['standard', 'dx'].flatMap((chartType, index) => {
+    const songsByVer: Record<string, string[]> = data[chartType];
+    if (!songsByVer) {
       return;
     }
-    for (const version of Object.keys(data[chartType])) {
-      const songList: string[] = data[chartType][version];
+    const icosByVer: Record<string, string[]> = data[chartType + 'Ico'] || {};
+    return Object.keys(songsByVer).flatMap((version) => {
+      const songList = songsByVer[version];
+      const icoList = icosByVer[version] || [];
       const versionInt = parseInt(version);
-      for (const name of songList) {
-        output.push({
-          name: name,
+      return songList.map((song, i) =>
+        i < icoList.length
+          ? {
+              name: song,
           dx: index,
           debut: versionInt,
-        });
+              ico: icoList[i],
       }
+          : {
+              name: song,
+              dx: index,
+              debut: versionInt,
     }
+      );
+    });
   });
-  return output;
 }
 
 // TODO: accept overrides from rating calculator
@@ -229,9 +238,9 @@ export async function loadSongDatabase(
   }
 
   if (gameRegion === GameRegion.Intl) {
-    const debutVersionOverrides = await fetchDebutVersionOverrides();
-    console.log('debutVersionOverrides', debutVersionOverrides);
-    for (const songProps of debutVersionOverrides) {
+    const regionOverrides = await fetchRegionOverrides();
+    console.log('regionOverrides', regionOverrides);
+    for (const songProps of regionOverrides) {
       songDatabase.updateSong(songProps);
     }
   }

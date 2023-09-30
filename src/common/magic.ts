@@ -27,6 +27,7 @@ const LV_REGEX = /\blv\s*:\s*(\[.+?\])/;
 const VERSION_REGEX = /\bv\s*:\s*(-?[0-9]+)/;
 const SONGNAME_REGEX = /\bn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
+const ICO_REGEX = /\bico\s*:\s*"([0-9a-z]+)"/;
 
 /**
  * Parse song properties from text.
@@ -41,6 +42,7 @@ function parseLine(line: string): SongProperties | undefined {
   const debutVerMatch = line.match(VERSION_REGEX);
   const songNameMatch = line.match(SONGNAME_REGEX);
   const nicknameMatch = line.match(SONGNICKNAME_REGEX);
+  const icoMatch = line.match(ICO_REGEX);
   if (dxMatch && lvMatch && debutVerMatch && songNameMatch) {
     let lvList = JSON.parse(lvMatch[1]) as number[];
     if (lvList.length > DIFFICULTIES.length) {
@@ -55,6 +57,9 @@ function parseLine(line: string): SongProperties | undefined {
     };
     if (nicknameMatch) {
       props.nickname = nicknameMatch[1];
+    }
+    if (icoMatch) {
+      props.ico = icoMatch[1];
     }
     return props;
   }
