@@ -5,7 +5,7 @@ import {
   FRIEND_SCORE_URLS,
 } from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
-import {GameRegion, getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
+import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
@@ -72,7 +72,7 @@ type FriendInfo = {
   function insertAnalyzeButton(friend: FriendInfo, container: HTMLElement) {
     const region = getGameRegionFromOrigin(window.location.origin);
     const queryParams = new URLSearchParams({
-      [QueryParam.GameRegion]: region === GameRegion.Jp ? 'jp' : 'intl',
+      [QueryParam.GameRegion]: region,
       [QueryParam.FriendIdx]: friend.idx,
       [QueryParam.PlayerName]: friend.name,
     });

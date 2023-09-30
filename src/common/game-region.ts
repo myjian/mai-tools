@@ -1,19 +1,27 @@
 export const enum GameRegion {
-  Jp = 'https://maimaidx.jp',
-  Intl = 'https://maimaidx-eng.com',
+  Jp = 'jp',
+  Intl = 'intl',
 }
 
-export const MAIMAI_NET_ORIGINS = [GameRegion.Jp, GameRegion.Intl];
+const MaimaiNetOriginByRegion: Record<GameRegion, string> = {
+  [GameRegion.Jp]: 'https://maimaidx.jp',
+  [GameRegion.Intl]: 'https://maimaidx-eng.com',
+};
+
+const REGIONS = [GameRegion.Jp, GameRegion.Intl];
+
+export const MAIMAI_NET_ORIGINS = REGIONS.map((reg) => MaimaiNetOriginByRegion[reg]);
 
 export function isMaimaiNetOrigin(origin: string) {
-  return origin === GameRegion.Jp || origin === GameRegion.Intl;
+  return MAIMAI_NET_ORIGINS.includes(origin);
 }
 
 export function getGameRegionFromOrigin(origin: string): GameRegion {
-  return origin === GameRegion.Jp ? GameRegion.Jp : GameRegion.Intl;
+  const region = REGIONS.find((reg) => MaimaiNetOriginByRegion[reg] === origin);
+  return region || GameRegion.Jp;
 }
 
 export function getGameRegionFromShortString(region: string): GameRegion {
   region = (region || '').toLowerCase();
-  return region === 'jp' ? GameRegion.Jp : GameRegion.Intl;
+  return region === GameRegion.Jp ? GameRegion.Jp : GameRegion.Intl;
 }

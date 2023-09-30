@@ -20,11 +20,7 @@ export function getMaimaiSongsLink(
   }
 
   if (gameRegion) {
-    if (gameRegion === GameRegion.Jp) {
-      q.set('region', 'jp');
-    } else if (gameRegion === GameRegion.Intl) {
-      q.set('region', 'intl');
-    }
+    q.set('region', gameRegion);
   }
 
   if (minGameVer != null && minGameVer >= 0) {

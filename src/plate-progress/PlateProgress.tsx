@@ -9,7 +9,7 @@ import {PlateProgressDetail} from './PlateProgressDetail';
 const BASE_URL = getMaiToolsBaseUrl() + '/data/plate-info';
 
 interface Props {
-  region: string;
+  region: GameRegion;
   version: string;
   playerScores: FullChartRecord[];
 }
@@ -20,8 +20,7 @@ export function PlateProgress(props: Props) {
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    const regionPrefix = region === GameRegion.Jp ? 'jp' : 'intl';
-    fetch(`${BASE_URL}/${regionPrefix}${version}.json`).then(async (res) => {
+    fetch(`${BASE_URL}/${region}${version}.json`).then(async (res) => {
       if (res.ok) {
         const info = await res.json();
         console.log(info);

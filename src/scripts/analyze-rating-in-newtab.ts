@@ -2,7 +2,7 @@ import {ChartRecord} from '../common/chart-record';
 import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, fetchScoresFull, SELF_SCORE_URLS} from '../common/fetch-self-score';
-import {GameRegion, getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
+import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
@@ -79,7 +79,7 @@ declare global {
   function insertAnalyzeButton(playerName: string) {
     const region = getGameRegionFromOrigin(window.location.origin);
     const urlSearch = new URLSearchParams({
-      [QueryParam.GameRegion]: region === GameRegion.Jp ? 'jp' : 'intl',
+      [QueryParam.GameRegion]: region,
     });
     if (playerName) {
       urlSearch.set(QueryParam.PlayerName, playerName);

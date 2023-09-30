@@ -219,7 +219,7 @@ import {ALLOWED_ORIGINS} from '../common/util';
   function addScoreConverterLink() {
     removeScrollControl(d);
     const queryParams = new URLSearchParams({
-      [QueryParam.Date]: String(getPlayDate(d.body)),
+      [QueryParam.Date]: getPlayDate(d.body).toString(),
       [QueryParam.Track]: getTrack(d.body),
       [QueryParam.SongTitle]: getSongName(d.body),
       [QueryParam.Difficulty]: getDifficultyForRecord(d.body).toString(),

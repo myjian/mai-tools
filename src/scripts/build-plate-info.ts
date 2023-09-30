@@ -1,9 +1,9 @@
 import {ChartType, getChartType} from '../common/chart-type';
 import {getSongName} from '../common/fetch-score-util';
-import {GameRegion} from '../common/game-region';
+import {getGameRegionFromOrigin} from '../common/game-region';
 import {getSongIdx, isNiconicoLink} from '../common/song-name-helper';
 
-const FILE_PREFIX = window.location.origin === GameRegion.Jp ? 'jp' : 'intl';
+const FILE_PREFIX = getGameRegionFromOrigin(window.location.origin);
 
 const PLATE_PREFIX: Record<string | number, string> = {
   0: '真',
