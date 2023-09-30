@@ -37,7 +37,6 @@ interface Props {
   songDatabase: SongDatabase;
   ratingData: RatingData;
   playerGradeIndex: number;
-  playerName: string | null;
   oldSongs?: ReadonlyArray<SongProperties>;
   newSongs?: ReadonlyArray<SongProperties>;
 }
@@ -57,7 +56,6 @@ export const RatingOutput = ({
   oldSongs,
   ratingData,
   gameRegion,
-  playerName,
   playerGradeIndex,
   songDatabase,
 }: Props) => {
@@ -134,7 +132,6 @@ export const RatingOutput = ({
       fullOldChartsRating={fullOldChartsRating}
       ratingData={ratingData}
       totalRating={totalRating}
-      playerName={playerName}
       playerGradeIndex={playerGradeIndex}
     />
   );

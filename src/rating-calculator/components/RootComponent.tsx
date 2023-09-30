@@ -60,6 +60,7 @@ interface State {
 export class RootComponent extends React.PureComponent<{}, State> {
   private playerGradeIndex = 0;
   private referrer = document.referrer && new URL(document.referrer).origin;
+  private date = new Date();
   private playerScores: ChartRecord[] = [];
   private songDatabase: SongDatabase;
 
@@ -76,6 +77,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
     const friendIdx = queryParams.get(QueryParam.FriendIdx);
     const playerName = queryParams.get(QueryParam.PlayerName);
+    const date = parseInt(queryParams.get(QueryParam.Date) || '');
     const lang = getInitialLanguage();
     updateDocumentTitle(lang);
 
@@ -87,6 +89,9 @@ export class RootComponent extends React.PureComponent<{}, State> {
       playerName,
       progress: '',
     };
+    if (!isNaN(date)) {
+      this.date = new Date(date);
+    }
     loadSongDatabase(gameVer, region).then((songDb) => (this.songDatabase = songDb));
     if (window.opener) {
       this.initWindowCommunication();
@@ -106,8 +111,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const {lang, region, gameVer, playerName, ratingData, oldSongs, newSongs, progress} =
-      this.state;
+    const {lang, region, gameVer, ratingData, oldSongs, newSongs, progress} = this.state;
     const messages = MessagesByLang[lang];
     return (
       <LangContext.Provider value={lang}>
@@ -133,7 +137,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
             songDatabase={this.songDatabase}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
-            playerName={playerName}
             oldSongs={oldSongs}
             newSongs={newSongs}
           />
@@ -162,7 +165,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     if (evt) {
       evt.preventDefault();
     }
-    const {gameVer, region} = this.state;
+    const {gameVer, region, playerName} = this.state;
     if (
       !this.songDatabase ||
       this.songDatabase.gameVer !== gameVer ||
@@ -179,7 +182,14 @@ export class RootComponent extends React.PureComponent<{}, State> {
       this.setState({ratingData: undefined});
       return;
     }
-    const ratingData = analyzePlayerRating(this.songDatabase, playerScores, gameVer, region);
+    const ratingData = analyzePlayerRating(
+      this.songDatabase,
+      this.date,
+      playerName,
+      playerScores,
+      gameVer,
+      region
+    );
     console.log('Rating Data:', ratingData);
     this.setState({ratingData});
   };

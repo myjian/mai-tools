@@ -12,6 +12,7 @@ const MessagesByLang = {
     maximum: 'Max',
     minimum: 'Min',
     column: ':',
+    date: 'Date',
     newChartsRating: 'New Charts Rating',
     oldChartsRating: 'Old Charts Rating',
     grade: 'Grade',
@@ -22,6 +23,7 @@ const MessagesByLang = {
     maximum: '最大',
     minimum: '最小',
     column: '：',
+    date: '日期',
     newChartsRating: '新譜面 Rating',
     oldChartsRating: '舊譜面 Rating',
     grade: '段位',
@@ -32,6 +34,7 @@ const MessagesByLang = {
     maximum: '최대',
     minimum: '최소',
     column: '：',
+    date: '날짜',
     newChartsRating: '신곡 레이팅',
     oldChartsRating: '구곡 레이팅',
     grade: '등급',
@@ -39,7 +42,6 @@ const MessagesByLang = {
 };
 
 interface Props {
-  playerName: string;
   playerGradeIndex: number;
   fullNewChartsRating?: number;
   fullOldChartsRating?: number;
@@ -48,7 +50,6 @@ interface Props {
 }
 
 export const RatingOverview = ({
-  playerName,
   playerGradeIndex,
   fullNewChartsRating,
   fullOldChartsRating,
@@ -84,7 +85,14 @@ export const RatingOverview = ({
 
   return (
     <div className="ratingOverview">
-      <h2 id="outputHeading">{playerName || messages.analysisResult}</h2>
+      <div>
+        <span>
+          {messages.date}
+          {messages.column}{' '}
+        </span>
+        <span>{ratingData.date.toLocaleDateString()}</span>
+      </div>
+      <h2 id="outputHeading">{ratingData.playerName || messages.analysisResult}</h2>
       <div className="totalRatingRow">
         <span className="totalRating">
           Rating：{' '}

@@ -9,6 +9,8 @@ export interface ChartRecordWithRating extends ChartRecord {
 }
 
 export interface RatingData {
+  date: Date;
+  playerName?: string;
   oldChartsRating: number;
   oldTopChartsCount: number;
   oldChartRecords: ChartRecordWithRating[];

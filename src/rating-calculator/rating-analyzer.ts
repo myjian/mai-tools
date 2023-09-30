@@ -44,6 +44,8 @@ function getRecordWithRating(
 
 export function analyzePlayerRating(
   songDb: SongDatabase,
+  date: Date,
+  playerName: string,
   playerScores: ReadonlyArray<ChartRecord>,
   gameVer: GameVersion,
   gameRegion: GameRegion
@@ -85,11 +87,13 @@ export function analyzePlayerRating(
   }
 
   return {
+    date,
     newChartRecords,
     newChartsRating,
     newTopChartsCount,
     oldChartRecords,
     oldChartsRating,
     oldTopChartsCount,
+    playerName,
   };
 }
