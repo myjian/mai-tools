@@ -27,7 +27,7 @@ const LV_REGEX = /\blv\s*:\s*(\[.+?\])/;
 const VERSION_REGEX = /\bv\s*:\s*(-?[0-9]+)/;
 const SONGNAME_REGEX = /\bn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
 const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
-const ICO_REGEX = /\bico\s*:\s*"([0-9a-z]+)"/;
+const ICO_REGEX = /\bico\s*:\s*["`]([0-9a-z]+)["`]/;
 
 /**
  * Parse song properties from text.
