@@ -199,10 +199,10 @@ async function fetchChartLevelOverrides(gameVer: GameVersion) {
   return output;
 }
 
-async function fetchRegionOverrides(): Promise<
-  Pick<SongProperties, 'name' | 'dx' | 'debut' | 'dx'>[]
-> {
-  const url = getMaiToolsBaseUrl() + '/data/song-info/intl.json';
+async function fetchRegionOverrides(
+  region: GameRegion
+): Promise<Pick<SongProperties, 'name' | 'dx' | 'debut' | 'dx'>[]> {
+  const url = getMaiToolsBaseUrl() + `/data/song-info/${region}.json`;
   const data = await fetchJson(url);
   return ['standard', 'dx'].flatMap((chartType, index) => {
     const songsByVer: Record<string, string[]> = data[chartType];
@@ -249,12 +249,10 @@ export async function loadSongDatabase(
     songDatabase.insertOrUpdateSong(songProps, gameVer);
   }
 
-  if (gameRegion === GameRegion.Intl) {
-    const regionOverrides = await fetchRegionOverrides();
-    console.log('regionOverrides', regionOverrides);
-    for (const songProps of regionOverrides) {
-      songDatabase.updateSong(songProps);
-    }
+  const regionOverrides = await fetchRegionOverrides(gameRegion);
+  console.log('regionOverrides', regionOverrides);
+  for (const songProps of regionOverrides) {
+    songDatabase.updateSong(songProps);
   }
 
   const removedSongs = getRemovedSongs(gameRegion);
