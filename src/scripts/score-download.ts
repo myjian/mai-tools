@@ -32,7 +32,7 @@ import {loadSongDatabase} from '../common/song-props';
       songName: '歌曲',
       version: '版本',
       allDone:
-        '✅ 已匯入全部成績到文字框，請按「複製成績」把資料複製到剪貼簿。複製後可於 Excel 或 Google 試算表內貼上。',
+        '✅ 已載入全部成績到文字框，請按「複製成績」把資料複製到剪貼簿。複製後可於 Excel 或 Google 試算表內貼上。',
       pleaseFavoriteFriend: '無法讀取分數。請先將好友加入最愛',
     },
     [Language.en_US]: {
