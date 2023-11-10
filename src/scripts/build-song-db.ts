@@ -12,7 +12,7 @@ async function buildSongDb() {
     let lv = getChartLevel(d);
     const c = getChartType(d);
     if (n === 'Link') {
-      n = (await isNiconicoLink(idx)) ? 'Link(nico)' : 'Link(org)';
+      n = (await isNiconicoLink(idx)) ? 'Link (nico)' : 'Link (org)';
     } else if (n === '+♂' || n === '39') {
       n = "'" + n;
     }

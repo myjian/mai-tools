@@ -16,7 +16,7 @@ export function getSongIdx(row: HTMLElement) {
 
 export function getSongNickname(name: string, genre: string) {
   if (name === 'Link') {
-    name = genre.includes('niconico') ? 'Link(nico)' : 'Link(org)';
+    name = genre.includes('niconico') ? 'Link (nico)' : 'Link (org)';
   }
   return name;
 }
