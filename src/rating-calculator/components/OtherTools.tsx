@@ -9,7 +9,7 @@ const MessagesByLang = {
   [Language.en_US]: {
     otherToolsHeading: 'Other Tools',
     ratingVisualizer: 'Rating Lookup Table & Visualization',
-    bookmarketList: 'maimai Bookmarklets (Features & How to use)',
+    bookmarketList: 'mai-tools homepage (Features & How to use)',
     arcadeSongs: 'arcade-songs (Song searching tool) by Raku Zeta',
     otohime: 'Otohime (Personal score tracking) by KOINU',
     mapDistanceCalc:
@@ -18,7 +18,7 @@ const MessagesByLang = {
   [Language.zh_TW]: {
     otherToolsHeading: '其他工具',
     ratingVisualizer: '單曲 R 值圖表',
-    bookmarketList: '書籤小工具介紹與設定教學',
+    bookmarketList: 'maimai 小工具介紹與設定教學',
     arcadeSongs: '音樂遊戲歌曲搜尋工具 arcade-songs (由 Raku Zeta 製作)',
     otohime: 'Otohime - 音 Game 成績單網站 (由 KOINU 製作)',
     mapDistanceCalc: 'ちほー道數計算器 (旅伴 & 收藏品) (由 魚丸◎蕾娜 製作)',
