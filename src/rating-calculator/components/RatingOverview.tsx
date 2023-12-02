@@ -2,13 +2,14 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
+import {CommonMessages} from '../common-messages';
 import {getGradeByIndex} from '../grade';
+import {getAvg} from '../rating-functions';
 import {RatingData} from '../types';
 
 const MessagesByLang = {
   [Language.en_US]: {
     analysisResult: 'Analysis Result',
-    average: 'Avg',
     maximum: 'Max',
     minimum: 'Min',
     column: ':',
@@ -19,7 +20,6 @@ const MessagesByLang = {
   },
   [Language.zh_TW]: {
     analysisResult: '分析結果',
-    average: '平均',
     maximum: '最大',
     minimum: '最小',
     column: '：',
@@ -30,7 +30,6 @@ const MessagesByLang = {
   },
   [Language.ko_KR]: {
     analysisResult: '분석결과',
-    average: '평균',
     maximum: '최대',
     minimum: '최소',
     column: '：',
@@ -42,6 +41,7 @@ const MessagesByLang = {
 };
 
 interface Props {
+  compactMode: boolean;
   playerGradeIndex: number;
   fullNewChartsRating?: number;
   fullOldChartsRating?: number;
@@ -50,6 +50,7 @@ interface Props {
 }
 
 export const RatingOverview = ({
+  compactMode,
   playerGradeIndex,
   fullNewChartsRating,
   fullOldChartsRating,
@@ -67,6 +68,7 @@ export const RatingOverview = ({
   );
 
   const lang = useLanguage();
+  const commonMsgs = CommonMessages[lang];
   const messages = MessagesByLang[lang];
   const {newChartsRating, newTopChartsCount, oldChartsRating, oldTopChartsCount} = ratingData;
   const minNewChartRating =
@@ -82,6 +84,18 @@ export const RatingOverview = ({
   const maxOldChartRating =
     oldTopChartsCount > 0 ? Math.floor(ratingData.oldChartRecords[0].rating) : 0;
   const playerGrade = playerGradeIndex > 0 ? getGradeByIndex(playerGradeIndex) : null;
+
+  if (compactMode) {
+    return (
+      <div className="ratingOverview">
+        <div>{ratingData.date.toLocaleDateString()}</div>
+        <span className="totalRating">{totalRating}</span>
+        <div>{newChartsRating}</div>
+        <div>+</div>
+        <div>{oldChartsRating}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="ratingOverview">
@@ -115,7 +129,7 @@ export const RatingOverview = ({
                 : newChartsRating}
             </td>
             <td className="avgRatingColumn">
-              ({`${messages.average} ${getAvg(newChartsRating, newTopChartsCount)}`}
+              ({`${commonMsgs.average} ${getAvg(newChartsRating, newTopChartsCount)}`}
               {showMore
                 ? ` ${messages.maximum} ${maxNewChartRating} ${messages.minimum} ${minNewChartRating}`
                 : ''}
@@ -131,7 +145,7 @@ export const RatingOverview = ({
                 : oldChartsRating}
             </td>
             <td className="avgRatingColumn">
-              ({`${messages.average} ${getAvg(oldChartsRating, oldTopChartsCount)}`}
+              ({`${commonMsgs.average} ${getAvg(oldChartsRating, oldTopChartsCount)}`}
               {showMore
                 ? ` ${messages.maximum} ${maxOldChartRating} ${messages.minimum} ${minOldChartRating}`
                 : ''}
@@ -152,10 +166,6 @@ export const RatingOverview = ({
     </div>
   );
 };
-
-function getAvg(sum: number, count: number) {
-  return count ? (sum / count).toFixed(0) : 0;
-}
 
 function getDenominatorText(denom: number): string {
   return denom ? denom.toFixed(0) : '?';

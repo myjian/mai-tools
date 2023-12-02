@@ -47,26 +47,20 @@
   display: block;
 }
 
-@media only screen and (min-width: 1000px) {
-  .maybeFlexRow {
-    display: flex;
-    flex-direction: row;
-  }
+.compactRatingRow {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
 
-  .compactRatingColumn,
-  .ratingSubjects,
-  .ratingCandidates {
-    margin-right: 16px;
-  }
+.compactRatingRow .ratingOverview {
+  text-align: center;
+}
 
-  /* In maybeFlexRow, right margin will be set by compactRatingColumn. */
-  .maybeFlexRow .ratingSubjects {
-    margin-right: 0;
-  }
+.compactRatingRow .totalRating {
+  margin: 0 0 8px;
+}
 
-  .compactRatingColumn {
-    display: flex;
-    flex-direction: column-reverse;
-    align-self: flex-start;
-  }
+.compactRatingRow .ratingSubjects {
+  margin-right: 10px;
 }

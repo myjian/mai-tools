@@ -27,3 +27,7 @@ export function calculateFullRating(songs: ReadonlyArray<SongProperties>, count:
   }
   return totalRating;
 }
+
+export function getAvg(sum: number, count: number) {
+  return count ? (sum / count).toFixed(0) : 0;
+}

@@ -3,7 +3,9 @@ import React, {useCallback, useState} from 'react';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {SongDatabase} from '../../common/song-props';
+import {CommonMessages} from '../common-messages';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
+import {getAvg} from '../rating-functions';
 import {RatingData} from '../types';
 import {CollapsibleSectionTitle} from './CollapsibleSectionTitle';
 import {TopChartRecords} from './TopChartRecords';
@@ -42,8 +44,12 @@ export const RatingSubjects = ({
     setHideContent(!hideContent);
   }, [hideContent]);
 
-  const messages = MessagesByLang[useLanguage()];
-  const rating = isCurrentVersion ? ratingData.newChartsRating : ratingData.oldChartsRating;
+  const lang = useLanguage();
+  const commonMsgs = CommonMessages[lang];
+  const messages = MessagesByLang[lang];
+  const avgRating = isCurrentVersion
+    ? getAvg(ratingData.newChartsRating, ratingData.newTopChartsCount)
+    : getAvg(ratingData.oldChartsRating, ratingData.oldTopChartsCount);
   const records = isCurrentVersion ? ratingData.newChartRecords : ratingData.oldChartRecords;
   const topCount = isCurrentVersion ? ratingData.newTopChartsCount : ratingData.oldTopChartsCount;
   const maxTopCount = isCurrentVersion ? NUM_TOP_NEW_CHARTS : NUM_TOP_OLD_CHARTS;
@@ -55,7 +61,9 @@ export const RatingSubjects = ({
   return (
     <div className={'ratingSubjects ' + (hideContent ? 'contentHidden' : '')}>
       {compactMode ? (
-        <div className="ratingSubjectsMiniHeading">{title + ' ' + rating}</div>
+        <div className="ratingSubjectsMiniHeading">
+          {`${title} ${commonMsgs.average} ${avgRating}`}
+        </div>
       ) : (
         <CollapsibleSectionTitle
           title={title}

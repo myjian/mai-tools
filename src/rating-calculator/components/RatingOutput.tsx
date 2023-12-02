@@ -122,6 +122,7 @@ export const RatingOutput = ({
 
   const ratingOverview = (
     <RatingOverview
+      compactMode={compactMode}
       fullNewChartsRating={fullNewChartsRating}
       fullOldChartsRating={fullOldChartsRating}
       ratingData={ratingData}
@@ -158,13 +159,13 @@ export const RatingOutput = ({
         songDb={songDatabase}
       />
       {compactMode ? (
-        <div className="maybeFlexRow">
-          <div className="compactRatingColumn">
+        <>
+          <div className="compactRatingRow">
             {ratingOverview}
             {ratingSubjectsNew}
           </div>
           {ratingSubjectsOld}
-        </div>
+        </>
       ) : (
         <>
           {ratingOverview}
