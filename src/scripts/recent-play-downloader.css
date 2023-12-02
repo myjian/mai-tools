@@ -113,6 +113,10 @@ td.songTitleCell {
   background-color: #dbaaff;
 }
 
+.recordRow.utage {
+  background-color: #ff6ffd;
+}
+
 .snackbarContainer {
   position: fixed;
   bottom: 6px;

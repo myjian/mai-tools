@@ -160,6 +160,7 @@ type Cache = {
   const LV_DELTA = 0.02;
   const isFriendScore = location.pathname.includes('battleStart');
   const isDxScoreVs = location.search.includes('scoreType=1');
+  const isUtage = location.search.includes('diff=10');
 
   const cache: Cache = {};
 
@@ -708,13 +709,13 @@ type Cache = {
     select.append(createOption(SortBy.SyncAsc));
     select.append(createOption(SortBy.SyncDes));
     if (isFriendScore) {
-      if (isDxScoreVs) {
+      if (!isUtage && isDxScoreVs) {
         select.append(createOption(SortBy.DxStarDes));
         select.append(createOption(SortBy.DxStarAsc));
       }
       select.append(createOption(SortBy.VsResultAsc));
       select.append(createOption(SortBy.VsResultDes));
-    } else {
+    } else if (!isUtage) {
       select.append(createOption(SortBy.DxStarDes));
       select.append(createOption(SortBy.DxStarAsc));
     }

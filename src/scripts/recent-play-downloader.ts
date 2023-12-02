@@ -4,7 +4,7 @@ import domtoimage from 'dom-to-image';
 
 import {ChartType} from '../common/chart-type';
 import {fixTimezone, formatDate} from '../common/date-util';
-import {Difficulty, DIFFICULTY_CLASSNAME_MAP, getDifficultyByName} from '../common/difficulties';
+import {Difficulty, getDifficultyByName, getDifficultyClassName} from '../common/difficulties';
 import {calculateDetailedDxStar, getDxStarText} from '../common/dx-star';
 import {getGameRegionFromOrigin} from '../common/game-region';
 import {getInitialLanguage, Language} from '../common/lang';
@@ -261,7 +261,7 @@ type Options = {
     achvFragment.append(rankSpan, '\t', record.achievement.toFixed(4) + '%');
     return _renderScoreRowHelper(
       [formatDate(record.date), [nickname, record.songImgSrc], achvFragment, record.stamps],
-      [SCORE_RECORD_ROW_CLASSNAME, DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)],
+      [SCORE_RECORD_ROW_CLASSNAME, getDifficultyClassName(record.difficulty)],
       false
     );
   }
@@ -572,7 +572,9 @@ type Options = {
         createOutputElement(records, songDb, titleImg);
         rows.forEach((row, idx) => {
           const record = records[idx];
-          addLvToRow(row, record, songDb);
+          if (record.difficulty !== Difficulty.UTAGE) {
+            addLvToRow(row, record, songDb);
+          }
         });
       } catch (e) {
         const footer = d.getElementsByTagName('footer')[0];

@@ -4,6 +4,7 @@ export const enum Difficulty {
   EXPERT = 2,
   MASTER = 3,
   ReMASTER = 4,
+  UTAGE = 5, // on maimai NET it is 10, but here I use 5 for simplicity
 }
 
 export const DIFFICULTIES = [
@@ -13,16 +14,8 @@ export const DIFFICULTIES = [
   Difficulty.MASTER,
   Difficulty.ReMASTER,
 ];
-const DIFFICULTY_TEXT = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER', 'Re:MASTER'];
-const DIFFICULTY_SHORT_TEXT = ['BAS', 'ADV', 'EXP', 'MAS', 'ReM'];
-
-export const DIFFICULTY_CLASSNAME_MAP = new Map<Difficulty, string>([
-  [Difficulty.BASIC, 'basic'],
-  [Difficulty.ADVANCED, 'advanced'],
-  [Difficulty.EXPERT, 'expert'],
-  [Difficulty.MASTER, 'master'],
-  [Difficulty.ReMASTER, 'remaster'],
-]);
+const DIFFICULTY_TEXT = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER', 'Re:MASTER', 'UTAGE'];
+const DIFFICULTY_SHORT_TEXT = ['BAS', 'ADV', 'EXP', 'MAS', 'ReM', 'UTG'];
 
 export function getDifficultyName(diff: Difficulty): string {
   return DIFFICULTY_TEXT[diff];
@@ -44,12 +37,20 @@ export function getDifficultyForRecord(row: HTMLElement): Difficulty {
   return getDifficultyByName(d);
 }
 
+/** @return class name to be applied on HTML elements */
+export function getDifficultyClassName(diff: Difficulty): string {
+  return ['basic', 'advanced', 'expert', 'master', 'remaster', 'utage'][diff] || '';
+}
+
 export function getDifficultyTextColor(diff: Difficulty): string {
-  return [
-    '#45c124', // basic
-    '#ffba01', // advanced
-    '#ff7b7b', // expert
-    '#9f51dc', // master
-    '#dbaaff', // remaster
-  ][diff];
+  return (
+    [
+      '#45c124', // basic
+      '#ffba01', // advanced
+      '#ff7b7b', // expert
+      '#9f51dc', // master
+      '#dbaaff', // remaster
+      '#f540f3', // utage
+    ][diff] || 'black'
+  );
 }

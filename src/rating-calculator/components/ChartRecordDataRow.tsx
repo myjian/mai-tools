@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {getChartTypeName} from '../../common/chart-type';
-import {DIFFICULTY_CLASSNAME_MAP} from '../../common/difficulties';
+import {getDifficultyClassName} from '../../common/difficulties';
 import {getDisplayLv} from '../../common/level-helper';
 import {getRankTitle} from '../../common/rank-functions';
 import {getSongNickname, RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
@@ -64,7 +64,7 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
   });
   return (
     <ChartRecordRow
-      className={DIFFICULTY_CLASSNAME_MAP.get(record.difficulty)}
+      className={getDifficultyClassName(record.difficulty)}
       columnValues={columnValues}
     />
   );

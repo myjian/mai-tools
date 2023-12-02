@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Difficulty, DIFFICULTY_CLASSNAME_MAP} from '../common/difficulties';
+import {Difficulty, getDifficultyClassName} from '../common/difficulties';
 import {PlateType} from './plate_info';
 
 interface Props {
@@ -36,7 +36,7 @@ export function PlateProgressTableCell(props: Props) {
         }
       : {};
   return props.useTh ? (
-    <th className={DIFFICULTY_CLASSNAME_MAP.get(props.d)} {...clickableProps}>
+    <th className={getDifficultyClassName(props.d)} {...clickableProps}>
       {props.value}
     </th>
   ) : (

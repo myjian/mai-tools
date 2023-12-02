@@ -5,7 +5,7 @@ import {ChartType, getChartTypeName} from '../../common/chart-type';
 import {
   DIFFICULTIES,
   Difficulty,
-  DIFFICULTY_CLASSNAME_MAP,
+  getDifficultyClassName,
   getDifficultyName,
 } from '../../common/difficulties';
 import {useLanguage} from '../../common/lang-react';
@@ -73,7 +73,7 @@ export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) =>
                 rowHead={getDifficultyName(d)}
                 columns={chartTypeNames}
                 rankDist={dist}
-                rowClassname={DIFFICULTY_CLASSNAME_MAP.get(d)}
+                rowClassname={getDifficultyClassName(d)}
                 baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
                 perColumnClassnames={[]}
               />

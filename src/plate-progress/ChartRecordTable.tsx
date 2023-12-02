@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ChartType} from '../common/chart-type';
-import {Difficulty, DIFFICULTY_CLASSNAME_MAP, getDifficultyName} from '../common/difficulties';
+import {Difficulty, getDifficultyClassName, getDifficultyName} from '../common/difficulties';
 import {getSongNickname} from '../common/song-name-helper';
 import {ChartRecordTableRow} from './ChartRecordTableRow';
 import {PlateType, ProgressByDifficulty, VersionInfo} from './plate_info';
@@ -57,7 +57,7 @@ export function ChartRecordTable(props: Props) {
   return (
     <>
       <h3>
-        <span className={DIFFICULTY_CLASSNAME_MAP.get(d)}>{getDifficultyName(d)}</span> scores for{' '}
+        <span className={getDifficultyClassName(d)}>{getDifficultyName(d)}</span> scores for{' '}
         {versionInfo.plate_name[plateType]}
       </h3>
       <table>

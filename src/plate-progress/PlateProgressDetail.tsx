@@ -39,6 +39,7 @@ export function PlateProgressDetail(props: Props) {
     [Difficulty.EXPERT]: allSongs.dx.size + allSongs.std.size,
     [Difficulty.MASTER]: allSongs.dx.size + allSongs.std.size,
     [Difficulty.ReMASTER]: remasterSongs.dx.size + remasterSongs.std.size,
+    [Difficulty.UTAGE]: 0,
   };
   const progressByPlate: Record<PlateType, ProgressByDifficulty> = useMemo(() => {
     const result = Object.keys(versionInfo.plate_name).reduce((res, plateType) => {
@@ -103,5 +104,6 @@ function createEmptyProgress(): ProgressByDifficulty {
     [Difficulty.EXPERT]: {0: [], 1: []},
     [Difficulty.MASTER]: {0: [], 1: []},
     [Difficulty.ReMASTER]: {0: [], 1: []},
+    [Difficulty.UTAGE]: {0: [], 1: []},
   };
 }
