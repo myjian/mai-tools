@@ -36,7 +36,7 @@ async function parseSongList(dom: Document) {
 
 export async function fetchAllSongs(dom?: Document) {
   if (!dom) {
-    const url = SELF_SCORE_URLS.get(Difficulty.ADVANCED);
+    const url = SELF_SCORE_URLS.get(Difficulty.BASIC);
     dom = await fetchPage(url);
   }
   return await parseSongList(dom);
