@@ -1,6 +1,8 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useLanguage} from '../../common/lang-react';
+import {LevelDef} from '../../common/level-helper';
+import {RANK_SSS_PLUS} from '../../common/rank-functions';
 import {SongDatabase, SongProperties} from '../../common/song-props';
 import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {CommonMessages} from '../common-messages';
@@ -61,19 +63,31 @@ export const CandidateChartRecords = ({
   const [showAll, setShowAll] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<ColumnType | undefined>();
   const [reverse, setReverse] = useState<boolean | undefined>();
+  const [levelToShow, setLevelToShow] = useState<LevelDef>();
 
   const name = isCurrentVersion ? 'new' : 'old';
-  const records = useMemo(() => {
-    const records = isCurrentVersion ? ratingData.newChartRecords : ratingData.oldChartRecords;
-    const topCount = isCurrentVersion ? ratingData.newTopChartsCount : ratingData.oldTopChartsCount;
+  const records = isCurrentVersion ? ratingData.newChartRecords : ratingData.oldChartRecords;
+  const topCount = isCurrentVersion ? ratingData.newTopChartsCount : ratingData.oldTopChartsCount;
+  const minRating = topCount > 0 ? Math.floor(records[topCount - 1].rating) : 0;
+  // If we have no topCount (likely meaning the latest version has not been played), estimate
+  // minRating by using 0.9 * lowest rating in old records.
+  const levels = generateLevels(
+    minRating ||
+      (ratingData.oldTopChartsCount
+        ? Math.floor(0.9 * ratingData.oldChartRecords[ratingData.oldTopChartsCount - 1].rating)
+        : 0)
+  );
+
+  const candidates = useMemo(() => {
     const poolSize = isCurrentVersion
       ? NEW_CANDIDATE_SONGS_POOL_SIZE
       : OLD_CANDIDATE_SONGS_POOL_SIZE;
-    if (showPlayed) {
-      return getCandidateCharts(records, topCount, poolSize);
-    }
-    return songList ? getNotPlayedCharts(songList, records, topCount, poolSize) : [];
-  }, [songList, ratingData, showPlayed]);
+    return showPlayed
+      ? getCandidateCharts(records, topCount, poolSize, levelToShow)
+      : songList
+      ? getNotPlayedCharts(songList, records, minRating, poolSize, levelToShow)
+      : [];
+  }, [songList, records, showPlayed, levelToShow]);
 
   const toggleShowMore = useCallback(
     (evt: React.SyntheticEvent<HTMLAnchorElement>) => {
@@ -86,6 +100,13 @@ export const CandidateChartRecords = ({
   const toggleShowPlayed = useCallback((showPlayed: boolean) => {
     setShowPlayed(showPlayed);
   }, []);
+
+  const selectLv = useCallback(
+    (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+      setLevelToShow(levels.find((lv) => evt.currentTarget.value === lv.title));
+    },
+    [setLevelToShow]
+  );
 
   const handleSortBy = useCallback(
     (col: ColumnType) => {
@@ -101,19 +122,19 @@ export const CandidateChartRecords = ({
     [sortBy, reverse]
   );
 
-  const endIndex = showAll ? records.length : Math.min(records.length, CANDIDATE_SONGS_LIMIT);
+  const endIndex = showAll ? candidates.length : Math.min(candidates.length, CANDIDATE_SONGS_LIMIT);
   // make a copy
-  const recordsToShow = records.slice(0, endIndex).map((r, i) => {
+  const candidatesToShow = candidates.slice(0, endIndex).map((r, i) => {
     r.order = i + 1;
     return r;
   });
   if (sortBy) {
-    recordsToShow.sort(COMPARATOR.get(sortBy));
+    candidatesToShow.sort(COMPARATOR.get(sortBy));
     if (reverse) {
-      recordsToShow.reverse();
+      candidatesToShow.reverse();
     }
   }
-  const hasMore = records.length > CANDIDATE_SONGS_LIMIT;
+  const hasMore = candidates.length > CANDIDATE_SONGS_LIMIT;
 
   const messages = CommonMessages[useLanguage()];
   return (
@@ -125,11 +146,20 @@ export const CandidateChartRecords = ({
           toggleShowPlayed={toggleShowPlayed}
         />
       )}
-      {/* TODO: filter by level */}
+      <select className="candidateLvSelect" value={levelToShow?.title || '--'} onChange={selectLv}>
+        <option value="--">
+          {messages.level} - {messages.all}
+        </option>
+        {levels.map((lv) => (
+          <option key={lv.title} value={lv.title}>
+            {lv.title}
+          </option>
+        ))}
+      </select>
       <ChartRecordsTable
         songDatabase={songDatabase}
         tableClassname="candidateTable"
-        records={recordsToShow}
+        records={candidatesToShow}
         sortBy={handleSortBy}
         columns={COLUMNS}
         isCandidate
@@ -143,3 +173,24 @@ export const CandidateChartRecords = ({
     </CollapsibleContainer>
   );
 };
+
+function generateLevels(minRating: number): LevelDef[] {
+  const easiestLv = (minRating * 100) / (RANK_SSS_PLUS.factor * RANK_SSS_PLUS.minAchv);
+  let baseLv = Math.floor(easiestLv);
+  const isPlus = easiestLv - baseLv > 0.6;
+  const levels: LevelDef[] = [];
+  if (easiestLv <= 14.9) {
+    if (!isPlus) {
+      levels.push({title: String(baseLv), minLv: baseLv, maxLv: baseLv + 0.6});
+    }
+    levels.push({title: baseLv + '+', minLv: baseLv + 0.7, maxLv: baseLv + 0.9});
+    baseLv += 1;
+    while (baseLv < 15) {
+      levels.push({title: String(baseLv), minLv: baseLv, maxLv: baseLv + 0.6});
+      levels.push({title: baseLv + '+', minLv: baseLv + 0.7, maxLv: baseLv + 0.9});
+      baseLv += 1;
+    }
+  }
+  levels.push({title: '15', minLv: 15.0, maxLv: 15.0});
+  return levels;
+}

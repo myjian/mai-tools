@@ -1,5 +1,6 @@
 import {shuffleArray} from '../common/array-util';
 import {DIFFICULTIES} from '../common/difficulties';
+import {LevelDef} from '../common/level-helper';
 import {
   getRankDefinitions,
   getRankIndexByAchievement,
@@ -15,13 +16,16 @@ import {ChartRecordWithRating} from './types';
 
 // const MIN_RATING_ADJUSTMENT = 10; // for sorting order tweak
 
+const LOWEST_RANK_FOR_CANDIDATE = getRankIndexByAchievement(94);
+
 type NextRatingCandidate = Pick<ChartRecordWithRating, 'achievement' | 'level'>;
 
-function getNextRating(record: NextRatingCandidate, ratingRangeMin: number, numOfRanks: number) {
-  let rankDefIdx = getRankIndexByAchievement(record.achievement);
-  if (rankDefIdx === -1) {
-    rankDefIdx = getRankIndexByAchievement(94);
-  }
+function getNextRating(record: NextRatingCandidate, lowestRating: number, numOfRanks: number) {
+  // Choose the higher one (if 50% vs 94%, choose 94%; if 98% vs 94%. choose 98%)
+  let rankDefIdx = Math.min(
+    getRankIndexByAchievement(record.achievement),
+    LOWEST_RANK_FOR_CANDIDATE
+  );
   const ranks = getRankDefinitions();
   const ratingByRank = new Map();
   for (let i = rankDefIdx - 1; i >= 0; i--) {
@@ -30,8 +34,8 @@ function getNextRating(record: NextRatingCandidate, ratingRangeMin: number, numO
       continue;
     }
     const [minRt] = calculateRatingRange(record.level, rank);
-    if (minRt > ratingRangeMin) {
-      ratingByRank.set(rank.title, {minRt: minRt - ratingRangeMin, rank});
+    if (minRt > lowestRating) {
+      ratingByRank.set(rank.title, {minRt: minRt - lowestRating, rank});
       if (ratingByRank.size >= numOfRanks) {
         break;
       }
@@ -43,7 +47,8 @@ function getNextRating(record: NextRatingCandidate, ratingRangeMin: number, numO
 export function getCandidateCharts(
   records: ReadonlyArray<ChartRecordWithRating>,
   topCount: number,
-  count: number
+  count: number,
+  requiredLv?: LevelDef
 ) {
   const candidates: ChartRecordWithRating[] = [];
   if (topCount <= 0) {
@@ -51,39 +56,44 @@ export function getCandidateCharts(
   }
   for (let i = 0; i < topCount; i++) {
     const record = records[i];
-    if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
-      const ratingByRank = getNextRating(record, Math.floor(record.rating), 2);
-      if (!ratingByRank.size) {
-        continue;
-      }
-      record.nextRanks = ratingByRank;
-      candidates.push(record);
-    }
+    if (record.achievement >= SSSPLUS_MIN_ACHIEVEMENT) continue;
+    if (requiredLv && (record.level < requiredLv.minLv || record.level > requiredLv.maxLv))
+      continue;
+    record.nextRanks = getNextRating(record, Math.floor(record.rating), 2);
+    candidates.push(record);
   }
   const minRating = Math.floor(records[topCount - 1].rating);
   for (let i = topCount; i < records.length; i++) {
     const record = records[i];
-    if (record.achievement < SSSPLUS_MIN_ACHIEVEMENT) {
-      const ratingByRank = getNextRating(record, minRating, 2);
-      if (!ratingByRank.size) {
-        continue;
-      }
-      record.nextRanks = ratingByRank;
-      candidates.push(record);
-      if (candidates.length >= count) {
-        break;
-      }
+    if (record.achievement >= SSSPLUS_MIN_ACHIEVEMENT) continue;
+    if (requiredLv && (record.level < requiredLv.minLv || record.level > requiredLv.maxLv))
+      continue;
+    const ratingByRank = getNextRating(record, minRating, 2);
+    if (!ratingByRank.size) {
+      continue;
+    }
+    record.nextRanks = ratingByRank;
+    candidates.push(record);
+    if (candidates.length >= count) {
+      break;
     }
   }
   candidates.sort(compareCandidate);
   return candidates;
 }
 
+/**
+ * @param songList List of all available songs
+ * @param records Played charts
+ * @param count Number of not played charts to return
+ * @param requiredLv Required level (choose only charts of this level)
+ */
 export function getNotPlayedCharts(
   songList: ReadonlyArray<SongProperties>,
   records: ReadonlyArray<ChartRecordWithRating>,
-  topCount: number,
-  count: number
+  minRating: number,
+  count: number,
+  requiredLv?: LevelDef
 ) {
   const playedCharts = new Set<string>();
   for (const r of records) {
@@ -91,9 +101,14 @@ export function getNotPlayedCharts(
     playedCharts.add(key + r.difficulty);
   }
   const maxRating = records.length ? Math.ceil(records[0].rating) : 0;
-  const minRating = records.length ? Math.floor(records[topCount - 1].rating) : 0;
-  const hardestLv = maxRating ? (maxRating * 100) / (RANK_S.factor * RANK_S.minAchv) : 15;
-  const easiestLv = (minRating * 100) / (RANK_SSS_PLUS.factor * RANK_SSS_PLUS.minAchv);
+  const hardestLv = requiredLv
+    ? requiredLv.maxLv
+    : maxRating
+    ? (maxRating * 100) / (RANK_S.factor * RANK_S.minAchv)
+    : 15;
+  const easiestLv = requiredLv
+    ? requiredLv.minLv
+    : (minRating * 100) / (RANK_SSS_PLUS.factor * RANK_SSS_PLUS.minAchv);
   const candidates: ChartRecordWithRating[] = [];
   const shuffledSongList = shuffleArray(songList);
   for (const s of shuffledSongList) {

@@ -143,6 +143,10 @@ export class SongDatabase {
     }
   }
 
+  getAllProps(): SongProperties[] {
+    return Array.from(this.dxMap.values()).concat(Array.from(this.standardMap.values()));
+  }
+
   getPropsForSongs(songs: ReadonlyArray<BasicSongProps>): SongProperties[] {
     return songs
       .map((s) => {

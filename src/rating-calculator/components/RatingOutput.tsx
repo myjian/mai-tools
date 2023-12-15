@@ -6,7 +6,7 @@ import {GameRegion} from '../../common/game-region';
 import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {SongDatabase, SongProperties} from '../../common/song-props';
+import {BasicSongProps, SongDatabase, SongProperties} from '../../common/song-props';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {calculateFullRating} from '../rating-functions';
 import {RatingData} from '../types';
@@ -34,29 +34,36 @@ interface Props {
   songDatabase: SongDatabase;
   ratingData: RatingData;
   playerGradeIndex: number;
-  oldSongs?: ReadonlyArray<SongProperties>;
-  newSongs?: ReadonlyArray<SongProperties>;
+  allSongs?: ReadonlyArray<BasicSongProps>;
 }
 
 interface State {
   fullNewChartsRating?: number;
   fullOldChartsRating?: number;
+  newSongs?: ReadonlyArray<SongProperties>;
+  oldSongs?: ReadonlyArray<SongProperties>;
 }
 
 export const RatingOutput = ({
   gameVer,
-  newSongs,
-  oldSongs,
+  allSongs,
   ratingData,
   gameRegion,
   playerGradeIndex,
   songDatabase,
 }: Props) => {
   const state = useMemo<State>(() => {
+    const allSongProps = allSongs
+      ? songDatabase.getPropsForSongs(allSongs)
+      : gameRegion === GameRegion.Jp
+      ? songDatabase.getAllProps()
+      : null;
+    const newSongs = allSongProps?.filter((song) => song.debut === gameVer);
+    const oldSongs = allSongProps?.filter((song) => song.debut < gameVer);
     const fullNewChartsRating = newSongs ? calculateFullRating(newSongs, NUM_TOP_NEW_CHARTS) : 0;
     const fullOldChartsRating = oldSongs ? calculateFullRating(oldSongs, NUM_TOP_OLD_CHARTS) : 0;
-    return {fullNewChartsRating, fullOldChartsRating};
-  }, [newSongs, oldSongs]);
+    return {newSongs, oldSongs, fullNewChartsRating, fullOldChartsRating};
+  }, [songDatabase, allSongs, gameVer, gameRegion]);
 
   const [compactMode, setCompactMode] = useState(false);
 
@@ -139,12 +146,12 @@ export const RatingOutput = ({
           <RatingCandidates
             songDatabase={songDatabase}
             isCurrentVersion
-            songList={newSongs}
+            songList={state.newSongs}
             ratingData={ratingData}
           />
           <RatingCandidates
             songDatabase={songDatabase}
-            songList={oldSongs}
+            songList={state.oldSongs}
             ratingData={ratingData}
           />
         </div>

@@ -64,3 +64,12 @@
 .compactRatingRow .ratingSubjects {
   margin-right: 10px;
 }
+
+.playedToggleForm {
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+
+.candidateLvSelect {
+  margin-bottom: 16px;
+}

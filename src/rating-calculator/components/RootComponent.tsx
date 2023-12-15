@@ -16,7 +16,7 @@ import {
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
 import {QueryParam} from '../../common/query-params';
-import {loadSongDatabase, SongDatabase, SongProperties} from '../../common/song-props';
+import {BasicSongProps, loadSongDatabase, SongDatabase} from '../../common/song-props';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {RatingData} from '../types';
 import {LanguageChooser} from './LanguageChooser';
@@ -47,7 +47,7 @@ interface State {
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
-  allSongs?: ReadonlyArray<SongProperties>;
+  allSongs?: ReadonlyArray<BasicSongProps>;
 }
 
 export class RootComponent extends React.PureComponent<{}, State> {
@@ -90,9 +90,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
       this.playerScores = readPlayerScoresFromQueryParams(queryParams, songDb);
       this.analyzeRating();
     });
-    if (window.opener) {
-      this.initWindowCommunication();
-    }
+    this.initWindowCommunication();
   }
 
   componentDidUpdate(_prevProps: {}, prevState: State) {
@@ -104,8 +102,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
   render() {
     const {lang, region, gameVer, ratingData, allSongs, progress} = this.state;
     const messages = MessagesByLang[lang];
-    const newSongs = allSongs?.filter((song) => song.debut === gameVer);
-    const oldSongs = allSongs?.filter((song) => song.debut < gameVer);
     return (
       <LangContext.Provider value={lang}>
         <table className="inputSelectTable">
@@ -130,8 +126,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
             songDatabase={this.songDatabase}
             ratingData={ratingData}
             playerGradeIndex={this.playerGradeIndex}
-            oldSongs={oldSongs}
-            newSongs={newSongs}
+            allSongs={allSongs}
           />
         )}
         <PageFooter />
@@ -207,7 +202,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   private initWindowCommunication() {
     window.addEventListener('message', (evt) => {
-      if (!isMaimaiNetOrigin(evt.origin)) {
+      if (!isMaimaiNetOrigin(evt.origin) && evt.origin !== window.origin) {
         return;
       }
       this.referrer = evt.origin;
@@ -240,9 +235,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
           this.analyzeRating();
           break;
         case 'allSongs':
-          this.setState({
-            allSongs: this.songDatabase.getPropsForSongs(evt.data.payload),
-          });
+          this.setState({allSongs: evt.data.payload});
           break;
       }
     });

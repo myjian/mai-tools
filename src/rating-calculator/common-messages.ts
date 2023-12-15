@@ -2,6 +2,7 @@ import {Language} from '../common/lang';
 
 export const CommonMessages = {
   [Language.en_US]: {
+    all: 'All',
     average: 'Avg',
     subtotal: 'Subtotal',
     chartType: 'Chart',
@@ -16,6 +17,7 @@ export const CommonMessages = {
     autofill: 'Autofill',
   },
   [Language.zh_TW]: {
+    all: '全部',
     average: '平均',
     subtotal: '小計',
     difficulty: '難度',
@@ -30,6 +32,7 @@ export const CommonMessages = {
     autofill: '自動帶入',
   },
   [Language.ko_KR]: {
+    all: '전부',
     average: '평균',
     subtotal: '총합',
     difficulty: '난이도',

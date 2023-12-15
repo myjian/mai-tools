@@ -35,11 +35,6 @@ textarea:focus {
   margin-top: 14px;
 }
 
-.playedToggleForm {
-  margin-bottom: 16px;
-  padding-left: 4px;
-}
-
 .radioLabel:first-child {
   margin-right: 20px;
 }
