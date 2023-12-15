@@ -207,6 +207,9 @@ export class RootComponent extends React.PureComponent<{}, State> {
       }
       this.referrer = evt.origin;
       console.log(evt.origin, evt.data);
+      if (typeof evt.data !== 'object') {
+        return;
+      }
       let payloadAsInt;
       switch (evt.data.action) {
         case 'gameVersion':
