@@ -278,8 +278,8 @@ export function filterSongsByVersion(
   const songs: SongProperties[] = [];
   for (const listItem of allowlist) {
     const song =
-      songDatabase.getSongProperties(listItem.name, '', listItem.dx) ||
-      songDatabase.getSongProperties(listItem.nickname, '', listItem.dx);
+      songDatabase.getSongProperties(listItem.nickname, '', listItem.dx) ||
+      songDatabase.getSongProperties(listItem.name, '', listItem.dx);
 
     if (!song) {
       console.warn('Could not find song properties for', listItem);

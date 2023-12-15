@@ -103,7 +103,7 @@ export function getNotPlayedCharts(
       let lv = s.lv[index];
       const levelIsPrecise = lv > 0;
       lv = Math.abs(lv);
-      const key = s.name === 'Link' ? s.nickname : getSongNicknameWithChartType(s.name, '', s.dx);
+      const key = getSongNicknameWithChartType(s.name === 'Link' ? s.nickname : s.name, '', s.dx);
       // Math.min is hack for newly added Re:MASTER charts.
       // I think the hack is no longer needed as I made parseSongProperties check lv array length,
       // but just want to stay safe.
