@@ -2,7 +2,6 @@ import {getChartType} from './chart-type';
 import {Difficulty} from './difficulties';
 import {getSongName} from './fetch-score-util';
 import {SELF_SCORE_URLS} from './fetch-self-score';
-import {GameVersion} from './game-version';
 import {fetchPage} from './net-helpers';
 import {getSongIdx, isNiconicoLink} from './song-name-helper';
 import {BasicSongProps} from './song-props';
@@ -39,12 +38,6 @@ export async function fetchAllSongs(dom?: Document) {
     const url = SELF_SCORE_URLS.get(Difficulty.BASIC);
     dom = await fetchPage(url);
   }
-  return await parseSongList(dom);
-}
-
-export async function fetchNewSongs(ver: GameVersion): Promise<BasicSongProps[]> {
-  // diff=0 means BASIC
-  const dom = await fetchPage(`/maimai-mobile/record/musicVersion/search/?version=${ver}&diff=0`);
   return await parseSongList(dom);
 }
 

@@ -16,13 +16,7 @@ import {
 import {getInitialLanguage, Language, saveLanguage} from '../../common/lang';
 import {LangContext} from '../../common/lang-react';
 import {QueryParam} from '../../common/query-params';
-import {
-  filterSongsByVersion,
-  loadSongDatabase,
-  MatchMode,
-  SongDatabase,
-  SongProperties,
-} from '../../common/song-props';
+import {loadSongDatabase, SongDatabase, SongProperties} from '../../common/song-props';
 import {analyzePlayerRating} from '../rating-analyzer';
 import {RatingData} from '../types';
 import {LanguageChooser} from './LanguageChooser';
@@ -53,8 +47,7 @@ interface State {
   ratingData?: RatingData;
   playerName: string | null;
   friendIdx: string | null;
-  oldSongs?: ReadonlyArray<SongProperties>;
-  newSongs?: ReadonlyArray<SongProperties>;
+  allSongs?: ReadonlyArray<SongProperties>;
 }
 
 export class RootComponent extends React.PureComponent<{}, State> {
@@ -103,20 +96,16 @@ export class RootComponent extends React.PureComponent<{}, State> {
   }
 
   componentDidUpdate(_prevProps: {}, prevState: State) {
-    if (
-      this.songDatabase &&
-      ((!this.state.oldSongs && !this.state.newSongs) || prevState.gameVer !== this.state.gameVer)
-    ) {
-      this.loadSongLists(this.state.gameVer);
-    }
     if (this.state.lang != prevState.lang) {
       updateDocumentTitle(this.state.lang);
     }
   }
 
   render() {
-    const {lang, region, gameVer, ratingData, oldSongs, newSongs, progress} = this.state;
+    const {lang, region, gameVer, ratingData, allSongs, progress} = this.state;
     const messages = MessagesByLang[lang];
+    const newSongs = allSongs?.filter((song) => song.debut === gameVer);
+    const oldSongs = allSongs?.filter((song) => song.debut < gameVer);
     return (
       <LangContext.Provider value={lang}>
         <table className="inputSelectTable">
@@ -218,63 +207,43 @@ export class RootComponent extends React.PureComponent<{}, State> {
 
   private initWindowCommunication() {
     window.addEventListener('message', (evt) => {
-      if (isMaimaiNetOrigin(evt.origin)) {
-        this.referrer = evt.origin;
-        console.log(evt.origin, evt.data);
-        let payloadAsInt;
-        switch (evt.data.action) {
-          case 'gameVersion':
-            this.setState(
-              {
-                region: getGameRegionFromOrigin(evt.origin),
-                gameVer: validateGameVersion(
-                  evt.data.payload,
-                  RATING_CALCULATOR_SUPPORTED_VERSIONS[0]
-                ),
-              },
-              this.analyzeRating
-            );
-            break;
-          case 'playerGrade':
-            payloadAsInt = parseInt(evt.data.payload);
-            if (payloadAsInt) {
-              this.playerGradeIndex = payloadAsInt;
-            }
-            break;
-          case 'showProgress':
-            this.setState({progress: evt.data.payload});
-            break;
-          case 'setPlayerScore':
-            this.playerScores = evt.data.payload;
-            this.analyzeRating();
-            break;
-          case 'allSongs':
-            this.setState({
-              oldSongs: filterSongsByVersion(
+      if (!isMaimaiNetOrigin(evt.origin)) {
+        return;
+      }
+      this.referrer = evt.origin;
+      console.log(evt.origin, evt.data);
+      let payloadAsInt;
+      switch (evt.data.action) {
+        case 'gameVersion':
+          this.setState(
+            {
+              region: getGameRegionFromOrigin(evt.origin),
+              gameVer: validateGameVersion(
                 evt.data.payload,
-                this.songDatabase,
-                this.state.gameVer,
-                MatchMode.OLDER
+                RATING_CALCULATOR_SUPPORTED_VERSIONS[0]
               ),
-            });
-            break;
-          case 'newSongs':
-            if (evt.data.payload.length) {
-              this.setState({
-                newSongs: filterSongsByVersion(
-                  evt.data.payload,
-                  this.songDatabase,
-                  this.state.gameVer,
-                  MatchMode.EQUAL
-                ),
-              });
-            } else {
-              this.setState({
-                newSongs: this.songDatabase.getSongsByVersion(this.state.gameVer),
-              });
-            }
-            break;
-        }
+            },
+            this.analyzeRating
+          );
+          break;
+        case 'playerGrade':
+          payloadAsInt = parseInt(evt.data.payload);
+          if (payloadAsInt) {
+            this.playerGradeIndex = payloadAsInt;
+          }
+          break;
+        case 'showProgress':
+          this.setState({progress: evt.data.payload});
+          break;
+        case 'setPlayerScore':
+          this.playerScores = evt.data.payload;
+          this.analyzeRating();
+          break;
+        case 'allSongs':
+          this.setState({
+            allSongs: this.songDatabase.getPropsForSongs(evt.data.payload),
+          });
+          break;
       }
     });
     const {friendIdx, lang} = this.state;
@@ -285,11 +254,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
       // Analyze self rating
       this.postMessageToOpener({action: 'ready', payload: lang});
     }
-  }
-
-  private loadSongLists(gameVer: GameVersion) {
-    this.postMessageToOpener({action: 'fetchAllSongs'});
-    this.postMessageToOpener({action: 'fetchNewSongs', payload: gameVer});
   }
 }
 

@@ -1,5 +1,5 @@
 import {compareNumber} from '../common/number-helper';
-import {getRankDefinitions, RankDef} from '../common/rank-functions';
+import {getRankDefinitions, RANK_SSS_PLUS, RankDef} from '../common/rank-functions';
 import {SongProperties} from '../common/song-props';
 
 export function calculateRatingRange(lv: number, rank: RankDef) {
@@ -20,7 +20,7 @@ export function calculateFullRating(songs: ReadonlyArray<SongProperties>, count:
   }
   allLvs.sort(compareNumber);
   const topLvs = allLvs.slice(Math.max(0, allLvs.length - count));
-  const topRank = getRankDefinitions()[0];
+  const topRank = RANK_SSS_PLUS;
   let totalRating = 0;
   for (const lv of topLvs) {
     totalRating += Math.floor((lv * topRank.minAchv * topRank.factor) / 100);

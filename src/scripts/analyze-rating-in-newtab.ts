@@ -3,20 +3,13 @@ import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, fetchScoresFull, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
-import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {SongDatabase} from '../common/song-props';
-import {
-  ALLOWED_ORIGINS,
-  fetchAllSongs,
-  fetchNewSongs,
-  getPostMessageFunc,
-  handleError,
-} from '../common/util';
+import {ALLOWED_ORIGINS, fetchAllSongs, getPostMessageFunc, handleError} from '../common/util';
 
 declare global {
   interface Window {
@@ -47,6 +40,10 @@ declare global {
 
   const isOnFriendPage = location.pathname.includes('friend');
 
+  /**
+   * Load self scores and send them via the callback provided.
+   * @return the Document of BASIC song scores page. (this is later used to get all songs)
+   */
   async function fetchSelfRecords(
     send: (action: string, payload: unknown) => void,
     fullRecords: boolean = false
@@ -70,7 +67,7 @@ declare global {
         )
       );
     }
-    allSongsDom = domCache.get(Difficulty.MASTER);
+    allSongsDom = domCache.get(Difficulty.BASIC);
     send('showProgress', '');
     send('setPlayerScore', scoreList);
     return allSongsDom;
@@ -141,35 +138,19 @@ declare global {
       console.log(evt.origin, evt.data);
       if (ALLOWED_ORIGINS.includes(evt.origin)) {
         const send = getPostMessageFunc(evt.source as WindowProxy, evt.origin);
-        if (typeof evt.data === 'string') {
-          // this branch is deprecated!
-          if (evt.data === 'ready') {
-            send('gameVersion', await gameVerPromise);
-            allSongsDom = fetchSelfRecords(send);
-          }
-        } else if (typeof evt.data === 'object') {
+        if (typeof evt.data === 'object') {
           if (evt.data.action === 'ready') {
             send('gameVersion', await gameVerPromise);
             if (typeof evt.data.payload === 'string') {
               LANG = evt.data.payload as Language;
             }
             allSongsDom = fetchSelfRecords(send);
+            allSongsDom.then(fetchAllSongs).then((songs) => send('allSongs', songs));
           } else if (evt.data.action === 'fetchScoresFull') {
             if (typeof evt.data.payload === 'string') {
               LANG = evt.data.payload as Language;
             }
             allSongsDom = fetchSelfRecords(send, true);
-          } else if (evt.data.action === 'fetchNewSongs') {
-            const gameVer = await gameVerPromise;
-            const ver = evt.data.payload as GameVersion;
-            if (gameVer < ver) {
-              // Current gameVer is older than the requested version.
-              send('newSongs', []);
-            } else {
-              fetchNewSongs(ver).then((songs) => send('newSongs', songs));
-            }
-          } else if (evt.data.action === 'fetchAllSongs') {
-            allSongsDom.then((dom) => fetchAllSongs(dom).then((songs) => send('allSongs', songs)));
           } else if (evt.data.action === 'saveLanguage') {
             LANG = evt.data.payload as Language;
             saveLanguage(LANG);

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 
-import {ChartType} from '../../common/chart-type';
 import {GameRegion} from '../../common/game-region';
 import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
@@ -39,11 +38,7 @@ export function ShareRating(props: {
       .concat(ratingData.oldChartRecords.slice(0, ratingData.oldTopChartsCount));
 
     const songProps = topRecords
-      .map(
-        (rec) =>
-          songDb.getSongProperties(rec.songName, rec.genre, ChartType.DX) ||
-          songDb.getSongProperties(rec.songName, rec.genre, ChartType.STANDARD)
-      )
+      .map((record) => songDb.getSongProperties(record.songName, record.genre, record.chartType))
       .filter((sp) => sp?.ico);
 
     if (songProps.length < topRecords.length) {

@@ -1,8 +1,8 @@
 import React from 'react';
 
+import {LevelDef} from '../common/level-helper';
 import {RankDef} from '../common/rank-functions';
 import {IntervalLines} from './IntervalLines';
-import {LevelDef} from './levels';
 import {LvRatingContainer} from './LvRatingContainer';
 import {RatingAxis} from './RatingAxis';
 
@@ -27,8 +27,9 @@ export class RatingVisualizer extends React.PureComponent<Props, State> {
   state: State = {};
 
   render() {
-    const { axisLabelStep, canZoomIn, handleSetRange, heightUnit, levels, maxRating, ranks } = this.props;
-    const { highlightInterval } = this.state;
+    const {axisLabelStep, canZoomIn, handleSetRange, heightUnit, levels, maxRating, ranks} =
+      this.props;
+    const {highlightInterval} = this.state;
     const containerHeight = this.getContainerHeight();
 
     if (!heightUnit) {
@@ -78,7 +79,6 @@ export class RatingVisualizer extends React.PureComponent<Props, State> {
     );
   }
 
-
   private getContainerHeight(): number {
     const {axisLabelStep, maxRating, heightUnit, topPadding} = this.props;
     return (maxRating + axisLabelStep) * heightUnit + topPadding;
@@ -107,4 +107,3 @@ export class RatingVisualizer extends React.PureComponent<Props, State> {
     }
   };
 }
-

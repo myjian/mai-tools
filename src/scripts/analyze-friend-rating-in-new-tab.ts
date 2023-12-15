@@ -6,20 +6,13 @@ import {
 } from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
-import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
-import {BasicSongProps, SongDatabase} from '../common/song-props';
-import {
-  ALLOWED_ORIGINS,
-  fetchAllSongs,
-  fetchNewSongs,
-  getPostMessageFunc,
-  handleError,
-} from '../common/util';
+import {SongDatabase} from '../common/song-props';
+import {ALLOWED_ORIGINS, fetchAllSongs, getPostMessageFunc, handleError} from '../common/util';
 
 declare global {
   interface Window {
@@ -186,7 +179,6 @@ type FriendInfo = {
         insertAnalyzeButton(info, elem);
       });
     }
-    let allSongs: BasicSongProps[];
     const gameVerPromise = fetchGameVersion(document.body);
     if (window.ratingCalcMsgListener) {
       window.removeEventListener('message', window.ratingCalcMsgListener);
@@ -206,29 +198,15 @@ type FriendInfo = {
           const friend = friends_cache[evt.data.payload];
           if (friend) {
             fetchFriendRecords(friend, false, send);
+            fetchAllSongs().then((songs) => {
+              send('allSongs', songs);
+            });
           }
         } else if (evt.data.action === 'fetchFriendScoresFull') {
           const friend = friends_cache[evt.data.payload];
           if (friend) {
             fetchFriendRecords(friend, true, send);
           }
-        } else if (evt.data.action === 'fetchNewSongs') {
-          const gameVer = await gameVerPromise;
-          const ver = evt.data.payload as GameVersion;
-          if (gameVer < ver) {
-            // Current gameVer is older than the requested version.
-            send('newSongs', []);
-          } else {
-            fetchNewSongs(ver).then((songs) => send('newSongs', songs));
-          }
-        } else if (evt.data.action === 'fetchAllSongs') {
-          if (allSongs) {
-            send('allSongs', allSongs);
-          }
-          fetchAllSongs().then((songs) => {
-            allSongs = songs;
-            send('allSongs', songs);
-          });
         } else if (evt.data.action === 'saveLanguage') {
           LANG = evt.data.payload as Language;
           saveLanguage(LANG);

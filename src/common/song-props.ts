@@ -143,19 +143,17 @@ export class SongDatabase {
     }
   }
 
-  getSongsByVersion(gameVer: GameVersion): SongProperties[] {
-    const songs: SongProperties[] = [];
-    this.dxMap.forEach((song) => {
-      if (song.debut === gameVer) {
-        songs.push(song);
-      }
-    });
-    this.standardMap.forEach((song) => {
-      if (song.debut === gameVer) {
-        songs.push(song);
-      }
-    });
-    return songs;
+  getPropsForSongs(songs: ReadonlyArray<BasicSongProps>): SongProperties[] {
+    return songs
+      .map((s) => {
+        const props =
+          this.getSongProperties(s.nickname, '', s.dx) || this.getSongProperties(s.name, '', s.dx);
+        if (!props) {
+          console.warn('Could not find song properties for', s);
+        }
+        return props;
+      })
+      .filter((props) => !!props);
   }
 
   toString(): string {
@@ -262,35 +260,4 @@ export async function loadSongDatabase(
 
   songDatabase.validate();
   return songDatabase;
-}
-
-export const enum MatchMode {
-  EQUAL,
-  OLDER,
-}
-
-export function filterSongsByVersion(
-  allowlist: ReadonlyArray<BasicSongProps>,
-  songDatabase: SongDatabase,
-  gameVer: GameVersion,
-  matchMode: MatchMode
-): SongProperties[] {
-  const songs: SongProperties[] = [];
-  for (const listItem of allowlist) {
-    const song =
-      songDatabase.getSongProperties(listItem.nickname, '', listItem.dx) ||
-      songDatabase.getSongProperties(listItem.name, '', listItem.dx);
-
-    if (!song) {
-      console.warn('Could not find song properties for', listItem);
-      continue;
-    }
-    if (
-      (matchMode === MatchMode.EQUAL && song.debut === gameVer) ||
-      (matchMode === MatchMode.OLDER && song.debut < gameVer)
-    ) {
-      songs.push(song);
-    }
-  }
-  return songs;
 }

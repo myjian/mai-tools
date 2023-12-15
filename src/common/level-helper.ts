@@ -1,3 +1,9 @@
+export type LevelDef = {
+  title: string;
+  minLv: number;
+  maxLv: number;
+};
+
 export const MAX_LEVEL = 15;
 
 const MIN_LEVEL = 1;
