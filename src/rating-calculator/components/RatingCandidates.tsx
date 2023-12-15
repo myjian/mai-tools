@@ -2,8 +2,8 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
-import {SongDatabase} from '../../common/song-props';
-import {ChartRecordWithRating} from '../types';
+import {SongDatabase, SongProperties} from '../../common/song-props';
+import {RatingData} from '../types';
 import {CandidateChartRecords} from './CandidatesChartRecords';
 import {CollapsibleSectionTitle} from './CollapsibleSectionTitle';
 
@@ -24,17 +24,12 @@ const MessagesByLang = {
 
 interface Props {
   songDatabase: SongDatabase;
+  ratingData: RatingData;
   isCurrentVersion?: boolean;
-  candidateCharts: ReadonlyArray<ChartRecordWithRating>;
-  notPlayedCharts?: ReadonlyArray<ChartRecordWithRating>;
+  songList?: ReadonlyArray<SongProperties>;
 }
 
-export const RatingCandidates = ({
-  songDatabase,
-  isCurrentVersion,
-  candidateCharts,
-  notPlayedCharts,
-}: Props) => {
+export const RatingCandidates = ({songDatabase, ratingData, songList, isCurrentVersion}: Props) => {
   const [hideCandidates, setHideCandidates] = useState(false);
 
   const toggleCandidateChartsDisplay = useCallback(() => {
@@ -54,11 +49,11 @@ export const RatingCandidates = ({
         isCandidateList
       />
       <CandidateChartRecords
-        name={isCurrentVersion ? 'new' : 'old'}
+        ratingData={ratingData}
         songDatabase={songDatabase}
         hidden={hideCandidates}
-        played={candidateCharts}
-        notPlayed={notPlayedCharts}
+        isCurrentVersion={isCurrentVersion}
+        songList={songList}
       />
     </div>
   );

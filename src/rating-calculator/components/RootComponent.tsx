@@ -95,7 +95,6 @@ export class RootComponent extends React.PureComponent<{}, State> {
     loadSongDatabase(gameVer, region).then((songDb) => {
       this.songDatabase = songDb;
       this.playerScores = readPlayerScoresFromQueryParams(queryParams, songDb);
-      console.log('Loaded ', songDb, this.playerScores);
       this.analyzeRating();
     });
     if (window.opener) {

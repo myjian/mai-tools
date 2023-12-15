@@ -7,10 +7,9 @@ import {GameVersion} from '../../common/game-version';
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
 import {SongDatabase, SongProperties} from '../../common/song-props';
-import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
 import {calculateFullRating} from '../rating-functions';
-import {ChartRecordWithRating, RatingData} from '../types';
+import {RatingData} from '../types';
 import {RatingCandidates} from './RatingCandidates';
 import {RatingOverview} from './RatingOverview';
 import {RatingSubjects} from './RatingSubjects';
@@ -29,9 +28,6 @@ const MessagesByLang = {
   },
 };
 
-const NEW_CANDIDATE_SONGS_POOL_SIZE = 100;
-const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
-
 interface Props {
   gameRegion: GameRegion;
   gameVer: GameVersion;
@@ -43,10 +39,6 @@ interface Props {
 }
 
 interface State {
-  newCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
-  oldCandidateCharts: ReadonlyArray<ChartRecordWithRating>;
-  notPlayedNewCharts?: ReadonlyArray<ChartRecordWithRating>;
-  notPlayedOldCharts?: ReadonlyArray<ChartRecordWithRating>;
   fullNewChartsRating?: number;
   fullOldChartsRating?: number;
 }
@@ -61,46 +53,10 @@ export const RatingOutput = ({
   songDatabase,
 }: Props) => {
   const state = useMemo<State>(() => {
-    const {newChartRecords, newTopChartsCount, oldChartRecords, oldTopChartsCount} = ratingData;
-
-    const newCandidateCharts = getCandidateCharts(
-      newChartRecords,
-      newTopChartsCount,
-      NEW_CANDIDATE_SONGS_POOL_SIZE
-    );
-    const notPlayedNewCharts = newSongs
-      ? getNotPlayedCharts(
-          newSongs,
-          newChartRecords,
-          newTopChartsCount,
-          NEW_CANDIDATE_SONGS_POOL_SIZE
-        )
-      : [];
-    const oldCandidateCharts = getCandidateCharts(
-      oldChartRecords,
-      oldTopChartsCount,
-      OLD_CANDIDATE_SONGS_POOL_SIZE
-    );
-    const notPlayedOldCharts = oldSongs
-      ? getNotPlayedCharts(
-          oldSongs,
-          oldChartRecords,
-          oldTopChartsCount,
-          OLD_CANDIDATE_SONGS_POOL_SIZE
-        )
-      : [];
-
     const fullNewChartsRating = newSongs ? calculateFullRating(newSongs, NUM_TOP_NEW_CHARTS) : 0;
     const fullOldChartsRating = oldSongs ? calculateFullRating(oldSongs, NUM_TOP_OLD_CHARTS) : 0;
-    return {
-      newCandidateCharts,
-      oldCandidateCharts,
-      notPlayedNewCharts,
-      notPlayedOldCharts,
-      fullNewChartsRating,
-      fullOldChartsRating,
-    };
-  }, [newSongs, oldSongs, ratingData]);
+    return {fullNewChartsRating, fullOldChartsRating};
+  }, [newSongs, oldSongs]);
 
   const [compactMode, setCompactMode] = useState(false);
 
@@ -109,14 +65,7 @@ export const RatingOutput = ({
   }, []);
 
   const {newTopChartsCount, oldTopChartsCount} = ratingData;
-  const {
-    newCandidateCharts,
-    oldCandidateCharts,
-    notPlayedNewCharts,
-    notPlayedOldCharts,
-    fullNewChartsRating,
-    fullOldChartsRating,
-  } = state;
+  const {fullNewChartsRating, fullOldChartsRating} = state;
   const totalRating = ratingData.newChartsRating + ratingData.oldChartsRating;
   const messages = MessagesByLang[useLanguage()];
 
@@ -190,13 +139,13 @@ export const RatingOutput = ({
           <RatingCandidates
             songDatabase={songDatabase}
             isCurrentVersion
-            candidateCharts={newCandidateCharts}
-            notPlayedCharts={notPlayedNewCharts}
+            songList={newSongs}
+            ratingData={ratingData}
           />
           <RatingCandidates
             songDatabase={songDatabase}
-            candidateCharts={oldCandidateCharts}
-            notPlayedCharts={notPlayedOldCharts}
+            songList={oldSongs}
+            ratingData={ratingData}
           />
         </div>
       )}

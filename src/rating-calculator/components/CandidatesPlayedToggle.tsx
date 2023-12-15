@@ -5,16 +5,16 @@ import {useLanguage} from '../../common/lang-react';
 
 const MessagesByLang = {
   [Language.en_US]: {
-    showPlayed: "Show played charts",
-    showNotPlayed: "Show not yet played charts",
+    showPlayed: 'Show played charts',
+    showNotPlayed: 'Show not yet played charts',
   },
   [Language.zh_TW]: {
-    showPlayed: "顯示已玩過的譜面",
-    showNotPlayed: "顯示未玩過的譜面",
+    showPlayed: '顯示已玩過的譜面',
+    showNotPlayed: '顯示未玩過的譜面',
   },
   [Language.ko_KR]: {
-    showPlayed: "플레이한 채보 보기",
-    showNotPlayed: "플레이 한 적 없는 채보 보기",
+    showPlayed: '플레이한 채보 보기',
+    showNotPlayed: '플레이 한 적 없는 채보 보기',
   },
 };
 
@@ -25,9 +25,12 @@ interface Props {
 }
 
 export const CandidatesPlayedToggle = ({name, showPlayed, toggleShowPlayed}: Props) => {
-  const handleRadioChange = useCallback(() => {
-    toggleShowPlayed(!showPlayed);
-  }, [toggleShowPlayed]);
+  const handleRadioChange = useCallback(
+    (evt: React.SyntheticEvent<HTMLInputElement>) => {
+      toggleShowPlayed(evt.currentTarget.value === '1');
+    },
+    [toggleShowPlayed]
+  );
   const messages = MessagesByLang[useLanguage()];
 
   return (

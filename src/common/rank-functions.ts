@@ -15,13 +15,25 @@ export interface RecommendedLevel {
 
 export const SSSPLUS_MIN_ACHIEVEMENT = 100.5;
 
+export const RANK_S: RankDef = {
+  minAchv: 97.0,
+  factor: 20,
+  title: 'S',
+};
+
+export const RANK_SSS_PLUS: RankDef = {
+  minAchv: 100.5,
+  factor: 22.4,
+  title: 'SSS+',
+};
+
 const RANK_DEFINITIONS: ReadonlyArray<RankDef> = [
-  {minAchv: 100.5, factor: 22.4, title: 'SSS+'},
+  RANK_SSS_PLUS,
   {minAchv: 100.0, factor: 21.6, title: 'SSS'},
   {minAchv: 99.5, factor: 21.1, title: 'SS+'},
   {minAchv: 99.0, factor: 20.8, title: 'SS'},
   {minAchv: 98.0, factor: 20.3, title: 'S+'},
-  {minAchv: 97.0, factor: 20, title: 'S'},
+  RANK_S,
   {minAchv: 94.0, factor: 16.8, title: 'AAA'},
   {minAchv: 90.0, factor: 15.2, title: 'AA'},
   {minAchv: 80.0, factor: 13.6, title: 'A'},

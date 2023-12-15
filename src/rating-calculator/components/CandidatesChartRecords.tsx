@@ -1,7 +1,8 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {useLanguage} from '../../common/lang-react';
-import {SongDatabase} from '../../common/song-props';
+import {SongDatabase, SongProperties} from '../../common/song-props';
+import {getCandidateCharts, getNotPlayedCharts} from '../candidate-songs';
 import {CommonMessages} from '../common-messages';
 import {
   compareSongsByAchv,
@@ -11,12 +12,15 @@ import {
   compareSongsByNextRank,
   compareSongsByNextRating,
 } from '../record-comparator';
-import {ChartRecordWithRating, ColumnType} from '../types';
+import {ChartRecordWithRating, ColumnType, RatingData} from '../types';
 import {CandidatesPlayedToggle} from './CandidatesPlayedToggle';
 import {ChartRecordsTable} from './ChartRecordsTable';
 import {CollapsibleContainer} from './CollapsibleContainer';
 
 const CANDIDATE_SONGS_LIMIT = 20;
+
+const NEW_CANDIDATE_SONGS_POOL_SIZE = 100;
+const OLD_CANDIDATE_SONGS_POOL_SIZE = 250;
 
 const COLUMNS: ReadonlyArray<ColumnType> = [
   ColumnType.NO,
@@ -39,18 +43,37 @@ const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithR
   ]);
 
 interface Props {
-  name: string;
   songDatabase: SongDatabase;
-  played: ReadonlyArray<ChartRecordWithRating>;
-  notPlayed?: ReadonlyArray<ChartRecordWithRating>;
+  ratingData: RatingData;
+  isCurrentVersion?: boolean;
+  songList?: ReadonlyArray<SongProperties>;
   hidden?: boolean;
 }
 
-export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, name}: Props) => {
+export const CandidateChartRecords = ({
+  hidden,
+  songDatabase,
+  ratingData,
+  isCurrentVersion,
+  songList,
+}: Props) => {
   const [showPlayed, setShowPlayed] = useState<boolean>(true);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<ColumnType | undefined>();
   const [reverse, setReverse] = useState<boolean | undefined>();
+
+  const name = isCurrentVersion ? 'new' : 'old';
+  const records = useMemo(() => {
+    const records = isCurrentVersion ? ratingData.newChartRecords : ratingData.oldChartRecords;
+    const topCount = isCurrentVersion ? ratingData.newTopChartsCount : ratingData.oldTopChartsCount;
+    const poolSize = isCurrentVersion
+      ? NEW_CANDIDATE_SONGS_POOL_SIZE
+      : OLD_CANDIDATE_SONGS_POOL_SIZE;
+    if (showPlayed) {
+      return getCandidateCharts(records, topCount, poolSize);
+    }
+    return songList ? getNotPlayedCharts(songList, records, topCount, poolSize) : [];
+  }, [songList, ratingData, showPlayed]);
 
   const toggleShowMore = useCallback(
     (evt: React.SyntheticEvent<HTMLAnchorElement>) => {
@@ -60,12 +83,9 @@ export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, 
     [showAll]
   );
 
-  const toggleShowPlayed = useCallback(
-    (showPlayed: boolean) => {
-      setShowPlayed(showPlayed);
-    },
-    [showPlayed]
-  );
+  const toggleShowPlayed = useCallback((showPlayed: boolean) => {
+    setShowPlayed(showPlayed);
+  }, []);
 
   const handleSortBy = useCallback(
     (col: ColumnType) => {
@@ -81,7 +101,6 @@ export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, 
     [sortBy, reverse]
   );
 
-  const records = !showPlayed && notPlayed ? notPlayed : played;
   const endIndex = showAll ? records.length : Math.min(records.length, CANDIDATE_SONGS_LIMIT);
   // make a copy
   const recordsToShow = records.slice(0, endIndex).map((r, i) => {
@@ -99,7 +118,7 @@ export const CandidateChartRecords = ({hidden, played, notPlayed, songDatabase, 
   const messages = CommonMessages[useLanguage()];
   return (
     <CollapsibleContainer className="songRecordTableContainer" hidden={hidden}>
-      {notPlayed && (
+      {songList && (
         <CandidatesPlayedToggle
           name={name}
           showPlayed={showPlayed}

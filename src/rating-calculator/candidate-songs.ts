@@ -1,9 +1,10 @@
 import {shuffleArray} from '../common/array-util';
 import {DIFFICULTIES} from '../common/difficulties';
 import {
-  getRankByAchievement,
   getRankDefinitions,
   getRankIndexByAchievement,
+  RANK_S,
+  RANK_SSS_PLUS,
   SSSPLUS_MIN_ACHIEVEMENT,
 } from '../common/rank-functions';
 import {getSongNicknameWithChartType} from '../common/song-name-helper';
@@ -91,10 +92,8 @@ export function getNotPlayedCharts(
   }
   const maxRating = records.length ? Math.ceil(records[0].rating) : 0;
   const minRating = records.length ? Math.floor(records[topCount - 1].rating) : 0;
-  const maxRank = getRankByAchievement(100.5);
-  const minRank = getRankByAchievement(97);
-  const hardestLv = maxRating ? (maxRating * 100) / (minRank.factor * minRank.minAchv) : 15;
-  const easiestLv = (minRating * 100) / (maxRank.factor * maxRank.minAchv);
+  const hardestLv = maxRating ? (maxRating * 100) / (RANK_S.factor * RANK_S.minAchv) : 15;
+  const easiestLv = (minRating * 100) / (RANK_SSS_PLUS.factor * RANK_SSS_PLUS.minAchv);
   const candidates: ChartRecordWithRating[] = [];
   const shuffledSongList = shuffleArray(songList);
   for (const s of shuffledSongList) {
