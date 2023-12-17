@@ -55,7 +55,7 @@ type Options = {
       songName: 'Song',
       difficulty: 'Difficulty',
       achievement: 'Achv',
-      stamps: 'Grade',
+      stamps: 'Stamps',
       playDate: 'Play date:',
       newRecordToggleHeading: 'Display:',
       sortBy: 'Sort by:',
