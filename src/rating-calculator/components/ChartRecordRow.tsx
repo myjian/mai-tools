@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 
-import {RATING_TARGET_SONG_NAME_PREFIX} from '../../common/song-name-helper';
-import {getZhWikiLink} from '../../common/wiki-link';
+import {ColumnType} from '../types';
 
 const SCORE_RECORD_ROW_CLASSNAME = 'scoreRecordRow';
 const SCORE_RECORD_CELL_BASE_CLASSNAME = 'scoreRecordCell';
@@ -18,23 +17,24 @@ const SCORE_RECORD_CELL_CLASSNAMES = [
 
 interface Props {
   className?: string;
-  columnValues: ReadonlyArray<string | number>;
+  columns: ReadonlyArray<ColumnType>;
+  renderCell: (col: ColumnType) => ReactNode;
   isHeading?: boolean;
   onClickCell?: (index: number) => void;
 }
 export class ChartRecordRow extends React.PureComponent<Props> {
   render() {
-    const {columnValues, isHeading, onClickCell} = this.props;
+    const {columns, isHeading, renderCell, onClickCell} = this.props;
     let className = SCORE_RECORD_ROW_CLASSNAME;
     if (this.props.className) {
       className += ' ' + this.props.className;
     }
     return (
       <tr className={className}>
-        {columnValues.map((v, index) => {
+        {columns.map((v, index) => {
           const columnClassName = SCORE_RECORD_CELL_CLASSNAMES[index];
           let className = SCORE_RECORD_CELL_BASE_CLASSNAME + ' ' + columnClassName;
-          const children = this.getChildren(v, index, isHeading);
+          const children = renderCell(v);
           const clickProps = onClickCell
             ? {
                 tabIndex: 0,
@@ -62,27 +62,4 @@ export class ChartRecordRow extends React.PureComponent<Props> {
       </tr>
     );
   }
-
-  private getChildren = (
-    value: string | number,
-    colIdx: number,
-    isHeading: boolean
-  ): React.ReactNode => {
-    if (!isHeading && colIdx === 1) {
-      let songName = value as string;
-      const startIndex = songName.startsWith(RATING_TARGET_SONG_NAME_PREFIX)
-        ? RATING_TARGET_SONG_NAME_PREFIX.length
-        : 0;
-      songName = songName.substring(startIndex);
-      return (
-        <a className="songWikiLink" href={getZhWikiLink(songName)} target="_blank">
-          {value}
-        </a>
-      );
-    }
-    if (typeof value === 'string' && value.includes('\n')) {
-      return value.split('\n').map((v, idx) => <div key={idx}>{v}</div>);
-    }
-    return value;
-  };
 }

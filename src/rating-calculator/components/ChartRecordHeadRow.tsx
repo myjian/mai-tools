@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
@@ -49,7 +49,10 @@ interface Props {
 
 export const ChartRecordHeadRow = React.memo(({columns, sortBy}: Props) => {
   const lang = useLanguage();
-  const columnTitles = columns.map((c) => getColumnTitle(lang, c));
   const handleClick = sortBy && ((index: number) => sortBy(columns[index]));
-  return <ChartRecordRow columnValues={columnTitles} onClickCell={handleClick} isHeading />;
+  const renderCell = useCallback((col: ColumnType) => getColumnTitle(lang, col), [lang]);
+
+  return (
+    <ChartRecordRow columns={columns} onClickCell={handleClick} isHeading renderCell={renderCell} />
+  );
 });
