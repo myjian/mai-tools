@@ -64,6 +64,7 @@ export const CandidateChartRecords = ({
   const [sortBy, setSortBy] = useState<ColumnType | undefined>();
   const [reverse, setReverse] = useState<boolean | undefined>();
   const [levelToShow, setLevelToShow] = useState<LevelDef>();
+  const [minorLvToShow, setMinorLvToShow] = useState<number>();
 
   const name = isCurrentVersion ? 'new' : 'old';
   const records = isCurrentVersion ? ratingData.newChartRecords : ratingData.oldChartRecords;
@@ -82,12 +83,15 @@ export const CandidateChartRecords = ({
     const poolSize = isCurrentVersion
       ? NEW_CANDIDATE_SONGS_POOL_SIZE
       : OLD_CANDIDATE_SONGS_POOL_SIZE;
+    const lvFilter = minorLvToShow
+      ? {title: levelToShow.title, minLv: minorLvToShow, maxLv: minorLvToShow}
+      : levelToShow;
     return showPlayed
-      ? getCandidateCharts(records, topCount, poolSize, levelToShow)
+      ? getCandidateCharts(records, topCount, poolSize, lvFilter)
       : songList
-      ? getNotPlayedCharts(songList, records, minRating, poolSize, levelToShow)
+      ? getNotPlayedCharts(songList, records, minRating, poolSize, lvFilter)
       : [];
-  }, [songList, records, showPlayed, levelToShow]);
+  }, [songList, records, showPlayed, levelToShow, minorLvToShow]);
 
   const toggleShowMore = useCallback(
     (evt: React.SyntheticEvent<HTMLAnchorElement>) => {
@@ -103,9 +107,20 @@ export const CandidateChartRecords = ({
 
   const selectLv = useCallback(
     (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-      setLevelToShow(levels.find((lv) => evt.currentTarget.value === lv.title));
+      const majorLv = levels.find((lv) => evt.currentTarget.value === lv.title);
+      if (levelToShow !== majorLv) {
+        setMinorLvToShow(null);
+      }
+      setLevelToShow(majorLv);
     },
     [setLevelToShow]
+  );
+  const selectMinorLv = useCallback(
+    (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+      const minorLv = parseFloat(evt.currentTarget.value);
+      setMinorLvToShow(isNaN(minorLv) ? null : minorLv);
+    },
+    [setMinorLvToShow]
   );
 
   const handleSortBy = useCallback(
@@ -135,6 +150,12 @@ export const CandidateChartRecords = ({
     }
   }
   const hasMore = candidates.length > CANDIDATE_SONGS_LIMIT;
+  const minorLvs = [];
+  if (levelToShow) {
+    for (let i = levelToShow.minLv; i <= levelToShow.maxLv; i += 0.1) {
+      minorLvs.push(i);
+    }
+  }
 
   const messages = CommonMessages[useLanguage()];
   return (
@@ -146,16 +167,38 @@ export const CandidateChartRecords = ({
           toggleShowPlayed={toggleShowPlayed}
         />
       )}
-      <select className="candidateLvSelect" value={levelToShow?.title || '--'} onChange={selectLv}>
-        <option value="--">
-          {messages.level} - {messages.all}
-        </option>
-        {levels.map((lv) => (
-          <option key={lv.title} value={lv.title}>
-            {lv.title}
+      <div>
+        <select
+          className="candidateLvSelect"
+          value={levelToShow?.title || '--'}
+          onChange={selectLv}
+        >
+          <option value="--">
+            {messages.level} - {messages.all}
           </option>
-        ))}
-      </select>
+          {levels.map((lv) => (
+            <option key={lv.title} value={lv.title}>
+              {lv.title}
+            </option>
+          ))}
+        </select>
+        {minorLvs.length ? (
+          <select
+            className="candidateMinorLvSelect"
+            value={minorLvToShow == null ? '--' : minorLvToShow.toFixed(1)}
+            onChange={selectMinorLv}
+          >
+            <option value="--">
+              {messages.all} {levelToShow.title}
+            </option>
+            {minorLvs.map((lv) => (
+              <option key={lv.toFixed(1)} value={lv.toFixed(1)}>
+                {lv.toFixed(1)}
+              </option>
+            ))}
+          </select>
+        ) : null}
+      </div>
       <ChartRecordsTable
         songDatabase={songDatabase}
         tableClassname="candidateTable"

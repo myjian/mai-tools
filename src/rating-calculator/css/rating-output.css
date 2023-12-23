@@ -72,4 +72,10 @@
 
 .candidateLvSelect {
   margin-bottom: 16px;
+  margin-right: 10px;
+}
+
+.candidateLvSelect,
+.candidateMinorLvSelect {
+  display: inline-block;
 }
