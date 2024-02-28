@@ -55,10 +55,6 @@ import {ALLOWED_ORIGINS} from '../common/util';
     ['FSD+', '/maimai-mobile/img/music_icon_fsdp.png'],
   ]);
 
-  function trimSpaces(textLine: string) {
-    return textLine.trim().replace(/\s+/g, '-');
-  }
-
   function fetchAndCacheImg(map: Map<string, Blob | string>, title: string) {
     let img = map.get(title);
     if (img instanceof Blob) {
@@ -79,10 +75,13 @@ import {ALLOWED_ORIGINS} from '../common/util';
   }
 
   function getNoteDetails(e: HTMLElement) {
-    return (e.querySelector('.playlog_notes_detail') as HTMLElement).innerText
+    return (e.querySelector('.playlog_notes_detail') as HTMLElement)
+      .innerText
       .split('\n')
-      .slice(-5)
-      .map(trimSpaces)
+      .map(s => s.replace(/\t/g, ' '))
+      .map(s => s.trim())
+      .filter(s => s.length > 0)
+      .map(s => s.replace(/ /g, '-'))
       .join('_');
   }
 
