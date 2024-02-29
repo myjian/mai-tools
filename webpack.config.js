@@ -50,6 +50,14 @@ module.exports = (env) => ({
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'build')
+    },
+    compress: true,
+    port: 8080,
+    hot: true // Enable Hot Reloading
+  },
   plugins: [
     new CopyPlugin({
       patterns: [{from: 'public/', to: './'}],
