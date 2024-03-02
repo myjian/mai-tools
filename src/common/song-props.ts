@@ -1,11 +1,11 @@
 import {ChartType} from './chart-type';
 import {GameRegion} from './game-region';
-import {GameVersion, LATEST_VERSION} from './game-version';
-import {getRemovedSongs} from './removed-songs';
+import {GameVersion} from './game-version';
 import {getMaiToolsBaseUrl} from './script-host';
 import {getSongNickname} from './song-name-helper';
 import {MagicApi} from './infra/magic-api';
 import {MaiToolsApi} from './infra/mai-tools-api';
+import {SongDatabaseFactory} from './application/song-database-factory';
 
 export interface BasicSongProps {
   dx: ChartType;
@@ -20,78 +20,14 @@ export interface SongProperties extends BasicSongProps {
 }
 
 export class SongDatabase {
-  readonly gameVer: GameVersion | null;
-  readonly region: GameRegion | null;
-
-  private dxMap = new Map<string, SongProperties>();
-  private standardMap = new Map<string, SongProperties>();
-  private nameByIco = new Map<string, string>();
-  private verbose = true;
-
-  constructor(gameVer: GameVersion = null, region: GameRegion = null, verbose = true) {
-    this.gameVer = gameVer;
-    this.region = region;
-    this.verbose = verbose;
-  }
-
-  insertOrUpdateSong(song: SongProperties) {
-    const map = song.dx === ChartType.DX ? this.dxMap : this.standardMap;
-    if (this.updateSong(song)) {
-      return;
-    }
-    const key = song.name === 'Link' ? song.nickname : song.name;
-    if (song.ico) {
-      this.nameByIco.set(song.ico, key);
-    }
-    if (map.has(key)) {
-      console.warn(
-        `Found existing song properties for ${key} ${song.dx}: ${JSON.stringify(map.get(key))}`
-      );
-      console.warn(`Will ignore ${song}`);
-      return;
-    }
-    map.set(key, song);
-  }
-
-  /**
-   * @return true if song prop is successfully updated.
-   */
-  updateSong(update: Partial<SongProperties>): boolean {
-    const map = update.dx === ChartType.DX ? this.dxMap : this.standardMap;
-    const key = map.has(update.name) ? update.name : update.nickname;
-    const existing = map.get(key);
-    if (!existing) {
-      return false;
-    }
-
-    let levels = existing.lv;
-    if (update.lv instanceof Array) {
-      levels = existing.lv.map((oldLevel, i) => {
-        const newLevel = update.lv[i];
-        return !isNaN(newLevel) && newLevel > 0 ? newLevel : oldLevel;
-      });
-    }
-    if (update.ico) {
-      this.nameByIco.set(update.ico, key);
-    }
-    map.set(key, {...existing, ...update, lv: levels});
-    return true;
-  }
-
-  deleteSong(name: string) {
-    this.dxMap.delete(name);
-    this.standardMap.delete(name);
-  }
-
-  // validation: every song must have debut and lv
-  validate() {
-    for (const map of [this.dxMap, this.standardMap]) {
-      map.forEach((song) => {
-        console.assert(song.debut != null);
-        console.assert(song.debut >= 0 && song.debut <= LATEST_VERSION);
-        console.assert(song.lv.length >= 4);
-      });
-    }
+  constructor(
+    readonly gameVer: GameVersion = null,
+    readonly region: GameRegion = null,
+    private readonly verbose = true,
+    private dxMap: Map<string, SongProperties> = new Map(),
+    private standardMap: Map<string, SongProperties> = new Map(),
+    private nameByIco: Map<string, string> = new Map(),
+  ) {
   }
 
   hasDualCharts(songName: string, genre: string): boolean {
@@ -161,30 +97,10 @@ export async function loadSongDatabase(
   gameVer: GameVersion,
   gameRegion: GameRegion
 ): Promise<SongDatabase> {
-  const songs = await new MagicApi().loadMagic(gameVer);
-  const songDatabase = new SongDatabase(gameVer, gameRegion);
-  for (const song of songs) {
-    songDatabase.insertOrUpdateSong(song);
-  }
+  const factory = new SongDatabaseFactory(
+    new MaiToolsApi(getMaiToolsBaseUrl()),
+    new MagicApi(),
+  );
 
-  const maiToolsApi = new MaiToolsApi(getMaiToolsBaseUrl());
-  const chartLevelOverrides = await maiToolsApi.fetchChartLevelOverrides(gameVer);
-  const regionOverrides = await maiToolsApi.fetchRegionOverrides(gameRegion);
-
-  console.log('chartLevelOverrides', chartLevelOverrides);
-  for (const songProps of chartLevelOverrides) {
-    songDatabase.insertOrUpdateSong(songProps);
-  }
-  console.log('regionOverrides', regionOverrides);
-  for (const songProps of regionOverrides) {
-    songDatabase.updateSong(songProps);
-  }
-
-  const removedSongs = getRemovedSongs(gameRegion);
-  for (const songName of removedSongs) {
-    songDatabase.deleteSong(songName);
-  }
-
-  songDatabase.validate();
-  return songDatabase;
+  return factory.create(gameVer, gameRegion);
 }
