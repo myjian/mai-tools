@@ -56,3 +56,28 @@ export function getPostMessageFunc(w: WindowProxy, origin: string) {
 export function sleep(milliseconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
+
+export async function cached<T>(
+  key: string,
+  duration: number,
+  fn: () => Promise<T>,
+  now: number = Date.now()
+): Promise<T> {
+  const item = window.localStorage.getItem(key);
+  if (item) {
+    const {value, expiration} = JSON.parse(item);
+    if (expiration && expiration > now) { // valid
+      // console.log(`Found cache: ${key}=${value}`);
+      return value;
+    }
+  }
+
+  // expired or not found
+  const value = await fn();
+  window.localStorage.setItem(key, JSON.stringify({value, expiration: now + duration}));
+  return value;
+}
+
+export function expireCache(key: string) {
+  window.localStorage.removeItem(key);
+}
