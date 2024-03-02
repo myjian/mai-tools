@@ -1,10 +1,10 @@
 import {ChartType} from './chart-type';
 import {GameRegion} from './game-region';
 import {GameVersion, LATEST_VERSION} from './game-version';
-import {loadMagic} from './magic';
 import {getRemovedSongs} from './removed-songs';
 import {getMaiToolsBaseUrl} from './script-host';
 import {getSongNickname} from './song-name-helper';
+import {MagicApi} from './infra/magic-api';
 
 export interface BasicSongProps {
   dx: ChartType;
@@ -239,7 +239,7 @@ export async function loadSongDatabase(
   gameVer: GameVersion,
   gameRegion: GameRegion
 ): Promise<SongDatabase> {
-  const songs = await loadMagic(gameVer);
+  const songs = await new MagicApi().loadMagic(gameVer);
   const songDatabase = new SongDatabase(gameVer, gameRegion);
   for (const song of songs) {
     songDatabase.insertOrUpdateSong(song, gameVer);
