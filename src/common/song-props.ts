@@ -19,11 +19,6 @@ export interface SongProperties extends BasicSongProps {
   lv: ReadonlyArray<number>;
 }
 
-type SongPropertiesOverride = BasicSongProps & {
-  debut?: number;
-  lv?: ReadonlyArray<number>;
-};
-
 export class SongDatabase {
   readonly gameVer: GameVersion | null;
   readonly region: GameRegion | null;
@@ -39,15 +34,10 @@ export class SongDatabase {
     this.verbose = verbose;
   }
 
-  insertOrUpdateSong(song: SongPropertiesOverride, gameVer: GameVersion) {
+  insertOrUpdateSong(song: SongProperties) {
     const map = song.dx === ChartType.DX ? this.dxMap : this.standardMap;
     if (this.updateSong(song)) {
       return;
-    }
-    // If debut is not set, set to current version.
-    // This ensure chart level overrides always associate with a game version.
-    if (!song.debut && song.debut !== 0) {
-      song.debut = gameVer;
     }
     const key = song.name === 'Link' ? song.nickname : song.name;
     if (song.ico) {
@@ -60,7 +50,7 @@ export class SongDatabase {
       console.warn(`Will ignore ${song}`);
       return;
     }
-    map.set(key, song as SongProperties);
+    map.set(key, song);
   }
 
   /**
@@ -174,7 +164,7 @@ export async function loadSongDatabase(
   const songs = await new MagicApi().loadMagic(gameVer);
   const songDatabase = new SongDatabase(gameVer, gameRegion);
   for (const song of songs) {
-    songDatabase.insertOrUpdateSong(song, gameVer);
+    songDatabase.insertOrUpdateSong(song);
   }
 
   const maiToolsApi = new MaiToolsApi(getMaiToolsBaseUrl());
@@ -183,7 +173,7 @@ export async function loadSongDatabase(
 
   console.log('chartLevelOverrides', chartLevelOverrides);
   for (const songProps of chartLevelOverrides) {
-    songDatabase.insertOrUpdateSong(songProps, gameVer);
+    songDatabase.insertOrUpdateSong(songProps);
   }
   console.log('regionOverrides', regionOverrides);
   for (const songProps of regionOverrides) {

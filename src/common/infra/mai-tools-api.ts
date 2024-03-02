@@ -8,9 +8,9 @@ export class MaiToolsApi {
   ) {
   }
 
-  async fetchChartLevelOverrides(gameVer: GameVersion) {
+  async fetchChartLevelOverrides(gameVer: GameVersion): Promise<SongProperties[]> {
     const data = await fetchJson(`${this.maiToolsBaseUrl}/data/chart-levels/version${gameVer}.json`);
-    const output: Pick<SongProperties, 'name' | 'dx' | 'lv'>[] = [];
+    const output: SongProperties[] = [];
     ['standard', 'dx'].forEach((chartType, index) => {
       if (!data[chartType]) {
         return;
@@ -19,6 +19,7 @@ export class MaiToolsApi {
         output.push({
           name: name,
           dx: index,
+          debut: gameVer,
           lv: data[chartType][name],
         });
       }
@@ -41,18 +42,12 @@ export class MaiToolsApi {
         const icoList = icosByVer[version] || [];
         const versionInt = parseInt(version);
         return songList.map((song, i) =>
-          i < icoList.length
-            ? {
-              name: song,
-              dx: index,
-              debut: versionInt,
-              ico: icoList[i],
-            }
-            : {
-              name: song,
-              dx: index,
-              debut: versionInt,
-            }
+          ({
+            name: song,
+            dx: index,
+            debut: versionInt,
+            ico: icoList.at(i),
+          })
         );
       });
     });
