@@ -5,6 +5,7 @@ import {getRemovedSongs} from './removed-songs';
 import {getMaiToolsBaseUrl} from './script-host';
 import {getSongNickname} from './song-name-helper';
 import {MagicApi} from './infra/magic-api';
+import {MaiToolsApi} from './infra/mai-tools-api';
 
 export interface BasicSongProps {
   dx: ChartType;
@@ -165,75 +166,6 @@ export class SongDatabase {
   }
 }
 
-async function fetchJson(url: string) {
-  let body = '';
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      return {};
-    }
-    body = await response.text();
-    return JSON.parse(body);
-  } catch (e) {
-    // Can be network error or parse error
-    console.warn(e);
-    console.warn('Failed to parse JSON: ' + body);
-  }
-  return {};
-}
-
-async function fetchChartLevelOverrides(gameVer: GameVersion) {
-  const url = getMaiToolsBaseUrl() + `/data/chart-levels/version${gameVer}.json`;
-  const data = await fetchJson(url);
-  const output: Pick<SongProperties, 'name' | 'dx' | 'lv'>[] = [];
-  ['standard', 'dx'].forEach((chartType, index) => {
-    if (!data[chartType]) {
-      return;
-    }
-    for (const name of Object.keys(data[chartType])) {
-      output.push({
-        name: name,
-        dx: index,
-        lv: data[chartType][name],
-      });
-    }
-  });
-  return output;
-}
-
-async function fetchRegionOverrides(
-  region: GameRegion
-): Promise<Pick<SongProperties, 'name' | 'dx' | 'debut' | 'dx'>[]> {
-  const url = getMaiToolsBaseUrl() + `/data/song-info/${region}.json`;
-  const data = await fetchJson(url);
-  return ['standard', 'dx'].flatMap((chartType, index) => {
-    const songsByVer: Record<string, string[]> = data[chartType];
-    if (!songsByVer) {
-      return;
-    }
-    const icosByVer: Record<string, string[]> = data[chartType + 'Ico'] || {};
-    return Object.keys(songsByVer).flatMap((version) => {
-      const songList = songsByVer[version];
-      const icoList = icosByVer[version] || [];
-      const versionInt = parseInt(version);
-      return songList.map((song, i) =>
-        i < icoList.length
-          ? {
-              name: song,
-              dx: index,
-              debut: versionInt,
-              ico: icoList[i],
-            }
-          : {
-              name: song,
-              dx: index,
-              debut: versionInt,
-            }
-      );
-    });
-  });
-}
-
 // TODO: accept overrides from rating calculator
 export async function loadSongDatabase(
   gameVer: GameVersion,
@@ -245,13 +177,14 @@ export async function loadSongDatabase(
     songDatabase.insertOrUpdateSong(song, gameVer);
   }
 
-  const chartLevelOverrides = await fetchChartLevelOverrides(gameVer);
+  const maiToolsApi = new MaiToolsApi(getMaiToolsBaseUrl());
+  const chartLevelOverrides = await maiToolsApi.fetchChartLevelOverrides(gameVer);
+  const regionOverrides = await maiToolsApi.fetchRegionOverrides(gameRegion);
+
   console.log('chartLevelOverrides', chartLevelOverrides);
   for (const songProps of chartLevelOverrides) {
     songDatabase.insertOrUpdateSong(songProps, gameVer);
   }
-
-  const regionOverrides = await fetchRegionOverrides(gameRegion);
   console.log('regionOverrides', regionOverrides);
   for (const songProps of regionOverrides) {
     songDatabase.updateSong(songProps);
