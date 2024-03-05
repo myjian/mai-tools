@@ -78,11 +78,11 @@ import {ALLOWED_ORIGINS} from '../common/util';
     return (e.querySelector('.playlog_notes_detail') as HTMLElement)
       .innerText
       .split('\n')
-      .map(s => s.replace(/\t/g, ' '))
       .map(s => s.trim())
-      .filter(s => s.length > 0)
-      .map(s => s.replace(/ /g, '-'))
-      .join('_');
+      .map(s => s.replace(/\t/g, '-'))
+      .join('_')
+      .replace(/^_+|_+$/g, '') // remove first & last underscores
+      ;
   }
 
   function getTrack(e: HTMLElement) {
