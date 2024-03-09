@@ -7,7 +7,7 @@ import {normalizeSongName} from '../song-name-helper';
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 1 day
 const CACHE_KEY_PREFIX = 'magicVer';
-const OLD_KEYS_TO_CLEANUP = ['dxLv15', 'dxLv16', 'dxLv17', 'dxLv18', 'dxLv19', 'dxLv20', 'magicExpire', 'magicVer12', 'magicVer13', 'magicVer18', 'magicVer19', 'magicVer20', 'magicVer21'];
+const OLD_KEYS_TO_CLEANUP = ['dxLv15', 'dxLv16', 'dxLv17', 'dxLv18', 'dxLv19', 'dxLv20', 'magicExpire'];
 
 const MagicSauce: Record<GameVersion, string> = {
   [GameVersion.FiNALE]: null,
