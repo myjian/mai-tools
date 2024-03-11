@@ -64,7 +64,7 @@ export class SongDatabaseFactory {
     if (this.updateSong(dxMap, standardMap, nameByIco, song)) {
       return;
     }
-    const key = song.nickname ?? song.name;
+    const key = song.name === 'Link' ? song.nickname : song.name;
     if (song.ico) {
       nameByIco.set(song.ico, key);
     }
