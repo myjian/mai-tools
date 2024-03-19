@@ -177,13 +177,6 @@ import {loadSongDatabase} from '../common/song-props';
     div.style.marginBottom = '16px';
     cache.div = div;
 
-    const fetchBtn = d.createElement('button');
-    fetchBtn.className = 'm_r_5';
-    fetchBtn.style.color = '#1477e6';
-    fetchBtn.append(UIString.fetch);
-    fetchBtn.addEventListener('click', handleStartDownload);
-    div.append(fetchBtn);
-
     const included = d.createElement('div');
     included.className = 'included p_10 m_10';
     included.append(UIString.include);
@@ -206,11 +199,11 @@ import {loadSongDatabase} from '../common/song-props';
     }
     div.append(excluded);
 
-    const tx = d.createElement('textarea');
-    tx.className = 'f_12';
-    tx.id = 'outputText';
-    tx.style.whiteSpace = 'pre';
-    div.append(tx);
+    const fetchBtn = d.createElement('button');
+    fetchBtn.className = 'm_r_5';
+    fetchBtn.innerText = UIString.fetch;
+    fetchBtn.addEventListener('click', handleStartDownload);
+    div.append(fetchBtn);
 
     const copyBtn = d.createElement('button');
     copyBtn.innerText = UIString.copy;
@@ -223,6 +216,12 @@ import {loadSongDatabase} from '../common/song-props';
       btn.style.padding = '8px 12px';
     }
     div.append(copyBtn);
+
+    const tx = d.createElement('textarea');
+    tx.className = 'f_12';
+    tx.id = 'outputText';
+    tx.style.whiteSpace = 'pre';
+    div.append(tx);
 
     copyBtn.addEventListener('click', () => {
       tx.select();
