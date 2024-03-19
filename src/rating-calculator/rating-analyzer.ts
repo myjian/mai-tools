@@ -52,7 +52,7 @@ export function analyzePlayerRating(
 ): RatingData {
   const newChartRecords = [];
   const oldChartRecords = [];
-  const removedSongs = getRemovedSongs(gameRegion);
+  const removedSongs = getRemovedSongs(gameRegion, gameVer);
   for (const record of playerScores) {
     if (removedSongs.includes(record.songName)) {
       continue;
