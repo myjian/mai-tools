@@ -68,6 +68,9 @@
   .ratingCell {
     width: 70px;
   }
+  .newRatingCell {
+    width: 65px;
+  }
 
   .songRecordCompactTableContainer .songTitleCell,
   .songRecordCompactTableContainer .chartTypeCell,
@@ -75,6 +78,9 @@
   .songRecordCompactTableContainer .achievementCell,
   .songRecordCompactTableContainer .rankCell,
   .songRecordCompactTableContainer .ratingCell {
+    width: unset;
+  }
+  .songRecordCompactTableContainer .newRatingCell {
     width: unset;
   }
 }
@@ -91,7 +97,9 @@ td.ratingCell,
 .candidateTable .ratingCell {
   text-align: center;
 }
-
+.candidateTable .newRatingCell {
+  text-align: center;
+}
 .songWikiLink {
   color: inherit;
   text-decoration: none;

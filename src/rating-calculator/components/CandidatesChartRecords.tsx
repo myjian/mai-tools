@@ -11,6 +11,7 @@ import {
   compareSongsByChartType,
   compareSongsByLevel,
   compareSongsByName,
+  compareSongsByNewRating,
   compareSongsByNextRank,
   compareSongsByNextRating,
 } from '../record-comparator';
@@ -32,6 +33,7 @@ const COLUMNS: ReadonlyArray<ColumnType> = [
   ColumnType.ACHIEVEMENT,
   ColumnType.NEXT_RANK,
   ColumnType.NEXT_RATING,
+  ColumnType.NEW_RATING,
 ];
 
 const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithRating) => number> =
@@ -42,6 +44,7 @@ const COMPARATOR: Map<ColumnType, (x: ChartRecordWithRating, y: ChartRecordWithR
     [ColumnType.ACHIEVEMENT, compareSongsByAchv],
     [ColumnType.NEXT_RANK, compareSongsByNextRank],
     [ColumnType.NEXT_RATING, compareSongsByNextRating],
+    [ColumnType.NEW_RATING, compareSongsByNewRating],
   ]);
 
 interface Props {

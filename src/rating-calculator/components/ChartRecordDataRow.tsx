@@ -69,6 +69,12 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
                 <div key={idx}>+{r.minRt.toFixed(0)}</div>
               ))
             : '';
+        case ColumnType.NEW_RATING:
+          return record.rating
+              ? Array.from(record.nextRanks.values()).map((r, idx) => (
+                  <div key={idx}>{(Math.floor(record.rating)+r.minRt).toFixed(0)}</div>
+              ))
+              : '';
         case ColumnType.RATING:
           return Math.floor(record.rating).toString();
       }

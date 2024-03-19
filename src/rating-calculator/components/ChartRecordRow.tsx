@@ -13,6 +13,7 @@ const SCORE_RECORD_CELL_CLASSNAMES = [
   ACHV_CELL_CLASSNAME,
   'rankCell',
   'ratingCell',
+  'newRatingCell',
 ];
 
 interface Props {

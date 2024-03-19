@@ -56,6 +56,18 @@ export function compareSongsByNextRating(
   );
 }
 
+export function compareSongsByNewRating(
+    record1: ChartRecordWithRating,
+    record2: ChartRecordWithRating
+) {
+  const newRating1 = Math.floor(record1.rating) + record1.nextRanks.values().next().value;
+  const newRating2 = Math.floor(record2.rating) + record2.nextRanks.values().next().value;
+  return (
+      compareNumbers(newRating1.minRt, newRating2.minRt) ||
+      compareSongsByNumAttr(record1, record2, 'level')
+  );
+}
+
 export function compareSongsByLevel(
   record1: ChartRecordWithRating,
   record2: ChartRecordWithRating
