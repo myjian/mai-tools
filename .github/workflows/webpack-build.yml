@@ -2,7 +2,7 @@ name: Build with webpack
 
 on:
   pull_request:
-    branches: [ "gh-pages" ]
+    branches: ['gh-pages']
   workflow_call:
 
 jobs:
@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: package.json
 
       - name: Build
         run: |
@@ -24,6 +24,6 @@ jobs:
           npm run build
 
       - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: build/
