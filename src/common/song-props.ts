@@ -257,7 +257,7 @@ export async function loadSongDatabase(
     songDatabase.updateSong(songProps);
   }
 
-  const removedSongs = getRemovedSongs(gameRegion);
+  const removedSongs = getRemovedSongs(gameRegion, gameVer);
   for (const songName of removedSongs) {
     songDatabase.deleteSong(songName);
   }
