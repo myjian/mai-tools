@@ -1,8 +1,6 @@
-Data
-====
+# Data
 
-chart-levels Schema
-----
+## chart-levels Schema
 
 Each JSON file in this folder represents data specific to the version.
 
@@ -10,17 +8,15 @@ Each JSON file in this folder represents data specific to the version.
   - Song name
     - Levels: An array of chart levels (BASIC, ADVANCED, EXPERT, MASTER, and Re:MASTER). If you don't know the exact level, please use negative number. For example, if you know a chart is 12.9, use 12.9. If you only know a chart is 12+, use -12.7. If you only know a chart is 12, use -12.
 
-song-info Schema
-----
+## song-info Schema
 
 Each JSON file in this folder represents data specific to the region.
 
 - Chart type: Either "dx" or "standard"
-  - Debut version: The version when the song was added. Please refer to src/common/game-version.ts for the version numbers.
+  - Debut version: The version when the song was added. Please refer to [src/common/game-version.ts](https://github.com/myjian/mai-tools/blob/gh-pages/src/common/game-version.ts) for the version numbers.
     - Song names: An array of song names
 
-Instructions
-----
+## Instructions
 
 Case 1: If a song belongs to a newer Japan version but is added to International version sooner, please update both chart-levels and song-info/intl.json. Examples:
 

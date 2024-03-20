@@ -39,7 +39,7 @@ export class RootComponent extends React.PureComponent<{}, State> {
     this.state = {
       lang,
       region,
-      version: GameVersion.FESTiVAL.toString(),
+      version: GameVersion.FESTiVAL_PLUS.toString(),
       friendIdx,
       playerName,
       progress: '',

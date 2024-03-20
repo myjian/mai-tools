@@ -1,3 +1,11 @@
+/**
+ * Checklist when adding new game version:
+ *   - Remove deleted songs from plate info
+ *   - Add deleted songs to src/common/removed-songs.ts
+ *   - Update default version in src/plate-progress/RootComponent.tsx
+ *   - Update PLATE_PREFIX in src/scripts/build-plate-info.ts
+ */
+
 const VERSION_NAMES = [
   'maimai', // 0
   'maimai PLUS',
