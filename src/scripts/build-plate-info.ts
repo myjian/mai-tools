@@ -27,6 +27,7 @@ const PLATE_PREFIX: Record<string | number, string> = {
   18: '星',
   19: '祭',
   20: '祝',
+  21: '双',
 };
 
 async function buildSongDb(versionName: string, platePrefix: string) {
