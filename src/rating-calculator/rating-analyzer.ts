@@ -2,7 +2,7 @@ import {ChartRecord} from '../common/chart-record';
 import {ChartType} from '../common/chart-type';
 import {GameRegion} from '../common/game-region';
 import {GameVersion} from '../common/game-version';
-import {getRankByAchievement, SSSPLUS_MIN_ACHIEVEMENT} from '../common/rank-functions';
+import {getRating} from '../common/rating-functions';
 import {getRemovedSongs} from '../common/removed-songs';
 import {SongDatabase, SongProperties} from '../common/song-props';
 import {compareSongsByRating} from './record-comparator';
@@ -10,16 +10,6 @@ import {ChartRecordWithRating, RatingData} from './types';
 
 export const NUM_TOP_NEW_CHARTS = 15;
 export const NUM_TOP_OLD_CHARTS = 35;
-
-function getScoreMultiplier(achievement: number) {
-  achievement = Math.min(achievement, SSSPLUS_MIN_ACHIEVEMENT);
-  const rank = getRankByAchievement(achievement);
-  if (!rank) {
-    console.warn(`Could not find rank for achievement ${achievement.toFixed(4)}%`);
-  }
-  const factor = rank ? rank.factor : 5;
-  return (factor * achievement) / 100;
-}
 
 /**
  * Compute rating value based on the chart level and player achievement.
@@ -38,7 +28,7 @@ function getRecordWithRating(
   }
   return {
     ...record,
-    rating: record.level * getScoreMultiplier(record.achievement),
+    rating: getRating(record.level, record.achievement),
   };
 }
 

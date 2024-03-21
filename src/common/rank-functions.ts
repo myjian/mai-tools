@@ -13,8 +13,6 @@ export interface RecommendedLevel {
   rating: number;
 }
 
-export const SSSPLUS_MIN_ACHIEVEMENT = 100.5;
-
 export const RANK_S: RankDef = {
   minAchv: 97.0,
   factor: 20,

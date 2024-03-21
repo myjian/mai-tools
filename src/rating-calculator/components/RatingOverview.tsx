@@ -2,9 +2,9 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
+import {getAvg} from '../../common/rating-functions';
 import {CommonMessages} from '../common-messages';
 import {getGradeByIndex} from '../grade';
-import {getAvg} from '../rating-functions';
 import {RatingData} from '../types';
 
 const MessagesByLang = {
