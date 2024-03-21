@@ -8,13 +8,17 @@ import {
 } from '../common/rank-functions';
 import {loadUserPreference, saveUserPreference, UserPreference} from '../common/user-preference';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-calculator/rating-analyzer';
+import {QueryParam} from "../common/query-params";
 
 const MIN_ACHIEVEMENT = 99;
 const DEFAULT_TARGET_RATING = 12000;
 
 export const RecommendedLevels = () => {
+  const queryParams = new URLSearchParams(location.search);
   const [targetRating, setTargetRating] = useState(
-    () => parseInt(loadUserPreference(UserPreference.TargetRating)) || DEFAULT_TARGET_RATING
+    () => parseInt(queryParams.get(QueryParam.TargetRating)) ||
+        parseInt(loadUserPreference(UserPreference.TargetRating)) ||
+        DEFAULT_TARGET_RATING
   );
   const handleTargetRatingChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const rating = parseInt(e.currentTarget.value);

@@ -25,4 +25,7 @@ export const enum QueryParam {
   FriendIdx = 'friendIdx',
   ChartType = 'ct',
   SongImage = 'si',
+
+  // For rating-visualizer
+  TargetRating = 'targetRating',
 }
