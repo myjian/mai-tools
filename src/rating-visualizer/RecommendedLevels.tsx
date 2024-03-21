@@ -16,8 +16,8 @@ const DEFAULT_TARGET_RATING = 12000;
 export const RecommendedLevels = () => {
   const queryParams = new URLSearchParams(location.search);
   const [targetRating, setTargetRating] = useState(
-    () => parseInt(loadUserPreference(UserPreference.TargetRating)) ||
-        parseInt(queryParams.get(QueryParam.TargetRating)) ||
+    () => parseInt(queryParams.get(QueryParam.TargetRating)) ||
+        parseInt(loadUserPreference(UserPreference.TargetRating)) ||
         DEFAULT_TARGET_RATING
   );
   const handleTargetRatingChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
