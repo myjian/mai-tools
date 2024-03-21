@@ -8,7 +8,7 @@ import {GameVersion} from './game-version';
  */
 export function getRemovedSongs(gameRegion: GameRegion, gameVersion: GameVersion): string[] {
   if (gameRegion === GameRegion.Jp) {
-    if (gameVersion > GameVersion.BUDDIES) {
+    if (gameVersion > GameVersion.BUDDiES) {
       return [
         '全世界共通リズム感テスト',
         '君の知らない物語',
