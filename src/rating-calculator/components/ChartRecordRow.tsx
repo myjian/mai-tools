@@ -5,15 +5,17 @@ import {ColumnType} from '../types';
 const SCORE_RECORD_ROW_CLASSNAME = 'scoreRecordRow';
 const SCORE_RECORD_CELL_BASE_CLASSNAME = 'scoreRecordCell';
 const ACHV_CELL_CLASSNAME = 'achievementCell';
-const SCORE_RECORD_CELL_CLASSNAMES = [
-  'orderCell',
-  'songTitleCell',
-  'chartTypeCell',
-  'levelCell',
-  ACHV_CELL_CLASSNAME,
-  'rankCell',
-  'ratingCell',
-];
+const SCORE_RECORD_CELL_CLASSNAMES: Record<ColumnType, string> = {
+  [ColumnType.NO]: 'orderCell',
+  [ColumnType.SONG_TITLE]: 'songTitleCell',
+  [ColumnType.CHART_TYPE]: 'chartTypeCell',
+  [ColumnType.LEVEL]: 'levelCell',
+  [ColumnType.ACHIEVEMENT]: ACHV_CELL_CLASSNAME,
+  [ColumnType.RANK]: 'rankCell',
+  [ColumnType.NEXT_RANK]: 'rankCell',
+  [ColumnType.RATING]: 'ratingCell',
+  [ColumnType.NEXT_RATING]: 'ratingCell',
+};
 
 interface Props {
   className?: string;
@@ -32,7 +34,7 @@ export class ChartRecordRow extends React.PureComponent<Props> {
     return (
       <tr className={className}>
         {columns.map((v, index) => {
-          const columnClassName = SCORE_RECORD_CELL_CLASSNAMES[index];
+          const columnClassName = SCORE_RECORD_CELL_CLASSNAMES[v];
           let className = SCORE_RECORD_CELL_BASE_CLASSNAME + ' ' + columnClassName;
           const children = renderCell(v);
           const clickProps = onClickCell
