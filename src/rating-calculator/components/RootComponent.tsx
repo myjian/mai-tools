@@ -60,9 +60,9 @@ export class RootComponent extends React.PureComponent<{}, State> {
   constructor(props: {}) {
     super(props);
     const queryParams = new URLSearchParams(location.search);
-    const dxVersionQueryParam = queryParams.get(QueryParam.GameVersion);
+    const gameVerParam = queryParams.get(QueryParam.GameVersion);
     const gameVer = validateGameVersion(
-      dxVersionQueryParam,
+      gameVerParam,
       RATING_CALCULATOR_SUPPORTED_VERSIONS[0],
       RATING_CALCULATOR_SUPPORTED_VERSIONS[RATING_CALCULATOR_SUPPORTED_VERSIONS.length - 1]
     );
