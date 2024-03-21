@@ -2,10 +2,10 @@ import React, {useCallback, useState} from 'react';
 
 import {Language} from '../../common/lang';
 import {useLanguage} from '../../common/lang-react';
+import {getAvg} from '../../common/rating-functions';
 import {SongDatabase} from '../../common/song-props';
 import {CommonMessages} from '../common-messages';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-analyzer';
-import {getAvg} from '../rating-functions';
 import {RatingData} from '../types';
 import {CollapsibleSectionTitle} from './CollapsibleSectionTitle';
 import {TopChartRecords} from './TopChartRecords';

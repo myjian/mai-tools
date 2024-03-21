@@ -1,6 +1,6 @@
-import {compareNumber} from '../common/number-helper';
-import {getRankDefinitions, RANK_SSS_PLUS, RankDef} from '../common/rank-functions';
-import {SongProperties} from '../common/song-props';
+import {compareNumber} from './number-helper';
+import {getRankByAchievement, getRankDefinitions, RANK_SSS_PLUS, RankDef} from './rank-functions';
+import {SongProperties} from './song-props';
 
 export function calculateRatingRange(lv: number, rank: RankDef) {
   const rankDefs = getRankDefinitions();
@@ -30,4 +30,13 @@ export function calculateFullRating(songs: ReadonlyArray<SongProperties>, count:
 
 export function getAvg(sum: number, count: number) {
   return count ? (sum / count).toFixed(0) : 0;
+}
+
+export function getRating(level: number, achv: number) {
+  const achievement = Math.min(achv, RANK_SSS_PLUS.minAchv);
+  const rank = getRankByAchievement(achievement);
+  if (!rank) {
+    console.warn(`Could not find rank for achievement ${achievement.toFixed(4)}%`);
+  }
+  return rank ? (level * rank.factor * achievement) / 100 : 0;
 }

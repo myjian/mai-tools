@@ -234,6 +234,19 @@ body {
   padding-bottom: 6px;
 }
 
+.calculatorTable {
+  width: 99%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-left: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.calculatorTable input {
+  width: 90%;
+}
+
 .lookupTable {
   width: 99%;
   table-layout: fixed;

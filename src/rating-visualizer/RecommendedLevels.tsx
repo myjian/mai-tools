@@ -1,20 +1,39 @@
 import React, {useState} from 'react';
 
 import {RecommendedLevelRow} from '../common/components/RecommendedLevelRow';
+import {Language} from '../common/lang';
+import {useLanguage} from '../common/lang-react';
 import {
   calcRecommendedLevels,
   getRankDefinitions,
   getRankIndexByAchievement,
 } from '../common/rank-functions';
 import {loadUserPreference, saveUserPreference, UserPreference} from '../common/user-preference';
+import {CommonMessages} from '../rating-calculator/common-messages';
 import {NUM_TOP_NEW_CHARTS, NUM_TOP_OLD_CHARTS} from '../rating-calculator/rating-analyzer';
+import {QueryParam} from "../common/query-params";
 
 const MIN_ACHIEVEMENT = 99;
 const DEFAULT_TARGET_RATING = 12000;
 
+const MessagesByLang = {
+  [Language.en_US]: {
+    target: 'Target',
+  },
+  [Language.ko_KR]: {
+    target: '과녁',
+  },
+  [Language.zh_TW]: {
+    target: '目標',
+  },
+};
+
 export const RecommendedLevels = () => {
+  const queryParams = new URLSearchParams(location.search);
   const [targetRating, setTargetRating] = useState(
-    () => parseInt(loadUserPreference(UserPreference.TargetRating)) || DEFAULT_TARGET_RATING
+    () => parseInt(queryParams.get(QueryParam.TargetRating)) ||
+        parseInt(loadUserPreference(UserPreference.TargetRating)) ||
+        DEFAULT_TARGET_RATING
   );
   const handleTargetRatingChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const rating = parseInt(e.currentTarget.value);
@@ -24,6 +43,9 @@ export const RecommendedLevels = () => {
     saveUserPreference(UserPreference.TargetRating, rating.toFixed(0));
     setTargetRating(rating);
   };
+  const lang = useLanguage();
+  const messages = MessagesByLang[lang];
+  const commonMessages = CommonMessages[lang];
 
   const targetRatingPerSong = Math.ceil(targetRating / (NUM_TOP_NEW_CHARTS + NUM_TOP_OLD_CHARTS));
   const ranks = getRankDefinitions().slice(0, getRankIndexByAchievement(MIN_ACHIEVEMENT) + 1);
@@ -31,7 +53,7 @@ export const RecommendedLevels = () => {
   return (
     <div className="suggestLvByRating">
       <label className="targetRatingLabel">
-        Target Rating:{' '}
+        {messages.target}:{' '}
         <input
           className="targetRating"
           onChange={handleTargetRatingChange}
@@ -42,10 +64,10 @@ export const RecommendedLevels = () => {
       <table className="lookupTable recLvTable">
         <thead className="lookupTableHead">
           <tr>
-            <th>Level</th>
-            <th>Rank</th>
-            <th>Achv</th>
-            <th>Rating</th>
+            <th>{commonMessages.level}</th>
+            <th>{commonMessages.rank}</th>
+            <th>{commonMessages.achievementAbbr}</th>
+            <th>{commonMessages.rating}</th>
           </tr>
         </thead>
         <tbody>
