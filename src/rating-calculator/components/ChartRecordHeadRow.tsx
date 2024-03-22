@@ -39,7 +39,6 @@ function getColumnTitle(lang: Language, col: ColumnType): string {
     [ColumnType.RATING]: CommonMessages[lang].rating,
     [ColumnType.NEXT_RANK]: messages.nextGoal,
     [ColumnType.NEXT_RATING]: messages.nextRating,
-    [ColumnType.NEW_RATING]: CommonMessages[lang].rating,
   }[col];
 }
 

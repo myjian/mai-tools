@@ -66,21 +66,10 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
         case ColumnType.NEXT_RATING:
           return record.nextRanks
             ? Array.from(record.nextRanks.values()).map((r, idx) => (
-                <div key={idx}>+{r.minRt.toFixed(0)}</div>
+                <div key={idx}>{Math.floor(record.level*r.rank.factor*(r.rank.minAchv/100)).toFixed(0)}
+                  (+{r.minRt.toFixed(0)})</div>
               ))
             : '';
-        case ColumnType.NEW_RATING:
-          return record.rating
-            //Used in calculating rating on played charts
-            ? Array.from(record.nextRanks.values()).map((r, idx) => (
-                <div key={idx}>{(Math.floor(record.rating)+r.minRt).toFixed(0)}</div>
-            ))
-            : record.nextRanks
-              //Used in calculating rating on not yet played charts
-              ? Array.from(record.nextRanks.values()).map((r, idx) => (
-                  <div key={idx}>{Math.floor(record.level*r.rank.factor*(r.rank.minAchv/100)).toFixed(0)}</div>
-              ))
-              : '';
         case ColumnType.RATING:
           return Math.floor(record.rating).toString();
       }

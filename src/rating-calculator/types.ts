@@ -29,5 +29,4 @@ export const enum ColumnType {
   NEXT_RANK,
   RATING,
   NEXT_RATING,
-  NEW_RATING,
 }
