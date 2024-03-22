@@ -5,7 +5,6 @@ import {ColumnType} from '../types';
 const SCORE_RECORD_ROW_CLASSNAME = 'scoreRecordRow';
 const SCORE_RECORD_CELL_BASE_CLASSNAME = 'scoreRecordCell';
 const ACHV_CELL_CLASSNAME = 'achievementCell';
-
 const SCORE_RECORD_CELL_CLASSNAMES: Record<ColumnType, string> = {
   [ColumnType.NO]: 'orderCell',
   [ColumnType.SONG_TITLE]: 'songTitleCell',
