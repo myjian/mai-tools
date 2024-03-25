@@ -42,7 +42,7 @@ export const enum GameVersion {
   BUDDiES_PLUS = 22,
 }
 
-export const LATEST_VERSION = GameVersion.BUDDiES;
+export const LATEST_VERSION = GameVersion.BUDDiES_PLUS;
 
 export const RATING_CALCULATOR_SUPPORTED_VERSIONS = [
   GameVersion.UNIVERSE_PLUS,
