@@ -68,6 +68,9 @@
   .ratingCell {
     width: 70px;
   }
+  .nextRatingCell {
+    width: 105px;
+  }
 
   .songRecordCompactTableContainer .songTitleCell,
   .songRecordCompactTableContainer .chartTypeCell,
@@ -82,6 +85,10 @@
 td.orderCell,
 td.achievementCell {
   text-align: right;
+}
+
+td.nextRatingCell {
+  text-align: left;
 }
 
 td.chartTypeCell,

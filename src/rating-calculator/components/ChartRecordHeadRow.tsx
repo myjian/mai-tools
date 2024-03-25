@@ -11,19 +11,16 @@ const MessagesByLang = {
     num: '#',
     song: 'Song',
     nextGoal: 'Next Goal',
-    nextRating: '+Rating',
   },
   [Language.zh_TW]: {
     num: '#',
     song: '歌曲',
     nextGoal: '下個\n目標',
-    nextRating: 'R 值\n加分',
   },
   [Language.ko_KR]: {
     num: '#',
     song: '노래',
     nextGoal: '다음 목표',
-    nextRating: '+레이팅',
   },
 };
 
@@ -38,7 +35,7 @@ function getColumnTitle(lang: Language, col: ColumnType): string {
     [ColumnType.RANK]: CommonMessages[lang].rank,
     [ColumnType.RATING]: CommonMessages[lang].rating,
     [ColumnType.NEXT_RANK]: messages.nextGoal,
-    [ColumnType.NEXT_RATING]: messages.nextRating,
+    [ColumnType.NEXT_RATING]: CommonMessages[lang].rating,
   }[col];
 }
 

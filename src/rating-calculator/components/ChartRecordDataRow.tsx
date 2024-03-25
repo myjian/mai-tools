@@ -66,7 +66,8 @@ export const ChartRecordDataRow = React.memo((props: Props) => {
         case ColumnType.NEXT_RATING:
           return record.nextRanks
             ? Array.from(record.nextRanks.values()).map((r, idx) => (
-                <div key={idx}>+{r.minRt.toFixed(0)}</div>
+                <div key={idx}>{Math.floor(record.level*r.rank.factor*(r.rank.minAchv/100)).toFixed(0)}
+                  {' '}(+{r.minRt.toFixed(0)})</div>
               ))
             : '';
         case ColumnType.RATING:
