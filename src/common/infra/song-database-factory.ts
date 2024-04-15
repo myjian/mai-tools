@@ -1,10 +1,10 @@
 import {ChartType} from '../chart-type';
 import {GameRegion} from '../game-region';
 import {GameVersion, LATEST_VERSION} from '../game-version';
-import {MagicApi} from '../infra/magic-api';
-import {MaiToolsApi} from '../infra/mai-tools-api';
 import {getRemovedSongs} from '../removed-songs';
 import {SongDatabase, SongProperties} from '../song-props';
+import {MagicApi} from './magic-api';
+import {MaiToolsApi} from './mai-tools-api';
 
 export class SongDatabaseFactory {
   constructor(private readonly maiToolsApi: MaiToolsApi, private readonly magicApi: MagicApi) {}

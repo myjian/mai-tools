@@ -1,9 +1,9 @@
-import {SongDatabaseFactory} from './application/song-database-factory';
 import {ChartType} from './chart-type';
 import {GameRegion} from './game-region';
 import {GameVersion} from './game-version';
 import {MagicApi} from './infra/magic-api';
 import {MaiToolsApi} from './infra/mai-tools-api';
+import {SongDatabaseFactory} from './infra/song-database-factory';
 import {getMaiToolsBaseUrl} from './script-host';
 import {getSongNickname} from './song-name-helper';
 
