@@ -1,22 +1,15 @@
-import {MaiToolsApi} from '../infra/mai-tools-api';
-import {MagicApi} from '../infra/magic-api';
-import {GameVersion, LATEST_VERSION} from '../game-version';
-import {GameRegion} from '../game-region';
-import {SongDatabase, SongProperties} from '../song-props';
-import {getRemovedSongs} from '../removed-songs';
 import {ChartType} from '../chart-type';
+import {GameRegion} from '../game-region';
+import {GameVersion, LATEST_VERSION} from '../game-version';
+import {MagicApi} from '../infra/magic-api';
+import {MaiToolsApi} from '../infra/mai-tools-api';
+import {getRemovedSongs} from '../removed-songs';
+import {SongDatabase, SongProperties} from '../song-props';
 
 export class SongDatabaseFactory {
-  constructor(
-    private readonly maiToolsApi: MaiToolsApi,
-    private readonly magicApi: MagicApi,
-  ) {
-  }
+  constructor(private readonly maiToolsApi: MaiToolsApi, private readonly magicApi: MagicApi) {}
 
-  async create(
-    gameVer: GameVersion,
-    gameRegion: GameRegion,
-  ): Promise<SongDatabase> {
+  async create(gameVer: GameVersion, gameRegion: GameRegion): Promise<SongDatabase> {
     const dxMap = new Map<string, SongProperties>();
     const standardMap = new Map<string, SongProperties>();
     const nameByIco = new Map<string, string>();
@@ -38,27 +31,20 @@ export class SongDatabaseFactory {
       this.updateSong(dxMap, standardMap, nameByIco, songProps);
     }
 
-    const removedSongs = getRemovedSongs(gameRegion);
+    const removedSongs = getRemovedSongs(gameRegion, gameVer);
     for (const songName of removedSongs) {
       this.deleteSong(dxMap, standardMap, songName);
     }
 
     this.validate(dxMap, standardMap);
-    return new SongDatabase(
-      gameVer,
-      gameRegion,
-      true,
-      dxMap,
-      standardMap,
-      nameByIco,
-    );
+    return new SongDatabase(gameVer, gameRegion, true, dxMap, standardMap, nameByIco);
   }
 
   private insertOrUpdateSong(
     dxMap: Map<string, SongProperties>,
     standardMap: Map<string, SongProperties>,
     nameByIco: Map<string, string>,
-    song: SongProperties,
+    song: SongProperties
   ) {
     const map = song.dx === ChartType.DX ? dxMap : standardMap;
     if (this.updateSong(dxMap, standardMap, nameByIco, song)) {
@@ -85,7 +71,7 @@ export class SongDatabaseFactory {
     dxMap: Map<string, SongProperties>,
     standardMap: Map<string, SongProperties>,
     nameByIco: Map<string, string>,
-    update: Partial<SongProperties>,
+    update: Partial<SongProperties>
   ): boolean {
     const map = update.dx === ChartType.DX ? dxMap : standardMap;
     const key = map.has(update.name) ? update.name : update.nickname;
@@ -111,17 +97,14 @@ export class SongDatabaseFactory {
   private deleteSong(
     dxMap: Map<string, SongProperties>,
     standardMap: Map<string, SongProperties>,
-    name: string,
+    name: string
   ) {
     dxMap.delete(name);
     standardMap.delete(name);
   }
 
   // validation: every song must have debut and lv
-  private validate(
-    dxMap: Map<string, SongProperties>,
-    standardMap: Map<string, SongProperties>,
-  ) {
+  private validate(dxMap: Map<string, SongProperties>, standardMap: Map<string, SongProperties>) {
     for (const map of [dxMap, standardMap]) {
       map.forEach((song) => {
         console.assert(song.debut != null);
@@ -130,6 +113,4 @@ export class SongDatabaseFactory {
       });
     }
   }
-
-
 }

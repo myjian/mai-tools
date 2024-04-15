@@ -1,25 +1,45 @@
-import {GameVersion} from '../game-version';
-import {SongProperties} from '../song-props';
 import {DIFFICULTIES} from '../difficulties';
-import {cached, expireCache} from '../util';
+import {GameVersion} from '../game-version';
 import {normalizeSongName} from '../song-name-helper';
-
+import {SongProperties} from '../song-props';
+import {cached, expireCache} from '../util';
 
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 1 day
 const CACHE_KEY_PREFIX = 'magicVer';
-const OLD_KEYS_TO_CLEANUP = ['dxLv15', 'dxLv16', 'dxLv17', 'dxLv18', 'dxLv19', 'dxLv20', 'magicExpire'];
+const OLD_KEYS_TO_CLEANUP = [
+  'dxLv15',
+  'dxLv16',
+  'dxLv17',
+  'dxLv18',
+  'dxLv19',
+  'dxLv20',
+  'magicExpire',
+];
 
 const MagicSauce: Record<GameVersion, string> = {
   [GameVersion.FiNALE]: null,
   [GameVersion.DX]: null,
   [GameVersion.UNIVERSE_PLUS]:
-    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZWU1NjlkNzRmNDIyZDRlMjU1MDY1ZDhiMDJlYTI5NGEvcmF3LzkzMmZiMDNhMzgxMjEyMTAwODBkNmY1Mzc5MTNhMDg0MjQ3ZTUzMWMvbWFpZHhfaW5fbHZfdW5pdmVyc2VwbHVzLmpz',
+    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZWU1NjlkNzRmNDIyZDRlMjU1MDY1ZDhiMDJlYTI5NGEvcmF3Lw==',
   [GameVersion.FESTiVAL]:
-    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vMDg1NWM4OTQ3YjU0N2Q3YjliODg4MTU4NTEyZGRlNjkvcmF3LzFlZWIwNzRkMzkzNjc3NDhhZjQwZmIxYTlkZDRhMTZiNDJmOTliNmIvbWFpZHhfaW5fbHZfZmVzdGl2YWwuanM=',
+    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vMDg1NWM4OTQ3YjU0N2Q3YjliODg4MTU4NTEyZGRlNjkvcmF3Lw==',
   [GameVersion.FESTiVAL_PLUS]:
-    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vYWQyNjg1ODcyZmQ3ZjVjZDdhNDdlY2IzNDA1MTRlNmIvcmF3Lzk5NjE3NDhkM2M0ODFlZjQ5NWNmZTNkMDgwMzkyYWI4NjI5NWNlOWMvbWFpZHhfaW5fbHZfZmVzdGl2YWxwbHVzLmpz',
-  [GameVersion.BUDDIES]:
-    'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfYnVkZGllcy5qcw==',
+    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vYWQyNjg1ODcyZmQ3ZjVjZDdhNDdlY2IzNDA1MTRlNmIvcmF3Lw==',
+  [GameVersion.BUDDiES]:
+    'aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9teWppYW4vZThkOGJiMjcyZjMyYzJjOGE2ODU0MTQzZGUxY2FhZDEvcmF3Lw==',
+  [GameVersion.BUDDiES_PLUS]:
+    'aHR0cHM6Ly9zZ2ltZXJhLmdpdGh1Yi5pby9tYWlfUmF0aW5nQW5hbHl6ZXIvc2NyaXB0c19tYWltYWkvbWFpZHhfaW5fbHZfYnVkZGllc3BsdXMuanM=',
+};
+
+// If the value is true, we assume it is SongProperties[] stored as JSON.
+const MagicIsParsed: Record<GameVersion, boolean> = {
+  [GameVersion.FiNALE]: false,
+  [GameVersion.DX]: false,
+  [GameVersion.UNIVERSE_PLUS]: false,
+  [GameVersion.FESTiVAL]: false,
+  [GameVersion.FESTiVAL_PLUS]: false,
+  [GameVersion.BUDDiES]: true,
+  [GameVersion.BUDDiES_PLUS]: false,
 };
 
 const DX_REGEX = /\bdx\s*:\s*([0-9]+)/;
@@ -30,7 +50,6 @@ const SONGNICKNAME_REGEX = /\bnn\s*:\s*["'`](.+?)["'`]\s*[,\}]/;
 const ICO_REGEX = /\bico\s*:\s*["`]([0-9a-z]+)["`]/;
 
 export class MagicApi {
-
   /**
    * Parse song properties from text.
    *
@@ -70,22 +89,23 @@ export class MagicApi {
   private async fetchMagic(gameVer: GameVersion): Promise<SongProperties[]> {
     const sauce = MagicSauce[gameVer] || MagicSauce[GameVersion.UNIVERSE_PLUS];
     const res = await fetch(atob(sauce));
-    if (res.ok) {
-      const text = await res.text();
-      return text
-        .split('\n')
-        .map(this.parseLine)
-        .filter((props) => props != null);
+    if (!res.ok) {
+      return [];
     }
-    return [];
+    if (MagicIsParsed[gameVer]) {
+      return await res.json();
+    }
+    const text = await res.text();
+    return text
+      .split('\n')
+      .map(this.parseLine)
+      .filter((props) => props != null);
   }
 
   async loadMagic(gameVer: GameVersion): Promise<SongProperties[]> {
     // console.log('Magic happening...');
-    const songs = await cached(
-      CACHE_KEY_PREFIX + gameVer,
-      CACHE_DURATION,
-      () => this.fetchMagic(gameVer)
+    const songs = await cached(CACHE_KEY_PREFIX + gameVer, CACHE_DURATION, () =>
+      this.fetchMagic(gameVer)
     );
     if (!songs.length) {
       expireCache(CACHE_KEY_PREFIX + gameVer);
@@ -94,4 +114,3 @@ export class MagicApi {
     return songs;
   }
 }
-

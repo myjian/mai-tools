@@ -3,6 +3,7 @@ import {Difficulty} from '../common/difficulties';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {fetchScores, fetchScoresFull, SELF_SCORE_URLS} from '../common/fetch-self-score';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
+import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
@@ -45,6 +46,7 @@ declare global {
    * @return the Document of BASIC song scores page. (this is later used to get all songs)
    */
   async function fetchSelfRecords(
+    gameVer: GameVersion,
     send: (action: string, payload: unknown) => void,
     fullRecords: boolean = false
   ): Promise<Document> {
@@ -63,7 +65,7 @@ declare global {
         await (fullRecords ? fetchScoresFull : fetchScores)(
           difficulty,
           domCache,
-          new SongDatabase(null, null, false)
+          new SongDatabase(gameVer, null, false)
         )
       );
     }
@@ -144,13 +146,13 @@ declare global {
             if (typeof evt.data.payload === 'string') {
               LANG = evt.data.payload as Language;
             }
-            allSongsDom = fetchSelfRecords(send);
+            allSongsDom = fetchSelfRecords(await gameVerPromise, send);
             allSongsDom.then(fetchAllSongs).then((songs) => send('allSongs', songs));
           } else if (evt.data.action === 'fetchScoresFull') {
             if (typeof evt.data.payload === 'string') {
               LANG = evt.data.payload as Language;
             }
-            allSongsDom = fetchSelfRecords(send, true);
+            allSongsDom = fetchSelfRecords(await gameVerPromise, send, true);
           } else if (evt.data.action === 'saveLanguage') {
             LANG = evt.data.payload as Language;
             saveLanguage(LANG);

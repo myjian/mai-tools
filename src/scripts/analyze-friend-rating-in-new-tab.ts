@@ -6,6 +6,7 @@ import {
 } from '../common/fetch-friend-score';
 import {getPlayerGrade, getPlayerName} from '../common/fetch-score-util';
 import {getGameRegionFromOrigin, isMaimaiNetOrigin} from '../common/game-region';
+import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language, saveLanguage} from '../common/lang';
 import {fetchGameVersion} from '../common/net-helpers';
 import {QueryParam} from '../common/query-params';
@@ -109,6 +110,7 @@ type FriendInfo = {
   }
 
   async function fetchFriendRecords(
+    gameVer: GameVersion,
     friend: FriendInfo,
     full: boolean,
     send: (action: string, payload: unknown) => void
@@ -126,7 +128,7 @@ type FriendInfo = {
           await (full ? fetchFriendScoresFull : fetchFriendScores)(
             friend.idx,
             difficulty,
-            new SongDatabase(null, null, false)
+            new SongDatabase(gameVer, null, false)
           )
         );
       }
@@ -194,10 +196,11 @@ type FriendInfo = {
         }
 
         if (evt.data.action === 'getFriendRecords') {
-          send('gameVersion', await gameVerPromise);
+          const gameVer = await gameVerPromise;
+          send('gameVersion', gameVer);
           const friend = friends_cache[evt.data.payload];
           if (friend) {
-            fetchFriendRecords(friend, false, send);
+            fetchFriendRecords(gameVer, friend, false, send);
             fetchAllSongs().then((songs) => {
               send('allSongs', songs);
             });
@@ -205,7 +208,7 @@ type FriendInfo = {
         } else if (evt.data.action === 'fetchFriendScoresFull') {
           const friend = friends_cache[evt.data.payload];
           if (friend) {
-            fetchFriendRecords(friend, true, send);
+            fetchFriendRecords(await gameVerPromise, friend, true, send);
           }
         } else if (evt.data.action === 'saveLanguage') {
           LANG = evt.data.payload as Language;
