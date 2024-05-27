@@ -73,9 +73,8 @@ export const DifficultyDistribution = ({chartRecords, topChartsCount}: Props) =>
                 rowHead={getDifficultyName(d)}
                 columns={chartTypeNames}
                 rankDist={dist}
-                rowClassname={getDifficultyClassName(d)}
                 baseCellClassname={DIFF_RANK_CELL_BASE_CLASSNAME}
-                perColumnClassnames={[]}
+                perColumnClassnames={[getDifficultyClassName(d)]}
               />
             );
           })}
