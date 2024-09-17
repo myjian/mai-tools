@@ -15,7 +15,7 @@ const PLATE_PREFIX: Record<string | number, string> = {
   6: '桃',
   7: '櫻',
   8: '紫',
-  9: '堇',
+  9: '菫',
   10: '白',
   11: '雪',
   12: '輝',
@@ -37,7 +37,7 @@ async function buildSongDb(versionName: string, platePrefix: string) {
     version_name: versionName,
     plate_name: {
       FC: `${platePrefix}極`,
-      SSS: `${platePrefix}將`,
+      SSS: `${platePrefix}将`,
       AP: `${platePrefix}神`,
       FSD: `${platePrefix}舞舞`,
     },
