@@ -28,32 +28,32 @@ import {handleError} from '../common/util';
   const path = d.location.pathname;
   if (path === '/maimai-mobile/record/') {
     import('./recent-play-downloader');
-  } else if (path.indexOf('/maimai-mobile/record/playlogDetail/') >= 0) {
+  } else if (path.startsWith('/maimai-mobile/record/playlogDetail/')) {
     import('./score-converter');
     import('./play-record-helper');
-  } else if (path.indexOf('/maimai-mobile/record/musicDetail/') >= 0) {
+  } else if (path.startsWith('/maimai-mobile/record/musicDetail/')) {
     removeScrollControl(d);
     import('./song-detail-helper');
-  } else if (path.indexOf('/maimai-mobile/record/music') >= 0) {
+  } else if (path.startsWith('/maimai-mobile/record/music')) {
     import('./score-sort');
-  } else if (path.indexOf('/maimai-mobile/friend/') >= 0) {
+  } else if (path.startsWith('/maimai-mobile/friend/')) {
     import('./analyze-friend-rating-in-new-tab');
-    if (path.indexOf('/maimai-mobile/friend/friendDetail/') >= 0) {
+    if (path.startsWith('/maimai-mobile/friend/friendDetail/')) {
       import('./score-download');
     }
     if (
-      path.indexOf('/maimai-mobile/friend/friendGenreVs/battleStart/') >= 0 ||
-      path.indexOf('/maimai-mobile/friend/friendLevelVs/battleStart/') >= 0
+      path.startsWith('/maimai-mobile/friend/friendGenreVs/battleStart/') ||
+      path.startsWith('/maimai-mobile/friend/friendLevelVs/battleStart/')
     ) {
       import('./score-sort');
     }
-  } else if (path.indexOf('/maimai-mobile/home/') >= 0 || path === '/maimai-mobile/playerData/') {
+  } else if (path === '/maimai-mobile/home/' || path === '/maimai-mobile/playerData/') {
     removeScrollControl(d);
     import('./score-download');
     import('./analyze-rating-in-newtab');
   } else if (
-    path.indexOf('/maimai-mobile/photo/') >= 0 ||
-    path.indexOf('/maimai-mobile/playerData/photo/') >= 0
+    path.startsWith('/maimai-mobile/photo/') ||
+    path.startsWith('/maimai-mobile/playerData/photo/')
   ) {
     import('./album-download-helper');
   }
