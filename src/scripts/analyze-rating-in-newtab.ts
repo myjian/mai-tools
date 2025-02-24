@@ -24,7 +24,7 @@ import {QueryParam} from '../common/query-params';
 import {statusText} from '../common/score-fetch-progress';
 import {getScriptHost} from '../common/script-host';
 import {
-  getLinkGenre,
+  fetchSongGenre,
   getSongIdx,
   getSongNickname,
   getSongNicknameWithChartType,
@@ -101,12 +101,12 @@ declare global {
     for (const row of rows) {
       const idx = getSongIdx(row);
       if (!idx) {
-        // Note: we cannot use songName to determine whether to skip this row.
+        // Note: we cannot use song name to determine whether to skip this row.
         // as there is a song whose name is empty.
         continue;
       }
       const songName = getSongName(row);
-      const genre = songName === 'Link' ? await getLinkGenre(idx) : '';
+      const genre = songName === 'Link' ? await fetchSongGenre(idx) : '';
       const difficulty = getChartDifficulty(row);
       const chartType = getChartType(row);
 

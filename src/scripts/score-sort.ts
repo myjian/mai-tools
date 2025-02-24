@@ -19,7 +19,7 @@ import {
   getOfficialLevel,
 } from '../common/level-helper';
 import {fetchGameVersion, fetchPage} from '../common/net-helpers';
-import {getLinkGenre, getSongIdx} from '../common/song-name-helper';
+import {fetchSongGenre, getCachedSongGenre, getSongIdx} from '../common/song-name-helper';
 import {loadSongDatabase, SongDatabase, SongProperties} from '../common/song-props';
 
 const enum SortBy {
@@ -49,8 +49,6 @@ const enum SectionHeadStyle {
 
 type Cache = {
   songDb?: SongDatabase;
-  nicoLinkIdx?: string;
-  originalLinkIdx?: string;
 };
 
 (function (d) {
@@ -286,16 +284,15 @@ type Cache = {
     const t = getChartType(row);
     const lvIndex = DIFFICULTIES.indexOf(getChartDifficulty(row));
     let props: SongProperties | undefined;
-    if (name === 'Link') {
-      const idx = isFriendScore ? null : getSongIdx(row);
-      if (cache.nicoLinkIdx === idx) {
-        props = songDb.getSongProperties(name, 'niconico', t);
-      } else if (cache.originalLinkIdx === idx) {
-        props = songDb.getSongProperties(name, '', t);
+    if (name !== 'Link') {
+      props = songDb.getSongProperties(name, '', t);
+    } else if (!isFriendScore) {
+      const idx = getSongIdx(row);
+      const genre = getCachedSongGenre(idx);
+      if (genre) {
+        props = songDb.getSongProperties(name, genre, t);
       }
       console.log(props);
-    } else {
-      props = songDb.getSongProperties(name, '', t);
     }
     return coalesceInLv(songDb.gameVer, row, lvIndex, props);
   }
@@ -729,12 +726,7 @@ type Cache = {
         const idx = getSongIdx(row);
         if (idx) {
           // idx is only available on self score page
-          const genre = await getLinkGenre(idx);
-          if (genre.includes('niconico')) {
-            cache.nicoLinkIdx = idx;
-          } else {
-            cache.originalLinkIdx = idx;
-          }
+          const genre = await fetchSongGenre(idx);
           const props = songDb.getSongProperties(name, genre, ChartType.STANDARD);
           saveInLv(row, coalesceInLv(gameVer, row, lvIndex, props));
         } else {

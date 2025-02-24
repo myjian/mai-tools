@@ -1,4 +1,5 @@
 import {ChartType, getChartTypeName} from './chart-type';
+import {getSongName} from './fetch-score-util';
 import {fetchSongDetailPage} from './util';
 
 export const RATING_TARGET_SONG_NAME_PREFIX = '▶ ';
@@ -40,30 +41,31 @@ export function getSongNicknameWithChartType(
   return getSongNickname(name, genre) + ' [' + getChartTypeName(chartType) + ']';
 }
 
-let cachedLinkIdx: {nico?: string; original?: string} = {};
+let cachedGenreByIdx: Record<string, string> = {};
 
-export async function getLinkGenre(idx: string): Promise<string> {
-  if (cachedLinkIdx.nico === idx) {
-    return 'niconico';
-  }
-  if (cachedLinkIdx.original === idx) {
-    return 'maimai';
+export function getCachedSongGenre(idx: string): string {
+  return cachedGenreByIdx[idx];
+}
+
+export async function fetchSongGenre(idx: string): Promise<string> {
+  const cachedGenre = getCachedSongGenre(idx);
+  if (cachedGenre) {
+    return cachedGenre;
   }
   const dom = await fetchSongDetailPage(idx);
-  const isNico = (dom.body.querySelector('.m_10.m_t_5.t_r.f_12') as HTMLElement).innerText.includes(
-    'niconico'
-  );
-  console.log('Link (idx: ' + idx + ') ' + (isNico ? 'is niconico' : 'is original'));
-  if (isNico) {
-    cachedLinkIdx.nico = idx;
-  } else {
-    cachedLinkIdx.original = idx;
-  }
-  return isNico ? 'niconico' : 'maimai';
+  // TODO: remove `.includes` and use its value directly
+  const genre = dom.body
+    .querySelector<HTMLElement>('.m_10.m_t_5.t_r.f_12')
+    .innerText.includes('niconico')
+    ? 'niconico'
+    : 'maimai';
+  console.log(`${idx} is ${getSongName(dom.body)} from ${genre}`);
+  cachedGenreByIdx[idx] = genre;
+  return genre;
 }
 
 export function getSongGenreFromImg(songName: string, imgSrc: string): string {
-  if (songName != 'Link') {
+  if (songName !== 'Link') {
     return '';
   }
   return imgSrc.includes('e90f79d9dcff84df') ? 'niconico' : 'maimai';
