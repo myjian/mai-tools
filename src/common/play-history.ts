@@ -17,8 +17,8 @@ export interface PlayRecord extends ChartRecord {
 }
 
 // Only include tab and new line, but not space.
-const FRONT_WHITESPACE_REGEX = /^[\n\t]/g;
-const END_WHITESPACE_REGEX = /[\n\t]$/g;
+const FRONT_WHITESPACE_REGEX = /^[\n\t]+/g;
+const END_WHITESPACE_REGEX = /[\n\t]+$/g;
 
 const AP_FC_IMG_NAME_TO_TEXT = new Map([
   ['fc', 'FC'],
