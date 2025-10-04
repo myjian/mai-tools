@@ -4,7 +4,7 @@ import {LangSwitcher} from '../common/components/LangSwitcher';
 import {GameVersion} from '../common/game-version';
 import {getInitialLanguage, Language} from '../common/lang';
 import {LangContext} from '../common/lang-react';
-import {getMaxConstant, getMinConstant, getOfficialLevel, LevelDef} from '../common/level-helper';
+import {getMaxConstant, getMinConstant, getMinMinorOfPlus, getOfficialLevel, LevelDef} from '../common/level-helper';
 import {getRankDefinitions} from '../common/rank-functions';
 import {loadUserPreference, saveUserPreference, UserPreference} from '../common/user-preference';
 import {MultiplierTable} from './MultiplierTable';
@@ -120,8 +120,9 @@ export class RootComponent extends React.PureComponent<{}, State> {
   private getLevels(): LevelDef[] {
     const {minLv, maxLv} = this.state;
     // TODO: Take input from option or query params
-    const startLv = getMinConstant(GameVersion.BUDDiES, minLv);
-    const endLv = getMaxConstant(GameVersion.BUDDiES, maxLv);
+    const startLv = getMinConstant(GameVersion.PRiSM, minLv);
+    const endLv = getMaxConstant(GameVersion.PRiSM, maxLv);
+    const minMinor = getMinMinorOfPlus(GameVersion.PRiSM);
     const lvs = [];
     let currentLv = startLv;
     const showEachConstant = endLv - startLv < 1;
@@ -130,12 +131,12 @@ export class RootComponent extends React.PureComponent<{}, State> {
       const nextLv = showEachConstant
         ? currentLv + 0.1
         : Math.round(currentLv) === currentLv
-        ? currentLv + 0.7
-        : currentLv + 0.3;
+        ? currentLv + minMinor
+        : currentLv + 1 - minMinor;
       lvs.push({
         title: showEachConstant
           ? currentLv.toFixed(1)
-          : getOfficialLevel(GameVersion.BUDDiES, currentLv),
+          : getOfficialLevel(GameVersion.PRiSM, currentLv),
         minLv: currentLv,
         maxLv: nextLv - 0.1,
       });
