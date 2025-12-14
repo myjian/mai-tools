@@ -5,7 +5,7 @@ export class PageFooter extends React.PureComponent {
     return (
       <footer>
         Made by{" "}
-        <a className="authorLink" href="https://github.com/myjian/">
+        <a className="authorLink" href="https://github.com/myjian/" target="_blank">
           myjian
         </a>
         .
