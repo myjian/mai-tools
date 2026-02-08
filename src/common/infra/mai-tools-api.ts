@@ -8,7 +8,7 @@ export class MaiToolsApi {
 
   async fetchChartLevelOverrides(gameVer: GameVersion): Promise<SongProperties[]> {
     const data = await fetchJson(
-      `${this.maiToolsBaseUrl}/data/chart-levels/version${gameVer}.json`
+      `${this.maiToolsBaseUrl}/data/chart-levels/version${gameVer}.json`,
     );
     const output: SongProperties[] = [];
     ['standard', 'dx'].forEach((chartType, index) => {
@@ -29,7 +29,7 @@ export class MaiToolsApi {
   }
 
   async fetchRegionOverrides(
-    region: GameRegion
+    region: GameRegion,
   ): Promise<Pick<SongProperties, 'name' | 'dx' | 'debut' | 'ico'>[]> {
     const data = await fetchJson(`${this.maiToolsBaseUrl}/data/song-info/${region}.json`);
     return ['standard', 'dx'].flatMap((chartType, index) => {
@@ -47,7 +47,7 @@ export class MaiToolsApi {
             name,
             dx: index,
             debut: versionInt,
-            ico: icoList.at(i),
+            ico: icoList[i],
           };
           return song;
         });
