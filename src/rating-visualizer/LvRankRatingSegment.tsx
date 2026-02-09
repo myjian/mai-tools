@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo, useCallback, useMemo} from 'react';
 
 interface LvRankRatingSegmentProps {
   minAchv: number;
@@ -12,40 +12,41 @@ interface LvRankRatingSegmentProps {
   highlightInterval: (min: number, max: number) => void;
 }
 
-export class LvRankRatingSegment extends React.PureComponent<LvRankRatingSegmentProps> {
-  private minRt = 0;
-  private maxRt = 0;
+export const LvRankRatingSegment = memo(
+  ({
+    minAchv,
+    minLv,
+    minFactor,
+    maxAchv,
+    maxLv,
+    maxFactor,
+    heightUnit,
+    title,
+    highlightInterval,
+  }: LvRankRatingSegmentProps) => {
+    const minRt = Math.floor(minLv * minAchv * minFactor);
+    const maxRt = Math.floor(maxLv * maxAchv * maxFactor);
 
-  render() {
-    const {minLv, minAchv, minFactor, maxLv, maxAchv, maxFactor, heightUnit, title} = this.props;
-    this.minRt = Math.floor(minLv * minAchv * minFactor);
-    this.maxRt = Math.floor(maxLv * maxAchv * maxFactor);
+    const hoverText = useMemo(() => {
+      if (minRt < maxRt) {
+        return `${minRt} - ${maxRt}`;
+      }
+      return maxRt.toString();
+    }, [minRt, maxRt]);
+
+    const handleClick = useCallback(() => {
+      highlightInterval(minRt, maxRt);
+    }, [minRt, maxRt, highlightInterval]);
+
     const style = {
-      bottom: (this.minRt - 0.5) * heightUnit + 'px',
-      height: (this.maxRt - this.minRt + 1) * heightUnit + 'px',
+      bottom: (minRt - 0.5) * heightUnit + 'px',
+      height: (maxRt - minRt + 1) * heightUnit + 'px',
     };
     const className = 'ratingSegment ' + 'segment' + title.replace('+', 'P');
     return (
-      <div
-        className={className}
-        style={style}
-        title={this.hoverText()}
-        tabIndex={0}
-        onClick={this.handleClick}
-      >
+      <div className={className} style={style} title={hoverText} tabIndex={0} onClick={handleClick}>
         <div className="ratingSegmentLabel">{title}</div>
       </div>
     );
-  }
-
-  private hoverText(): string {
-    if (this.minRt < this.maxRt) {
-      return `${this.minRt} - ${this.maxRt}`;
-    }
-    return this.maxRt.toString();
-  }
-
-  private handleClick = () => {
-    this.props.highlightInterval(this.minRt, this.maxRt);
-  };
-}
+  },
+);

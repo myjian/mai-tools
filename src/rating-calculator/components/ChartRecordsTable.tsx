@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo} from 'react';
 
 import {ChartRecordWithRating, ColumnType} from '../types';
 import {ChartRecordDataRow} from './ChartRecordDataRow';
@@ -11,13 +11,11 @@ interface Props {
   sortBy?: (col: ColumnType) => void;
   isCandidate?: boolean;
 }
-export class ChartRecordsTable extends React.PureComponent<Props> {
-  render() {
-    const {columns, sortBy, records, isCandidate} = this.props;
-    let {tableClassname} = this.props;
-    tableClassname += ' songRecordTable';
+export const ChartRecordsTable = memo(
+  ({columns, sortBy, records, isCandidate, tableClassname}: Props) => {
+    const composedTableClassname = tableClassname + ' songRecordTable';
     return (
-      <table className={tableClassname}>
+      <table className={composedTableClassname}>
         <thead>
           <ChartRecordHeadRow sortBy={sortBy} columns={columns} />
         </thead>
@@ -37,5 +35,5 @@ export class ChartRecordsTable extends React.PureComponent<Props> {
         </tbody>
       </table>
     );
-  }
-}
+  },
+);

@@ -1,30 +1,26 @@
-import React from 'react';
+import {memo} from 'react';
 
 interface SongImgProps {
   imgSrc?: string;
 }
-export class SongImg extends React.PureComponent<SongImgProps> {
-  render() {
-    const {imgSrc} = this.props;
-    return (
-      <div className="songImgContainer">
-        {(
-          imgSrc
-          ? <img className="songImg" src={imgSrc} alt="" />
-          : <div className="songImg songImgPlaceholder" />
-        )}
-        <div className="songImgReflecContainer">
-          {this.getReflecElement(imgSrc)}
-        </div>
-      </div>
-    );
+
+function getReflecElement(imgSrc?: string) {
+  if (imgSrc) {
+    const style = {backgroundImage: `url("${imgSrc}")`};
+    return <div className="songImgReflec" style={style}></div>;
   }
-  
-  private getReflecElement(imgSrc?: string) {
-    if (imgSrc) {
-      const style = {backgroundImage: `url("${imgSrc}")`};
-      return <div className="songImgReflec" style={style}></div>;
-    }
-    return <div className="songImgPlaceholder songImgReflecPlaceholder" />;
-  }
+  return <div className="songImgPlaceholder songImgReflecPlaceholder" />;
 }
+
+export const SongImg = memo(({imgSrc}: SongImgProps) => {
+  return (
+    <div className="songImgContainer">
+      {imgSrc ? (
+        <img className="songImg" src={imgSrc} alt="" />
+      ) : (
+        <div className="songImg songImgPlaceholder" />
+      )}
+      <div className="songImgReflecContainer">{getReflecElement(imgSrc)}</div>
+    </div>
+  );
+});

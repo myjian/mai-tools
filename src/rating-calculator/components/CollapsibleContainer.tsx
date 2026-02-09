@@ -1,21 +1,19 @@
 import '../css/collapsible-container.css';
 
-import React from 'react';
+import {memo} from 'react';
 
 interface Props {
   className?: string;
   hidden?: boolean;
   children?: React.ReactNode;
 }
-export class CollapsibleContainer extends React.PureComponent<Props> {
-  render() {
-    let className = 'collapsibleContainer';
-    if (this.props.className) {
-      className += ' ' + this.props.className;
-    }
-    if (this.props.hidden) {
-      className += ' hidden';
-    }
-    return <div className={className}>{this.props.children}</div>;
+export const CollapsibleContainer = memo(({className, hidden, children}: Props) => {
+  let composedClassName = 'collapsibleContainer';
+  if (className) {
+    composedClassName += ' ' + className;
   }
-}
+  if (hidden) {
+    composedClassName += ' hidden';
+  }
+  return <div className={composedClassName}>{children}</div>;
+});

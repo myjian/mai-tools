@@ -1,15 +1,11 @@
-import React from 'react';
-
-export class PageFooter extends React.PureComponent {
-  render() {
-    return (
-      <footer>
-        Made by{" "}
-        <a className="authorLink" href="https://github.com/myjian/" target="_blank">
-          myjian
-        </a>
-        .
-      </footer>
-    );
-  }
-}
+export const PageFooter = () => {
+  return (
+    <footer>
+      Made by{' '}
+      <a className="authorLink" href="https://github.com/myjian/" target="_blank">
+        myjian
+      </a>
+      .
+    </footer>
+  );
+};

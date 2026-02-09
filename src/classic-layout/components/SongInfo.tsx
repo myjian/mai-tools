@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import {memo} from 'react';
 
 import {getZhWikiLink} from '../../common/wiki-link';
 
@@ -20,23 +20,20 @@ interface SongInfoProps {
   track: string;
   difficulty?: string;
 }
-export class SongInfo extends React.PureComponent<SongInfoProps> {
-  render() {
-    const {songTitle, track, difficulty} = this.props;
-    return (
-      <div className="songInfoContainer">
-        <div>
-          <span className="track" id="track">
-            {track}
-          </span>
-          <DifficultyInfo difficulty={difficulty} />
-        </div>
-        <h2 className="songTitle" id="songTitle">
-          <a className="songWikiLink" href={getZhWikiLink(songTitle)} target="_blank">
-            {songTitle}
-          </a>
-        </h2>
+export const SongInfo = memo(({songTitle, track, difficulty}: SongInfoProps) => {
+  return (
+    <div className="songInfoContainer">
+      <div>
+        <span className="track" id="track">
+          {track}
+        </span>
+        <DifficultyInfo difficulty={difficulty} />
       </div>
-    );
-  }
-}
+      <h2 className="songTitle" id="songTitle">
+        <a className="songWikiLink" href={getZhWikiLink(songTitle)} target="_blank">
+          {songTitle}
+        </a>
+      </h2>
+    </div>
+  );
+});

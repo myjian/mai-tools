@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo} from 'react';
 
 import {ChartRecord} from '../../common/chart-record';
 import {GameVersion} from '../../common/game-version';
@@ -35,9 +35,8 @@ interface Props {
   topChartsCount: number;
 }
 
-export class LevelRankDistribution extends React.PureComponent<Props> {
-  render() {
-    const {gameVer, chartRecords, topLeftCell, topChartsCount} = this.props;
+export const LevelRankDistribution = memo(
+  ({gameVer, chartRecords, topLeftCell, topChartsCount}: Props) => {
     const topRecords = chartRecords.slice(0, topChartsCount);
     const includeAllPerfect = gameVer >= GameVersion.CiRCLE;
     const rankMap = getRankMap(topRecords, includeAllPerfect);
@@ -66,5 +65,5 @@ export class LevelRankDistribution extends React.PureComponent<Props> {
         </tbody>
       </table>
     );
-  }
-}
+  },
+);

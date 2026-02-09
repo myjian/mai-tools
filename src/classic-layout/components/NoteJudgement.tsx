@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo} from 'react';
 
 import {formatFloat} from '../../common/number-helper';
 import {Judgement} from '../types';
@@ -19,9 +19,8 @@ interface NoteJudgementProps {
   isDxMode: boolean;
   showDetail: boolean;
 }
-export class NoteJudgement extends React.PureComponent<NoteJudgementProps> {
-  render() {
-    const {noteType, judgements, lastColumn, loss, isDxMode, showDetail} = this.props;
+export const NoteJudgement = memo(
+  ({noteType, judgements, lastColumn, loss, isDxMode, showDetail}: NoteJudgementProps) => {
     if (!judgements) {
       return null;
     }
@@ -49,5 +48,5 @@ export class NoteJudgement extends React.PureComponent<NoteJudgementProps> {
         <td className={scoreClass}>{getLastColumnText(lastColumn.score, isDxMode)}</td>
       </tr>
     );
-  }
-}
+  },
+);

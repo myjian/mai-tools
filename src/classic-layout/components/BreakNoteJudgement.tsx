@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo} from 'react';
 
 import {Judgement} from '../types';
 import {getLastColumnText, NoteJudgement} from './NoteJudgement';
@@ -11,9 +11,8 @@ interface BreakNoteJudgementProps {
   isDxMode: boolean;
   showDetail: boolean;
 }
-export class BreakNoteJudgement extends React.PureComponent<BreakNoteJudgementProps> {
-  render() {
-    const {judgements, distribution, lastColumn, loss, isDxMode, showDetail} = this.props;
+export const BreakNoteJudgement = memo(
+  ({judgements, distribution, lastColumn, loss, isDxMode, showDetail}: BreakNoteJudgementProps) => {
     const scoreClass = lastColumn.isMax ? 'score maxScore' : 'score';
     if (showDetail) {
       return (
@@ -50,5 +49,5 @@ export class BreakNoteJudgement extends React.PureComponent<BreakNoteJudgementPr
         />
       );
     }
-  }
-}
+  },
+);

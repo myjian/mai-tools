@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo} from 'react';
 
 interface Props {
   values: ReadonlyArray<string | number>;
@@ -7,23 +7,30 @@ interface Props {
   baseCellClassname: string;
   perColumnClassnames: ReadonlyArray<string>;
 }
-export class RankDistributionRow extends React.PureComponent<Props> {
-  render() {
-    const {values, isHeading, rowClassname, baseCellClassname, perColumnClassnames} = this.props;
+export const RankDistributionRow = memo(
+  ({values, isHeading, rowClassname, baseCellClassname, perColumnClassnames}: Props) => {
     return (
       <tr className={rowClassname}>
         {values.map((v, index) => {
           const useTh = isHeading || index === 0;
           let className = baseCellClassname;
           if (perColumnClassnames[index]) {
-            className += " " + perColumnClassnames[index];
+            className += ' ' + perColumnClassnames[index];
           }
           if (useTh) {
-            return <th key={index} className={className}>{v}</th>;
+            return (
+              <th key={index} className={className}>
+                {v}
+              </th>
+            );
           }
-          return <td key={index} className={className}>{v}</td>;
+          return (
+            <td key={index} className={className}>
+              {v}
+            </td>
+          );
         })}
       </tr>
     );
-  }
-}
+  },
+);

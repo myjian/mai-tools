@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo} from 'react';
 
 interface DateAndPlaceProps {
   date: string;
@@ -6,17 +6,17 @@ interface DateAndPlaceProps {
   isDxMode: boolean;
   toggleDxMode: () => void;
 }
-export class DateAndPlace extends React.PureComponent<DateAndPlaceProps> {
-  render() {
-    const {actualPlace, date, isDxMode} = this.props;
+
+export const DateAndPlace = memo(
+  ({date, actualPlace, isDxMode, toggleDxMode}: DateAndPlaceProps) => {
     const place = isDxMode ? actualPlace : 'CAFE MiLK';
     return (
       <div className="dateAndPlace">
         <div className="date">{date}</div>
-        <button className="place" onClick={this.props.toggleDxMode}>
+        <button className="place" onClick={toggleDxMode}>
           {place}
         </button>
       </div>
     );
-  }
-}
+  },
+);

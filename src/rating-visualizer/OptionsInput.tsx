@@ -1,4 +1,4 @@
-import React from 'react';
+import {memo, useCallback} from 'react';
 
 import {DisplayValue} from './RatingTable';
 
@@ -28,29 +28,93 @@ interface OptionsInputProps {
   onSetTableDisplay: (display: DisplayValue) => void;
 }
 
-export class OptionsInput extends React.PureComponent<OptionsInputProps> {
-  render() {
-    const {heightUnit, minLv, minRank, maxLv, tableDisplay} = this.props;
+const renderLvOptions = () => {
+  const options: React.ReactElement[] = [];
+  for (let i = 0; i <= LEVELS.length; i++) {
+    const lv = LEVELS[i];
+    options.push(
+      <option key={i} value={lv}>
+        {lv}
+      </option>,
+    );
+  }
+  return options;
+};
+
+export const OptionsInput = memo(
+  ({
+    heightUnit,
+    minLv,
+    minRank,
+    maxLv,
+    tableDisplay,
+    onSetRange,
+    onChangeUnit,
+    onSetMinRank,
+    onSetTableDisplay,
+  }: OptionsInputProps) => {
+    const handleChangeMinLv = useCallback(
+      (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+        const minLv = evt.currentTarget.value;
+        const minLvIdx = LEVELS.indexOf(minLv);
+        const maxLvIdx = LEVELS.indexOf(maxLv);
+        onSetRange(minLv, LEVELS[Math.min(minLvIdx, maxLvIdx)]);
+      },
+      [maxLv, onSetRange],
+    );
+
+    const handleChangeMaxLv = useCallback(
+      (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+        const maxLv = evt.currentTarget.value;
+        const minLvIdx = LEVELS.indexOf(minLv);
+        const maxLvIdx = LEVELS.indexOf(maxLv);
+        onSetRange(LEVELS[Math.max(minLvIdx, maxLvIdx)], maxLv);
+      },
+      [minLv, onSetRange],
+    );
+
+    const handleChangeHeightUnit = useCallback(
+      (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+        const unit = parseInt(evt.currentTarget.value);
+        onChangeUnit(unit);
+      },
+      [onChangeUnit],
+    );
+
+    const handleChangeMinRank = useCallback(
+      (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+        onSetMinRank(evt.currentTarget.value);
+      },
+      [onSetMinRank],
+    );
+
+    const handleChangeTableDisplay = useCallback(
+      (evt: React.SyntheticEvent<HTMLSelectElement>) => {
+        onSetTableDisplay(evt.currentTarget.value as DisplayValue);
+      },
+      [onSetTableDisplay],
+    );
+
     return (
       <div className="optionsContainer">
         <div className="container" tabIndex={-1}>
           <span className="lvRangeLabelContainer">
             <label className="optionGroup">
               Min&nbsp;Lv:&nbsp;
-              <select onChange={this.handleChangeMinLv} value={minLv}>
-                {this.renderLvOptions()}
+              <select onChange={handleChangeMinLv} value={minLv}>
+                {renderLvOptions()}
               </select>
             </label>
             <label className="optionGroup">
               Max&nbsp;Lv:&nbsp;
-              <select onChange={this.handleChangeMaxLv} value={maxLv}>
-                {this.renderLvOptions()}
+              <select onChange={handleChangeMaxLv} value={maxLv}>
+                {renderLvOptions()}
               </select>
             </label>
           </span>
           <label className="optionGroup">
             Min Rank:&nbsp;
-            <select onChange={this.handleChangeMinRank} value={minRank}>
+            <select onChange={handleChangeMinRank} value={minRank}>
               <option value="AAA">AAA</option>
               <option value="S">S</option>
               <option value="SS">SS</option>
@@ -60,7 +124,7 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
           <br></br>
           <label className="optionGroup">
             Graph:&nbsp;
-            <select onChange={this.handleChangeHeightUnit} value={heightUnit.toFixed(0)}>
+            <select onChange={handleChangeHeightUnit} value={heightUnit.toFixed(0)}>
               <option value="0">Hide</option>
               <option value="3">3x</option>
               <option value="4">4x</option>
@@ -71,7 +135,7 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
           </label>
           <label className="optionGroup">
             Table values:&nbsp;
-            <select onChange={this.handleChangeTableDisplay} value={tableDisplay}>
+            <select onChange={handleChangeTableDisplay} value={tableDisplay}>
               <option value="MIN">MIN</option>
               <option value="MAX">MAX</option>
               <option value="RANGE">RANGE</option>
@@ -80,45 +144,5 @@ export class OptionsInput extends React.PureComponent<OptionsInputProps> {
         </div>
       </div>
     );
-  }
-
-  private renderLvOptions() {
-    const options: React.ReactElement[] = [];
-    for (let i = 0; i <= LEVELS.length; i++) {
-      const lv = LEVELS[i];
-      options.push(
-        <option key={i} value={lv}>
-          {lv}
-        </option>
-      );
-    }
-    return options;
-  }
-
-  private handleChangeMinLv = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    const minLv = evt.currentTarget.value;
-    const minLvIdx = LEVELS.indexOf(minLv);
-    const maxLvIdx = LEVELS.indexOf(this.props.maxLv);
-    this.props.onSetRange(minLv, LEVELS[Math.min(minLvIdx, maxLvIdx)]);
-  };
-
-  private handleChangeMaxLv = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    const maxLv = evt.currentTarget.value;
-    const minLvIdx = LEVELS.indexOf(this.props.minLv);
-    const maxLvIdx = LEVELS.indexOf(maxLv);
-    this.props.onSetRange(LEVELS[Math.max(minLvIdx, maxLvIdx)], maxLv);
-  };
-
-  private handleChangeHeightUnit = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    const unit = parseInt(evt.currentTarget.value);
-    this.props.onChangeUnit(unit);
-  };
-
-  private handleChangeMinRank = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    this.props.onSetMinRank(evt.currentTarget.value);
-  };
-
-  private handleChangeTableDisplay = (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-    this.props.onSetTableDisplay(evt.currentTarget.value as DisplayValue);
-  };
-}
+  },
+);
