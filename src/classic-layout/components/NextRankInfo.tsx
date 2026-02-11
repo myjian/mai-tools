@@ -1,13 +1,23 @@
-import {memo} from 'react';
+import {useMemo} from 'react';
 
 interface NextRankInfoProps {
   nextRank?: {title: string; diff: number};
   showTitle: boolean;
 }
 
-export const NextRankInfo = memo(({nextRank, showTitle}: NextRankInfoProps) => {
+export const NextRankInfo = ({nextRank, showTitle}: NextRankInfoProps) => {
   const nextRankTitle = showTitle && nextRank ? nextRank.title : '';
-  const nextRankDiff = getNextRankDiff(nextRank);
+  const nextRankDiff = useMemo(() => {
+    if (!nextRank) {
+      return '—————';
+    }
+    const {diff} = nextRank;
+    return typeof diff !== 'number'
+      ? diff
+      : Math.round(diff) === diff
+        ? diff.toLocaleString('en')
+        : diff.toFixed(4) + '%';
+  }, [nextRank]);
   return (
     <tr className="nextRank">
       <th className="noRightBorder" colSpan={4}>
@@ -19,18 +29,4 @@ export const NextRankInfo = memo(({nextRank, showTitle}: NextRankInfoProps) => {
       </td>
     </tr>
   );
-});
-
-function getNextRankDiff(nextRank?: {title: string; diff: number}) {
-  if (!nextRank) {
-    return '—————';
-  }
-  const {diff} = nextRank;
-  if (typeof diff === 'number') {
-    if (Math.round(diff) !== diff) {
-      return diff.toFixed(4) + '%';
-    }
-    return diff.toLocaleString('en');
-  }
-  return diff;
-}
+};
