@@ -29,16 +29,11 @@ interface OptionsInputProps {
 }
 
 const renderLvOptions = () => {
-  const options: React.ReactElement[] = [];
-  for (let i = 0; i <= LEVELS.length; i++) {
-    const lv = LEVELS[i];
-    options.push(
-      <option key={i} value={lv}>
-        {lv}
-      </option>,
-    );
-  }
-  return options;
+  return LEVELS.map((lv, i) => (
+    <option key={i} value={lv}>
+      {lv}
+    </option>
+  ));
 };
 
 export const OptionsInput = memo(
@@ -55,20 +50,20 @@ export const OptionsInput = memo(
   }: OptionsInputProps) => {
     const handleChangeMinLv = useCallback(
       (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-        const minLv = evt.currentTarget.value;
-        const minLvIdx = LEVELS.indexOf(minLv);
+        const newMinLv = evt.currentTarget.value;
+        const minLvIdx = LEVELS.indexOf(newMinLv);
         const maxLvIdx = LEVELS.indexOf(maxLv);
-        onSetRange(minLv, LEVELS[Math.min(minLvIdx, maxLvIdx)]);
+        onSetRange(newMinLv, LEVELS[Math.min(minLvIdx, maxLvIdx)]);
       },
       [maxLv, onSetRange],
     );
 
     const handleChangeMaxLv = useCallback(
       (evt: React.SyntheticEvent<HTMLSelectElement>) => {
-        const maxLv = evt.currentTarget.value;
+        const newMaxLv = evt.currentTarget.value;
         const minLvIdx = LEVELS.indexOf(minLv);
-        const maxLvIdx = LEVELS.indexOf(maxLv);
-        onSetRange(LEVELS[Math.max(minLvIdx, maxLvIdx)], maxLv);
+        const maxLvIdx = LEVELS.indexOf(newMaxLv);
+        onSetRange(LEVELS[Math.max(minLvIdx, maxLvIdx)], newMaxLv);
       },
       [minLv, onSetRange],
     );

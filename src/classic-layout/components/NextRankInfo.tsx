@@ -5,20 +5,6 @@ interface NextRankInfoProps {
   showTitle: boolean;
 }
 
-function getNextRankDiff(nextRank?: {title: string; diff: number}) {
-  if (!nextRank) {
-    return '—————';
-  }
-  const {diff} = nextRank;
-  if (typeof diff === 'number') {
-    if (Math.round(diff) !== diff) {
-      return diff.toFixed(4) + '%';
-    }
-    return diff.toLocaleString('en');
-  }
-  return diff;
-}
-
 export const NextRankInfo = memo(({nextRank, showTitle}: NextRankInfoProps) => {
   const nextRankTitle = showTitle && nextRank ? nextRank.title : '';
   const nextRankDiff = getNextRankDiff(nextRank);
@@ -34,3 +20,17 @@ export const NextRankInfo = memo(({nextRank, showTitle}: NextRankInfoProps) => {
     </tr>
   );
 });
+
+function getNextRankDiff(nextRank?: {title: string; diff: number}) {
+  if (!nextRank) {
+    return '—————';
+  }
+  const {diff} = nextRank;
+  if (typeof diff === 'number') {
+    if (Math.round(diff) !== diff) {
+      return diff.toFixed(4) + '%';
+    }
+    return diff.toLocaleString('en');
+  }
+  return diff;
+}

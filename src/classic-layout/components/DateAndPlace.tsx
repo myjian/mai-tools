@@ -8,7 +8,7 @@ interface DateAndPlaceProps {
 }
 
 export const DateAndPlace = memo(
-  ({date, actualPlace, isDxMode, toggleDxMode}: DateAndPlaceProps) => {
+  ({actualPlace, date, isDxMode, toggleDxMode}: DateAndPlaceProps) => {
     const place = isDxMode ? actualPlace : 'CAFE MiLK';
     return (
       <div className="dateAndPlace">

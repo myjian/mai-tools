@@ -4,14 +4,6 @@ interface SongImgProps {
   imgSrc?: string;
 }
 
-function getReflecElement(imgSrc?: string) {
-  if (imgSrc) {
-    const style = {backgroundImage: `url("${imgSrc}")`};
-    return <div className="songImgReflec" style={style}></div>;
-  }
-  return <div className="songImgPlaceholder songImgReflecPlaceholder" />;
-}
-
 export const SongImg = memo(({imgSrc}: SongImgProps) => {
   return (
     <div className="songImgContainer">
@@ -24,3 +16,11 @@ export const SongImg = memo(({imgSrc}: SongImgProps) => {
     </div>
   );
 });
+
+function getReflecElement(imgSrc?: string) {
+  if (imgSrc) {
+    const style = {backgroundImage: `url("${imgSrc}")`};
+    return <div className="songImgReflec" style={style}></div>;
+  }
+  return <div className="songImgPlaceholder songImgReflecPlaceholder" />;
+}
