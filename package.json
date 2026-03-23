@@ -28,7 +28,7 @@
     "@types/dom-to-image": "^2.6.4",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "copy-webpack-plugin": "^11.0.0",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^6.8.1",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.3.1",
