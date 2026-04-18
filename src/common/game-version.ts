@@ -20,8 +20,8 @@ const VERSION_NAMES = [
   'MiLK', // 10
   'MiLK PLUS',
   'FiNALE', // 12
-  'maimaiでらっくす',
-  'maimaiでらっくす PLUS',
+  'でらっくす',
+  'でらっくす PLUS',
   'Splash', // 15
   'Splash PLUS',
   'UNiVERSE', // 17
