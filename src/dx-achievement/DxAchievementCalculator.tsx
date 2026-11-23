@@ -78,7 +78,7 @@ export const DxAchievementCalculator = () => {
 
   const handleChangeBreakJudgement = useCallback(
     (evt: SyntheticEvent<HTMLInputElement>) => {
-      const count = parseInt(evt.currentTarget.value);
+      const count = evt.currentTarget.value.length ? parseInt(evt.currentTarget.value) : 0;
       if (count >= 0) {
         const index = parseInt(evt.currentTarget.name.substring(6));
         setBreakJudgements((prev) => prev.map((v, idx) => (idx === index ? count : v)));
