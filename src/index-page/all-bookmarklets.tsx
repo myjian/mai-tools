@@ -14,6 +14,7 @@ export const BOOKMARKLET_LINK = `javascript:(
   }
 )(document)`
   .replace(/[\n ]/g, '')
+  .replace(/"/g, "'")
   .replace('vars', 'var s');
 
 export const LinkNameByLang = {

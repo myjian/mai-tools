@@ -35,9 +35,11 @@ export const PCManual = () => {
         <p>
           {messages.create}
           <br />
-          <a className="bookmarkletCopy" href={BOOKMARKLET_LINK}>
-            {LinkNameByLang[lang]}
-          </a>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `<a className="bookmarkletCopy" href="${BOOKMARKLET_LINK}">${LinkNameByLang[lang]}</a>`,
+            }}
+          ></span>
         </p>
         <p>{messages.use}</p>
       </div>
