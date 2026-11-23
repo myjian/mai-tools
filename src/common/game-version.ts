@@ -69,5 +69,5 @@ export function validateGameVersion(
 }
 
 export function getVersionName(ver: GameVersion) {
-  return VERSION_NAMES[ver];
+  return VERSION_NAMES[ver] || '?';
 }
