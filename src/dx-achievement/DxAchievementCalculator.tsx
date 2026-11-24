@@ -104,6 +104,7 @@ export const DxAchievementCalculator = () => {
           <br />
           <input
             name="totalScore"
+            type="number"
             onChange={handleChangeTotalScore}
             defaultValue={initialTotalScoreInput}
           ></input>
@@ -113,6 +114,7 @@ export const DxAchievementCalculator = () => {
           <br />
           <input
             name="breakScore"
+            type="number"
             defaultValue={initialBreakScoreInput}
             onChange={handleChangeTotalScore}
           ></input>
@@ -126,6 +128,7 @@ export const DxAchievementCalculator = () => {
               <br />
               <input
                 className="noteCount"
+                type="number"
                 name="break_0"
                 defaultValue={initialBreakJudgementsInput[0]}
                 onChange={handleChangeBreakJudgement}
@@ -136,6 +139,7 @@ export const DxAchievementCalculator = () => {
               <br />
               <input
                 className="noteCount"
+                type="number"
                 name="break_1"
                 defaultValue={initialBreakJudgementsInput[1]}
                 onChange={handleChangeBreakJudgement}
@@ -146,8 +150,9 @@ export const DxAchievementCalculator = () => {
               <br />
               <input
                 className="noteCount"
-                defaultValue={initialBreakJudgementsInput[2]}
+                type="number"
                 name="break_2"
+                defaultValue={initialBreakJudgementsInput[2]}
                 onChange={handleChangeBreakJudgement}
               ></input>
             </div>
@@ -156,6 +161,7 @@ export const DxAchievementCalculator = () => {
               <br />
               <input
                 className="noteCount"
+                type="number"
                 name="break_3"
                 defaultValue={initialBreakJudgementsInput[3]}
                 onChange={handleChangeBreakJudgement}
